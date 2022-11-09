@@ -1,0 +1,11 @@
+DIM a1d OF INT[5,7,9]
+a1d[2,3,4] = 99
+PRINT a1dd[2,3,4]
+test()
+
+DEF test
+    DIM a2d OF INT[5,7,9]
+    REM a2d[2,3,4] = 50
+    PRINT a2d
+ENDDEF
+
