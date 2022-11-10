@@ -5,7 +5,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 
 	switch (t.type) {
 		case ParserTokenType::LITERAL: {
-			switch (t.data_type.GetType()) {
+			switch (t.data_type) {
 				case Primitive::INT:
 					return ValueType{llvm.CreateConstantInt(t.data_type, t.iv), t.data_type};
 				case Primitive::FLOAT:
@@ -184,20 +184,20 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 		}
 		case ParserTokenType::TRUE: {
 			ValueType vt;
-			vt.type = Type::Int();
+			vt.type = Primitive::INT;
 			vt.value = llvm.CreateConstantInt(vt.type, 1);
 			return vt;
 		}
 		case ParserTokenType::FALSE: {
 			ValueType vt;
-			vt.type = Type::Int();
+			vt.type = Primitive::INT;
 			vt.value = llvm.CreateConstantInt(vt.type, 0);
 			return vt;
 		}
 
 		case ParserTokenType::INT: {
 			auto t1 = CompileExpression(t.children[0]);
-			auto tt = Type::Int();
+			auto tt = Primitive::INT;
 			ValueType vt;
 			vt.type = t1.type;
 			vt.value = t1.value;
@@ -206,7 +206,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 		}
 		case ParserTokenType::FLOAT: {
 			auto t1 = CompileExpression(t.children[0]);
-			auto tt = Type::Float();
+			auto tt = Primitive::FLOAT;
 			ValueType vt;
 			vt.type = t1.type;
 			vt.value = t1.value;
@@ -215,7 +215,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 		}
 		case ParserTokenType::STRING: {
 			auto t1 = CompileExpression(t.children[0]);
-			auto tt = Type::String();
+			auto tt = Primitive::STRING;
 			ValueType vt;
 			vt.type = t1.type;
 			vt.value = t1.value;
@@ -225,12 +225,12 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 		case ParserTokenType::STRING_WITH_FORMAT: {
 			auto t1 = CompileExpression(t.children[0]);
 			auto t2 = CompileExpression(t.children[1]);
-			if (t2.type.GetType() != Primitive::STRING) {
+			if (t2.type != Primitive::STRING) {
 				RaiseException("WITH clause must be a string", t);
 			}
 			ValueType vt;
-			vt.type = Type::String();
-			switch (t1.type.GetType()) {
+			vt.type = Primitive::STRING;
+			switch (t1.type) {
 				case Primitive::INT:
 					vt.value = CreateCall("int_to_string_with", {t1.value, t2.value});
 					break;
@@ -248,7 +248,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 
 		case ParserTokenType::UNARYMINUS: {
 			ValueType vt = CompileExpression(t.children[0]);
-			switch (vt.type.GetType()) {
+			switch (vt.type) {
 				case Primitive::INT:
 					vt.value = GetIR()->CreateNeg(vt.value);
 					break;
@@ -264,27 +264,27 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 			// String
 		case ParserTokenType::ASC: {
 			ValueType vt = CompileExpression(t.children[0]);
-			if (vt.type.GetType() != Primitive::STRING) {
+			if (vt.type != Primitive::STRING) {
 				TypeError(t);
 			}
-			vt.type = Type::Int();
+			vt.type = Primitive::INT;
 			vt.value = CreateCall("asc", {vt.value});
 			return vt;
 		}
 		case ParserTokenType::CHRS: {
 			ValueType vt = CompileExpression(t.children[0]);
-			if (vt.type.GetType() != Primitive::INT) {
+			if (vt.type != Primitive::INT) {
 				TypeError(t);
 			}
-			vt.type = Type::String();
+			vt.type = Primitive::STRING;
 			vt.value = CreateCall("chrs", {vt.value});
 			strip_strings = true;
 			llvm.AddTempString(vt.value, GetIR());
 			return vt;
 		}
 		case ParserTokenType::INSTR: {
-			auto s = Type::String();
-			auto i = Type::Int();
+			auto s = Primitive::STRING;
+			auto i = Primitive::INT;
 			ValueType vt1 = CompileExpression(t.children[0]);
 			llvm.AutoConversion(GetIR(), vt1, s);
 			ValueType vt2 = CompileExpression(t.children[1]);
@@ -297,8 +297,8 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 			return vt;
 		}
 		case ParserTokenType::LEFTS: {
-			auto s = Type::String();
-			auto i = Type::Int();
+			auto s = Primitive::STRING;
+			auto i = Primitive::INT;
 			ValueType vt1 = CompileExpression(t.children[0]);
 			llvm.AutoConversion(GetIR(), vt1, s);
 			ValueType vt2 = CompileExpression(t.children[1]);
@@ -311,8 +311,8 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 			return vt;
 		}
 		case ParserTokenType::MIDS: {
-			auto s = Type::String();
-			auto i = Type::Int();
+			auto s = Primitive::STRING;
+			auto i = Primitive::INT;
 			ValueType vt1 = CompileExpression(t.children[0]);
 			llvm.AutoConversion(GetIR(), vt1, s);
 			ValueType vt2 = CompileExpression(t.children[1]);
@@ -327,8 +327,8 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 			return vt;
 		}
 		case ParserTokenType::RIGHTS: {
-			auto s = Type::String();
-			auto i = Type::Int();
+			auto s = Primitive::STRING;
+			auto i = Primitive::INT;
 			ValueType vt1 = CompileExpression(t.children[0]);
 			llvm.AutoConversion(GetIR(), vt1, s);
 			ValueType vt2 = CompileExpression(t.children[1]);
@@ -342,28 +342,28 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 		}
 		case ParserTokenType::LEN: {
 			ValueType vt = CompileExpression(t.children[0]);
-			if (vt.type.GetType() != Primitive::STRING) {
+			if (vt.type != Primitive::STRING) {
 				TypeError(t);
 			}
-			vt.type = Type::Int();
+			vt.type = Primitive::INT;
 			vt.value = CreateCall("len", {vt.value});
 			return vt;
 		}
 		case ParserTokenType::TIME: {
 			ValueType vt;
-			vt.type = Type::Int();
+			vt.type = Primitive::INT;
 			vt.value = CreateCall("_time", {});
 			return vt;
 		}
 		case ParserTokenType::HPTIME: {
 			ValueType vt;
-			vt.type = Type::Int();
+			vt.type = Primitive::INT;
 			vt.value = CreateCall("highprec", {});
 			return vt;
 		}
 		case ParserTokenType::TIMES: {
 			ValueType vt;
-			vt.type = Type::String();
+			vt.type = Primitive::STRING;
 			vt.value = CreateCall("times", {});
 			strip_strings = true;
 			llvm.AddTempString(vt.value, GetIR());
@@ -373,6 +373,6 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 			assert(0);
 	}
 
-	return ValueType{nullptr, Type::None()};
+	return ValueType{nullptr, Primitive::NONE};
 }
 

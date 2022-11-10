@@ -37,7 +37,7 @@ std::any Parser::visitIntegerLiteral(DaricParser::IntegerLiteralContext *context
             RaiseException("Invalid number", context);
         }
     }
-    return ParserToken{ParserTokenType::LITERAL, Type::Int(), "", i, 0, ""};
+    return ParserToken{ParserTokenType::LITERAL, Primitive::INT, "", i, 0, ""};
 }
 
 std::any Parser::visitFloatLiteral(DaricParser::FloatLiteralContext *context) {
@@ -52,7 +52,7 @@ std::any Parser::visitFloatLiteral(DaricParser::FloatLiteralContext *context) {
     if (context->MINUS() != nullptr) {
         i = -i;
     }
-    return ParserToken{ParserTokenType::LITERAL, Type::Float(), "", 0, i, ""};
+    return ParserToken{ParserTokenType::LITERAL, Primitive::FLOAT, "", 0, i, ""};
 }
 
 std::any Parser::visitStringLiteral(DaricParser::StringLiteralContext *context) {
@@ -63,5 +63,5 @@ std::any Parser::visitStringLiteral(DaricParser::StringLiteralContext *context) 
     v.erase(v.length() - 1, 1);
 
     // Create global string reference
-    return ParserToken{ParserTokenType::LITERAL, Type::String(), "", 0, 0, v};
+    return ParserToken{ParserTokenType::LITERAL, Primitive::STRING, "", 0, 0, v};
 }

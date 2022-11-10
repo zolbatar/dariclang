@@ -1,7 +1,7 @@
 #include "CompilerLLVM.h"
 
-llvm::Type *CompilerLLVM::TypeConversion(Type &type) {
-	switch (type.GetType()) {
+llvm::Type *CompilerLLVM::TypeConversion(Primitive type) {
+	switch (type) {
 		case Primitive::INT:
 			return TypeInt;
 		case Primitive::FLOAT:
@@ -15,42 +15,42 @@ llvm::Type *CompilerLLVM::TypeConversion(Type &type) {
 	}
 }
 
-llvm::Constant *CompilerLLVM::CreateConstantInt(Type &type, T_I v) {
+llvm::Constant *CompilerLLVM::CreateConstantInt(Primitive type, T_I v) {
 	return llvm::ConstantInt::get(TypeConversion(type), v);
 }
 
-llvm::Constant *CompilerLLVM::CreateConstantFloat(Type &type, T_F v) {
+llvm::Constant *CompilerLLVM::CreateConstantFloat(Primitive type, T_F v) {
 	return llvm::ConstantFP::get(TypeConversion(type), v);
 }
 
 llvm::Constant *CompilerLLVM::CreateConstantString(llvm::IRBuilder<> *ir, llvm::Function *func,
-												   Type &type, T_S v, std::string identifier) {
+												   Primitive type, T_S v, std::string identifier) {
 	return ir->CreateGlobalString(v, identifier.size() > 0 ? identifier + " ## Initial" : "");
 }
 
-void CompilerLLVM::AutoConversion(llvm::IRBuilder<> *ir, ValueType &value_type, Type &type) {
+void CompilerLLVM::AutoConversion(llvm::IRBuilder<> *ir, ValueType &value_type, Primitive type) {
 	if (value_type.type == type) {
 		// Do nothing
 	}
-	else if (value_type.type.GetType() == Primitive::INT && type.GetType() == Primitive::FLOAT) {
+	else if (value_type.type == Primitive::INT && type == Primitive::FLOAT) {
 		value_type.value = ir->CreateSIToFP(value_type.value, TypeConversion(type));
 	}
-	else if (value_type.type.GetType() == Primitive::FLOAT && type.GetType() == Primitive::INT) {
+	else if (value_type.type == Primitive::FLOAT && type == Primitive::INT) {
 		value_type.value = ir->CreateFPToSI(value_type.value, TypeConversion(type));
 	}
-	else if (value_type.type.GetType() == Primitive::INT && type.GetType() == Primitive::BYTE) {
+	else if (value_type.type == Primitive::INT && type == Primitive::BYTE) {
 		value_type.value = ir->CreateTrunc(value_type.value, TypeConversion(type));
 	}
-	else if (value_type.type.GetType() == Primitive::STRING && type.GetType() == Primitive::INT) {
+	else if (value_type.type == Primitive::STRING && type == Primitive::INT) {
 		value_type.value = ir->CreateCall(Module->getFunction("string_to_int"), {value_type.value});
 	}
-	else if (value_type.type.GetType() == Primitive::STRING && type.GetType() == Primitive::FLOAT) {
+	else if (value_type.type == Primitive::STRING && type == Primitive::FLOAT) {
 		value_type.value = ir->CreateCall(Module->getFunction("string_to_float"), {value_type.value});
 	}
-	else if (value_type.type.GetType() == Primitive::FLOAT && type.GetType() == Primitive::STRING) {
+	else if (value_type.type == Primitive::FLOAT && type == Primitive::STRING) {
 		value_type.value = ir->CreateCall(Module->getFunction("float_to_string"), {value_type.value});
 	}
-	else if (value_type.type.GetType() == Primitive::INT && type.GetType() == Primitive::STRING) {
+	else if (value_type.type == Primitive::INT && type == Primitive::STRING) {
 		value_type.value = ir->CreateCall(Module->getFunction("int_to_string"), {value_type.value});
 	}
 	else {
@@ -63,11 +63,11 @@ void CompilerLLVM::AutoConversion2Way(llvm::IRBuilder<> *ir, ValueType &value_ty
 	if (value_type1.type == value_type2.type) {
 		// Do nothing
 	}
-	else if (value_type1.type.GetType() == Primitive::INT && value_type2.type.GetType() == Primitive::FLOAT) {
+	else if (value_type1.type == Primitive::INT && value_type2.type == Primitive::FLOAT) {
 		value_type1.value = ir->CreateSIToFP(value_type1.value, TypeConversion(value_type2.type));
 		value_type1.type = value_type2.type;
 	}
-	else if (value_type2.type.GetType() == Primitive::INT && value_type1.type.GetType() == Primitive::FLOAT) {
+	else if (value_type2.type == Primitive::INT && value_type1.type == Primitive::FLOAT) {
 		value_type2.value = ir->CreateSIToFP(value_type2.value, TypeConversion(value_type1.type));
 		value_type2.type = value_type2.type;
 	}

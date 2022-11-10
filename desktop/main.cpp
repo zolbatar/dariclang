@@ -2,12 +2,10 @@
 #include <fstream>
 #include "Parser/Parser.h"
 #include "Compiler/Compiler.h"
-#include "Variables/Types.h"
 
 int main() {
 	std::cout << "Welcome to Daric!" << std::endl;
 
-	Type::InitTypes();
 	Parser parser;
     std::ifstream file("Syntax.daric");
 //	std::ifstream file("Minimal.daric");

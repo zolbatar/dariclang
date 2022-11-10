@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.23)
-project(DaricV2)
+project(Daric)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -37,7 +37,7 @@ separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 llvm_map_components_to_libnames(LLVM_LIBS core support AArch64 X86 Coroutines OrcJIT)
 
-add_executable(DaricV2
+add_executable(${PROJECT_NAME}
         main.cpp
 
         Compiler/Compiler.cpp
@@ -47,6 +47,7 @@ add_executable(DaricV2
         Compiler/CompilerIf.cpp
         Compiler/CompilerVariables.cpp
         Compiler/CompilerExpression.cpp
+        Compiler/CompilerStructs.cpp
 
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
@@ -58,6 +59,7 @@ add_executable(DaricV2
         LLVM/CompilerLLVMBoolean.cpp
         LLVM/CompilerLLVMBlocks.cpp
         LLVM/CompilerLLVMArrays.cpp
+        LLVM/CompilerLLVMStructs.cpp
 
         JIT/JIT.cpp
         JIT/String.cpp
@@ -78,6 +80,7 @@ add_executable(DaricV2
         Parser/Core/ParserType.cpp
         Parser/Core/ParserVariable.cpp
         Parser/Core/ParserStatements.cpp
+        Parser/Tokens/ParserSTRUCT.cpp
         Parser/Tokens/ParserIF.cpp
         Parser/Tokens/ParserMODULE.cpp
         Parser/Tokens/ParserPRINT.cpp
@@ -85,18 +88,17 @@ add_executable(DaricV2
         Parser/Tokens/ParserSWAP.cpp
         Parser/Tokens/ParserDIM.cpp
 
-        Variables/Types.h
-        Variables/Types.cpp
         Variables/PrimitiveTypes.h
         Variables/Instance.cpp
         Variables/Instance.h
         Variables/Reference.cpp
+        Variables/Structs.h
 
         Variables/Reference.h
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Parser/Tokens/ParserSTRUCT.cpp Compiler/CompilerStructs.cpp LLVM/CompilerLLVMStructs.cpp)
+        Grammar/DaricVisitor.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBS} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS})
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

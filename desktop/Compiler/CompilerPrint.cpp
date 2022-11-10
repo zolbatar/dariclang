@@ -8,7 +8,7 @@ void Compiler::TokenPrint(ParserToken &t) {
 	else if (t.type == ParserTokenType::PRINT) {
 		new_line = t.children.size() == 2;
 		auto value_type = CompileExpression(t.children[0]);
-		switch (value_type.type.GetType()) {
+		switch (value_type.type) {
 			case Primitive::INT:
 				CreateCall("PrintInteger", {value_type.value});
 				break;
@@ -29,7 +29,7 @@ void Compiler::TokenPrint(ParserToken &t) {
 		new_line = t.children.size() == 3;
 		auto value_type1 = CompileExpression(t.children[1]);
 		auto value_type2 = CompileExpression(t.children[0]);
-		switch (value_type1.type.GetType()) {
+		switch (value_type1.type) {
 			case Primitive::INT:
 				CreateCall("PrintIntegerFormat", {value_type1.value, value_type2.value});
 				break;

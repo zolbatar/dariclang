@@ -2,7 +2,7 @@
 
 void Compiler::TokenIf(ParserToken &token) {
 	auto value_type = CompileExpression(token.children[0]);
-	auto t = Type::Int();
+	auto t = Primitive::INT;
 	llvm.AutoConversion(GetIR(), value_type, t);
 	value_type.value = GetIR()->CreateIntCast(value_type.value, llvm.TypeBit, true);
 

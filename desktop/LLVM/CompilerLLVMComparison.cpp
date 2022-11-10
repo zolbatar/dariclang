@@ -3,8 +3,8 @@
 ValueType CompilerLLVM::ComparisonEQ(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
-	vt.type = Type::Int();
-	switch (t1.type.GetType()) {
+	vt.type = Primitive::INT;
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpEQ(t1.value, t2.value);
@@ -28,8 +28,8 @@ ValueType CompilerLLVM::ComparisonEQ(llvm::IRBuilder<> *ir, ValueType &t1, Value
 ValueType CompilerLLVM::ComparisonNE(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
-	vt.type = Type::Int();
-	switch (t1.type.GetType()) {
+	vt.type = Primitive::INT;
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpNE(t1.value, t2.value);
@@ -53,8 +53,8 @@ ValueType CompilerLLVM::ComparisonNE(llvm::IRBuilder<> *ir, ValueType &t1, Value
 ValueType CompilerLLVM::ComparisonLE(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
-	vt.type = Type::Int();
-	switch (t1.type.GetType()) {
+	vt.type = Primitive::INT;
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpSLE(t1.value, t2.value);
@@ -78,8 +78,8 @@ ValueType CompilerLLVM::ComparisonLE(llvm::IRBuilder<> *ir, ValueType &t1, Value
 ValueType CompilerLLVM::ComparisonLT(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
-	vt.type = Type::Int();
-	switch (t1.type.GetType()) {
+	vt.type = Primitive::INT;
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpSLT(t1.value, t2.value);
@@ -103,8 +103,8 @@ ValueType CompilerLLVM::ComparisonLT(llvm::IRBuilder<> *ir, ValueType &t1, Value
 ValueType CompilerLLVM::ComparisonGE(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
-	vt.type = Type::Int();
-	switch (t1.type.GetType()) {
+	vt.type = Primitive::INT;
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpSGE(t1.value, t2.value);
@@ -128,8 +128,8 @@ ValueType CompilerLLVM::ComparisonGE(llvm::IRBuilder<> *ir, ValueType &t1, Value
 ValueType CompilerLLVM::ComparisonGT(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
-	vt.type = Type::Int();
-	switch (t1.type.GetType()) {
+	vt.type = Primitive::INT;
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpSGT(t1.value, t2.value);

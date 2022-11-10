@@ -13,7 +13,7 @@ llvm::GlobalVariable *CompilerLLVM::SetGlobalArray(std::string name,
 												   llvm::Constant *init,
 												   size_t sz,
 												   llvm::ArrayType *size_v,
-												   Type type) {
+												   Primitive type) {
 	globals_array_dimensions[name] = new llvm::GlobalVariable(*Module,
 															  typ,
 															  false,
@@ -37,7 +37,7 @@ llvm::GlobalVariable *CompilerLLVM::SetGlobalArray(std::string name,
 llvm::AllocaInst *CompilerLLVM::SetLocalArray(std::string name,
 											  llvm::IRBuilder<> *ir,
 											  size_t sz,
-											  Type type) {
+											  Primitive type) {
 	locals_array_dimensions[name] = ir->CreateAlloca(TypeInt,
 													 llvm::ConstantInt::get(TypeInt, sz),
 													 name + "_dimensions");
@@ -49,7 +49,7 @@ llvm::AllocaInst *CompilerLLVM::SetLocalArray(std::string name,
 llvm::AllocaInst *CompilerLLVM::SetLocalArrayAllocate(std::string name,
 													  llvm::IRBuilder<> *ir,
 													  llvm::Value *sz,
-													  Type type) {
+													  Primitive type) {
 	locals[name] = ir->CreateAlloca(TypeConversion(type), sz, name);
 	return locals[name];
 }

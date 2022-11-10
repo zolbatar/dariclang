@@ -4,7 +4,7 @@ ValueType CompilerLLVM::BooleanOR(llvm::IRBuilder<> *ir, ValueType &t1, ValueTyp
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
 	vt.type = t1.type;
-	switch (t1.type.GetType()) {
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateOr(t1.value, t2.value);
@@ -19,7 +19,7 @@ ValueType CompilerLLVM::BooleanAND(llvm::IRBuilder<> *ir, ValueType &t1, ValueTy
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
 	vt.type = t1.type;
-	switch (t1.type.GetType()) {
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateAnd(t1.value, t2.value);
@@ -34,7 +34,7 @@ ValueType CompilerLLVM::BooleanEOR(llvm::IRBuilder<> *ir, ValueType &t1, ValueTy
 	AutoConversion2Way(ir, t1, t2);
 	ValueType vt;
 	vt.type = t1.type;
-	switch (t1.type.GetType()) {
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateXor(t1.value, t2.value);
@@ -48,7 +48,7 @@ ValueType CompilerLLVM::BooleanEOR(llvm::IRBuilder<> *ir, ValueType &t1, ValueTy
 ValueType CompilerLLVM::BooleanNOT(llvm::IRBuilder<> *ir, ValueType &t1) {
 	ValueType vt;
 	vt.type = t1.type;
-	switch (t1.type.GetType()) {
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpEQ(t1.value, llvm::ConstantInt::get(TypeInt, 0), "NOT");
@@ -63,7 +63,7 @@ ValueType CompilerLLVM::BooleanNOT(llvm::IRBuilder<> *ir, ValueType &t1) {
 ValueType CompilerLLVM::BooleanCOMPLEMENT(llvm::IRBuilder<> *ir, ValueType &t1) {
 	ValueType vt;
 	vt.type = t1.type;
-	switch (t1.type.GetType()) {
+	switch (t1.type) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateNot(t1.value);

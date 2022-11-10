@@ -2,13 +2,13 @@
 
 std::any Parser::visitType(DaricParser::TypeContext *context) {
     if (context->INT()) {
-        return Type::Int();
+        return Primitive::INT;
     } else if (context->FLOAT()) {
-        return Type::Float();
+        return Primitive::FLOAT;
     } else if (context->STRING()) {
-        return Type::String();
+        return Primitive::STRING;
     } else if (context->BYTE()) {
-        return Type::Byte();
+        return Primitive::BYTE;
     }
     RaiseException("Unknown type", context);
     return NULL;

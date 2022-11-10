@@ -3,13 +3,13 @@
 #include <list>
 #include <vector>
 #include <string>
-#include "../Variables/Types.h"
+#include "../Variables/PrimitiveTypes.h"
 #include "ParserTokenType.h"
 
 struct ParserToken
 {
 	ParserTokenType type;
-	Type data_type;
+	Primitive data_type;
 	std::string identifier;
 	T_I iv;
 	T_F fv;

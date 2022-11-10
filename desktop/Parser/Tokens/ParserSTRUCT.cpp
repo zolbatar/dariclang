@@ -17,7 +17,7 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     std::vector<llvm::Type *> members;
     for (int i = 1; i < context->IDENTIFIER().size(); i++) {
         ti.fields.push_back(context->IDENTIFIER(i)->getText());
-        ti.types.push_back(std::any_cast<Type>(visit(context->type(i - 1))));
+        ti.types.push_back(std::any_cast<Primitive>(visit(context->type(i - 1))));
     }
 
     // Add to token

@@ -52,7 +52,7 @@ void Compiler::TokenLocal(ParserToken &token) {
 void Compiler::TokenConst(ParserToken &token) {
     for (auto &s: token.children) {
         Instance::ConstantInstance(token.identifier, s.data_type, Scope::GLOBAL, llvm, GetIR());
-        switch (s.data_type.GetType()) {
+        switch (s.data_type) {
             case Primitive::INT:
                 llvm.CreateConstant(token.identifier, s.data_type, llvm.CreateConstantInt(s.data_type, s.iv));
                 break;
@@ -103,7 +103,7 @@ void Compiler::TokenDim(ParserToken &t) {
         // Check indices are integers
         std::vector<unsigned> indices;
         for (auto &s: var->GetIndices()) {
-            if (s.type != ParserTokenType::LITERAL && s.data_type.GetType() != Primitive::INT) {
+            if (s.type != ParserTokenType::LITERAL && s.data_type != Primitive::INT) {
                 // All dimensions need to be literals
                 RaiseException("For global arrays, dimensions need to be literal integers", s);
             }
@@ -128,7 +128,7 @@ void Compiler::TokenDim(ParserToken &t) {
         std::list<llvm::Value *> indices;
         for (auto &s: var->GetIndices()) {
             auto vt = CompileExpression(s);
-            if (vt.type.GetType() != Primitive::INT) {
+            if (vt.type != Primitive::INT) {
                 RaiseException("For local arrays, dimensions need to be integers", s);
             }
             indices.push_back(vt.value);
@@ -161,7 +161,7 @@ std::vector<ValueType> Compiler::ProcessIndices(Reference *ref, ParserToken &t) 
     }
 
     for (auto &v: values) {
-        if (v.type.GetType() != Primitive::INT) {
+        if (v.type != Primitive::INT) {
             RaiseException("Indices must be integers", t);
         }
     }

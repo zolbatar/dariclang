@@ -1,7 +1,7 @@
 #include <iostream>
 #include "CompilerLLVM.h"
 
-void CompilerLLVM::CreateConstant(std::string name, Type &type, llvm::Constant *val) {
+void CompilerLLVM::CreateConstant(std::string name, Primitive type, llvm::Constant *val) {
 	globals[name] = new llvm::GlobalVariable(*Module,
 											 TypeConversion(type),
 											 true,
@@ -12,7 +12,7 @@ void CompilerLLVM::CreateConstant(std::string name, Type &type, llvm::Constant *
 	globals_type[name] = type;
 }
 
-void CompilerLLVM::CreateGlobal(std::string name, Type &type, llvm::Constant *val) {
+void CompilerLLVM::CreateGlobal(std::string name, Primitive type, llvm::Constant *val) {
 	assert(!globals.contains(name));
 	//std::cout << "Creating global '" << name << "'\n";
 	globals[name] = new llvm::GlobalVariable(*Module,
@@ -25,7 +25,7 @@ void CompilerLLVM::CreateGlobal(std::string name, Type &type, llvm::Constant *va
 	globals_type[name] = type;
 }
 
-void CompilerLLVM::CreateLocal(std::string name, Type &type, llvm::IRBuilder<> *ir) {
+void CompilerLLVM::CreateLocal(std::string name, Primitive type, llvm::IRBuilder<> *ir) {
 	assert(!locals.contains(name));
 //	std::cout << "Creating local '" << name << "'\n";
 	locals[name] = ir->CreateAlloca(TypeConversion(type), nullptr, name);
@@ -42,8 +42,8 @@ void CompilerLLVM::StoreLocal(std::string name, llvm::IRBuilder<> *ir, llvm::Val
 	ir->CreateStore(val, locals[name]);
 }
 
-llvm::Constant *CompilerLLVM::GetDefaultForType(Type &type, llvm::IRBuilder<> *ir) {
-	switch (type.GetType()) {
+llvm::Constant *CompilerLLVM::GetDefaultForType(Primitive type, llvm::IRBuilder<> *ir) {
+	switch (type) {
 		case Primitive::INT:
 			return llvm::ConstantInt::get(TypeInt, 0);
 		case Primitive::FLOAT:
@@ -58,7 +58,7 @@ llvm::Constant *CompilerLLVM::GetDefaultForType(Type &type, llvm::IRBuilder<> *i
 	return nullptr;
 }
 
-ValueType CompilerLLVM::GetVariableValue(llvm::IRBuilder<> *ir, std::string name, Type &type) {
+ValueType CompilerLLVM::GetVariableValue(llvm::IRBuilder<> *ir, std::string name, Primitive type) {
 	ValueType vt;
 	vt.value = nullptr;
 	if (globals.contains(name)) {

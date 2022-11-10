@@ -18,8 +18,8 @@ public:
     std::string GetName() { return name; }
     size_t GetRef() { return index; }
     InstanceType GetInstanceType() { return instance_type; }
-    void SetDataType(Type data_type) { this->data_type = data_type; }
-    Type &GetDataType() { return data_type; }
+    void SetDataType(Primitive data_type) { this->data_type = data_type; }
+    Primitive GetDataType() { return data_type; }
     void SetStructName(std::string name) { struct_name = name; }
     std::string GetStructName() { return struct_name; }
 
@@ -49,7 +49,7 @@ private:
     Instance *instance = nullptr;
 
     // Individual
-    Type data_type;
+    Primitive data_type;
     InstanceType instance_type = InstanceType::SIMPLE;
     std::vector<ParserToken> indices;
     std::string name;
