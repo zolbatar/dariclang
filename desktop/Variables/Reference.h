@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utility>
+
 #include "../Parser/ParserToken.h"
 #include "../LLVM/CompilerLLVM.h"
 #include "Instance.h"
@@ -7,16 +9,13 @@
 class Reference {
 public:
     // Init
-    Reference(std::string name) {
-        this->name = name;
-        this->index = index_ptr++;
-    }
+    explicit Reference(std::string name);
     static Reference *Create(std::string name);
     static Reference *Get(size_t index);
 
     // Get/set state
     std::string GetName() { return name; }
-    size_t GetRef() { return index; }
+    [[nodiscard]] size_t GetRef() const { return index; }
     InstanceType GetInstanceType() { return instance_type; }
     void SetDataType(Primitive data_type) { this->data_type = data_type; }
     Primitive GetDataType() { return data_type; }
@@ -24,8 +23,8 @@ public:
     std::string GetStructName() { return struct_name; }
 
     // Value
-    void SetValue(ValueType vt, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
-    ValueType GetValue(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    void SetValue(ValueType vt, const std::vector<ValueType> &indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    ValueType GetValue(const std::vector<ValueType> &indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
 
     // Find instance
     bool InstanceExists();
@@ -37,8 +36,14 @@ public:
     // Array
     void SetAsArray(size_t size);
     void AddIndexRef(ParserToken &&token);
-    size_t IndicesCount() { return no_indices; }
+    [[nodiscard]] size_t IndicesCount() const;
     std::vector<ParserToken> &GetIndices();
+
+    // Fields
+    std::string &GetFields() { return fields; }
+    void SetFields(std::string fields) {
+        this->fields = std::move(fields);
+    }
 
 private:
     llvm::Value *LocalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
@@ -50,8 +55,9 @@ private:
 
     // Individual
     Primitive data_type;
-    InstanceType instance_type = InstanceType::SIMPLE;
+    InstanceType instance_type = InstanceType::PRIMITIVE;
     std::vector<ParserToken> indices;
+    std::string fields;
     std::string name;
     std::string struct_name;
     size_t index;

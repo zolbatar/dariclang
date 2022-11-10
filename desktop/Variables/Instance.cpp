@@ -3,6 +3,32 @@
 std::unordered_map<std::string, Instance> Instance::locals;
 std::unordered_map<std::string, Instance> Instance::globals;
 
+Instance *Instance::StructInstance(const std::string &name,
+                                   const std::string &struct_name,
+                                   llvm::StructType *struct_type,
+                                   Scope scope,
+                                   CompilerLLVM &llvm,
+                                   llvm::IRBuilder<> *ir) {
+    Instance i;
+    i.struct_type = struct_type;
+    i.name = name;
+    i.instance_type = InstanceType::STRUCT;
+    i.scope = scope;
+    switch (i.scope) {
+        case Scope::LOCAL:
+            llvm.CreateLocalStruct(name, struct_type, ir, struct_name);
+            locals.insert(std::make_pair(name, std::move(i)));
+            return &locals.find(name)->second;
+        case Scope::GLOBAL:
+            llvm.CreateGlobalStruct(name, struct_type, llvm::ConstantAggregateZero::get(struct_type), struct_name);
+            globals.insert(std::make_pair(name, std::move(i)));
+            return &globals.find(name)->second;
+        case Scope::UNKNOWN:
+            assert(0);
+    }
+    return nullptr;
+}
+
 Instance *Instance::ConstantInstance(std::string name,
                                      Primitive data_type,
                                      Scope scope,
@@ -11,7 +37,7 @@ Instance *Instance::ConstantInstance(std::string name,
     Instance i;
     i.type = data_type;
     i.name = name;
-    i.instance_type = InstanceType::SIMPLE;
+    i.instance_type = InstanceType::PRIMITIVE;
     i.scope = scope;
     switch (i.scope) {
         case Scope::LOCAL:
@@ -34,7 +60,7 @@ Instance *Instance::SimpleInstance(std::string name,
     Instance i;
     i.type = data_type;
     i.name = name;
-    i.instance_type = InstanceType::SIMPLE;
+    i.instance_type = InstanceType::PRIMITIVE;
     i.scope = scope;
     switch (i.scope) {
         case Scope::LOCAL:
@@ -122,4 +148,18 @@ ValueType Instance::GetArrayValue(llvm::Value *idx, CompilerLLVM &llvm, llvm::IR
     vt.value = ir->CreateLoad(llvm.TypeConversion(type), idx);
     return vt;
 }
+
+void Instance::SetStructValue(llvm::Value *v, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+    switch (scope) {
+        case Scope::GLOBAL:
+            llvm.StoreStructGlobal(name, ir, v, field_index, struct_type);
+            break;
+        case Scope::LOCAL:
+            llvm.StoreStructLocal(name, ir, v, field_index, struct_type);
+            break;
+        default:
+            assert(0);
+    }
+}
+
 

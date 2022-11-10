@@ -65,8 +65,8 @@ std::any Parser::visitStatement(DaricParser::StatementContext *context) {
 	if (context->struct_()) {
 		return std::any_cast<ParserToken>(visit(context->struct_()));
 	}
-	if (context->structinstance()) {
-		return std::any_cast<ParserToken>(visit(context->structinstance()));
+	if (context->structInstance()) {
+		return std::any_cast<ParserToken>(visit(context->structInstance()));
 	}
 	assert(0);
 	return NULL;

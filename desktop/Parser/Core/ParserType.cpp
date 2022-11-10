@@ -13,3 +13,18 @@ std::any Parser::visitType(DaricParser::TypeContext *context) {
     RaiseException("Unknown type", context);
     return NULL;
 }
+
+std::any Parser::visitTypeOrStruct(DaricParser::TypeOrStructContext *context) {
+    if (context->INT()) {
+        return TypeOrStruct{.type =Primitive::INT};
+    } else if (context->FLOAT()) {
+        return TypeOrStruct{.type =Primitive::FLOAT};
+    } else if (context->STRING()) {
+        return TypeOrStruct{.type =Primitive::STRING};
+    } else if (context->BYTE()) {
+        return TypeOrStruct{.type =Primitive::BYTE};
+    } else {
+        return TypeOrStruct{.is_struct = true, .name = context->IDENTIFIER()->getText()};
+    }
+}
+

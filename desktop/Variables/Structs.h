@@ -1,9 +1,13 @@
 #pragma once
+
 #include <vector>
 #include "PrimitiveTypes.h"
 
-struct StructInfo
-{
-    std::vector<std::string> fields;
-    std::vector<Primitive> types;
+struct StructMember {
+    std::string name;
+    Primitive type;
+};
+
+struct StructInfo {
+    std::vector<StructMember> fields;
 };

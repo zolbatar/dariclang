@@ -4,8 +4,38 @@
 void Compiler::TokenGlobal(ParserToken &token) {
     for (auto &s: token.children) {
 
+        // Get value
+        auto value_type = CompileExpression(s.children[0]);
+
         // Create, find and validate
         auto ref = Reference::Get(s.reference);
+
+        // Fields? Is it a struct?
+        if (!ref->GetFields().empty()) {
+            if (!llvm.IsVariableStruct(ref->GetName())) {
+                RaiseException("Record fields only valid for records", token);
+            }
+            auto struct_name = llvm.GetStructForVariable(ref->GetName());
+            auto si = parser->GetStruct(parser->GetStructIndex(struct_name));
+
+            // Is this a valid field?
+            for (auto i = 0; i < si->fields.size(); i++) {
+                if (si->fields[i].name == ref->GetFields()) {
+                    llvm.AutoConversion(GetIR(), value_type, si->fields[i].type);
+                    if (value_type.type != si->fields[i].type) {
+                        TypeError(token);
+                    }
+                    llvm.StoreStructGlobal(ref->GetName(),
+                                           GetIR(),
+                                           value_type.value,
+                                           i,
+                                           llvm.GetStruct(struct_name));
+                    return;
+                }
+            }
+            RaiseException("Field '" + ref->GetFields() + "' not found in record '" + struct_name + "'", token);
+        }
+
         if (!ref->InstanceExists()) {
             if (ref->GetInstanceType() == InstanceType::ARRAY)
                 RaiseException("Array '" + ref->GetName() + "'not defined", s);
@@ -16,7 +46,6 @@ void Compiler::TokenGlobal(ParserToken &token) {
             }
         }
 
-        auto value_type = CompileExpression(s.children[0]);
         llvm.AutoConversion(GetIR(), value_type, ref->GetDataType());
         if (value_type.type != ref->GetDataType()) {
             TypeError(token);
@@ -28,8 +57,38 @@ void Compiler::TokenGlobal(ParserToken &token) {
 void Compiler::TokenLocal(ParserToken &token) {
     for (auto &s: token.children) {
 
+        // Get value
+        auto value_type = CompileExpression(s.children[0]);
+
         // Create, find and validate
         auto ref = Reference::Get(s.reference);
+
+        // Fields? Is it a struct?
+        if (!ref->GetFields().empty()) {
+            if (!llvm.IsVariableStruct(ref->GetName())) {
+                RaiseException("Record fields only valid for records", token);
+            }
+            auto struct_name = llvm.GetStructForVariable(ref->GetName());
+            auto si = parser->GetStruct(parser->GetStructIndex(struct_name));
+
+            // Is this a valid field?
+            for (auto i = 0; i < si->fields.size(); i++) {
+                if (si->fields[i].name == ref->GetFields()) {
+                    llvm.AutoConversion(GetIR(), value_type, si->fields[i].type);
+                    if (value_type.type != si->fields[i].type) {
+                        TypeError(token);
+                    }
+                    llvm.StoreStructLocal(ref->GetName(),
+                                          GetIR(),
+                                          value_type.value,
+                                          i,
+                                          llvm.GetStruct(struct_name));
+                    return;
+                }
+            }
+            RaiseException("Field '" + ref->GetFields() + "' not found in record '" + struct_name + "'", token);
+        }
+
         if (!ref->InstanceExists()) {
             if (ref->GetInstanceType() == InstanceType::ARRAY)
                 RaiseException("Array '" + ref->GetName() + "'not defined", s);
@@ -40,7 +99,6 @@ void Compiler::TokenLocal(ParserToken &token) {
             }
         }
 
-        auto value_type = CompileExpression(s.children[0]);
         llvm.AutoConversion(GetIR(), value_type, ref->GetDataType());
         if (value_type.type != ref->GetDataType()) {
             TypeError(token);

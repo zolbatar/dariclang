@@ -15,7 +15,7 @@ struct Func {
 
 class Compiler {
 public:
-    bool Compile(Parser *parser, bool optimise, bool allow_end);
+    bool Compile(Parser *parser_in, bool optimise, bool allow_end_in);
     void Run();
 
 private:
@@ -67,7 +67,7 @@ private:
     void RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2);
     void DefaultReturn(Primitive t, ParserToken &token);
 
-    void TypeError(ParserToken &token);
+    static void TypeError(ParserToken &token);
     static void RaiseException(std::string msg, ParserToken &t) {
         throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, msg);
     }
@@ -76,6 +76,10 @@ private:
     }
     static void VariableNotFound(ParserToken &t, std::string name) {
         throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Variable '" + name + "' not found");
+    }
+    static void VariableAlreadyExists(ParserToken &t, std::string name) {
+        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position,
+                              "Variable '" + name + "' already defined");
     }
     static void ProcedureNotFound(ParserToken &t, std::string name) {
         throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Procedure '" + name + "' not found");

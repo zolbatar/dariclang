@@ -1,4 +1,5 @@
 #pragma once
+
 #include <unordered_map>
 #include <memory>
 #include <map>
@@ -7,6 +8,7 @@
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/IRBuilder.h"
 #include "../Variables/PrimitiveTypes.h"
+#include "../Variables/Structs.h"
 
 struct ValueType {
     llvm::Value *value;
@@ -34,24 +36,41 @@ public:
     void RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2, llvm::IRBuilder<> *builder);
 
     // Variables and values
-    llvm::GlobalVariable *GetGlobal(std::string name);
-    llvm::AllocaInst *GetLocal(std::string name);
-    llvm::Constant *GetDefaultForType(Primitive type, llvm::IRBuilder<> *ir);
+    llvm::GlobalVariable *GetGlobal(const std::string &name);
+    llvm::AllocaInst *GetLocal(const std::string &name);
+    llvm::Constant *GetDefaultForType(Primitive type, llvm::IRBuilder<> *ir) const;
 
     // Structs
-    llvm::StructType *CreateStruct(std::string name, std::vector<Primitive> types);
+    llvm::StructType *CreateStruct(std::string name, std::vector<StructMember> &types);
     llvm::StructType *GetStruct(std::string name);
+    void StoreStructGlobal(const std::string &name,
+                           llvm::IRBuilder<> *ir,
+                           llvm::Value *val,
+                           size_t field_index,
+                           llvm::StructType *struct_type);
+    void StoreStructLocal(const std::string &name,
+                          llvm::IRBuilder<> *ir,
+                          llvm::Value *val,
+                          size_t field_index,
+                          llvm::StructType *struct_type);
 
-    void CreateConstant(std::string name, Primitive type, llvm::Constant *val);
-    void CreateGlobal(std::string name, Primitive type, llvm::Constant *val);
-    void CreateLocal(std::string name, Primitive type, llvm::IRBuilder<> *ir);
-    void StoreGlobal(std::string name, llvm::IRBuilder<> *ir, llvm::Value *val);
-    void StoreLocal(std::string name, llvm::IRBuilder<> *ir, llvm::Value *val);
+    // Core store/load
+    void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
+    void CreateGlobal(const std::string &name, Primitive type, llvm::Constant *val);
+    void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir);
+    void CreateGlobalStruct(const std::string &name, llvm::StructType *type, llvm::Constant *val,
+                            const std::string &struct_name);
+    void CreateLocalStruct(const std::string &name, llvm::StructType *type, llvm::IRBuilder<> *ir,
+                           const std::string &struct_name);
+    bool IsVariableStruct(const std::string& name);
+    std::string &GetStructForVariable(const std::string& name);
+    void StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
+    void StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     llvm::Constant *CreateConstantInt(Primitive type, T_I v);
     llvm::Constant *CreateConstantFloat(Primitive type, T_F v);
     llvm::Constant *CreateConstantString(llvm::IRBuilder<> *ir, llvm::Function *func,
                                          Primitive type, T_S v, std::string identifier);
-    ValueType GetVariableValue(llvm::IRBuilder<> *ir, std::string name, Primitive type);
+    ValueType GetVariableValue(llvm::IRBuilder<> *ir, const std::string &name, Primitive type);
     void ClearLocals();
 
     // Arrays
@@ -153,13 +172,15 @@ private:
     std::unique_ptr<llvm::LLVMContext> Context = nullptr;
     std::unique_ptr<llvm::TargetMachine> Target = nullptr;
 
+    std::unordered_map<std::string, std::string> global_structs;
+    std::unordered_map<std::string, std::string> local_structs;
     std::unordered_map<std::string, llvm::GlobalVariable *> globals;
-    std::unordered_map<std::string, Primitive> globals_type;
     std::unordered_map<std::string, llvm::AllocaInst *> locals;
+    std::unordered_map<std::string, Primitive> globals_type;
     std::unordered_map<std::string, Primitive> locals_type;
     std::unordered_map<std::string, llvm::StructType *> structs;
     std::map<std::string, unsigned> locals_array_num_dimensions;
-    std::map<std::string, llvm::AllocaInst *> locals_array_dimensions;
     std::map<std::string, unsigned> globals_array_num_dimensions;
+    std::map<std::string, llvm::AllocaInst *> locals_array_dimensions;
     std::map<std::string, llvm::GlobalVariable *> globals_array_dimensions;
 };

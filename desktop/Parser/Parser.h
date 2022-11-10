@@ -31,7 +31,9 @@ public:
         return statements;
     }
 
-    StructInfo &GetStruct(size_t index) { return structs[index]; }
+    bool StructExists(std::string name) { return struct_indexes.contains(name); }
+    size_t GetStructIndex(std::string name) { return struct_indexes.find(name)->second; }
+    StructInfo *GetStruct(size_t index) { return &structs[index]; }
 
 private:
     std::vector<ParserToken> statements;
@@ -98,13 +100,14 @@ protected:
     std::any visitStatementsl(DaricParser::StatementslContext *context);
     std::any visitStringLiteral(DaricParser::StringLiteralContext *context);
     std::any visitType(DaricParser::TypeContext *context);
+    std::any visitTypeOrStruct(DaricParser::TypeOrStructContext *context);
     std::any visitReturn(DaricParser::ReturnContext *context);
     std::any visitExprcall(DaricParser::ExprcallContext *context);
     std::any visitSwap(DaricParser::SwapContext *context);
     std::any visitVariable(DaricParser::VariableContext *context);
     std::any visitDim(DaricParser::DimContext *context);
     std::any visitStruct(DaricParser::StructContext *context);
-    std::any visitStructinstance(DaricParser::StructinstanceContext *context);
+    std::any visitStructInstance(DaricParser::StructInstanceContext *context);
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

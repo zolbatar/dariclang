@@ -6,8 +6,9 @@
 #include "PrimitiveTypes.h"
 
 enum class InstanceType {
-    SIMPLE,
-    ARRAY
+    PRIMITIVE,
+    ARRAY,
+    STRUCT
 };
 
 enum class Scope {
@@ -18,6 +19,13 @@ enum class Scope {
 
 class Instance {
 public:
+    static Instance *StructInstance(const std::string &name,
+                                    const std::string &struct_name,
+                                    llvm::StructType *struct_type,
+                                    Scope scope,
+                                    CompilerLLVM &llvm,
+                                    llvm::IRBuilder<> *ir);
+
     static Instance *ConstantInstance(std::string name,
                                       Primitive data_type,
                                       Scope scope,
@@ -49,12 +57,14 @@ public:
     void SetArrayValue(llvm::Value *v, llvm::Value *idx, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     ValueType GetSimpleValue(CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     ValueType GetArrayValue(llvm::Value *idx, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    void SetStructValue(llvm::Value *v, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
 
 private:
     static std::unordered_map<std::string, Instance> locals;
     static std::unordered_map<std::string, Instance> globals;
     std::string name;
-    InstanceType instance_type = InstanceType::SIMPLE;
+    InstanceType instance_type = InstanceType::PRIMITIVE;
+    llvm::StructType *struct_type;
     Primitive type = Primitive::NONE;
     Scope scope = Scope::UNKNOWN;
     size_t no_indices = 0;

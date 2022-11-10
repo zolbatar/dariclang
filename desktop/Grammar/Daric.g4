@@ -26,7 +26,7 @@ statement
     | print
     | return
     | struct
-    | structinstance
+    | structInstance
     | swap
     ;
 
@@ -48,12 +48,14 @@ parameter:      IDENTIFIER (OF? type)? ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      PRIVATE? DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
 return:         RETURN expression? ;
-struct:         STRUCT IDENTIFIER separator* IDENTIFIER OF? type separator* (IDENTIFIER OF? type separator*)*  ENDSTRUCT ;
-structinstance: IDENTIFIER EQ LPAREN expression? (COMMA expression)* RPAREN OF? IDENTIFIER ;
+struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
+structInstance: RECORD IDENTIFIER OF? IDENTIFIER (LPAREN expression? (COMMA expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 
 variable
-    : IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE)?
+    : IDENTIFIER
+        (DOT IDENTIFIER)*
+        (SOPEN expression? (COMMA expression)* SCLOSE)?
     ;
 
 expression
@@ -147,6 +149,13 @@ type
     | FLOAT
     | INT
     | STRING
+    ;
+
+typeOrStruct
+    : BYTE
+    | FLOAT
+    | INT
+    | STRING
     | IDENTIFIER
     ;
 
@@ -191,8 +200,9 @@ THEN            : 'THEN' | 'Then' ;
 SWAP            : 'SWAP' | 'Swap ' ;
 WITH            : 'WITH' | 'With' ;
 
-STRUCT          : 'STRUCT' | 'Struct' ;
-ENDSTRUCT       : 'ENDSTRUCT' | 'EndStruct' ;
+DEFRECORD       : 'DEFRECORD' | 'DefRecord' ;
+RECORD          : 'RECORD' | 'Record' ;
+ENDRECORD       : 'ENDRECORD' | 'EndRecord' ;
 
 HPTIME          : 'HPTIME' | 'HPTime' ;
 TIME            : 'TIME' | 'Time' ;

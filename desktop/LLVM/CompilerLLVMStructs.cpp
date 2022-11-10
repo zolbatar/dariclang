@@ -1,6 +1,6 @@
 #include "CompilerLLVM.h"
 
-llvm::StructType *CompilerLLVM::CreateStruct(std::string name, std::vector<Primitive> types) {
+llvm::StructType *CompilerLLVM::CreateStruct(std::string name, std::vector<StructMember> &types) {
 
     // Exist?
     if (structs.contains(name))
@@ -9,7 +9,7 @@ llvm::StructType *CompilerLLVM::CreateStruct(std::string name, std::vector<Primi
     // Build LLVM struct
     std::vector<llvm::Type *> members;
     for (int i = 0; i < types.size(); i++) {
-        switch (types[i]) {
+        switch (types[i].type) {
             case Primitive::INT:
                 members.push_back(TypeInt);
                 break;
@@ -20,7 +20,7 @@ llvm::StructType *CompilerLLVM::CreateStruct(std::string name, std::vector<Primi
                 members.push_back(TypeString);
                 break;
             default:
-                return nullptr;
+                assert(0);
         }
     }
 
