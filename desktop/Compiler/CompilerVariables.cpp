@@ -3,37 +3,22 @@
 
 void Compiler::TokenGlobal(ParserToken &token) {
     for (auto &s: token.children) {
-
-        // Get value
+        auto ref = Reference::Get(s.reference);
         auto value_type = CompileExpression(s.children[0]);
 
-        // Create, find and validate
-        auto ref = Reference::Get(s.reference);
-
-        // Fields? Is it a struct?
         if (!ref->GetFields().empty()) {
-            if (!llvm.IsVariableStruct(ref->GetName())) {
-                RaiseException("Record fields only valid for records", token);
-            }
-            auto struct_name = llvm.GetStructForVariable(ref->GetName());
-            auto si = parser->GetStruct(parser->GetStructIndex(struct_name));
+            auto ss = ref->FindFieldInStruct(token, llvm);
 
-            // Is this a valid field?
-            for (auto i = 0; i < si->fields.size(); i++) {
-                if (si->fields[i].name == ref->GetFields()) {
-                    llvm.AutoConversion(GetIR(), value_type, si->fields[i].type);
-                    if (value_type.type != si->fields[i].type) {
-                        TypeError(token);
-                    }
-                    llvm.StoreStructGlobal(ref->GetName(),
-                                           GetIR(),
-                                           value_type.value,
-                                           i,
-                                           llvm.GetStruct(struct_name));
-                    return;
-                }
+            llvm.AutoConversion(GetIR(), value_type, ss.member->type);
+            if (value_type.type != ss.member->type) {
+                TypeError(token);
             }
-            RaiseException("Field '" + ref->GetFields() + "' not found in record '" + struct_name + "'", token);
+            llvm.StoreStructGlobal(ref->GetName(),
+                                   GetIR(),
+                                   value_type.value,
+                                   ss.index,
+                                   llvm.GetStruct(ss.struct_name));
+            return;
         }
 
         if (!ref->InstanceExists()) {
@@ -50,43 +35,28 @@ void Compiler::TokenGlobal(ParserToken &token) {
         if (value_type.type != ref->GetDataType()) {
             TypeError(token);
         }
-        ref->SetValue(value_type, ProcessIndices(ref, s), llvm, GetIR());
+        ref->SetValue(value_type, ProcessIndices(ref, s), llvm, GetIR(), token);
     }
 }
 
 void Compiler::TokenLocal(ParserToken &token) {
     for (auto &s: token.children) {
-
-        // Get value
         auto value_type = CompileExpression(s.children[0]);
-
-        // Create, find and validate
         auto ref = Reference::Get(s.reference);
 
         // Fields? Is it a struct?
         if (!ref->GetFields().empty()) {
-            if (!llvm.IsVariableStruct(ref->GetName())) {
-                RaiseException("Record fields only valid for records", token);
+            auto ss = ref->FindFieldInStruct(token, llvm);
+            llvm.AutoConversion(GetIR(), value_type, ss.member->type);
+            if (value_type.type != ss.member->type) {
+                TypeError(token);
             }
-            auto struct_name = llvm.GetStructForVariable(ref->GetName());
-            auto si = parser->GetStruct(parser->GetStructIndex(struct_name));
-
-            // Is this a valid field?
-            for (auto i = 0; i < si->fields.size(); i++) {
-                if (si->fields[i].name == ref->GetFields()) {
-                    llvm.AutoConversion(GetIR(), value_type, si->fields[i].type);
-                    if (value_type.type != si->fields[i].type) {
-                        TypeError(token);
-                    }
-                    llvm.StoreStructLocal(ref->GetName(),
-                                          GetIR(),
-                                          value_type.value,
-                                          i,
-                                          llvm.GetStruct(struct_name));
-                    return;
-                }
-            }
-            RaiseException("Field '" + ref->GetFields() + "' not found in record '" + struct_name + "'", token);
+            llvm.StoreStructLocal(ref->GetName(),
+                                  GetIR(),
+                                  value_type.value,
+                                  ss.index,
+                                  llvm.GetStruct(ss.struct_name));
+            return;
         }
 
         if (!ref->InstanceExists()) {
@@ -103,7 +73,7 @@ void Compiler::TokenLocal(ParserToken &token) {
         if (value_type.type != ref->GetDataType()) {
             TypeError(token);
         }
-        ref->SetValue(value_type, ProcessIndices(ref, s), llvm, GetIR());
+        ref->SetValue(value_type, ProcessIndices(ref, s), llvm, GetIR(), token);
     }
 }
 
@@ -147,10 +117,10 @@ void Compiler::TokenSwap(ParserToken &t) {
         RaiseException("Types must be the same for SWAP", t);
     }
 
-    auto v1 = var1->GetValue(ProcessIndices(var1, t), llvm, GetIR());
-    auto v2 = var2->GetValue(ProcessIndices(var2, t), llvm, GetIR());
-    var1->SetValue(v2, ProcessIndices(var1, t), llvm, GetIR());
-    var2->SetValue(v1, ProcessIndices(var2, t), llvm, GetIR());
+    auto v1 = var1->GetValue(ProcessIndices(var1, t), llvm, GetIR(), t);
+    auto v2 = var2->GetValue(ProcessIndices(var2, t), llvm, GetIR(), t);
+    var1->SetValue(v2, ProcessIndices(var1, t), llvm, GetIR(), t);
+    var2->SetValue(v1, ProcessIndices(var2, t), llvm, GetIR(), t);
 }
 
 void Compiler::TokenDim(ParserToken &t) {

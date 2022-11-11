@@ -1,5 +1,5 @@
 #include "Reference.h"
-
+#include "../Parser/Parser.h"
 #include <utility>
 
 std::vector<Reference> Reference::references;
@@ -23,6 +23,10 @@ Reference *Reference::Get(size_t index) {
 void Reference::SetAsArray(size_t size) {
     instance_type = InstanceType::ARRAY;
     no_indices = size;
+}
+
+void Reference::SetAsStruct() {
+    instance_type = InstanceType::STRUCT;
 }
 
 void Reference::AddIndexRef(ParserToken &&token) {
@@ -57,8 +61,11 @@ void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope 
     }
 }
 
-void Reference::SetValue(ValueType vt, const std::vector<ValueType> &indices_val, CompilerLLVM &llvm,
-                         llvm::IRBuilder<> *ir) {
+void Reference::SetValue(ValueType vt,
+                         const std::vector<ValueType> &indices_val,
+                         CompilerLLVM &llvm,
+                         llvm::IRBuilder<> *ir,
+                         ParserToken &token) {
     switch (instance_type) {
         case InstanceType::PRIMITIVE:
             instance->SetSimpleValue(vt.value, llvm, ir);
@@ -69,12 +76,57 @@ void Reference::SetValue(ValueType vt, const std::vector<ValueType> &indices_val
                                               : LocalIndex(indices_val, llvm, ir),
                                     llvm, ir);
             break;
+        case InstanceType::STRUCT: {
+            auto ss = FindFieldInStruct(token, llvm);
+            switch (GetScope()) {
+                case Scope::LOCAL:
+                    llvm.StoreStructLocal(GetName(),
+                                          ir,
+                                          vt.value,
+                                          ss.index,
+                                          llvm.GetStruct(ss.struct_name));
+                    break;
+                case Scope::GLOBAL:
+                    llvm.StoreStructGlobal(GetName(),
+                                           ir,
+                                           vt.value,
+                                           ss.index,
+                                           llvm.GetStruct(ss.struct_name));
+                    break;
+                default:
+                    assert(0);
+            }
+            break;
+        }
         default:
             assert(0);
     }
 }
 
-ValueType Reference::GetValue(const std::vector<ValueType> &indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+StructSearch Reference::FindFieldInStruct(ParserToken &token, CompilerLLVM &llvm) {
+    StructSearch ss;
+    if (!llvm.IsVariableStruct(GetName())) {
+        RaiseException("Record fields only valid for records", token);
+    }
+    ss.struct_name = llvm.GetStructForVariable(GetName());
+    auto si = ParserStructs::GetStruct(ParserStructs::GetStructIndex(ss.struct_name));
+
+    // Is this a valid field?
+    for (auto i = 0; i < si->fields.size(); i++) {
+        if (si->fields[i].name == GetFields()) {
+            ss.index = i;
+            ss.member = &si->fields[i];
+            return ss;
+        }
+    }
+    RaiseException("Field '" + GetFields() + "' not found in record '" + ss.struct_name + "'", token);
+    return ss;
+}
+
+ValueType Reference::GetValue(const std::vector<ValueType> &indices_val,
+                              CompilerLLVM &llvm,
+                              llvm::IRBuilder<> *ir,
+                              ParserToken &token) {
     switch (instance_type) {
         case InstanceType::PRIMITIVE:
             return instance->GetSimpleValue(llvm, ir);
@@ -83,6 +135,28 @@ ValueType Reference::GetValue(const std::vector<ValueType> &indices_val, Compile
                                            ? GlobalIndex(indices_val, llvm, ir)
                                            : LocalIndex(indices_val, llvm, ir),
                                            llvm, ir);
+        case InstanceType::STRUCT: {
+            auto ss = FindFieldInStruct(token, llvm);
+            ValueType vt{.type = ss.member->type};
+            switch (GetScope()) {
+                case Scope::LOCAL:
+                    vt.value = llvm.GetStructLocal(GetName(),
+                                                   ir,
+                                                   ss.index,
+                                                   llvm.GetStruct(ss.struct_name),
+                                                   llvm.TypeConversion(vt.type));
+                    return vt;
+                case Scope::GLOBAL:
+                    vt.value = llvm.GetStructGlobal(GetName(),
+                                                    ir,
+                                                    ss.index,
+                                                    llvm.GetStruct(ss.struct_name),
+                                                    llvm.TypeConversion(vt.type));
+                    return vt;
+                default:
+                    assert(0);
+            }
+        }
         default:
             assert(0);
     }

@@ -1,10 +1,17 @@
 #pragma once
 
 #include <utility>
-
+#include "../Exception/Exception.h"
 #include "../Parser/ParserToken.h"
+#include "../Variables/Structs.h"
 #include "../LLVM/CompilerLLVM.h"
 #include "Instance.h"
+
+struct StructSearch {
+    StructMember *member;
+    std::string struct_name;
+    size_t index;
+};
 
 class Reference {
 public:
@@ -21,10 +28,18 @@ public:
     Primitive GetDataType() { return data_type; }
     void SetStructName(std::string name) { struct_name = name; }
     std::string GetStructName() { return struct_name; }
+    Scope GetScope() { return instance->GetScope(); }
 
     // Value
-    void SetValue(ValueType vt, const std::vector<ValueType> &indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
-    ValueType GetValue(const std::vector<ValueType> &indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    void SetValue(ValueType vt,
+                  const std::vector<ValueType> &indices_val,
+                  CompilerLLVM &llvm,
+                  llvm::IRBuilder<> *ir,
+                  ParserToken &token);
+    ValueType GetValue(const std::vector<ValueType> &indices_val,
+                       CompilerLLVM &llvm,
+                       llvm::IRBuilder<> *ir,
+                       ParserToken &token);
 
     // Find instance
     bool InstanceExists();
@@ -40,6 +55,8 @@ public:
     std::vector<ParserToken> &GetIndices();
 
     // Fields
+    StructSearch FindFieldInStruct(ParserToken &token, CompilerLLVM &llvm);
+    void SetAsStruct();
     std::string &GetFields() { return fields; }
     void SetFields(std::string fields) {
         this->fields = std::move(fields);
@@ -49,6 +66,10 @@ private:
     llvm::Value *LocalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     static std::vector<Reference> references;
+
+    static void RaiseException(std::string msg, ParserToken &t) {
+        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, msg);
+    }
 
     // Link to instance (used during compilation)
     Instance *instance = nullptr;

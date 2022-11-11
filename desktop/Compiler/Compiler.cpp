@@ -3,7 +3,7 @@
 #include "Compiler.h"
 
 bool Compiler::Compile(Parser *parser_in, bool optimise, bool allow_end_in) {
-    try {
+//    try {
         llvm.SetupProfile(optimise, allow_end_in, parser_in->GetModule());
         this->parser = parser_in;
         this->allow_end = allow_end_in;
@@ -42,11 +42,11 @@ bool Compiler::Compile(Parser *parser_in, bool optimise, bool allow_end_in) {
         CompileStatements(parser_in->GetStatements());
         implicit_ir->CreateRetVoid();
         return true;
-    }
+    /*}
     catch (CustomException &ex) {
         ex.OutputToStdout();
         return false;
-    }
+    }*/
 }
 
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {

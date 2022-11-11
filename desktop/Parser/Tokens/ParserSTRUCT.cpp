@@ -13,7 +13,7 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::STRUCT);
     ps.identifier = context->IDENTIFIER(0)->getText();
 
-    if (struct_indexes.contains(ps.identifier)) {
+    if (ParserStructs::StructExists(ps.identifier)) {
         RaiseException("Struct '' already defined", context);
     }
 
@@ -37,10 +37,10 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
             ti.fields.push_back(std::move(sm));
         } else {
             // Get child struct
-            auto f2 = struct_indexes.find(f->type.name);
-            if (f2 == struct_indexes.end())
+            auto f2 = ParserStructs::struct_indexes.find(f->type.name);
+            if (f2 == ParserStructs::struct_indexes.end())
                 RaiseException("Struct '" + f->type.name + "' not found", context);
-            auto child_struct = &structs[f2->second].fields;
+            auto child_struct = &ParserStructs::structs[f2->second].fields;
 
             // Add child fields
             for (auto f3 = child_struct->begin(); f3 != child_struct->end(); f3++) {
@@ -53,9 +53,9 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     }
 
     // Add to token
-    structs.push_back(std::move(ti));
-    ps.reference = index_ptr++;
-    struct_indexes.insert(std::make_pair(ps.identifier, ps.reference));
+    ParserStructs::structs.push_back(std::move(ti));
+    ps.reference = ParserStructs::index_ptr++;
+    ParserStructs::struct_indexes.insert(std::make_pair(ps.identifier, ps.reference));
 
     return ps;
 }

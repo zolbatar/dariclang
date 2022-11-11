@@ -1,7 +1,7 @@
 #include "Compiler.h"
 
 void Compiler::TokenStruct(ParserToken &t) {
-    auto _struct = parser->GetStruct(t.reference);
+    auto _struct = ParserStructs::GetStruct(t.reference);
     if (llvm.CreateStruct(t.identifier, _struct->fields) == nullptr)
         RaiseException("Error creating record", t);
 }
@@ -10,12 +10,12 @@ void Compiler::TokenStructGlobal(ParserToken &t) {
     auto ref = Reference::Get(t.reference);
 
     // Do we have this struct?
-    if (!parser->StructExists(ref->GetStructName()))
+    if (!ParserStructs::StructExists(ref->GetStructName()))
         RaiseException("Record '" + ref->GetStructName() + "' not found", t);
 
     // So fetch the struct info from LLVM and the parser
-    auto struct_index = parser->GetStructIndex(ref->GetStructName());
-    auto si = parser->GetStruct(struct_index);
+    auto struct_index = ParserStructs::GetStructIndex(ref->GetStructName());
+    auto si = ParserStructs::GetStruct(struct_index);
     auto llvm_struct = llvm.GetStruct(ref->GetStructName());
 
     // Start creating an instance
@@ -43,12 +43,12 @@ void Compiler::TokenStructLocal(ParserToken &t) {
     auto ref = Reference::Get(t.reference);
 
     // Do we have this struct?
-    if (!parser->StructExists(ref->GetStructName()))
+    if (!ParserStructs::StructExists(ref->GetStructName()))
         RaiseException("Struct '" + ref->GetStructName() + "' not found", t);
 
     // So fetch the struct info from LLVM and the parser
-    auto struct_index = parser->GetStructIndex(ref->GetStructName());
-    auto si = parser->GetStruct(struct_index);
+    auto struct_index = ParserStructs::GetStructIndex(ref->GetStructName());
+    auto si = ParserStructs::GetStruct(struct_index);
     auto llvm_struct = llvm.GetStruct(ref->GetStructName());
 
     // Start creating an instance

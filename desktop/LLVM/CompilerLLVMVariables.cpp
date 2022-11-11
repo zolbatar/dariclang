@@ -53,7 +53,7 @@ void CompilerLLVM::CreateLocalStruct(const std::string &name,
     local_structs.insert(std::make_pair(name, struct_name));
 }
 
-bool CompilerLLVM::IsVariableStruct(const std::string& name) {
+bool CompilerLLVM::IsVariableStruct(const std::string &name) {
     if (globals.contains(name)) {
         return global_structs.contains(name);
     } else if (locals.contains(name)) {
@@ -63,7 +63,7 @@ bool CompilerLLVM::IsVariableStruct(const std::string& name) {
     }
 }
 
-std::string &CompilerLLVM::GetStructForVariable(const std::string& name) {
+std::string &CompilerLLVM::GetStructForVariable(const std::string &name) {
     if (globals.contains(name)) {
         return global_structs.find(name)->second;
     } else if (locals.contains(name)) {
@@ -89,6 +89,26 @@ void CompilerLLVM::StoreStructLocal(const std::string &name,
     assert(locals.contains(name));
     auto gep = ir->CreateStructGEP(struct_type, locals[name], field_index);
     ir->CreateStore(val, gep);
+}
+
+llvm::Value *CompilerLLVM::GetStructGlobal(const std::string &name,
+                                           llvm::IRBuilder<> *ir,
+                                           size_t field_index,
+                                           llvm::StructType *struct_type,
+                                           llvm::Type *type) {
+    assert(globals.contains(name));
+    auto gep = ir->CreateStructGEP(struct_type, globals[name], field_index);
+    return ir->CreateLoad(type, gep);
+}
+
+llvm::Value *CompilerLLVM::GetStructLocal(const std::string &name,
+                                          llvm::IRBuilder<> *ir,
+                                          size_t field_index,
+                                          llvm::StructType *struct_type,
+                                          llvm::Type *type) {
+    assert(locals.contains(name));
+    auto gep = ir->CreateStructGEP(struct_type, locals[name], field_index);
+    return ir->CreateLoad(type, gep);
 }
 
 void CompilerLLVM::StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val) {

@@ -98,7 +98,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp)
+        Grammar/DaricVisitor.cpp Variables/Structs.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBS} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS})
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

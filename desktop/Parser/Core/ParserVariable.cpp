@@ -17,6 +17,7 @@ std::any Parser::visitVariable(DaricParser::VariableContext *context) {
 
     // Dot strings, i.e. a struct?
     if (context->IDENTIFIER().size() > 1) {
+        r->SetAsStruct();
         std::vector<std::string> fields;
         for (auto i = 1; i < context->IDENTIFIER().size(); i++) {
             fields.push_back(context->IDENTIFIER(i)->getText());

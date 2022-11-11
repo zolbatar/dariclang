@@ -53,6 +53,16 @@ public:
                           llvm::Value *val,
                           size_t field_index,
                           llvm::StructType *struct_type);
+    llvm::Value *GetStructGlobal(const std::string &name,
+                                 llvm::IRBuilder<> *ir,
+                                 size_t field_index,
+                                 llvm::StructType *struct_type,
+                                 llvm::Type *type);
+    llvm::Value *GetStructLocal(const std::string &name,
+                                llvm::IRBuilder<> *ir,
+                                size_t field_index,
+                                llvm::StructType *struct_type,
+                                llvm::Type *type);
 
     // Core store/load
     void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
@@ -62,8 +72,8 @@ public:
                             const std::string &struct_name);
     void CreateLocalStruct(const std::string &name, llvm::StructType *type, llvm::IRBuilder<> *ir,
                            const std::string &struct_name);
-    bool IsVariableStruct(const std::string& name);
-    std::string &GetStructForVariable(const std::string& name);
+    bool IsVariableStruct(const std::string &name);
+    std::string &GetStructForVariable(const std::string &name);
     void StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     void StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     llvm::Constant *CreateConstantInt(Primitive type, T_I v);

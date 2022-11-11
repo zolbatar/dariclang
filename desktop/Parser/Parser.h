@@ -31,19 +31,11 @@ public:
         return statements;
     }
 
-    bool StructExists(std::string name) { return struct_indexes.contains(name); }
-    size_t GetStructIndex(std::string name) { return struct_indexes.find(name)->second; }
-    StructInfo *GetStruct(size_t index) { return &structs[index]; }
-
 private:
     std::vector<ParserToken> statements;
     std::string module = "Daric";
     std::unordered_map<std::string, Procedure> procedures;
     Procedure *current_procedure = nullptr;
-
-    std::vector<StructInfo> structs;
-    std::unordered_map<std::string, size_t> struct_indexes;
-    size_t index_ptr = 0;
 
     void RaiseException(std::string msg, antlr4::ParserRuleContext *context) {
         throw CustomException(ExceptionType::PARSER, context->getStart()->getLine(),
