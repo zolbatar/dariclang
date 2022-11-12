@@ -37,6 +37,10 @@ separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
 llvm_map_components_to_libnames(LLVM_LIBS core support AArch64 X86 Coroutines OrcJIT)
 
+# The standard Daric library
+file(GLOB LIBRARIES ../runtime/cmake-build-release/libDaricRuntime.dylib)
+set(CMAKE_SKIP_RPATH FALSE)
+
 add_executable(${PROJECT_NAME}
         main.cpp
 
@@ -62,10 +66,6 @@ add_executable(${PROJECT_NAME}
         LLVM/CompilerLLVMStructs.cpp
 
         JIT/JIT.cpp
-        JIT/String.cpp
-        JIT/Runtime/Print.cpp
-        JIT/Runtime/Maths.cpp
-        JIT/Runtime/Chrono.cpp
 
         Parser/Parser.h
         Parser/Parser.cpp
@@ -99,9 +99,14 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp Variables/Shared.cpp)
-target_link_libraries(${PROJECT_NAME} ${LIBS} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS})
+target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS})
+#add_custom_command(TARGET ${PROJECT_NAME} PRE_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntime.dylib ${PROJECT_BINARY_DIR}/bin)
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach (dir ${dirs})
-    message(STATUS "dir='${dir}'")
+    message(STATUS "include='${dir}'")
+endforeach ()
+get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY LINK_DIRECTORIES)
+foreach (dir ${dirs})
+    message(STATUS "lib='${dir}'")
 endforeach ()

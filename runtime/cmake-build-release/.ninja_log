@@ -1,0 +1,16 @@
+# ninja log v5
+0	95	1668268860814164384	CMakeFiles/runtime.dir/Maths.cpp.o	5a654e7c8127dddd
+594	647	1668289810066827087	libDaricRuntime.dylib	3cfc334f64233278
+6	575	1668270391406842645	CMakeFiles/daricruntime.dir/String.cpp.o	22bc7657f221cbc7
+6	93	1668290943825365885	CMakeFiles/DaricRuntime.dir/Maths.cpp.o	3d300b1bc558822d
+6	575	1668268918269922974	CMakeFiles/runtime.dir/String.cpp.o	ff49a0bd69103ea
+0	92	1668269101261883372	CMakeFiles/daricruntime.dir/Maths.cpp.o	33df73dcbac24b52
+0	369	1668268861087729257	CMakeFiles/runtime.dir/Print.cpp.o	55a516c2fb6ec4e1
+587	618	1668290944353250000	libDaricRuntime.a	26672827fb683fff
+6	371	1668290944101251146	CMakeFiles/DaricRuntime.dir/Print.cpp.o	bc0b86cfbb313d52
+0	395	1668269101563245460	CMakeFiles/daricruntime.dir/Print.cpp.o	1f58e8be3e33e6af
+7	587	1668290944317157832	CMakeFiles/DaricRuntime.dir/String.cpp.o	118bf77bdb9bedb8
+6	94	1668290963815621319	CMakeFiles/DaricRuntime.dir/Maths.cpp.o	e2c021beada6269e
+6	373	1668290964093170088	CMakeFiles/DaricRuntime.dir/Print.cpp.o	33f205fed1a88e8a
+6	593	1668290964312707942	CMakeFiles/DaricRuntime.dir/String.cpp.o	10450de94b77247
+593	649	1668290964372198835	libDaricRuntime.dylib	3cfc334f64233278

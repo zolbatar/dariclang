@@ -1,5 +1,4 @@
 #include "Compiler.h"
-#include "../JIT/String.h"
 
 void Compiler::TokenGlobal(ParserToken &token) {
     for (auto &s: token.children) {

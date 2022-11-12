@@ -1,6 +1,5 @@
 #include "../Compiler/Compiler.h"
 #include "../JIT/JIT.h"
-#include "../JIT/String.h"
 #include "llvm/Linker/Linker.h"
 #include "llvm/Support/FileSystem.h"
 

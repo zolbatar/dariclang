@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../../Variables/PrimitiveTypes.h"
+#include "Types.h"
 
 extern "C" void PrintInteger(T_I v) {
     printf("%lld", v);
