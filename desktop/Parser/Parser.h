@@ -8,7 +8,7 @@
 #include "../Exception/Exception.h"
 #include "ParserToken.h"
 #include "../Variables/PrimitiveTypes.h"
-#include "../Variables/Structs.h"
+#include "../Variables/Shared.h"
 #include "../Variables/Instance.h"
 #include "../Variables/Reference.h"
 
@@ -23,6 +23,7 @@ private:
 
 class Parser : DaricVisitor {
 public:
+    Parser(SharedState &state) : state(state) {}
     void Parse(std::istream *source);
 
     std::string GetModule() { return module; }
@@ -32,6 +33,7 @@ public:
     }
 
 private:
+    SharedState &state;
     std::vector<ParserToken> statements;
     std::string module = "Daric";
     std::unordered_map<std::string, Procedure> procedures;
@@ -100,6 +102,7 @@ protected:
     std::any visitDim(DaricParser::DimContext *context);
     std::any visitStruct(DaricParser::StructContext *context);
     std::any visitStructInstance(DaricParser::StructInstanceContext *context);
+    std::any visitStructDim(DaricParser::StructDimContext *context);
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

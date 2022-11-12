@@ -26,6 +26,7 @@ statement
     | print
     | return
     | struct
+    | structDim
     | structInstance
     | swap
     ;
@@ -49,6 +50,7 @@ print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? 
 procedure:      PRIVATE? DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
 return:         RETURN expression? ;
 struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
+structDim:      RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
 structInstance: RECORD IDENTIFIER OF? IDENTIFIER (LPAREN expression? (COMMA expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 

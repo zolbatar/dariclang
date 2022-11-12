@@ -95,6 +95,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitStructDim(DaricParser::StructDimContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitStructInstance(DaricParser::StructInstanceContext *ctx) override {
     return visitChildren(ctx);
   }

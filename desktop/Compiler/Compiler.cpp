@@ -32,6 +32,9 @@ bool Compiler::Compile(Parser *parser_in, bool optimise, bool allow_end_in) {
                 case ParserTokenType::STRUCT_INSTANCE_GLOBAL:
                     TokenStructGlobal(token);
                     break;
+                case ParserTokenType::STRUCT_DIM_GLOBAL:
+                    TokenStructArrayGlobal(token);
+                    break;
                 default:
                     // Do nothing
                     break;
@@ -59,6 +62,7 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::DIM_GLOBAL:
             case ParserTokenType::STRUCT:
             case ParserTokenType::STRUCT_INSTANCE_GLOBAL:
+            case ParserTokenType::STRUCT_DIM_GLOBAL:
                 // Handled in first pass
                 break;
             case ParserTokenType::CALL:
@@ -94,6 +98,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
                 break;
             case ParserTokenType::STRUCT_INSTANCE_LOCAL:
                 TokenStructLocal(token);
+                break;
+            case ParserTokenType::STRUCT_DIM_LOCAL:
+                TokenStructArrayLocal(token);
                 break;
             default:
                 assert(0);

@@ -15,10 +15,12 @@ struct Func {
 
 class Compiler {
 public:
+    Compiler(SharedState &state) : state(state) {}
     bool Compile(Parser *parser_in, bool optimise, bool allow_end_in);
     void Run();
 
 private:
+    SharedState &state;
     Parser *parser;
     bool allow_end;
     bool strip_strings = false;
@@ -60,6 +62,8 @@ private:
     void TokenStruct(ParserToken &t);
     void TokenStructGlobal(ParserToken &t);
     void TokenStructLocal(ParserToken &t);
+    void TokenStructArrayGlobal(ParserToken &t);
+    void TokenStructArrayLocal(ParserToken &t);
 
     std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 

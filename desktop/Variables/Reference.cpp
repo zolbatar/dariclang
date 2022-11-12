@@ -5,13 +5,13 @@
 std::vector<Reference> Reference::references;
 size_t Reference::index_ptr = 0;
 
-Reference::Reference(std::string name) {
+Reference::Reference(SharedState &state, std::string name) : state(state) {
     this->name = std::move(name);
     this->index = index_ptr++;
 }
 
-Reference *Reference::Create(std::string name) {
-    references.emplace_back(Reference(std::move(name)));
+Reference *Reference::Create(SharedState &state, std::string name) {
+    references.emplace_back(Reference(state, std::move(name)));
     auto r = &references.back();
     return r;
 }
@@ -109,7 +109,7 @@ StructSearch Reference::FindFieldInStruct(ParserToken &token, CompilerLLVM &llvm
         RaiseException("Record fields only valid for records", token);
     }
     ss.struct_name = llvm.GetStructForVariable(GetName());
-    auto si = ParserStructs::GetStruct(ParserStructs::GetStructIndex(ss.struct_name));
+    auto si = state.GetStruct(state.GetStructIndex(ss.struct_name));
 
     // Is this a valid field?
     for (auto i = 0; i < si->fields.size(); i++) {

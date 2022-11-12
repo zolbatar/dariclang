@@ -15,7 +15,7 @@ ENDRECORD
 RECORD mystruct OF COORDINATE(12.45)
 mystruct.y=100
 
-# RECORD mystruct OF COORDINATE[100]
+RECORD mystructarray OF COORDINATE[100]
 
 Arrays()
 Boolean()

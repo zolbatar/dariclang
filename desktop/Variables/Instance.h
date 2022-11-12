@@ -8,7 +8,8 @@
 enum class InstanceType {
     PRIMITIVE,
     ARRAY,
-    STRUCT
+    STRUCT,
+    STRUCT_ARRAY
 };
 
 enum class Scope {
@@ -58,6 +59,11 @@ public:
     ValueType GetSimpleValue(CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     ValueType GetArrayValue(llvm::Value *idx, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     void SetStructValue(llvm::Value *v, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+
+    static void ClearStatic() {
+        locals.clear();
+        globals.clear();
+    }
 
 private:
     static std::unordered_map<std::string, Instance> locals;

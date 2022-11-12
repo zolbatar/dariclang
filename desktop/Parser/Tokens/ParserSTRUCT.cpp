@@ -13,7 +13,7 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::STRUCT);
     ps.identifier = context->IDENTIFIER(0)->getText();
 
-    if (ParserStructs::StructExists(ps.identifier)) {
+    if (state.StructExists(ps.identifier)) {
         RaiseException("Struct '' already defined", context);
     }
 
@@ -37,10 +37,10 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
             ti.fields.push_back(std::move(sm));
         } else {
             // Get child struct
-            auto f2 = ParserStructs::struct_indexes.find(f->type.name);
-            if (f2 == ParserStructs::struct_indexes.end())
+            auto f2 = state.struct_indexes.find(f->type.name);
+            if (f2 == state.struct_indexes.end())
                 RaiseException("Struct '" + f->type.name + "' not found", context);
-            auto child_struct = &ParserStructs::structs[f2->second].fields;
+            auto child_struct = &state.structs[f2->second].fields;
 
             // Add child fields
             for (auto f3 = child_struct->begin(); f3 != child_struct->end(); f3++) {
@@ -53,10 +53,27 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     }
 
     // Add to token
-    ParserStructs::structs.push_back(std::move(ti));
-    ps.reference = ParserStructs::index_ptr++;
-    ParserStructs::struct_indexes.insert(std::make_pair(ps.identifier, ps.reference));
+    state.structs.push_back(std::move(ti));
+    ps.reference = state.index_ptr++;
+    state.struct_indexes.insert(std::make_pair(ps.identifier, ps.reference));
 
+    return ps;
+}
+
+std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {
+    ParserToken ps = CreateToken(context, current_procedure
+                                          ? ParserTokenType::STRUCT_DIM_LOCAL
+                                          : ParserTokenType::STRUCT_DIM_GLOBAL);
+    auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
+    r->SetInstanceType(InstanceType::STRUCT_ARRAY);
+    ps.reference = r->GetRef();
+    r->SetStructName(context->IDENTIFIER(1)->getText());
+
+    // Dimensions
+    for (auto i = 0; i < context->expression().size(); i++) {
+        auto pse = std::any_cast<ParserToken>(visit(context->expression(i)));
+        r->GetIndices().push_back(std::move(pse));
+    }
     return ps;
 }
 
@@ -64,7 +81,8 @@ std::any Parser::visitStructInstance(DaricParser::StructInstanceContext *context
     ParserToken ps = CreateToken(context, current_procedure
                                           ? ParserTokenType::STRUCT_INSTANCE_LOCAL
                                           : ParserTokenType::STRUCT_INSTANCE_GLOBAL);
-    auto r = Reference::Create(context->IDENTIFIER(0)->getText());
+    auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
+    r->SetInstanceType(InstanceType::STRUCT);
     ps.reference = r->GetRef();
     r->SetStructName(context->IDENTIFIER(1)->getText());
 

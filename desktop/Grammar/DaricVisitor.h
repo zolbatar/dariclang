@@ -59,6 +59,8 @@ public:
 
     virtual std::any visitStruct(DaricParser::StructContext *context) = 0;
 
+    virtual std::any visitStructDim(DaricParser::StructDimContext *context) = 0;
+
     virtual std::any visitStructInstance(DaricParser::StructInstanceContext *context) = 0;
 
     virtual std::any visitSwap(DaricParser::SwapContext *context) = 0;

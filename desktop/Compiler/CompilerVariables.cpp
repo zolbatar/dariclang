@@ -6,9 +6,8 @@ void Compiler::TokenGlobal(ParserToken &token) {
         auto ref = Reference::Get(s.reference);
         auto value_type = CompileExpression(s.children[0]);
 
-        if (!ref->GetFields().empty()) {
+        if (ref->GetInstanceType() == InstanceType::STRUCT) {
             auto ss = ref->FindFieldInStruct(token, llvm);
-
             llvm.AutoConversion(GetIR(), value_type, ss.member->type);
             if (value_type.type != ss.member->type) {
                 TypeError(token);
@@ -45,7 +44,7 @@ void Compiler::TokenLocal(ParserToken &token) {
         auto ref = Reference::Get(s.reference);
 
         // Fields? Is it a struct?
-        if (!ref->GetFields().empty()) {
+        if (ref->GetInstanceType() == InstanceType::STRUCT) {
             auto ss = ref->FindFieldInStruct(token, llvm);
             llvm.AutoConversion(GetIR(), value_type, ss.member->type);
             if (value_type.type != ss.member->type) {

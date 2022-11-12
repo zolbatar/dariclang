@@ -13,7 +13,7 @@ std::string join(std::vector<std::string> const &strings, std::string delim) {
     );
 }
 std::any Parser::visitVariable(DaricParser::VariableContext *context) {
-    auto r = Reference::Create(context->IDENTIFIER(0)->getText());
+    auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
 
     // Dot strings, i.e. a struct?
     if (context->IDENTIFIER().size() > 1) {

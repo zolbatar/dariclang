@@ -92,13 +92,13 @@ add_executable(${PROJECT_NAME}
         Variables/Instance.cpp
         Variables/Instance.h
         Variables/Reference.cpp
-        Variables/Structs.h
+        Variables/Shared.h
 
         Variables/Reference.h
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Variables/Structs.cpp)
+        Grammar/DaricVisitor.cpp Variables/Shared.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBS} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS})
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

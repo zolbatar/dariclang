@@ -8,7 +8,7 @@
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/IRBuilder.h"
 #include "../Variables/PrimitiveTypes.h"
-#include "../Variables/Structs.h"
+#include "../Variables/Shared.h"
 
 struct ValueType {
     llvm::Value *value;

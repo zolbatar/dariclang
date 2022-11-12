@@ -35,10 +35,10 @@ public:
     RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
     RuleConst = 8, RuleDim = 9, RuleExprcall = 10, RuleEnd = 11, RuleIf = 12, 
     RuleIfml = 13, RuleModule = 14, RuleParameter = 15, RulePrint = 16, 
-    RuleProcedure = 17, RuleReturn = 18, RuleStruct = 19, RuleStructInstance = 20, 
-    RuleSwap = 21, RuleVariable = 22, RuleExpression = 23, RuleType = 24, 
-    RuleTypeOrStruct = 25, RuleLiteral = 26, RuleFloatLiteral = 27, RuleIntegerLiteral = 28, 
-    RuleStringLiteral = 29
+    RuleProcedure = 17, RuleReturn = 18, RuleStruct = 19, RuleStructDim = 20, 
+    RuleStructInstance = 21, RuleSwap = 22, RuleVariable = 23, RuleExpression = 24, 
+    RuleType = 25, RuleTypeOrStruct = 26, RuleLiteral = 27, RuleFloatLiteral = 28, 
+    RuleIntegerLiteral = 29, RuleStringLiteral = 30
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -78,6 +78,7 @@ public:
   class ProcedureContext;
   class ReturnContext;
   class StructContext;
+  class StructDimContext;
   class StructInstanceContext;
   class SwapContext;
   class VariableContext;
@@ -158,6 +159,7 @@ public:
     PrintContext *print();
     ReturnContext *return_();
     StructContext *struct_();
+    StructDimContext *structDim();
     StructInstanceContext *structInstance();
     SwapContext *swap();
 
@@ -461,6 +463,28 @@ public:
   };
 
   StructContext* struct_();
+
+  class  StructDimContext : public antlr4::ParserRuleContext {
+  public:
+    StructDimContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *RECORD();
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    antlr4::tree::TerminalNode *SOPEN();
+    antlr4::tree::TerminalNode *SCLOSE();
+    antlr4::tree::TerminalNode *OF();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  StructDimContext* structDim();
 
   class  StructInstanceContext : public antlr4::ParserRuleContext {
   public:
