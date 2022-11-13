@@ -1,50 +1,51 @@
 #include <iostream>
 #include <utility>
 #include "Compiler.h"
+#include "llvm/Bitcode/BitcodeWriter.h"
 
-bool Compiler::Compile(Parser *parser_in, bool optimise, bool allow_end_in) {
+bool Compiler::Compile(Parser *parser_in, bool optimise, bool run, bool allow_end_in) {
 //    try {
-        llvm.SetupProfile(optimise, allow_end_in, parser_in->GetModule());
-        this->parser = parser_in;
-        this->allow_end = allow_end_in;
+    llvm.SetupProfile(optimise, allow_end_in, run, parser_in->GetModule());
+    this->parser = parser_in;
+    this->allow_end = allow_end_in;
 
-        // Lookahead
-        auto n = Primitive::NONE;
-        implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
-        implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
-        for (auto &token: parser_in->GetStatements()) {
-            switch (token.type) {
-                case ParserTokenType::GLOBAL:
-                    TokenGlobal(token);
-                    break;
-                case ParserTokenType::MODULE:
-                    // This is the namespace, set up elsewhere
-                    break;
-                case ParserTokenType::PROCEDURE:
-                    CreateLookaheadProc(token);
-                    break;
-                case ParserTokenType::DIM_GLOBAL:
-                    TokenDim(token);
-                    break;
-                case ParserTokenType::STRUCT:
-                    TokenStruct(token);
-                    break;
-                case ParserTokenType::STRUCT_INSTANCE_GLOBAL:
-                    TokenStructGlobal(token);
-                    break;
-                case ParserTokenType::STRUCT_DIM_GLOBAL:
-                    TokenStructArrayGlobal(token);
-                    break;
-                default:
-                    // Do nothing
-                    break;
-            }
+    // Lookahead
+    auto n = Primitive::NONE;
+    implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
+    implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
+    for (auto &token: parser_in->GetStatements()) {
+        switch (token.type) {
+            case ParserTokenType::GLOBAL:
+                TokenGlobal(token);
+                break;
+            case ParserTokenType::MODULE:
+                // This is the namespace, set up elsewhere
+                break;
+            case ParserTokenType::PROCEDURE:
+                CreateLookaheadProc(token);
+                break;
+            case ParserTokenType::DIM_GLOBAL:
+                TokenDim(token);
+                break;
+            case ParserTokenType::STRUCT:
+                TokenStruct(token);
+                break;
+            case ParserTokenType::STRUCT_INSTANCE_GLOBAL:
+                TokenStructGlobal(token);
+                break;
+            case ParserTokenType::STRUCT_DIM_GLOBAL:
+                TokenStructArrayGlobal(token);
+                break;
+            default:
+                // Do nothing
+                break;
         }
+    }
 
-        // Real compile
-        CompileStatements(parser_in->GetStatements());
-        implicit_ir->CreateRetVoid();
-        return true;
+    // Real compile
+    CompileStatements(parser_in->GetStatements());
+    implicit_ir->CreateRetVoid();
+    return true;
     /*}
     catch (CustomException &ex) {
         ex.OutputToStdout();
@@ -112,6 +113,10 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             llvm.ClearTempStrings(GetIR());
         }
     }
+}
+
+void Compiler::CreateExecutable(std::string output_filename) {
+    llvm.CreateExecutable(output_filename);
 }
 
 void Compiler::Run() {

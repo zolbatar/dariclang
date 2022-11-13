@@ -4,11 +4,10 @@
 #include "Compiler/Compiler.h"
 #include "Variables/Shared.h"
 
-int main() {
+int main(int argc, char *argv[]) {
     std::cout << "Welcome to Daric!" << std::endl;
 
-    std::ifstream file("Syntax.daric");
-//	std::ifstream file("Minimal.daric");
+    std::ifstream file(argv[1]);
     if (!file.is_open()) {
         std::cout << "Can't open source file\n";
         return 1;
@@ -19,8 +18,12 @@ int main() {
     Parser parser(state);
     parser.Parse(&file);
     Compiler c(state);
-    if (c.Compile(&parser, true, false)) {
-        c.Run();
+    bool run = argc == 2;
+    if (c.Compile(&parser, true, run, true)) {
+        if (run)
+            c.Run();
+        else
+            c.CreateExecutable(std::string(argv[2]));
     }
     return 0;
 }
