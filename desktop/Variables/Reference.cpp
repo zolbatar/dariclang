@@ -56,6 +56,16 @@ void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope 
         case InstanceType::ARRAY:
             instance = Instance::ArrayInstance(name, data_type, scope, no_indices, llvm, ir);
             break;
+        case InstanceType::STRUCT:
+            instance = Instance::StructInstance(name,
+                                                struct_name,
+                                                llvm_struct_type,
+                                                scope,
+                                                llvm,
+                                                ir);
+            break;
+        case InstanceType::STRUCT_ARRAY:
+            break;
         default:
             assert(0);
     }

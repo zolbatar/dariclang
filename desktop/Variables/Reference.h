@@ -29,6 +29,8 @@ public:
     std::string GetStructName() { return struct_name; }
     Scope GetScope() { return instance->GetScope(); }
     void SetInstanceType(InstanceType instance_type) { this->instance_type = instance_type; }
+    void SetLLVMStructType(llvm::StructType *type) { this->llvm_struct_type = type; }
+    Instance *GetInstance() { return instance; }
 
     // Value
     void SetValue(ValueType vt,
@@ -81,6 +83,7 @@ private:
     Instance *instance = nullptr;
 
     // Individual
+    llvm::StructType *llvm_struct_type;
     Primitive data_type;
     InstanceType instance_type = InstanceType::PRIMITIVE;
     std::vector<ParserToken> indices;

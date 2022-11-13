@@ -49,7 +49,7 @@ llvm::AllocaInst *CompilerLLVM::SetLocalArray(std::string name,
 llvm::AllocaInst *CompilerLLVM::SetLocalArrayAllocate(std::string name,
                                                       llvm::IRBuilder<> *ir,
                                                       llvm::Value *sz,
-                                                      Primitive type) {
-    locals[name] = ir->CreateAlloca(TypeConversion(type), sz, name);
+                                                      llvm::Type *type) {
+    locals[name] = ir->CreateAlloca(type, sz, name);
     return locals[name];
 }

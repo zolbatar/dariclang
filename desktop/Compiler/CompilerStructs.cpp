@@ -6,8 +6,14 @@ void Compiler::TokenStruct(ParserToken &t) {
         RaiseException("Error creating record", t);
 }
 
-void Compiler::TokenStructGlobal(ParserToken &t) {
+void Compiler::TokenStructInstance(ParserToken &t) {
     auto ref = Reference::Get(t.reference);
+
+    if (procedure == nullptr) {
+        if (t.scope != Scope::GLOBAL) return;
+    } else {
+        if (t.scope != Scope::LOCAL) return;
+    }
 
     // Do we have this struct?
     if (!state.StructExists(ref->GetStructName()))
@@ -22,12 +28,10 @@ void Compiler::TokenStructGlobal(ParserToken &t) {
     if (Instance::Exists(ref->GetName())) {
         VariableAlreadyExists(t, ref->GetName());
     }
-    auto instance = Instance::StructInstance(ref->GetName(),
-                                             ref->GetStructName(),
-                                             llvm_struct,
-                                             Scope::GLOBAL,
-                                             llvm,
-                                             GetIR());
+
+    ref->SetLLVMStructType(llvm_struct);
+    ref->CreateInstance(llvm, GetIR(), t.scope);
+    auto instance = ref->GetInstance();
 
     // Initialise any fields?
     auto i = 0;
@@ -39,86 +43,69 @@ void Compiler::TokenStructGlobal(ParserToken &t) {
     }
 }
 
-void Compiler::TokenStructLocal(ParserToken &t) {
-    auto ref = Reference::Get(t.reference);
-
-    // Do we have this struct?
-    if (!state.StructExists(ref->GetStructName()))
-        RaiseException("Struct '" + ref->GetStructName() + "' not found", t);
+void Compiler::TokenStructArray(ParserToken &t) {
+    auto var = Reference::Get(t.reference);
 
     // So fetch the struct info from LLVM and the parser
-    auto struct_index = state.GetStructIndex(ref->GetStructName());
+    auto struct_index = state.GetStructIndex(var->GetStructName());
     auto si = state.GetStruct(struct_index);
-    auto llvm_struct = llvm.GetStruct(ref->GetStructName());
+    auto llvm_struct = llvm.GetStruct(var->GetStructName());
 
-    // Start creating an instance
-    if (Instance::Exists(ref->GetName())) {
-        VariableAlreadyExists(t, ref->GetName());
-    }
-    auto instance = Instance::StructInstance(ref->GetName(),
-                                             ref->GetStructName(),
-                                             llvm_struct,
-                                             Scope::LOCAL,
-                                             llvm,
-                                             GetIR());
+    if (procedure == nullptr) {
+        if (t.scope != Scope::GLOBAL) return;
 
-    // Initialise any fields?
-    auto i = 0;
-    for (auto &init: t.children) {
-        auto value = CompileExpression(init);
-        llvm.AutoConversion(GetIR(), value, si->fields[i].type);
-        instance->SetStructValue(value.value, i, llvm, GetIR());
-        i++;
-    }
-}
-
-void Compiler::TokenStructArrayGlobal(ParserToken &t) {
-    auto var = Reference::Get(t.reference);
-
-    // Check indices are integers
-    std::vector<unsigned> indices;
-    for (auto &s: var->GetIndices()) {
-        if (s.type != ParserTokenType::LITERAL && s.data_type != Primitive::INT) {
-            // All dimensions need to be literals
-            RaiseException("For global record arrays, dimensions need to be literal integers", s);
+        // Check indices are integers
+        std::vector<unsigned> indices;
+        for (auto &s: var->GetIndices()) {
+            if (s.type != ParserTokenType::LITERAL && s.data_type != Primitive::INT) {
+                // All dimensions need to be literals
+                RaiseException("For global record arrays, dimensions need to be literal integers", s);
+            }
+            indices.push_back(s.iv);
         }
-        indices.push_back(s.iv);
-    }
 
-    // Create dimensions data array
-    size_t size = 1;
-    auto typ = llvm::ArrayType::get(llvm.TypeInt, indices.size());
-    std::vector<llvm::Constant *> values;
-    for (auto &iv: indices) {
-        size *= iv;
-        values.push_back(llvm::ConstantInt::get(llvm.TypeInt, size));
-    }
-    auto init = llvm::ConstantArray::get(typ, values);
-}
-
-void Compiler::TokenStructArrayLocal(ParserToken &t) {
-    auto var = Reference::Get(t.reference);
-
-    std::list<llvm::Value *> indices;
-    for (auto &s: var->GetIndices()) {
-        auto vt = CompileExpression(s);
-        if (vt.type != Primitive::INT) {
-            RaiseException("For local record arrays, dimensions need to be integers", s);
+        // Create dimensions data array
+        size_t size = 1;
+        auto typ = llvm::ArrayType::get(llvm.TypeInt, indices.size());
+        std::vector<llvm::Constant *> values;
+        for (auto &iv: indices) {
+            size *= iv;
+            values.push_back(llvm::ConstantInt::get(llvm.TypeInt, size));
         }
-        indices.push_back(vt.value);
-    }
+        auto init = llvm::ConstantArray::get(typ, values);
 
-    // Store dimensions (list of dimensions)
-    auto typ = llvm::ArrayType::get(llvm.TypeInt, var->IndicesCount());
-    auto la = llvm.SetLocalArray(var->GetName(), GetIR(), var->IndicesCount(), var->GetDataType());
-    llvm::Value *size = llvm::ConstantInt::get(llvm.TypeInt, 1);
-    size_t i = 0;
-    for (auto &iv: indices) {
-        size = GetIR()->CreateMul(size, iv);
-        auto ptr = GetIR()->CreateGEP(llvm.TypeConversion(var->GetDataType()),
-                                      la,
-                                      {llvm::ConstantInt::get(llvm.TypeInt, i)});
-        GetIR()->CreateStore(size, ptr);
-        i++;
+        // Create array
+        auto size_v = llvm::ArrayType::get(llvm_struct, size);
+        llvm.SetGlobalArray(var->GetName(), typ, init, indices.size(), size_v, Primitive::NONE);
+        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL);
+    } else {
+        if (t.scope != Scope::LOCAL) return;
+
+        std::list<llvm::Value *> indices;
+        for (auto &s: var->GetIndices()) {
+            auto vt = CompileExpression(s);
+            if (vt.type != Primitive::INT) {
+                RaiseException("For local record arrays, dimensions need to be integers", s);
+            }
+            indices.push_back(vt.value);
+        }
+
+        // Store dimensions (list of dimensions)
+        auto typ = llvm::ArrayType::get(llvm.TypeInt, var->IndicesCount());
+        auto la = llvm.SetLocalArray(var->GetName(), GetIR(), var->IndicesCount(), var->GetDataType());
+        llvm::Value *size = llvm::ConstantInt::get(llvm.TypeInt, 1);
+        size_t i = 0;
+        for (auto &iv: indices) {
+            size = GetIR()->CreateMul(size, iv);
+            auto ptr = GetIR()->CreateGEP(llvm.TypeConversion(var->GetDataType()),
+                                          la,
+                                          {llvm::ConstantInt::get(llvm.TypeInt, i)});
+            GetIR()->CreateStore(size, ptr);
+            i++;
+        }
+
+        // Create array
+        llvm.SetLocalArrayAllocate(var->GetName(), GetIR(), size, llvm_struct);
+        var->CreateInstance(llvm, GetIR(), Scope::LOCAL);
     }
 }

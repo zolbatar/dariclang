@@ -61,10 +61,8 @@ private:
     void TokenSwap(ParserToken &t);
     void TokenDim(ParserToken &t);
     void TokenStruct(ParserToken &t);
-    void TokenStructGlobal(ParserToken &t);
-    void TokenStructLocal(ParserToken &t);
-    void TokenStructArrayGlobal(ParserToken &t);
-    void TokenStructArrayLocal(ParserToken &t);
+    void TokenStructInstance(ParserToken &t);
+    void TokenStructArray(ParserToken &t);
 
     std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 

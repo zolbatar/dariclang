@@ -12,12 +12,6 @@ enum class InstanceType {
     STRUCT_ARRAY
 };
 
-enum class Scope {
-    UNKNOWN,
-    LOCAL,
-    GLOBAL,
-};
-
 class Instance {
 public:
     static Instance *StructInstance(const std::string &name,

@@ -100,7 +100,7 @@ public:
     llvm::AllocaInst *SetLocalArrayAllocate(std::string name,
                                             llvm::IRBuilder<> *ir,
                                             llvm::Value *sz,
-                                            Primitive type);
+                                            llvm::Type *type);
     llvm::AllocaInst *GetLocalArrayDimensions(std::string name);
 
     // Conversion

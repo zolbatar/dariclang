@@ -15,26 +15,8 @@ bool Compiler::Compile(Parser *parser_in, bool optimise, bool run, bool allow_en
     implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
     for (auto &token: parser_in->GetStatements()) {
         switch (token.type) {
-            case ParserTokenType::GLOBAL:
-                TokenGlobal(token);
-                break;
-            case ParserTokenType::MODULE:
-                // This is the namespace, set up elsewhere
-                break;
             case ParserTokenType::PROCEDURE:
                 CreateLookaheadProc(token);
-                break;
-            case ParserTokenType::DIM_GLOBAL:
-                TokenDim(token);
-                break;
-            case ParserTokenType::STRUCT:
-                TokenStruct(token);
-                break;
-            case ParserTokenType::STRUCT_INSTANCE_GLOBAL:
-                TokenStructGlobal(token);
-                break;
-            case ParserTokenType::STRUCT_DIM_GLOBAL:
-                TokenStructArrayGlobal(token);
                 break;
             default:
                 // Do nothing
@@ -42,11 +24,10 @@ bool Compiler::Compile(Parser *parser_in, bool optimise, bool run, bool allow_en
         }
     }
 
-    // Real compile
     CompileStatements(parser_in->GetStatements());
     implicit_ir->CreateRetVoid();
     return true;
-    /*}
+/*    }
     catch (CustomException &ex) {
         ex.OutputToStdout();
         return false;
@@ -58,13 +39,18 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
 //		std::cout << "Line: " << token.line << std::endl;
         switch (token.type) {
             case ParserTokenType::PARAMETER:
-            case ParserTokenType::GLOBAL:
-            case ParserTokenType::MODULE:
-            case ParserTokenType::DIM_GLOBAL:
+                break;
             case ParserTokenType::STRUCT:
-            case ParserTokenType::STRUCT_INSTANCE_GLOBAL:
-            case ParserTokenType::STRUCT_DIM_GLOBAL:
-                // Handled in first pass
+                TokenStruct(token);
+                break;
+            case ParserTokenType::STRUCT_INSTANCE:
+                TokenStructInstance(token);
+                break;
+            case ParserTokenType::STRUCT_DIM:
+                TokenStructArray(token);
+                break;
+            case ParserTokenType::DIM:
+                TokenDim(token);
                 break;
             case ParserTokenType::CALL:
                 TokenCall(token);
@@ -85,6 +71,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::RETURN:
                 TokenReturn(token);
                 break;
+            case ParserTokenType::GLOBAL:
+                TokenGlobal(token);
+                break;
             case ParserTokenType::LOCAL:
                 TokenLocal(token);
                 break;
@@ -93,15 +82,6 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
                 break;
             case ParserTokenType::SWAP:
                 TokenSwap(token);
-                break;
-            case ParserTokenType::DIM_LOCAL:
-                TokenDim(token);
-                break;
-            case ParserTokenType::STRUCT_INSTANCE_LOCAL:
-                TokenStructLocal(token);
-                break;
-            case ParserTokenType::STRUCT_DIM_LOCAL:
-                TokenStructArrayLocal(token);
                 break;
             default:
                 assert(0);

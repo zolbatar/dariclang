@@ -1,7 +1,7 @@
 #include "../Parser.h"
 
 std::any Parser::visitDim(DaricParser::DimContext *context) {
-	ParserToken ps = CreateToken(context, current_procedure ? ParserTokenType::DIM_LOCAL : ParserTokenType::DIM_GLOBAL);
+	ParserToken ps = CreateToken(context, ParserTokenType::DIM);
 	auto r = Reference::Create(state, context->IDENTIFIER()->getText());
 	r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
 

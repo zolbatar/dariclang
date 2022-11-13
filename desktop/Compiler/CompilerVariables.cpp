@@ -1,6 +1,8 @@
 #include "Compiler.h"
 
 void Compiler::TokenGlobal(ParserToken &token) {
+    if (token.scope != Scope::GLOBAL) return;
+
     for (auto &s: token.children) {
         auto ref = Reference::Get(s.reference);
         auto value_type = CompileExpression(s.children[0]);
@@ -38,6 +40,8 @@ void Compiler::TokenGlobal(ParserToken &token) {
 }
 
 void Compiler::TokenLocal(ParserToken &token) {
+    if (token.scope != Scope::LOCAL) return;
+
     for (auto &s: token.children) {
         auto value_type = CompileExpression(s.children[0]);
         auto ref = Reference::Get(s.reference);
@@ -125,6 +129,7 @@ void Compiler::TokenDim(ParserToken &t) {
     auto var = Reference::Get(t.reference);
 
     if (procedure == nullptr) {
+        if (t.scope != Scope::GLOBAL) return;
 
         // Check indices are integers
         std::vector<unsigned> indices;
@@ -146,11 +151,13 @@ void Compiler::TokenDim(ParserToken &t) {
         }
         auto init = llvm::ConstantArray::get(typ, values);
 
-        // Create arrays
+        // Create array
         auto size_v = llvm::ArrayType::get(llvm.TypeConversion(var->GetDataType()), size);
         llvm.SetGlobalArray(var->GetName(), typ, init, indices.size(), size_v, var->GetDataType());
         var->CreateInstance(llvm, GetIR(), Scope::GLOBAL);
     } else {
+        if (t.scope != Scope::LOCAL) return;
+
         std::list<llvm::Value *> indices;
         for (auto &s: var->GetIndices()) {
             auto vt = CompileExpression(s);
@@ -174,8 +181,8 @@ void Compiler::TokenDim(ParserToken &t) {
             i++;
         }
 
-        // Create array dimensions (list of dimensions)
-        llvm.SetLocalArrayAllocate(var->GetName(), GetIR(), size, var->GetDataType());
+        // Create array
+        llvm.SetLocalArrayAllocate(var->GetName(), GetIR(), size, llvm.TypeConversion(var->GetDataType()));
         var->CreateInstance(llvm, GetIR(), Scope::LOCAL);
     }
 }

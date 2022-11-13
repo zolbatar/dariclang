@@ -65,9 +65,11 @@ private:
 
     ParserToken CreateToken(antlr4::ParserRuleContext *context, ParserTokenType type) {
         ParserToken p;
+        p.scope = current_procedure == nullptr ? Scope::GLOBAL : Scope::LOCAL;
         p.type = type;
         p.line = context->getStart()->getLine();
         p.char_position = context->getStart()->getCharPositionInLine();
+
         return p;
     }
 

@@ -18,4 +18,5 @@ struct ParserToken
 	size_t line;
 	uint16_t char_position;
 	size_t reference;
+    Scope scope;
 };
