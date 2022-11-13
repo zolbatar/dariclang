@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
     parser.Parse(&file);
     Compiler c(state);
     bool run = argc == 2;
-    if (c.Compile(&parser, true, run, false)) {
+    if (c.Compile(&parser, true, run, true)) {
         if (run)
             c.Run();
         else

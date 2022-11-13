@@ -251,9 +251,9 @@ ENDDEF
 
 DEF Chrono
 	PRINT "::Chrono::"
-	PRINT "Time               = ";:IF TIME > 0 Pass() ELSE Fail()
+	PRINT "Time               = ";:IF TIME >= 0 Pass() ELSE Fail()
 	PRINT "Time$              = ";:IF LEN(TIME$) = 24 Pass() ELSE Fail()
-	PRINT "HPTime             = ";:IF HPTIME > 0 Pass() ELSE Fail()
+	PRINT "HPTime             = ";:IF HPTIME >= 0 Pass() ELSE Fail()
 	PRINT
 ENDDEF
 
