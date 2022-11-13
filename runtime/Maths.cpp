@@ -8,6 +8,10 @@ extern "C" double pi() {
     return M_PI;
 }
 
+extern "C" double my_atan(double v) {
+    return std::atan(v);
+}
+
 extern "C" double deg(double v) {
     return (v * 180.0) / M_PI;
 }

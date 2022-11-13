@@ -1,0 +1,9 @@
+.idea/
+.DS_Store
+cmake-build-debug/
+cmake-build-release/
+*.ll
+*.s
+*.S
+*.wasm
+ImGuiBindings/

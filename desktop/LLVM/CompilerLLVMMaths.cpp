@@ -230,7 +230,7 @@ ValueType CompilerLLVM::MathsACS(llvm::IRBuilder<> *ir, ValueType &t1) {
 ValueType CompilerLLVM::MathsATN(llvm::IRBuilder<> *ir, ValueType &t1) {
     auto t = Primitive::FLOAT;
     AutoConversion(ir, t1, t);
-    t1.value = ir->CreateCall(Module->getFunction("atan"), {t1.value});
+    t1.value = ir->CreateCall(Module->getFunction("my_atan"), {t1.value});
     return t1;
 }
 

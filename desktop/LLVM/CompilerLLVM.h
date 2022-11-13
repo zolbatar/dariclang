@@ -23,7 +23,7 @@ struct FuncBuilder {
 class CompilerLLVM {
 public:
     CompilerLLVM();
-    void SetupProfile(bool optimise, bool allow_end, std::string module);
+    void SetupProfile(bool optimise, bool allow_end, bool run, std::string module);
     llvm::Function *CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters);
     llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
     void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);
@@ -164,6 +164,7 @@ public:
     ValueType BooleanCOMPLEMENT(llvm::IRBuilder<> *ir, ValueType &t1);
 
     void Run();
+    void CreateExecutable(std::string output_filename);
 
     llvm::Type *TypeNone = nullptr;
     llvm::Type *TypeBit = nullptr;
@@ -176,6 +177,7 @@ private:
     void AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses);
     void OptimiseModule();
 
+    bool run;
     bool optimise;
     bool allow_end;
 
