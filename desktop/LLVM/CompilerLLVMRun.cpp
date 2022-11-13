@@ -27,7 +27,8 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     std::cout << "Object file is " << b / 1024 << "KB" << std::endl;
 
     std::string s =
-            "clang++ -O3 -e _Implicit -Wl,-no_pie -L../../runtime/cmake-build-release/ -lDaricRuntimeStatic -framework OpenGL -lGLEW -lSDL2 Program.o -o " +
+            "clang++ -O3 -e _Implicit -Wl,-no_pie -L/opt/homebrew/lib -L../../runtime/cmake-build-release/ -lDaricRuntimeStatic -framework OpenGL -lGLEW -lSDL2 Program.o -o "
+            +
             output_filename;
     system(s.c_str());
     system("rm Program.o");
