@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 typedef int64_t T_I;
 typedef double T_F;

@@ -7,13 +7,17 @@ EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE
 message(STATUS "Architecture: ${ARCHITECTURE}")
 set(CMAKE_OSX_ARCHITECTURES ${ARCHITECTURE})
 
-if (NOT (APPLE AND ${ARCHITECTURE} STREQUAL "arm64"))
+if (APPLE)
+    if (${ARCHITECTURE} STREQUAL "arm64")
+        add_compile_options(-DSDL -DHAVE_FFSL -DCAPSTONE_HAS_ARM64)
+    else ()
+        add_compile_options(-DSDL -DHAVE_FFSL -DCAPSTONE_HAS_X86)
+    endif ()
+else()
     add_compile_options(-DSDL -DHAVE_FFSL -DCAPSTONE_HAS_X86)
-else ()
-    add_compile_options(-DSDL -DHAVE_FFSL -DCAPSTONE_HAS_ARM64)
-endif ()
+endif()
 
-include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
+    include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 # Antlr4
