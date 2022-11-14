@@ -45,16 +45,16 @@ bool Compiler::Compile() {
         ex.OutputToStdout();
         return false;
     }*/
-    auto t2 = std::chrono::steady_clock::now();
+/*    auto t2 = std::chrono::steady_clock::now();
     double time_span = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     time_span /= 1000000.0;
-    std::cout << "Compilation took " << std::setprecision(2) << time_span << " seconds" <<  std::endl;
+    std::cout << "Compilation took " << std::setprecision(2) << time_span << " seconds" <<  std::endl;*/
     return true;
 }
 
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
     for (auto &token: statements) {
-//		std::cout << "Line: " << token.line << std::endl;
+		//std::cout << "Line: " << token.line << std::endl;
         switch (token.type) {
             case ParserTokenType::PARAMETER:
                 break;

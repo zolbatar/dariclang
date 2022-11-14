@@ -63,7 +63,7 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
 std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::STRUCT_DIM);
     auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
-    r->SetInstanceType(InstanceType::STRUCT_ARRAY);
+    r->SetAsStructArray();
     ps.reference = r->GetRef();
     r->SetStructName(context->IDENTIFIER(1)->getText());
 
@@ -78,13 +78,14 @@ std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {
 std::any Parser::visitStructInstance(DaricParser::StructInstanceContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::STRUCT_INSTANCE);
     auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
-    r->SetInstanceType(InstanceType::STRUCT);
+    r->SetAsStruct();
     ps.reference = r->GetRef();
     r->SetStructName(context->IDENTIFIER(1)->getText());
 
     // Parameters
     for (auto i = 0; i < context->expression().size(); i++) {
         auto psp = std::any_cast<ParserToken>(visit(context->expression(i)));
+        psp.identifier =  context->IDENTIFIER(i+2)->getText();
         ps.children.push_back(std::move(psp));
     }
 

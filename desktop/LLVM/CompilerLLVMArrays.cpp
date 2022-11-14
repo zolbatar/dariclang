@@ -8,12 +8,12 @@ llvm::AllocaInst *CompilerLLVM::GetLocalArrayDimensions(std::string name) {
     return locals_array_dimensions[name];
 }
 
-llvm::GlobalVariable *CompilerLLVM::SetGlobalArray(std::string name,
-                                                   llvm::ArrayType *typ,
-                                                   llvm::Constant *init,
-                                                   size_t sz,
-                                                   llvm::ArrayType *size_v,
-                                                   Primitive type) {
+llvm::GlobalVariable *CompilerLLVM::CreateGlobalArray(std::string name,
+                                                      llvm::ArrayType *typ,
+                                                      llvm::Constant *init,
+                                                      size_t sz,
+                                                      llvm::ArrayType *size_v,
+                                                      Primitive type) {
     globals_array_dimensions[name] = new llvm::GlobalVariable(*Module,
                                                               typ,
                                                               false,
@@ -34,7 +34,7 @@ llvm::GlobalVariable *CompilerLLVM::SetGlobalArray(std::string name,
     return globals_array_dimensions[name];
 }
 
-llvm::AllocaInst *CompilerLLVM::SetLocalArray(std::string name,
+llvm::AllocaInst *CompilerLLVM::CreateLocalArrayStage1(std::string name,
                                               llvm::IRBuilder<> *ir,
                                               size_t sz,
                                               Primitive type) {
@@ -46,7 +46,7 @@ llvm::AllocaInst *CompilerLLVM::SetLocalArray(std::string name,
     return locals_array_dimensions[name];
 }
 
-llvm::AllocaInst *CompilerLLVM::SetLocalArrayAllocate(std::string name,
+llvm::AllocaInst *CompilerLLVM::CreateLocalArrayStage2(std::string name,
                                                       llvm::IRBuilder<> *ir,
                                                       llvm::Value *sz,
                                                       llvm::Type *type) {

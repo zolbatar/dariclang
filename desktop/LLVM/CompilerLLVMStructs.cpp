@@ -37,4 +37,3 @@ llvm::StructType *CompilerLLVM::GetStruct(std::string name) {
         return nullptr;
     return f->second;
 }
-

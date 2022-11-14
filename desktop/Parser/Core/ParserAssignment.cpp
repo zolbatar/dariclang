@@ -33,7 +33,6 @@ std::any Parser::visitAssignment(DaricParser::AssignmentContext *context) {
     psc.reference = r->GetRef();
 
     // We need to know a type OR have a value to assign to (so we can look up variable)
-    // Without this procedure calls without parens look like variables
     if (assignment_type == Primitive::NONE && context->EQ()) {
         assignment_type = Primitive::INT;
     }

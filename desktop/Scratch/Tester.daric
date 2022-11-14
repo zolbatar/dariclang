@@ -1,7 +1,6 @@
 PRINT "Daric Test Suite"
 PRINT "----------------"
 PRINT
-END
 
 CONST constant=100
 CONST ccf=12.5 OF FLOAT
@@ -15,9 +14,10 @@ DEFRECORD COMPOUND
     s OF STRING
     xy OF COORDINATE
 ENDRECORD
-RECORD myrecord OF COORDINATE(12.45)
+myrecord = RECORD OF COORDINATE(x=12.45)
 myrecord.y=100
-RECORD myrecordarray OF COORDINATE[100]
+DIM RECORD myrecordarray OF COORDINATE[100]
+myrecordarray[10].x=123
 
 # INTMAP mymap OF COORDINATE
 # mymap<100>
@@ -35,7 +35,7 @@ Numbers()
 PrintFormatting()
 Strings()
 SwapVars()
-Types()
+Records()
 Variables()
 
 PRINT "::Other::"
@@ -276,18 +276,17 @@ DEF Functions
 	PRINT
 ENDDEF
 
-DEF Types
-	PRINT "::Types::"
-	RECORD myrecordl COMPOUND(101,123.45,"test")
+DEF Records
+	PRINT "::Records::"
+	myrecordl = RECORD COMPOUND(i=101,f=123.45,s="test")
     myrecordl.xy.y=165.32
- 	PRINT "Load field (Local) = ";: IF myrecordl.i=101 AND myrecordl.f=123.45 AND myrecordl.s="test" Pass() ELSE Fail()
-	PRINT "Load field (Local) = ";: IF myrecordl.xy.y=165.32 Pass() ELSE Fail()
-	PRINT "Load field (Glob)  = ";: IF myrecord.y=12.45 AND myrecord.x=100.0 Pass() ELSE Fail(): REM Swapped earlier
-#	PRINT "Load field (Glob3a)= ";: IF GVTA![4,1].x# = 25.0 Pass() ELSE Fail()
-#	PRINT "Load field (Glob3b)= ";: IF GVTA![5,3].y# = 125.0 Pass() ELSE Fail()
-#	LOCAL DIM BB!:VertexTest[5]
-#	BB![4].y# = 100.0
-#	PRINT "Load field (array) = ";: IF BB![4].y# = 100.0 Pass() ELSE Fail()
+    DIM RECORD myrecordarray2 OF COORDINATE[10]
+    myrecordarray2[5].y=345
+ 	PRINT "Load field (1)     = ";: IF myrecordl.i=101 AND myrecordl.f=123.45 AND myrecordl.s="test" Pass() ELSE Fail()
+	PRINT "Load field (2)     = ";: IF myrecordl.xy.y=165.32 Pass() ELSE Fail()
+	PRINT "Load field (3)     = ";: IF myrecord.y=12.45 AND myrecord.x=100.0 Pass() ELSE Fail(): REM Swapped earlier
+	PRINT "Load field (4)     = ";: IF myrecordarray[10].x=123 Pass() ELSE Fail()
+	PRINT "Load field (5)     = ";: IF myrecordarray2[5].y=345 Pass() ELSE Fail()
 #	PRINT "Size of type array = ";: IF SIZE(BB![]) = 5 Pass() ELSE Fail()
 	PRINT
 ENDDEF

@@ -1,5 +1,4 @@
 #pragma once
-
 #include <map>
 #include <vector>
 #include "../LLVM/CompilerLLVM.h"
@@ -48,7 +47,12 @@ private:
     llvm::IRBuilder<> *GetIRImplicit() {
         return implicit_ir;
     }
+
     ValueType CompileExpression(ParserToken &t);
+    void GenericVariable(ParserToken &token, Scope scope);
+    void CreateGlobalDimensions(Reference *var, Primitive type1, llvm::Type *type2);
+    void CreateLocalDimensions(Reference *var, Primitive type1, llvm::Type *type2);
+
     void CreateLookaheadProc(ParserToken &t);
     void CompileStatements(std::vector<ParserToken> &statements);
     void TokenCall(ParserToken &token);

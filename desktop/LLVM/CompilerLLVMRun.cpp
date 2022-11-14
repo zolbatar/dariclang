@@ -78,7 +78,7 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
 void CompilerLLVM::Run() {
     // Debug
     if (options.output_ll_files) {
-        auto p = "../Out.ll";
+        auto p = "Out.ll";
         llvm::StringRef filename_post(p);
         std::error_code EC;
         llvm::raw_fd_ostream out_post(filename_post, EC);
@@ -89,7 +89,7 @@ void CompilerLLVM::Run() {
     CreateLLVMPasses();
 
     if (options.output_ll_files) {
-        auto p = "../OutOptimised.ll";
+        auto p = "OutOptimised.ll";
         llvm::StringRef filename_post(p);
         std::error_code EC;
         llvm::raw_fd_ostream out_post(filename_post, EC);

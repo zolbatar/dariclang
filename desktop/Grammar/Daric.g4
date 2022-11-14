@@ -50,14 +50,14 @@ print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? 
 procedure:      PRIVATE? DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
 return:         RETURN expression? ;
 struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
-structDim:      RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
-structInstance: RECORD IDENTIFIER OF? IDENTIFIER (LPAREN expression? (COMMA expression)* RPAREN)? ;
+structDim:      DIM RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
+structInstance: LET? IDENTIFIER EQ RECORD OF? IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 
 variable
     : IDENTIFIER
-        (DOT IDENTIFIER)*
         (SOPEN expression? (COMMA expression)* SCLOSE)?
+        (DOT IDENTIFIER)*
     ;
 
 expression

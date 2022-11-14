@@ -56,6 +56,7 @@ set(CMAKE_SKIP_RPATH FALSE)
 add_executable(${PROJECT_NAME}
         main.cpp
 
+        Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/Compiler.h
         Compiler/CompilerPrint.cpp
@@ -82,7 +83,7 @@ add_executable(${PROJECT_NAME}
         Parser/Parser.h
         Parser/Parser.cpp
         Parser/ParserCore.cpp
-        Parser/ParserErrorListenener.h
+        Parser/ParserErrorListener.h
         Parser/ParserToken.h
         Parser/ParserTokenType.h
         Parser/ParserLiteral.cpp
@@ -101,16 +102,27 @@ add_executable(${PROJECT_NAME}
         Parser/Tokens/ParserDIM.cpp
 
         Variables/PrimitiveTypes.h
+        Variables/Reference.h
+        Variables/Reference.cpp
+        Variables/Shared.cpp
+        Variables/Shared.h
         Variables/Instance.cpp
         Variables/Instance.h
-        Variables/Reference.cpp
-        Variables/Shared.h
+        Variables/InstancePrimitive.cpp
+        Variables/InstancePrimitive.h
+        Variables/InstanceConstant.cpp
+        Variables/InstanceConstant.h
+        Variables/InstancePrimitiveArray.cpp
+        Variables/InstancePrimitiveArray.h
+        Variables/InstanceRecord.cpp
+        Variables/InstanceRecord.h
+        Variables/InstanceRecordArray.cpp
+        Variables/InstanceRecordArray.h
 
-        Variables/Reference.h
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Variables/Shared.cpp Compiler/CompilerOptions.h)
+        Grammar/DaricVisitor.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS} ${LLD_LIBS})
 if (${ARCHITECTURE} STREQUAL "arm64")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)

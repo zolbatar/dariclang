@@ -10,6 +10,11 @@
 #include "../Variables/PrimitiveTypes.h"
 #include "../Variables/Shared.h"
 #include "../Variables/Instance.h"
+#include "../Variables/InstanceConstant.h"
+#include "../Variables/InstancePrimitive.h"
+#include "../Variables/InstancePrimitiveArray.h"
+#include "../Variables/InstanceRecord.h"
+#include "../Variables/InstanceRecordArray.h"
 #include "../Variables/Reference.h"
 
 class Procedure {

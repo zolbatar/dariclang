@@ -1,7 +1,7 @@
 #include "Parser.h"
 #include "../Grammar/DaricLexer.h"
 #include "../Grammar/DaricParser.h"
-#include "ParserErrorListenener.h"
+#include "ParserErrorListener.h"
 
 void Parser::Parse(std::istream *source) {
     try {
