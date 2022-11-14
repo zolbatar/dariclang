@@ -8,11 +8,13 @@ add_library(DaricRuntimeShared SHARED
         Print.cpp
         String.cpp
         Chrono.cpp
-        Types.h)
+        Types.h
+        Core.cpp)
 
 add_library(DaricRuntimeStatic STATIC
         Maths.cpp
         Print.cpp
         String.cpp
         Chrono.cpp
-        Types.h)
+        Types.h
+        Core.cpp)

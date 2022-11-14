@@ -29,6 +29,33 @@ Instance *Instance::StructInstance(const std::string &name,
     return nullptr;
 }
 
+Instance *Instance::StructInstanceArray(const std::string &name,
+                                        const std::string &struct_name,
+                                        llvm::StructType *struct_type,
+                                        Scope scope,
+                                        size_t no_indices,
+                                        CompilerLLVM &llvm,
+                                        llvm::IRBuilder<> *ir) {
+    Instance i;
+    i.struct_type = struct_type;
+    i.name = name;
+    i.instance_type = InstanceType::STRUCT_ARRAY;
+    i.scope = scope;
+    i.no_indices = no_indices;
+    switch (i.scope) {
+        case Scope::LOCAL:
+            locals.insert(std::make_pair(name, std::move(i)));
+            return &locals.find(name)->second;
+        case Scope::GLOBAL:
+            globals.insert(std::make_pair(name, std::move(i)));
+            return &globals.find(name)->second;
+        case Scope::UNKNOWN:
+            assert(0);
+    }
+    return nullptr;
+}
+
+
 Instance *Instance::ConstantInstance(std::string name,
                                      Primitive data_type,
                                      Scope scope,

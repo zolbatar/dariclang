@@ -26,6 +26,9 @@
 #include "llvm/Transforms/IPO.h"
 #include "lld/Common/Driver.h"
 #include "CompilerLLVM.h"
+#include "llvm/CodeGen/CommandFlags.h"
+
+const bool verbose = false;
 
 #ifdef __APPLE__
 
@@ -58,7 +61,7 @@ std::string MCPU = "native";
 
 std::list<std::string> MAttrs;
 
-static std::string getCPUArch() {
+std::string getCPUArch() {
 #ifdef __APPLE__
     uint32_t cputype = 0;
     size_t size = sizeof(cputype);
@@ -109,28 +112,28 @@ static std::string getFeaturesStr() {
     return Features.getString();
 }
 
-void CompilerLLVM::SetupProfile(bool optimise, bool allow_end, bool run, std::string module) {
-    // Optimisations
+void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
     llvm::CodeGenOpt::Level OLvl = llvm::CodeGenOpt::Default;
-    this->optimise = optimise;
-    this->run = run;
-    this->allow_end = allow_end;
-    if (optimise) {
+    this->options = options;
+    if (options.optimise) {
         OLvl = llvm::CodeGenOpt::Aggressive;
     }
+
+    llvm::Triple TheTriple;
+    TheTriple.setTriple(llvm::sys::getDefaultTargetTriple());
 
     // Options
     std::string CPUArch = getCPUArch();
     std::string CPUStr = getCPUStr();
     std::string FeaturesStr = getFeaturesStr();
     std::cout << "CPU Architecture: " << CPUArch << std::endl;
-    std::cout << "CPU String: " << CPUStr << std::endl;
-    std::cout << "CPU Features: " << FeaturesStr << std::endl;
+    if (verbose) {
+        std::cout << "CPU String: " << CPUStr << std::endl;
+        std::cout << "CPU Features: " << FeaturesStr << std::endl;
+    }
 
     // Target
     llvm::TargetOptions Options;
-    llvm::Triple TheTriple;
-    TheTriple.setTriple(llvm::sys::getDefaultTargetTriple());
     std::string Error;
     const llvm::Target *TheTarget = llvm::TargetRegistry::lookupTarget(CPUArch, TheTriple, Error);
     if (Error.length() > 0) {
@@ -140,7 +143,7 @@ void CompilerLLVM::SetupProfile(bool optimise, bool allow_end, bool run, std::st
 
     Target = std::unique_ptr<llvm::TargetMachine>(TheTarget->createTargetMachine(
             TheTriple.getTriple(), CPUStr, FeaturesStr,
-            Options, llvm::None, llvm::None, OLvl, true));
+            Options, llvm::Reloc::Model::Static, llvm::None, OLvl, options.target != CompileTarget::EXE));
     if (Target == nullptr) {
         std::cout << "Couldn't allocate target machine\n";
         exit(1);
@@ -203,54 +206,62 @@ void CompilerLLVM::SetupProfile(bool optimise, bool allow_end, bool run, std::st
     Module->getOrInsertFunction("int_to_string_with", TypeString, TypeInt, TypeString);
     Module->getOrInsertFunction("float_to_string_with", TypeString, TypeFloat, TypeString);
 
-    if (allow_end) {
+    if (!options.use_exit_as_end) {
         globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeInt, false,
                                                              llvm::GlobalValue::ExternalLinkage,
                                                              llvm::ConstantInt::get(TypeInt, 0),
                                                              "QuitRequested");
     }
-
-    std::cout << "LLVM initialisation complete\n";
 }
 
 void CompilerLLVM::AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses) {
     llvm::PassManagerBuilder builder;
-    builder.OptLevel = 3;
-    builder.OptLevel = 3;
+    if (options.optimise) {
+        builder.OptLevel = 3;
+    } else {
+        builder.OptLevel = 0;
+    }
     builder.SizeLevel = 0;
-    builder.Inliner = llvm::createFunctionInliningPass(3, 0, false);
-    builder.LoopVectorize = true;
-    builder.SLPVectorize = true;
-    builder.VerifyInput = true;
+    builder.Inliner = llvm::createFunctionInliningPass(builder.OptLevel, builder.SizeLevel, false);
+    if (options.optimise) {
+        builder.LoopVectorize = true;
+        builder.SLPVectorize = true;
+        builder.VerifyInput = true;
+    }
     Target->adjustPassManager(builder);
-    builder.Inliner = llvm::createFunctionInliningPass(3, 0, false);
     builder.populateFunctionPassManager(fnPasses);
     builder.populateModulePassManager(passes);
 }
 
-void CompilerLLVM::OptimiseModule() {
+void CompilerLLVM::CreateLLVMPasses() {
     llvm::legacy::PassManager passes;
     passes.add(new llvm::TargetLibraryInfoWrapperPass(Target->getTargetTriple()));
     passes.add(llvm::createTargetTransformInfoWrapperPass(Target->getTargetIRAnalysis()));
 
     llvm::legacy::FunctionPassManager fnPasses(Module.get());
     fnPasses.add(llvm::createTargetTransformInfoWrapperPass(Target->getTargetIRAnalysis()));
+    fnPasses.doInitialization();
     AddOptPasses(passes, fnPasses);
 
-    fnPasses.doInitialization();
+    // Optimise functions
     for (llvm::Function &func: *Module) {
         bool changed = fnPasses.run(func);
         if (changed) {
             //std::cout << "Function '" << std::string(func.getName()) << "' optimised\n";
         }
     }
-    fnPasses.doFinalization();
 
     std::error_code EC;
-    llvm::StringRef filename_s("Program.o");
+    llvm::StringRef filename_s(options.output_filename + ".o");
     llvm::raw_fd_ostream out_s(filename_s, EC, llvm::sys::fs::CreationDisposition::CD_CreateAlways);
-    Target->addPassesToEmitFile(passes, out_s, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile);
+    if (options.target == CompileTarget::EXE) {
+        if (Target->addPassesToEmitFile(passes, out_s, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
+            std::cout << "LLVM output of object files not supported\n";
+            exit(1);
+        }
+    }
 
+    fnPasses.doFinalization();
     passes.run(*Module);
 }
 

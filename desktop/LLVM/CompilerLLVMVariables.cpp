@@ -69,6 +69,9 @@ std::string &CompilerLLVM::GetStructForVariable(const std::string &name) {
     } else if (locals.contains(name)) {
         return local_structs.find(name)->second;
     }
+    else {
+        assert(0);
+    }
 }
 
 void CompilerLLVM::StoreStructGlobal(const std::string &name,

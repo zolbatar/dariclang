@@ -1,3 +1,8 @@
+PRINT "Daric Test Suite"
+PRINT "----------------"
+PRINT
+END
+
 CONST constant=100
 CONST ccf=12.5 OF FLOAT
 DIM a1d OF INT[5]:DIM a2di OF INT[5,5]:DIM a2df OF FLOAT[5,5]:DIM a3d OF INT[5,5,5]
@@ -10,11 +15,12 @@ DEFRECORD COMPOUND
     s OF STRING
     xy OF COORDINATE
 ENDRECORD
-RECORD mystruct OF COORDINATE(12.45)
-mystruct.y=100
-RECORD mystructarray OF COORDINATE[100]
+RECORD myrecord OF COORDINATE(12.45)
+myrecord.y=100
+RECORD myrecordarray OF COORDINATE[100]
 
 # INTMAP mymap OF COORDINATE
+# mymap<100>
 # STRINGMAP mystrmap OF FLOAT
 # VECTOR vec OF INT
 
@@ -222,7 +228,7 @@ DEF SwapVars
 	SWAP swpa,swpb
 	SWAP swpf1,swpf2
 	SWAP swps1$,swps2$
-	SWAP mystruct.y, mystruct.x
+	SWAP myrecord.y, myrecord.x
 	PRINT "Swap integer       = ";:IF swpa=2 AND swpb=1 Pass() ELSE Fail()
 	PRINT "Swap float         = ";:IF swpf1=456 AND swpf2=123 Pass() ELSE Fail()
 	PRINT "Swap string        = ";:IF swps1$="22" AND swps2$="11" Pass() ELSE Fail()
@@ -272,11 +278,11 @@ ENDDEF
 
 DEF Types
 	PRINT "::Types::"
-	RECORD mystructl COMPOUND(101,123.45,"test")
-    mystructl.xy.y=165.32
- 	PRINT "Load field (Local) = ";: IF mystructl.i=101 AND mystructl.f=123.45 AND mystructl.s="test" Pass() ELSE Fail()
-	PRINT "Load field (Local) = ";: IF mystructl.xy.y=165.32 Pass() ELSE Fail()
-	PRINT "Load field (Glob)  = ";: IF mystruct.y=12.45 AND mystruct.x=100.0 Pass() ELSE Fail(): REM Swapped earlier
+	RECORD myrecordl COMPOUND(101,123.45,"test")
+    myrecordl.xy.y=165.32
+ 	PRINT "Load field (Local) = ";: IF myrecordl.i=101 AND myrecordl.f=123.45 AND myrecordl.s="test" Pass() ELSE Fail()
+	PRINT "Load field (Local) = ";: IF myrecordl.xy.y=165.32 Pass() ELSE Fail()
+	PRINT "Load field (Glob)  = ";: IF myrecord.y=12.45 AND myrecord.x=100.0 Pass() ELSE Fail(): REM Swapped earlier
 #	PRINT "Load field (Glob3a)= ";: IF GVTA![4,1].x# = 25.0 Pass() ELSE Fail()
 #	PRINT "Load field (Glob3b)= ";: IF GVTA![5,3].y# = 125.0 Pass() ELSE Fail()
 #	LOCAL DIM BB!:VertexTest[5]

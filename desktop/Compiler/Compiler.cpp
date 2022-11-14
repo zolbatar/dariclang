@@ -1,19 +1,33 @@
 #include <iostream>
+#include <iomanip>
 #include <utility>
 #include "Compiler.h"
 #include "llvm/Bitcode/BitcodeWriter.h"
 
-bool Compiler::Compile(Parser *parser_in, bool optimise, bool run, bool allow_end_in) {
+bool Compiler::Compile() {
+
+    auto t1 = std::chrono::steady_clock::now();
+    std::cout << "Compiling..." << std::endl;
+    switch (options.target) {
+        case CompileTarget::EXE:
+            std::cout << "Target: Standalone executable (via object file)" << std::endl;
+            break;
+        case CompileTarget::JIT:
+            std::cout << "Target: JIT runtime" << std::endl;
+            break;
+        case CompileTarget::INTERACTIVE:
+            std::cout << "Target: Interactive" << std::endl;
+            break;
+    }
+
 //    try {
-    llvm.SetupProfile(optimise, allow_end_in, run, parser_in->GetModule());
-    this->parser = parser_in;
-    this->allow_end = allow_end_in;
+    llvm.SetupProfile(options, parser->GetModule());
 
     // Lookahead
     auto n = Primitive::NONE;
     implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
     implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
-    for (auto &token: parser_in->GetStatements()) {
+    for (auto &token: parser->GetStatements()) {
         switch (token.type) {
             case ParserTokenType::PROCEDURE:
                 CreateLookaheadProc(token);
@@ -24,14 +38,18 @@ bool Compiler::Compile(Parser *parser_in, bool optimise, bool run, bool allow_en
         }
     }
 
-    CompileStatements(parser_in->GetStatements());
+    CompileStatements(parser->GetStatements());
     implicit_ir->CreateRetVoid();
-    return true;
 /*    }
     catch (CustomException &ex) {
         ex.OutputToStdout();
         return false;
     }*/
+    auto t2 = std::chrono::steady_clock::now();
+    double time_span = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
+    time_span /= 1000000.0;
+    std::cout << "Compilation took " << std::setprecision(2) << time_span << " seconds" <<  std::endl;
+    return true;
 }
 
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
@@ -95,8 +113,8 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
     }
 }
 
-void Compiler::CreateExecutable(std::string output_filename) {
-    llvm.CreateExecutable(output_filename);
+void Compiler::CreateExecutable() {
+    llvm.CreateExecutable(options.output_filename);
 }
 
 void Compiler::Run() {
@@ -113,11 +131,13 @@ void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {
 
 void Compiler::TokenEnd(ParserToken &token) {
     auto t = Primitive::INT;
-    if (allow_end) {
+    if (!options.use_exit_as_end) {
         llvm.StoreGlobal("~QuitRequested", GetIR(), llvm.CreateConstantInt(t, 1));
         auto block = CreateAndInsertBB("END", true, token);
         GetIR()->CreateRetVoid();
         CreateAndInsertBB("END end", false, token);
+    } else {
+        CreateCall("daric_end", {});
     }
 }
 

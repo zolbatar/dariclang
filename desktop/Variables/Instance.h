@@ -20,7 +20,13 @@ public:
                                     Scope scope,
                                     CompilerLLVM &llvm,
                                     llvm::IRBuilder<> *ir);
-
+    static Instance *StructInstanceArray(const std::string &name,
+                                         const std::string &struct_name,
+                                         llvm::StructType *struct_type,
+                                         Scope scope,
+                                         size_t no_indices,
+                                         CompilerLLVM &llvm,
+                                         llvm::IRBuilder<> *ir);
     static Instance *ConstantInstance(std::string name,
                                       Primitive data_type,
                                       Scope scope,

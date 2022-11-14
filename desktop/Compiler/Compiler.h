@@ -4,6 +4,7 @@
 #include <vector>
 #include "../LLVM/CompilerLLVM.h"
 #include "../Parser/Parser.h"
+#include "CompilerOptions.h"
 
 struct Func {
     llvm::Function *func;
@@ -15,15 +16,16 @@ struct Func {
 
 class Compiler {
 public:
-    Compiler(SharedState &state) : state(state) {}
-    bool Compile(Parser *parser_in, bool optimise, bool run, bool allow_end_in);
+    Compiler(SharedState &state, Parser *parser, CompilerOptions options) :
+            state(state), options(options), parser(parser) {}
+    bool Compile();
     void Run();
-    void CreateExecutable(std::string output_filename);
+    void CreateExecutable();
 
 private:
+    CompilerOptions options;
     SharedState &state;
     Parser *parser;
-    bool allow_end;
     bool strip_strings = false;
     CompilerLLVM llvm;
     llvm::Function *implicit = nullptr;

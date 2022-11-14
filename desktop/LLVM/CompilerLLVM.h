@@ -9,6 +9,7 @@
 #include "llvm/IR/IRBuilder.h"
 #include "../Variables/PrimitiveTypes.h"
 #include "../Variables/Shared.h"
+#include "../Compiler/CompilerOptions.h"
 
 struct ValueType {
     llvm::Value *value;
@@ -23,7 +24,7 @@ struct FuncBuilder {
 class CompilerLLVM {
 public:
     CompilerLLVM();
-    void SetupProfile(bool optimise, bool allow_end, bool run, std::string module);
+    void SetupProfile(CompilerOptions options, std::string module);
     llvm::Function *CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters);
     llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
     void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);
@@ -175,11 +176,8 @@ public:
     std::unique_ptr<llvm::Module> Module = nullptr;
 private:
     void AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses);
-    void OptimiseModule();
-
-    bool run;
-    bool optimise;
-    bool allow_end;
+    void CreateLLVMPasses();
+    CompilerOptions options;
 
     std::unique_ptr<llvm::LLVMContext> Context = nullptr;
     std::unique_ptr<llvm::TargetMachine> Target = nullptr;

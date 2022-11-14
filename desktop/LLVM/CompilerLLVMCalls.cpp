@@ -9,7 +9,7 @@ llvm::Value *CompilerLLVM::CreateCall(std::string& name,
 		return nullptr;
 
 	// We need to check for END at the end of every DEF call
-	if (allow_end) {
+	if (!options.use_exit_as_end) {
 		auto quit = ir->CreateLoad(TypeInt, globals["~QuitRequested"]);
 		auto test = ir->CreateICmpEQ(quit, llvm::ConstantInt::get(TypeInt, 1));
 		auto block = ir->GetInsertBlock();
