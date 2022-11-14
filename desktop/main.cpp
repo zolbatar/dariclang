@@ -12,18 +12,31 @@ int main(int argc, char *argv[]) {
         std::cout << "Can't open source file\n";
         return 1;
     }
+
+    // What sort of compile?
+    CompilerOptions options;
+    options.output_ll_files = false;
+    if (argc == 2) {
+        options.target = CompileTarget::JIT;
+        options.use_exit_as_end = false;
+    } else {
+        options.target = CompileTarget::EXE;
+        options.output_filename = std::string(argv[2]);
+        options.use_exit_as_end = true;
+    }
+    bool run = argc == 2;
+
     Instance::ClearStatic();
     Reference::ClearStatic();
     SharedState state;
     Parser parser(state);
     parser.Parse(&file);
-    Compiler c(state);
-    bool run = argc == 2;
-    if (c.Compile(&parser, true, run, true)) {
+    Compiler c(state, &parser, options);
+    if (c.Compile()) {
         if (run)
             c.Run();
         else
-            c.CreateExecutable(std::string(argv[2]));
+            c.CreateExecutable();
     }
     return 0;
 }

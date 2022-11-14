@@ -18,6 +18,7 @@ extern "C" void Strings_Clear() {
 }
 
 extern "C" void Strings_Summary() {
+    return;
     std::cout << "GC summary\n";
     std::cout << "Temporary: " << temp_strings.size() << std::endl;
     std::cout << "Permanent: " << perm_strings.size() << std::endl;

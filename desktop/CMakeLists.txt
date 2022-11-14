@@ -28,14 +28,22 @@ if (${ARCHITECTURE} STREQUAL "arm64")
 else ()
     set(CORE_LLVM_DIR /usr/local/Cellar/llvm/15.0.3/)
 endif ()
+
 set(LLVM_DIR "${CORE_LLVM_DIR}lib/cmake/llvm")
 find_package(LLVM REQUIRED CONFIG)
 message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
 message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
 include_directories(${LLVM_INCLUDE_DIRS})
+
+set(LLD_DIR "${CORE_LLVM_DIR}lib/cmake/lld")
+find_package(LLD REQUIRED CONFIG)
+message(STATUS "Found LLD ${LLD_PACKAGE_VERSION}")
+message(STATUS "Using LLDConfig.cmake in: ${LLD_DIR}")
+set(LLD_LIBS ${LLD_EXPORTED_TARGETS})
+
 separate_arguments(LLVM_DEFINITIONS_LIST NATIVE_COMMAND ${LLVM_DEFINITIONS})
 add_definitions(${LLVM_DEFINITIONS_LIST})
-llvm_map_components_to_libnames(LLVM_LIBS core support AArch64 X86 Coroutines OrcJIT)
+llvm_map_components_to_libnames(LLVM_LIBS all AArch64 X86 OrcJIT)
 
 # The standard Daric library
 file(GLOB LIBRARIES ../runtime/cmake-build-release/libDaricRuntimeShared.dylib ./libDaricRuntimeShared.dylib)
@@ -98,13 +106,15 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Variables/Shared.cpp)
-target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS})
+        Grammar/DaricVisitor.cpp Variables/Shared.cpp Compiler/CompilerOptions.h)
+target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS} ${LLD_LIBS})
 if (${ARCHITECTURE} STREQUAL "arm64")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeShared.dylib ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
 else()
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeShared.dylib ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
 endif()
 

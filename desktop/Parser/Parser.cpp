@@ -4,7 +4,6 @@
 #include "ParserErrorListenener.h"
 
 void Parser::Parse(std::istream *source) {
-    auto t1 = std::chrono::steady_clock::now();
     try {
         // Call Antlr4 and process
         antlr4::ANTLRInputStream input(*source);
