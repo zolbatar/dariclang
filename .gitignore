@@ -6,3 +6,4 @@ desktop/Scratch/macOSM1/Daric
 *.o
 desktop/Scratch/macOSX64/Daric
 *.a
+.DS_Store
