@@ -11,10 +11,10 @@ Daric is in active development, with a native version for Windows, Mac and Linux
 * A modern BASIC dialect
 * Can be run either in a JIT, compiled to an executable and in future with a kind-of REPL prompt
 * Standard library:
-  * 2D - line drawing, circle, etc. Either renders immediately, or using back buffer flipping
-  * 3D engine, using OpenGL3 and shaders to render
-  * Sound, a soft synthesizer
-  * Simple TIME$ function and a low and high precision timer
+  * 2D - line drawing, circle, etc. Either renders immediately, or using back buffer flipping.
+  * 3D engine, using OpenGL3 and shaders to render.
+  * Sound, a soft synthesizer.
+  * Simple TIME$ function and a low and high precision timer.
 
 The following examples are in the repo:
 
@@ -25,7 +25,7 @@ Running
 
 There are currently two ways to run code:
 
-1. Using the JIT, this is the preferred way to get code running
+1. Using the JIT, this is the preferred way to get code running.
 2. Create a standalone executable - this is more intended for distribution. There are no additional runtime files needed, just the 
 executable.
 
