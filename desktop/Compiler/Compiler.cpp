@@ -54,7 +54,7 @@ bool Compiler::Compile() {
 
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
     for (auto &token: statements) {
-		//std::cout << "Line: " << token.line << std::endl;
+        //std::cout << "Line: " << token.line << std::endl;
         switch (token.type) {
             case ParserTokenType::PARAMETER:
                 break;
@@ -100,6 +100,12 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
                 break;
             case ParserTokenType::SWAP:
                 TokenSwap(token);
+                break;
+            case ParserTokenType::REPEAT:
+                TokenRepeat(token);
+                break;
+            case ParserTokenType::WHILE:
+                TokenWhile(token);
                 break;
             default:
                 assert(0);
@@ -165,5 +171,5 @@ void Compiler::TypeError(ParserToken &token) {
 }
 
 llvm::Value *Compiler::CreateCall(std::string name, llvm::ArrayRef<llvm::Value *> vals) {
-    return llvm.CreateCall(name, GetIR(), GetFunction(), vals);
+    return llvm.CreateCall(name, GetIR(), GetFunction(), vals, procedures.contains(name));
 }

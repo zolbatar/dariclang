@@ -55,6 +55,8 @@ public:
 
     virtual std::any visitProcedure(DaricParser::ProcedureContext *context) = 0;
 
+    virtual std::any visitRepeat(DaricParser::RepeatContext *context) = 0;
+
     virtual std::any visitReturn(DaricParser::ReturnContext *context) = 0;
 
     virtual std::any visitStruct(DaricParser::StructContext *context) = 0;
@@ -64,6 +66,8 @@ public:
     virtual std::any visitStructInstance(DaricParser::StructInstanceContext *context) = 0;
 
     virtual std::any visitSwap(DaricParser::SwapContext *context) = 0;
+
+    virtual std::any visitWhile(DaricParser::WhileContext *context) = 0;
 
     virtual std::any visitVariable(DaricParser::VariableContext *context) = 0;
 

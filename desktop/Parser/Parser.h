@@ -110,6 +110,8 @@ protected:
     std::any visitStruct(DaricParser::StructContext *context);
     std::any visitStructInstance(DaricParser::StructInstanceContext *context);
     std::any visitStructDim(DaricParser::StructDimContext *context);
+    std::any visitRepeat(DaricParser::RepeatContext *context);
+    std::any visitWhile(DaricParser::WhileContext *context);
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

@@ -60,6 +60,7 @@ enum class ParserTokenType
 	PRINTFORMAT,
 	PROCEDURE,
 	RAD,
+    REPEAT,
 	RETURN,
 	RIGHTS,
 	ROUND,
@@ -80,4 +81,5 @@ enum class ParserTokenType
 	TRUE,
 	UNARYMINUS,
 	VARIABLE,
+    WHILE,
 };

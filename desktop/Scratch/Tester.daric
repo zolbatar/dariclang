@@ -23,6 +23,7 @@ myrecordarray[10].x=123
 # mymap<100>
 # STRINGMAP mystrmap OF FLOAT
 # VECTOR vec OF INT
+# myrecordarray[2] = myrecordarray[10]
 
 Arrays()
 Boolean()
@@ -37,6 +38,7 @@ Strings()
 SwapVars()
 Records()
 Variables()
+Looping()
 
 PRINT "::Other::"
 NestedCalling()
@@ -289,6 +291,86 @@ DEF Records
 	PRINT "Load field (5)     = ";: IF myrecordarray2[5].y=345 Pass() ELSE Fail()
 #	PRINT "Size of type array = ";: IF SIZE(BB![]) = 5 Pass() ELSE Fail()
 	PRINT
+ENDDEF
+
+DEF Looping
+	PRINT "::Looping::"
+	PRINT "One line IF        = ";:IF 1 = 1 Pass() ELSE Fail()
+	PRINT "Multiline IF       = ";
+	IF 1 = 1 THEN
+		Pass()
+	ELSE
+		Fail()
+	ENDIF
+	I% = 0
+	REPEAT
+		I% = I% + 1
+	UNTIL I% = 10
+	PRINT "Repeat             = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	WHILE I% < 10
+		I% = I% + 1
+	ENDWHILE
+	PRINT "While              = ";:IF I% = 10 Pass() ELSE Fail()
+#	I% = 0
+#	FOR J% = 1 TO 1
+#		I% = I% + 1
+#    NEXT
+#	PRINT "FOR (Int/1 Iter)   = ";:IF I% = 1 Pass() ELSE Fail()
+#	I% = 0
+#	FOR J% = 0 TO 9
+#		I% = I% + 1
+#	NEXT
+#	PRINT "FOR (Int)          = ";:IF I% = 10 Pass() ELSE Fail()
+#	I% = 0
+#	FOR J% = 0 TO 9 STEP 2
+#		I% = I% + 1
+#	NEXT
+#	PRINT "FOR + Step (Int)   = ";:IF I% = 5 Pass() ELSE Fail()
+#	I% = 0
+#	FOR J% = 9 TO 0 STEP -1
+#		I% = I% + 1
+#	NEXT
+#	PRINT "FOR - (Int)        = ";:IF I% = 10 Pass() ELSE Fail()
+#	I% = 0
+#	FOR J# = 0.0 TO 9.0
+#		I% = I% + 1
+#	NEXT
+#	PRINT "FOR (Float)        = ";:IF I% = 10 Pass() ELSE Fail()
+#	I% = 0
+#	FOR J# = 0.0 TO 9.0 STEP 2.0
+#		I% = I% + 1
+#	NEXT
+#	PRINT "FOR + Step (Float) = ";:IF I% = 5 Pass() ELSE Fail()
+#	PRINT "Case               = ";
+#	I%=1
+#	CASE I% OF
+#		WHEN 0, 1, 2: Pass()
+#		WHEN 3: Fail()
+#		OTHERWISE Fail()
+#	ENDCASE
+#	PRINT "Case (not first)   = ";
+#	I%=2
+#	CASE I% OF
+#		WHEN 0,1: Fail()
+#		WHEN 2: Pass()
+#		OTHERWISE Fail()
+#	ENDCASE
+#	PRINT "Case (Otherwise)   = ";
+#	I%=4
+#	CASE I% OF
+#		WHEN 0, 1, 2: Fail()
+#		WHEN 3: Fail()
+#		OTHERWISE Pass()
+#	ENDCASE
+#	PRINT "Case (String)      = ";
+#	A$="B"
+#    CASE A$ OF
+# 		WHEN "A":Fail()
+#	 	WHEN "B":Pass()
+#		OTHERWISE Fail()
+#	ENDCASE
+    PRINT
 ENDDEF
 
 PRIVATE DEF Pass()

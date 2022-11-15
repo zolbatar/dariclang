@@ -5,11 +5,11 @@ program
     ;
 
 statements
-    : (COLON* statement (separator | EOF)?)*
-    ;
+    : (separator* statement (separator | EOF)?)*
+        ;
 
 statementsl
-    : (COLON* statement (COLON+ | EOF)?)*
+    : (COLON* statement (COLON | EOF)?)+
     ;
 
 statement
@@ -24,11 +24,13 @@ statement
     | module
     | procedure
     | print
+    | repeat
     | return
     | struct
     | structDim
     | structInstance
     | swap
+    | while
     ;
 
 separator
@@ -43,16 +45,18 @@ dim:            DIM IDENTIFIER OF? type SOPEN expression? (COMMA expression)* SC
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            END ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
-ifml:           IF expression THEN? statements (ELSE statements)? ENDIF ;
+ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
 module:         MODULE IDENTIFIER ;
 parameter:      IDENTIFIER (OF? type)? ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      PRIVATE? DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
+repeat:         REPEAT statements UNTIL expression ;
 return:         RETURN expression? ;
 struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
 structDim:      DIM RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
 structInstance: LET? IDENTIFIER EQ RECORD OF? IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
+while:          WHILE expression statements ENDWHILE ;
 
 variable
     : IDENTIFIER
@@ -191,16 +195,20 @@ ELSE            : 'ELSE' | 'Else' ;
 END             : 'END' | 'End' ;
 ENDDEF          : 'ENDDEF' | 'EndDef' ;
 ENDIF           : 'ENDIF' | 'EndIf' ;
+ENDWHILE        : 'ENDWHILE' | 'EndWhile' ;
 IF              : 'IF' | 'If' ;
 MODULE          : 'MODULE' | 'Module' ;
 OF              : 'OF' | 'Of' ;
 PRINT           : 'PRINT' | 'Print' ;
 PRIVATE         : 'PRIVATE' | 'Private' ;
 REM             : 'REM' | 'Rem' ;
+REPEAT          : 'REPEAT' | 'Repeat' ;
 RETURN          : 'RETURN' | 'Return' ;
 THEN            : 'THEN' | 'Then' ;
 SWAP            : 'SWAP' | 'Swap ' ;
+UNTIL           : 'UNTIL' | 'Until' ;
 WITH            : 'WITH' | 'With' ;
+WHILE           : 'WHILE' | 'While' ;
 
 DEFRECORD       : 'DEFRECORD' | 'DefRecord' ;
 RECORD          : 'RECORD' | 'Record' ;

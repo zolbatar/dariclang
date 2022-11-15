@@ -32,16 +32,16 @@ std::any Parser::visitStatement(DaricParser::StatementContext *context) {
 	if (context->end()) {
 		return std::any_cast<ParserToken>(visit(context->end()));
 	}
-	if (context->assign() != NULL) {
+	if (context->assign()) {
 		return std::any_cast<ParserToken>(visit(context->assign()));
 	}
-	if (context->if_() != NULL) {
+	if (context->if_()) {
 		return std::any_cast<ParserToken>(visit(context->if_()));
 	}
-	if (context->ifml() != NULL) {
+	if (context->ifml()) {
 		return std::any_cast<ParserToken>(visit(context->ifml()));
 	}
-	if (context->module() != NULL) {
+	if (context->module()) {
 		return std::any_cast<ParserToken>(visit(context->module()));
 	}
 	if (context->print()) {
@@ -71,6 +71,12 @@ std::any Parser::visitStatement(DaricParser::StatementContext *context) {
 	if (context->structDim()) {
 		return std::any_cast<ParserToken>(visit(context->structDim()));
 	}
+    if (context->repeat()) {
+        return std::any_cast<ParserToken>(visit(context->repeat()));
+    }
+    if (context->while_()) {
+        return std::any_cast<ParserToken>(visit(context->while_()));
+    }
 	assert(0);
 	return NULL;
 }

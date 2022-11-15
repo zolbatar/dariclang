@@ -87,6 +87,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitRepeat(DaricParser::RepeatContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitReturn(DaricParser::ReturnContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -104,6 +108,10 @@ public:
   }
 
   virtual std::any visitSwap(DaricParser::SwapContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitWhile(DaricParser::WhileContext *ctx) override {
     return visitChildren(ctx);
   }
 

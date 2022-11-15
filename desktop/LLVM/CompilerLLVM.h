@@ -87,7 +87,8 @@ public:
     llvm::Value *CreateCall(std::string &name,
                             llvm::IRBuilder<> *ir,
                             llvm::Function *this_func,
-                            llvm::ArrayRef<llvm::Value *> vals);
+                            llvm::ArrayRef<llvm::Value *> vals,
+                            bool user_function);
 
     // Maths
     ValueType MathsAdd(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);

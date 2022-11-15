@@ -13,21 +13,21 @@ class  DaricParser : public antlr4::Parser {
 public:
   enum {
     COMMENT = 1, CONST = 2, DEF = 3, DIM = 4, ELSE = 5, END = 6, ENDDEF = 7, 
-    ENDIF = 8, IF = 9, MODULE = 10, OF = 11, PRINT = 12, PRIVATE = 13, REM = 14, 
-    RETURN = 15, THEN = 16, SWAP = 17, WITH = 18, DEFRECORD = 19, RECORD = 20, 
-    ENDRECORD = 21, HPTIME = 22, TIME = 23, TIMES = 24, ABS = 25, ACS = 26, 
-    ASN = 27, ATN = 28, COS = 29, DEG = 30, EXP = 31, FLOOR = 32, LET = 33, 
-    LN = 34, LOG = 35, PI = 36, RAD = 37, ROUND = 38, SGN = 39, SIN = 40, 
-    SQR = 41, TAN = 42, FALSE = 43, TRUE = 44, ASC = 45, CHRS = 46, INSTR = 47, 
-    LEFTS = 48, MIDS = 49, RIGHTS = 50, LEN = 51, BYTE = 52, INT = 53, FLOAT = 54, 
-    STRING = 55, DOLLAR = 56, HASH = 57, COLON = 58, SEMICOLON = 59, DOT = 60, 
-    COMMA = 61, QUOTE = 62, NEWLINE = 63, PERCENT = 64, UNDERSCORE = 65, 
-    LPAREN = 66, RPAREN = 67, SOPEN = 68, SCLOSE = 69, EQ = 70, NE = 71, 
-    GT = 72, GE = 73, LT = 74, LE = 75, HAT = 76, PLUS = 77, MINUS = 78, 
-    MULTIPLY = 79, DIVIDE = 80, SHL = 81, SHR = 82, MOD = 83, DIV = 84, 
-    COMP = 85, NOT = 86, AND = 87, OR = 88, EOR = 89, STRINGLITERAL = 90, 
-    HEXNUMBER = 91, BINARYNUMBER = 92, FLOATLITERAL = 93, INTEGERLITERAL = 94, 
-    IDENTIFIER = 95, WS = 96
+    ENDIF = 8, ENDWHILE = 9, IF = 10, MODULE = 11, OF = 12, PRINT = 13, 
+    PRIVATE = 14, REM = 15, REPEAT = 16, RETURN = 17, THEN = 18, SWAP = 19, 
+    UNTIL = 20, WITH = 21, WHILE = 22, DEFRECORD = 23, RECORD = 24, ENDRECORD = 25, 
+    HPTIME = 26, TIME = 27, TIMES = 28, ABS = 29, ACS = 30, ASN = 31, ATN = 32, 
+    COS = 33, DEG = 34, EXP = 35, FLOOR = 36, LET = 37, LN = 38, LOG = 39, 
+    PI = 40, RAD = 41, ROUND = 42, SGN = 43, SIN = 44, SQR = 45, TAN = 46, 
+    FALSE = 47, TRUE = 48, ASC = 49, CHRS = 50, INSTR = 51, LEFTS = 52, 
+    MIDS = 53, RIGHTS = 54, LEN = 55, BYTE = 56, INT = 57, FLOAT = 58, STRING = 59, 
+    DOLLAR = 60, HASH = 61, COLON = 62, SEMICOLON = 63, DOT = 64, COMMA = 65, 
+    QUOTE = 66, NEWLINE = 67, PERCENT = 68, UNDERSCORE = 69, LPAREN = 70, 
+    RPAREN = 71, SOPEN = 72, SCLOSE = 73, EQ = 74, NE = 75, GT = 76, GE = 77, 
+    LT = 78, LE = 79, HAT = 80, PLUS = 81, MINUS = 82, MULTIPLY = 83, DIVIDE = 84, 
+    SHL = 85, SHR = 86, MOD = 87, DIV = 88, COMP = 89, NOT = 90, AND = 91, 
+    OR = 92, EOR = 93, STRINGLITERAL = 94, HEXNUMBER = 95, BINARYNUMBER = 96, 
+    FLOATLITERAL = 97, INTEGERLITERAL = 98, IDENTIFIER = 99, WS = 100
   };
 
   enum {
@@ -35,10 +35,10 @@ public:
     RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
     RuleConst = 8, RuleDim = 9, RuleExprcall = 10, RuleEnd = 11, RuleIf = 12, 
     RuleIfml = 13, RuleModule = 14, RuleParameter = 15, RulePrint = 16, 
-    RuleProcedure = 17, RuleReturn = 18, RuleStruct = 19, RuleStructDim = 20, 
-    RuleStructInstance = 21, RuleSwap = 22, RuleVariable = 23, RuleExpression = 24, 
-    RuleType = 25, RuleTypeOrStruct = 26, RuleLiteral = 27, RuleFloatLiteral = 28, 
-    RuleIntegerLiteral = 29, RuleStringLiteral = 30
+    RuleProcedure = 17, RuleRepeat = 18, RuleReturn = 19, RuleStruct = 20, 
+    RuleStructDim = 21, RuleStructInstance = 22, RuleSwap = 23, RuleWhile = 24, 
+    RuleVariable = 25, RuleExpression = 26, RuleType = 27, RuleTypeOrStruct = 28, 
+    RuleLiteral = 29, RuleFloatLiteral = 30, RuleIntegerLiteral = 31, RuleStringLiteral = 32
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -76,11 +76,13 @@ public:
   class ParameterContext;
   class PrintContext;
   class ProcedureContext;
+  class RepeatContext;
   class ReturnContext;
   class StructContext;
   class StructDimContext;
   class StructInstanceContext;
   class SwapContext;
+  class WhileContext;
   class VariableContext;
   class ExpressionContext;
   class TypeContext;
@@ -110,8 +112,6 @@ public:
     virtual size_t getRuleIndex() const override;
     std::vector<StatementContext *> statement();
     StatementContext* statement(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> COLON();
-    antlr4::tree::TerminalNode* COLON(size_t i);
     std::vector<SeparatorContext *> separator();
     SeparatorContext* separator(size_t i);
     std::vector<antlr4::tree::TerminalNode *> EOF();
@@ -157,11 +157,13 @@ public:
     ModuleContext *module();
     ProcedureContext *procedure();
     PrintContext *print();
+    RepeatContext *repeat();
     ReturnContext *return_();
     StructContext *struct_();
     StructDimContext *structDim();
     StructInstanceContext *structInstance();
     SwapContext *swap();
+    WhileContext *while_();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -340,6 +342,8 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IF();
     ExpressionContext *expression();
+    std::vector<antlr4::tree::TerminalNode *> NEWLINE();
+    antlr4::tree::TerminalNode* NEWLINE(size_t i);
     std::vector<StatementsContext *> statements();
     StatementsContext* statements(size_t i);
     antlr4::tree::TerminalNode *ENDIF();
@@ -427,6 +431,22 @@ public:
   };
 
   ProcedureContext* procedure();
+
+  class  RepeatContext : public antlr4::ParserRuleContext {
+  public:
+    RepeatContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *REPEAT();
+    StatementsContext *statements();
+    antlr4::tree::TerminalNode *UNTIL();
+    ExpressionContext *expression();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  RepeatContext* repeat();
 
   class  ReturnContext : public antlr4::ParserRuleContext {
   public:
@@ -527,6 +547,22 @@ public:
   };
 
   SwapContext* swap();
+
+  class  WhileContext : public antlr4::ParserRuleContext {
+  public:
+    WhileContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *WHILE();
+    ExpressionContext *expression();
+    StatementsContext *statements();
+    antlr4::tree::TerminalNode *ENDWHILE();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  WhileContext* while_();
 
   class  VariableContext : public antlr4::ParserRuleContext {
   public:
