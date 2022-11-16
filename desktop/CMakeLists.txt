@@ -122,7 +122,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Parser/Tokens/ParserREPEAT.cpp Parser/Tokens/ParserWHILE.cpp Compiler/CompilerLooping.cpp)
+        Grammar/DaricVisitor.cpp Parser/Tokens/ParserREPEAT.cpp Parser/Tokens/ParserWHILE.cpp Compiler/CompilerLooping.cpp Parser/Tokens/ParserFOR.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS} ${LLD_LIBS})
 if (${ARCHITECTURE} STREQUAL "arm64")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)

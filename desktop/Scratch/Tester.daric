@@ -312,11 +312,11 @@ DEF Looping
 		I% = I% + 1
 	ENDWHILE
 	PRINT "While              = ";:IF I% = 10 Pass() ELSE Fail()
-#	I% = 0
-#	FOR J% = 1 TO 1
-#		I% = I% + 1
-#    NEXT
-#	PRINT "FOR (Int/1 Iter)   = ";:IF I% = 1 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 1 TO 1
+		I% = I% + 1
+    NEXT
+	PRINT "FOR (Int/1 Iter)   = ";:IF I% = 1 Pass() ELSE Fail()
 #	I% = 0
 #	FOR J% = 0 TO 9
 #		I% = I% + 1

@@ -57,6 +57,12 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             ValueType vt;
             vt.value = CreateCall(t.identifier, llvm::ArrayRef(vals));
             vt.type = rr->second.return_type;
+
+            // String, if so make permanent
+            if (vt.type == Primitive::STRING) {
+                llvm.MakePermString(vt.value, GetIR());
+                strip_strings = true;
+            }
             return vt;
         }
         case ParserTokenType::PI:
@@ -197,29 +203,67 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
 
         case ParserTokenType::INT: {
             auto t1 = CompileExpression(t.children[0]);
-            auto tt = Primitive::INT;
             ValueType vt;
-            vt.type = t1.type;
-            vt.value = t1.value;
-            llvm.AutoConversion(GetIR(), vt, tt);
+            switch (t1.type) {
+                case Primitive::INT:
+                    vt.value = t1.value;
+                    vt.type = t1.type;
+                    break;
+                case Primitive::FLOAT:
+                    vt.value = t1.value;
+                    vt.type = t1.type;
+                    llvm.AutoConversion(GetIR(), vt, Primitive::INT);
+                    break;
+                case Primitive::STRING:
+                    vt.value = CreateCall("string_to_int", {t1.value});
+                    vt.type = Primitive::INT;
+                    break;
+                default:
+                    TypeError(t);
+            }
             return vt;
         }
         case ParserTokenType::FLOAT: {
             auto t1 = CompileExpression(t.children[0]);
-            auto tt = Primitive::FLOAT;
             ValueType vt;
-            vt.type = t1.type;
-            vt.value = t1.value;
-            llvm.AutoConversion(GetIR(), vt, tt);
+            switch (t1.type) {
+                case Primitive::FLOAT:
+                    vt.value = t1.value;
+                    vt.type = t1.type;
+                    break;
+                case Primitive::INT:
+                    vt.value = t1.value;
+                    vt.type = t1.type;
+                    llvm.AutoConversion(GetIR(), vt, Primitive::FLOAT);
+                    break;
+                case Primitive::STRING:
+                    vt.value = CreateCall("string_to_float", {t1.value});
+                    vt.type = Primitive::FLOAT;
+                    break;
+                default:
+                    TypeError(t);
+            }
             return vt;
         }
         case ParserTokenType::STRING: {
             auto t1 = CompileExpression(t.children[0]);
-            auto tt = Primitive::STRING;
             ValueType vt;
-            vt.type = t1.type;
-            vt.value = t1.value;
-            llvm.AutoConversion(GetIR(), vt, tt);
+            vt.type = Primitive::STRING;
+            switch (t1.type) {
+                case Primitive::INT:
+                    vt.value = CreateCall("int_to_string", {t1.value});
+                    break;
+                case Primitive::FLOAT:
+                    vt.value = CreateCall("float_to_string", {t1.value});
+                    break;
+                case Primitive::STRING:
+                    vt.value = t1.value;
+                    break;
+                default:
+                    TypeError(t);
+            }
+            strip_strings = true;
+            llvm.AddTempString(vt.value, GetIR());
             return vt;
         }
         case ParserTokenType::STRING_WITH_FORMAT: {
@@ -243,6 +287,8 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 default:
                     TypeError(t);
             }
+            strip_strings = true;
+            llvm.AddTempString(vt.value, GetIR());
             return vt;
         }
 

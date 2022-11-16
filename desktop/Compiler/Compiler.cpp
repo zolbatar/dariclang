@@ -4,6 +4,9 @@
 #include "Compiler.h"
 #include "llvm/Bitcode/BitcodeWriter.h"
 
+//#define CATCH_ERRORS 1
+//#define PERF 1
+
 bool Compiler::Compile() {
 
     auto t1 = std::chrono::steady_clock::now();
@@ -20,7 +23,9 @@ bool Compiler::Compile() {
             break;
     }
 
-//    try {
+#ifdef CATCH_ERRORS
+    try {
+#endif
     llvm.SetupProfile(options, parser->GetModule());
 
     // Lookahead
@@ -40,15 +45,19 @@ bool Compiler::Compile() {
 
     CompileStatements(parser->GetStatements());
     implicit_ir->CreateRetVoid();
-/*    }
+#ifdef CATCH_ERRORS
+    }
     catch (CustomException &ex) {
         ex.OutputToStdout();
         return false;
-    }*/
-/*    auto t2 = std::chrono::steady_clock::now();
+    }
+#endif
+#ifdef PERF
+    auto t2 = std::chrono::steady_clock::now();
     double time_span = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1).count();
     time_span /= 1000000.0;
-    std::cout << "Compilation took " << std::setprecision(2) << time_span << " seconds" <<  std::endl;*/
+    std::cout << "Compilation took " << std::setprecision(2) << time_span << " seconds" <<  std::endl;
+#endif
     return true;
 }
 

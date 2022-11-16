@@ -63,6 +63,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitFor(DaricParser::ForContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitIf(DaricParser::IfContext *ctx) override {
     return visitChildren(ctx);
   }

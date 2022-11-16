@@ -43,6 +43,8 @@ public:
 
     virtual std::any visitEnd(DaricParser::EndContext *context) = 0;
 
+    virtual std::any visitFor(DaricParser::ForContext *context) = 0;
+
     virtual std::any visitIf(DaricParser::IfContext *context) = 0;
 
     virtual std::any visitIfml(DaricParser::IfmlContext *context) = 0;

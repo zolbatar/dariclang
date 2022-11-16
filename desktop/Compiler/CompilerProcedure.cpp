@@ -78,5 +78,6 @@ void Compiler::TokenReturn(ParserToken &token) {
         llvm.AutoConversion(GetIR(), ret_value, return_type);
         GetIR()->CreateRet(ret_value.value);
     }
+
     CreateAndInsertBB("RETURN end", false, token);
 }

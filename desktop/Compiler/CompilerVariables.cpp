@@ -38,8 +38,21 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
             TypeError(token);
         }
 
+        // String? Release previous value
+        if (value_type.type == Primitive::STRING) {
+            llvm.ClearPermString(ref->GetValue(ProcessIndices(ref, s), llvm, GetIR(), token).value, GetIR());
+        }
+
         // And finally save the value
         ref->SetValue(value_type, ProcessIndices(ref, s), llvm, GetIR(), token);
+    }
+
+    // String?
+
+    // Clear temp?
+    if (strip_strings) {
+        strip_strings = false;
+        llvm.ClearTempStrings(GetIR());
     }
 }
 

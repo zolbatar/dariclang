@@ -13,32 +13,33 @@ class  DaricParser : public antlr4::Parser {
 public:
   enum {
     COMMENT = 1, CONST = 2, DEF = 3, DIM = 4, ELSE = 5, END = 6, ENDDEF = 7, 
-    ENDIF = 8, ENDWHILE = 9, IF = 10, MODULE = 11, OF = 12, PRINT = 13, 
-    PRIVATE = 14, REM = 15, REPEAT = 16, RETURN = 17, THEN = 18, SWAP = 19, 
-    UNTIL = 20, WITH = 21, WHILE = 22, DEFRECORD = 23, RECORD = 24, ENDRECORD = 25, 
-    HPTIME = 26, TIME = 27, TIMES = 28, ABS = 29, ACS = 30, ASN = 31, ATN = 32, 
-    COS = 33, DEG = 34, EXP = 35, FLOOR = 36, LET = 37, LN = 38, LOG = 39, 
-    PI = 40, RAD = 41, ROUND = 42, SGN = 43, SIN = 44, SQR = 45, TAN = 46, 
-    FALSE = 47, TRUE = 48, ASC = 49, CHRS = 50, INSTR = 51, LEFTS = 52, 
-    MIDS = 53, RIGHTS = 54, LEN = 55, BYTE = 56, INT = 57, FLOAT = 58, STRING = 59, 
-    DOLLAR = 60, HASH = 61, COLON = 62, SEMICOLON = 63, DOT = 64, COMMA = 65, 
-    QUOTE = 66, NEWLINE = 67, PERCENT = 68, UNDERSCORE = 69, LPAREN = 70, 
-    RPAREN = 71, SOPEN = 72, SCLOSE = 73, EQ = 74, NE = 75, GT = 76, GE = 77, 
-    LT = 78, LE = 79, HAT = 80, PLUS = 81, MINUS = 82, MULTIPLY = 83, DIVIDE = 84, 
-    SHL = 85, SHR = 86, MOD = 87, DIV = 88, COMP = 89, NOT = 90, AND = 91, 
-    OR = 92, EOR = 93, STRINGLITERAL = 94, HEXNUMBER = 95, BINARYNUMBER = 96, 
-    FLOATLITERAL = 97, INTEGERLITERAL = 98, IDENTIFIER = 99, WS = 100
+    ENDIF = 8, ENDWHILE = 9, FOR = 10, IF = 11, MODULE = 12, NEXT = 13, 
+    OF = 14, PRINT = 15, PRIVATE = 16, REM = 17, REPEAT = 18, RETURN = 19, 
+    THEN = 20, STEP = 21, SWAP = 22, TO = 23, UNTIL = 24, WITH = 25, WHILE = 26, 
+    DEFRECORD = 27, RECORD = 28, ENDRECORD = 29, HPTIME = 30, TIME = 31, 
+    TIMES = 32, ABS = 33, ACS = 34, ASN = 35, ATN = 36, COS = 37, DEG = 38, 
+    EXP = 39, FLOOR = 40, LET = 41, LN = 42, LOG = 43, PI = 44, RAD = 45, 
+    ROUND = 46, SGN = 47, SIN = 48, SQR = 49, TAN = 50, FALSE = 51, TRUE = 52, 
+    ASC = 53, CHRS = 54, INSTR = 55, LEFTS = 56, MIDS = 57, RIGHTS = 58, 
+    LEN = 59, BYTE = 60, INT = 61, FLOAT = 62, STRING = 63, DOLLAR = 64, 
+    HASH = 65, COLON = 66, SEMICOLON = 67, DOT = 68, COMMA = 69, QUOTE = 70, 
+    NEWLINE = 71, PERCENT = 72, UNDERSCORE = 73, LPAREN = 74, RPAREN = 75, 
+    SOPEN = 76, SCLOSE = 77, EQ = 78, NE = 79, GT = 80, GE = 81, LT = 82, 
+    LE = 83, HAT = 84, PLUS = 85, MINUS = 86, MULTIPLY = 87, DIVIDE = 88, 
+    SHL = 89, SHR = 90, MOD = 91, DIV = 92, COMP = 93, NOT = 94, AND = 95, 
+    OR = 96, EOR = 97, STRINGLITERAL = 98, HEXNUMBER = 99, BINARYNUMBER = 100, 
+    FLOATLITERAL = 101, INTEGERLITERAL = 102, IDENTIFIER = 103, WS = 104
   };
 
   enum {
     RuleProgram = 0, RuleStatements = 1, RuleStatementsl = 2, RuleStatement = 3, 
     RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
-    RuleConst = 8, RuleDim = 9, RuleExprcall = 10, RuleEnd = 11, RuleIf = 12, 
-    RuleIfml = 13, RuleModule = 14, RuleParameter = 15, RulePrint = 16, 
-    RuleProcedure = 17, RuleRepeat = 18, RuleReturn = 19, RuleStruct = 20, 
-    RuleStructDim = 21, RuleStructInstance = 22, RuleSwap = 23, RuleWhile = 24, 
-    RuleVariable = 25, RuleExpression = 26, RuleType = 27, RuleTypeOrStruct = 28, 
-    RuleLiteral = 29, RuleFloatLiteral = 30, RuleIntegerLiteral = 31, RuleStringLiteral = 32
+    RuleConst = 8, RuleDim = 9, RuleExprcall = 10, RuleEnd = 11, RuleFor = 12, 
+    RuleIf = 13, RuleIfml = 14, RuleModule = 15, RuleParameter = 16, RulePrint = 17, 
+    RuleProcedure = 18, RuleRepeat = 19, RuleReturn = 20, RuleStruct = 21, 
+    RuleStructDim = 22, RuleStructInstance = 23, RuleSwap = 24, RuleWhile = 25, 
+    RuleVariable = 26, RuleExpression = 27, RuleType = 28, RuleTypeOrStruct = 29, 
+    RuleLiteral = 30, RuleFloatLiteral = 31, RuleIntegerLiteral = 32, RuleStringLiteral = 33
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -70,6 +71,7 @@ public:
   class DimContext;
   class ExprcallContext;
   class EndContext;
+  class ForContext;
   class IfContext;
   class IfmlContext;
   class ModuleContext;
@@ -152,6 +154,7 @@ public:
     ConstContext *const_();
     DimContext *dim();
     EndContext *end();
+    ForContext *for_();
     IfContext *if_();
     IfmlContext *ifml();
     ModuleContext *module();
@@ -317,6 +320,27 @@ public:
   };
 
   EndContext* end();
+
+  class  ForContext : public antlr4::ParserRuleContext {
+  public:
+    ForContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *FOR();
+    antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *EQ();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *TO();
+    StatementsContext *statements();
+    antlr4::tree::TerminalNode *NEXT();
+    antlr4::tree::TerminalNode *STEP();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ForContext* for_();
 
   class  IfContext : public antlr4::ParserRuleContext {
   public:

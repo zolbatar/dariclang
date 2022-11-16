@@ -28,6 +28,8 @@ public:
     llvm::Function *CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters);
     llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
     void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);
+    void MakePermString(llvm::Value *v, llvm::IRBuilder<> *ir);
+    void ClearPermString(llvm::Value *v, llvm::IRBuilder<> *ir);
     void ClearTempStrings(llvm::IRBuilder<> *ir);
 
     // Blocks

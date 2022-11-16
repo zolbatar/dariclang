@@ -3,10 +3,15 @@
 #include <unordered_set>
 #include "Types.h"
 
+//#define DEBUG 1
+
 std::unordered_set<const char *> temp_strings;
 std::unordered_set<const char *> perm_strings;
 
 extern "C" void Strings_Clear() {
+#ifdef DEBUG
+    std::cout << "Clearing strings" << std::endl;
+#endif
     for (auto &a: temp_strings) {
         free((void *) a);
     }
@@ -18,9 +23,12 @@ extern "C" void Strings_Clear() {
 }
 
 extern "C" void Strings_Summary() {
-    std::cout << "GC summary\n";
+#ifdef DEBUG
+    std::cout << "\nGC summary\n";
+    std::cout << "----------\n";
     std::cout << "Temporary: " << temp_strings.size() << std::endl;
     std::cout << "Permanent: " << perm_strings.size() << std::endl;
+#endif
 }
 
 extern "C" int64_t String_Compare(const char *s1, const char *s2) {
@@ -28,10 +36,38 @@ extern "C" int64_t String_Compare(const char *s1, const char *s2) {
 }
 
 extern "C" void Add_Temp_String(const char *v) {
+#ifdef DEBUG
+    std::cout << "Add Temp String: " << (size_t)v << " is '" << v << "'" << std::endl;
+#endif
     temp_strings.insert(v);
 }
 
+extern "C" void Clear_Perm_String(const char *v) {
+    auto f = perm_strings.find(v);
+    if (f != perm_strings.end()) {
+#ifdef DEBUG
+        std::cout << "Clear Perm String: " << (size_t)v << " is '" << v << "'" << std::endl;
+#endif
+        free((void *) *f);
+        perm_strings.erase(f);
+    }
+}
+
+extern "C" void Make_Perm_String(const char *v) {
+    auto f = temp_strings.find(v);
+    if (f != temp_strings.end()) {
+#ifdef DEBUG
+        std::cout << "Make Perm String: " << (size_t)v << " is '" << v << "'" << std::endl;
+#endif
+        temp_strings.erase(v);
+        perm_strings.insert(v);
+    }
+}
+
 extern "C" void Clear_Temp_Strings() {
+#ifdef DEBUG
+    std::cout << "Clear Temp Strings" << std::endl;
+#endif
     for (auto &a: temp_strings) {
         free((void *) a);
     }

@@ -19,6 +19,7 @@ statement
     | const
     | dim
     | end
+    | for
     | if
     | ifml
     | module
@@ -44,6 +45,7 @@ const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? 
 dim:            DIM IDENTIFIER OF? type SOPEN expression? (COMMA expression)* SCLOSE ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            END ;
+for:            FOR IDENTIFIER EQ expression TO expression (STEP expression)? statements NEXT ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
 module:         MODULE IDENTIFIER ;
@@ -196,8 +198,10 @@ END             : 'END' | 'End' ;
 ENDDEF          : 'ENDDEF' | 'EndDef' ;
 ENDIF           : 'ENDIF' | 'EndIf' ;
 ENDWHILE        : 'ENDWHILE' | 'EndWhile' ;
+FOR             : 'FOR' | 'For' ;
 IF              : 'IF' | 'If' ;
 MODULE          : 'MODULE' | 'Module' ;
+NEXT            : 'NEXT' | 'Next' ;
 OF              : 'OF' | 'Of' ;
 PRINT           : 'PRINT' | 'Print' ;
 PRIVATE         : 'PRIVATE' | 'Private' ;
@@ -205,7 +209,9 @@ REM             : 'REM' | 'Rem' ;
 REPEAT          : 'REPEAT' | 'Repeat' ;
 RETURN          : 'RETURN' | 'Return' ;
 THEN            : 'THEN' | 'Then' ;
+STEP            : 'STEP' | 'Step' ;
 SWAP            : 'SWAP' | 'Swap ' ;
+TO              : 'TO' | 'To' ;
 UNTIL           : 'UNTIL' | 'Until' ;
 WITH            : 'WITH' | 'With' ;
 WHILE           : 'WHILE' | 'While' ;

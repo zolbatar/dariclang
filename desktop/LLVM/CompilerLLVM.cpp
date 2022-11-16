@@ -191,6 +191,8 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
     // String
     Module->getOrInsertFunction("String_Compare", TypeInt, TypeString, TypeString);
     Module->getOrInsertFunction("Add_Temp_String", TypeNone, TypeString);
+    Module->getOrInsertFunction("Make_Perm_String", TypeNone, TypeString);
+    Module->getOrInsertFunction("Clear_Perm_String", TypeNone, TypeString);
     Module->getOrInsertFunction("Clear_Temp_Strings", TypeNone);
     Module->getOrInsertFunction("asc", TypeInt, TypeString);
     Module->getOrInsertFunction("chrs", TypeString, TypeInt);
@@ -280,6 +282,16 @@ llvm::IRBuilder<> *CompilerLLVM::CreateBuilder(std::string name, llvm::Function 
 
 void CompilerLLVM::AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir) {
     auto fun = Module->getFunction("Add_Temp_String");
+    ir->CreateCall(fun, {v});
+}
+
+void CompilerLLVM::MakePermString(llvm::Value *v, llvm::IRBuilder<> *ir) {
+    auto fun = Module->getFunction("Make_Perm_String");
+    ir->CreateCall(fun, {v});
+}
+
+void CompilerLLVM::ClearPermString(llvm::Value *v, llvm::IRBuilder<> *ir) {
+    auto fun = Module->getFunction("Clear_Perm_String");
     ir->CreateCall(fun, {v});
 }
 
