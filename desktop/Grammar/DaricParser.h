@@ -333,7 +333,9 @@ public:
     antlr4::tree::TerminalNode *TO();
     StatementsContext *statements();
     antlr4::tree::TerminalNode *NEXT();
+    TypeContext *type();
     antlr4::tree::TerminalNode *STEP();
+    antlr4::tree::TerminalNode *OF();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

@@ -317,31 +317,31 @@ DEF Looping
 		I% = I% + 1
     NEXT
 	PRINT "FOR (Int/1 Iter)   = ";:IF I% = 1 Pass() ELSE Fail()
-#	I% = 0
-#	FOR J% = 0 TO 9
-#		I% = I% + 1
-#	NEXT
-#	PRINT "FOR (Int)          = ";:IF I% = 10 Pass() ELSE Fail()
-#	I% = 0
-#	FOR J% = 0 TO 9 STEP 2
-#		I% = I% + 1
-#	NEXT
-#	PRINT "FOR + Step (Int)   = ";:IF I% = 5 Pass() ELSE Fail()
-#	I% = 0
-#	FOR J% = 9 TO 0 STEP -1
-#		I% = I% + 1
-#	NEXT
-#	PRINT "FOR - (Int)        = ";:IF I% = 10 Pass() ELSE Fail()
-#	I% = 0
-#	FOR J# = 0.0 TO 9.0
-#		I% = I% + 1
-#	NEXT
-#	PRINT "FOR (Float)        = ";:IF I% = 10 Pass() ELSE Fail()
-#	I% = 0
-#	FOR J# = 0.0 TO 9.0 STEP 2.0
-#		I% = I% + 1
-#	NEXT
-#	PRINT "FOR + Step (Float) = ";:IF I% = 5 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 0 TO 9
+		I% = I% + 1
+	NEXT
+	PRINT "FOR (Int)          = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 0 TO 10 STEP 2
+		I% = I% + 1
+	NEXT
+	PRINT "FOR + Step (Int)   = ";:IF I% = 6 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 9 TO 0 STEP -1
+		I% = I% + 1
+	NEXT
+	PRINT "FOR - (Int)        = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J# OF FLOAT = 0.0 TO 9.0
+		I% = I% + 1
+	NEXT
+	PRINT "FOR (Float)        = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J# OF FLOAT = 0.0 TO 10.0 STEP 2.0
+		I% = I% + 1
+	NEXT
+	PRINT "FOR + Step (Float) = ";:IF I% = 6 Pass() ELSE Fail()
 #	PRINT "Case               = ";
 #	I%=1
 #	CASE I% OF

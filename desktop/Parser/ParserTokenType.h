@@ -28,6 +28,7 @@ enum class ParserTokenType
 	EXP,
 	FALSE,
 	FLOOR,
+    FOR,
 	HAT,
 	INSTR,
 	FLOAT,

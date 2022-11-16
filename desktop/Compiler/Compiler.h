@@ -71,6 +71,7 @@ private:
     void TokenStructArray(ParserToken &t);
     void TokenRepeat(ParserToken &t);
     void TokenWhile(ParserToken &t);
+    void TokenFor(ParserToken &t);
 
     std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 

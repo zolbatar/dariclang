@@ -50,3 +50,99 @@ void Compiler::TokenWhile(ParserToken &token) {
     GetIR()->SetInsertPoint(quitBB);
 }
 
+void Compiler::TokenFor(ParserToken &t) {
+    auto ref = Reference::Get(t.reference);
+
+    // String?
+    if (ref->GetDataType() == Primitive::STRING) {
+        RaiseException("Strings not allowed in FOR loops", t);
+    }
+
+    // Find the loop variable
+    if (!ref->InstanceExists()) {
+        // If no type, assume INT
+        if (ref->GetDataType() == Primitive::NONE)
+            ref->SetDataType(Primitive::INT);
+        ref->CreateInstance(llvm, GetIR(), t.scope);
+    }
+    if (!ref->FindInstance())
+        RaiseException("Variable error", t);
+
+    auto from = CompileExpression(t.children[1]);
+    auto to = CompileExpression(t.children[2]);
+    ValueType step;
+    if (t.children.size() == 4) {
+        step = CompileExpression(t.children[3]);
+    } else {
+        step.type = ref->GetDataType();
+        switch (ref->GetDataType()) {
+            case Primitive::INT:
+                step.value = llvm.CreateConstantInt(Primitive::INT, 1);
+                break;
+            case Primitive::FLOAT:
+                step.value = llvm.CreateConstantFloat(Primitive::FLOAT, 1.0);
+                break;
+            default:
+                TypeError(t);
+        }
+    }
+
+    // Ensure all types are the same
+    llvm.AutoConversion(GetIR(), to, ref->GetDataType());
+    llvm.AutoConversion(GetIR(), from, ref->GetDataType());
+    llvm.AutoConversion(GetIR(), step, ref->GetDataType());
+    if (ref->GetDataType() != to.type && ref->GetDataType() != from.type || ref->GetDataType() != step.type) {
+        RaiseException("In a FOR loop, all values must the same type", t);
+    }
+
+    // Set init loop variable value
+    ref->SetValue(from, std::vector<ValueType>(), llvm, GetIR(), t);
+
+    // Flag to indicate completion
+    auto temp_name = "FOR temp (" + std::to_string(t.line) + ")";
+    auto finished = GetIR()->CreateAlloca(llvm.TypeBit, nullptr, temp_name);
+    GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 0), finished);
+
+    // Blocks
+    auto bodyBB = CreateAndInsertBB("FOR body", true, t);
+    auto bodyEndBB = CreateAndInsertBB("FOR body end", false, t);
+    auto bodyFlagBB = CreateAndInsertBB("FOR body flag", false, t);
+    auto bodyFlag2BB = CreateAndInsertBB("FOR body flag2", false, t);
+    auto endBB = CreateAndInsertBB("FOR body terminate", false, t);
+
+    // Body block
+    GetIR()->SetInsertPoint(bodyBB);
+    CompileStatements(t.children[0].children);
+    RetBrCheckSplit(bodyBB, bodyEndBB);
+
+    // Body Terminator
+    GetIR()->SetInsertPoint(bodyEndBB);
+
+    // Add step to loop variable
+    auto v = ref->GetValue(std::vector<ValueType>(), llvm, GetIR(), t);
+    auto nv = llvm.MathsAdd(GetIR(), v, step);
+    ref->SetValue(nv, std::vector<ValueType>(), llvm, GetIR(), t);
+
+    // Have we completed?
+    llvm::Value *cond;
+    switch (ref->GetDataType()) {
+        case Primitive::INT:
+            cond = GetIR()->CreateICmpEQ(nv.value, to.value);
+            break;
+        case Primitive::FLOAT:
+            cond = GetIR()->CreateFCmpOEQ(nv.value, to.value);
+            break;
+        default:
+            assert(0);
+    }
+    GetIR()->CreateCondBr(GetIR()->CreateLoad(llvm.TypeBit, finished), endBB, bodyFlagBB);
+    GetIR()->SetInsertPoint(bodyFlagBB);
+    GetIR()->CreateCondBr(cond, bodyFlag2BB, bodyBB);
+    GetIR()->SetInsertPoint(bodyFlag2BB);
+    GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 1), finished);
+    GetIR()->CreateBr(bodyBB);
+
+    // Body Terminator
+    GetIR()->SetInsertPoint(endBB);
+}
+

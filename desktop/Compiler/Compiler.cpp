@@ -116,6 +116,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::WHILE:
                 TokenWhile(token);
                 break;
+            case ParserTokenType::FOR:
+                TokenFor(token);
+                break;
             default:
                 assert(0);
         }
