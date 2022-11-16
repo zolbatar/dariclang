@@ -35,6 +35,8 @@ public:
 
     virtual std::any visitCall(DaricParser::CallContext *context) = 0;
 
+    virtual std::any visitCase(DaricParser::CaseContext *context) = 0;
+
     virtual std::any visitConst(DaricParser::ConstContext *context) = 0;
 
     virtual std::any visitDim(DaricParser::DimContext *context) = 0;
@@ -68,6 +70,8 @@ public:
     virtual std::any visitStructInstance(DaricParser::StructInstanceContext *context) = 0;
 
     virtual std::any visitSwap(DaricParser::SwapContext *context) = 0;
+
+    virtual std::any visitWhen(DaricParser::WhenContext *context) = 0;
 
     virtual std::any visitWhile(DaricParser::WhileContext *context) = 0;
 

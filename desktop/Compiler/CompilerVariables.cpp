@@ -5,6 +5,11 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
         auto ref = Reference::Get(s.reference);
         auto value_type = CompileExpression(s.children[0]);
 
+        // If no type, try and auto-guess it from the expression
+        if (ref->GetDataType() == Primitive::NONE) {
+            ref->SetDataType(value_type.type);
+        }
+
         // If it's a primitive type, we create the variable if we need to
         if (ref->GetInstanceType() == InstanceType::PRIMITIVE) {
             if (!ref->InstanceExists()) {

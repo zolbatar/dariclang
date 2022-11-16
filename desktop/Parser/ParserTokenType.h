@@ -13,6 +13,7 @@ enum class ParserTokenType
 	ATN,
 	BRANCH,
 	CALL,
+    CASE,
 	CHRS,
 	COMMENT,
 	COMPLEMENT,
@@ -55,6 +56,7 @@ enum class ParserTokenType
 	NEWLINE,
 	NOT,
 	OR,
+    OTHERWISE,
 	PARAMETER,
 	PI,
 	PRINT,
@@ -82,5 +84,6 @@ enum class ParserTokenType
 	TRUE,
 	UNARYMINUS,
 	VARIABLE,
+    WHEN,
     WHILE,
 };

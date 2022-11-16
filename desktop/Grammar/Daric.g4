@@ -16,6 +16,7 @@ statement
     : COMMENT
     | assign
     | call
+    | case
     | const
     | dim
     | end
@@ -41,6 +42,7 @@ separator
 assign:         LET? assignment (COMMA assignment)* (OF? type)? ;
 assignment:     variable EQ expression ;
 call:           IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
+case:           CASE expression OF separator? when+ (OTHERWISE statements)? ENDCASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
 dim:            DIM IDENTIFIER OF? type SOPEN expression? (COMMA expression)* SCLOSE ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
@@ -58,6 +60,7 @@ struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (sep
 structDim:      DIM RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
 structInstance: LET? IDENTIFIER EQ RECORD OF? IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
+when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements ENDWHILE ;
 
 variable
@@ -190,11 +193,13 @@ stringLiteral
 
 COMMENT         : (REM | HASH | QUOTE) ~ [\r\n]* ;
 
+CASE            : 'CASE' | 'Case' ;
 CONST           : 'CONST' | 'Const' ;
 DEF             : 'DEF' | 'Def' ;
 DIM             : 'DIM' | 'Dim' ;
 ELSE            : 'ELSE' | 'Else' ;
 END             : 'END' | 'End' ;
+ENDCASE         : 'ENDCASE' | 'EndCase' ;
 ENDDEF          : 'ENDDEF' | 'EndDef' ;
 ENDIF           : 'ENDIF' | 'EndIf' ;
 ENDWHILE        : 'ENDWHILE' | 'EndWhile' ;
@@ -203,6 +208,7 @@ IF              : 'IF' | 'If' ;
 MODULE          : 'MODULE' | 'Module' ;
 NEXT            : 'NEXT' | 'Next' ;
 OF              : 'OF' | 'Of' ;
+OTHERWISE       : 'OTHERWISE' | 'Otherwise'     ;
 PRINT           : 'PRINT' | 'Print' ;
 PRIVATE         : 'PRIVATE' | 'Private' ;
 REM             : 'REM' | 'Rem' ;
@@ -213,6 +219,7 @@ STEP            : 'STEP' | 'Step' ;
 SWAP            : 'SWAP' | 'Swap ' ;
 TO              : 'TO' | 'To' ;
 UNTIL           : 'UNTIL' | 'Until' ;
+WHEN            : 'WHEN' | 'When' ;
 WITH            : 'WITH' | 'With' ;
 WHILE           : 'WHILE' | 'While' ;
 

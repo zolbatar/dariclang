@@ -53,6 +53,8 @@ void Compiler::TokenWhile(ParserToken &token) {
 void Compiler::TokenFor(ParserToken &t) {
     auto ref = Reference::Get(t.reference);
 
+    auto from = CompileExpression(t.children[1]);
+
     // String?
     if (ref->GetDataType() == Primitive::STRING) {
         RaiseException("Strings not allowed in FOR loops", t);
@@ -60,15 +62,15 @@ void Compiler::TokenFor(ParserToken &t) {
 
     // Find the loop variable
     if (!ref->InstanceExists()) {
-        // If no type, assume INT
-        if (ref->GetDataType() == Primitive::NONE)
-            ref->SetDataType(Primitive::INT);
+        // If no type, try and auto-guess it from the expression
+        if (ref->GetDataType() == Primitive::NONE) {
+            ref->SetDataType(from.type);
+        }
         ref->CreateInstance(llvm, GetIR(), t.scope);
     }
     if (!ref->FindInstance())
         RaiseException("Variable error", t);
 
-    auto from = CompileExpression(t.children[1]);
     auto to = CompileExpression(t.children[2]);
     ValueType step;
     if (t.children.size() == 4) {
@@ -124,20 +126,12 @@ void Compiler::TokenFor(ParserToken &t) {
     ref->SetValue(nv, std::vector<ValueType>(), llvm, GetIR(), t);
 
     // Have we completed?
-    llvm::Value *cond;
-    switch (ref->GetDataType()) {
-        case Primitive::INT:
-            cond = GetIR()->CreateICmpEQ(nv.value, to.value);
-            break;
-        case Primitive::FLOAT:
-            cond = GetIR()->CreateFCmpOEQ(nv.value, to.value);
-            break;
-        default:
-            assert(0);
-    }
+    auto cond = llvm.ComparisonEQ(GetIR(), nv, to);
+    cond.value = GetIR()->CreateTrunc(cond.value, llvm.TypeBit);
+
     GetIR()->CreateCondBr(GetIR()->CreateLoad(llvm.TypeBit, finished), endBB, bodyFlagBB);
     GetIR()->SetInsertPoint(bodyFlagBB);
-    GetIR()->CreateCondBr(cond, bodyFlag2BB, bodyBB);
+    GetIR()->CreateCondBr(cond.value, bodyFlag2BB, bodyBB);
     GetIR()->SetInsertPoint(bodyFlag2BB);
     GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 1), finished);
     GetIR()->CreateBr(bodyBB);

@@ -32,11 +32,6 @@ std::any Parser::visitAssignment(DaricParser::AssignmentContext *context) {
     auto r = std::any_cast<Reference *>(visit(context->variable()));
     psc.reference = r->GetRef();
 
-    // We need to know a type OR have a value to assign to (so we can look up variable)
-    if (assignment_type == Primitive::NONE && context->EQ()) {
-        assignment_type = Primitive::INT;
-    }
-
     r->SetDataType(assignment_type);
 
     // Do we have an expression (i.e. initial value?)

@@ -3,7 +3,7 @@ PRINT "----------------"
 PRINT
 
 CONST constant=100
-CONST ccf=12.5 OF FLOAT
+CONST ccf=12.5
 DIM a1d OF INT[5]:DIM a2di OF INT[5,5]:DIM a2df OF FLOAT[5,5]:DIM a3d OF INT[5,5,5]
 a1d[3]=123:a2di[2,3]=456:a3d[1,2,3]=789
 
@@ -225,14 +225,14 @@ ENDDEF
 DEF SwapVars
 	PRINT "::Swap::"
 	swpa=1,swpb=2
-	swpf1=123,swpf2=456 OF FLOAT
+	swpf1=123.2,swpf2=456.2
 	swps1$="11",swps2$="22" OF STRING
 	SWAP swpa,swpb
 	SWAP swpf1,swpf2
 	SWAP swps1$,swps2$
 	SWAP myrecord.y, myrecord.x
 	PRINT "Swap integer       = ";:IF swpa=2 AND swpb=1 Pass() ELSE Fail()
-	PRINT "Swap float         = ";:IF swpf1=456 AND swpf2=123 Pass() ELSE Fail()
+	PRINT "Swap float         = ";:IF swpf1=456.2 AND swpf2=123.2 Pass() ELSE Fail()
 	PRINT "Swap string        = ";:IF swps1$="22" AND swps2$="11" Pass() ELSE Fail()
 	PRINT
 ENDDEF
@@ -333,43 +333,43 @@ DEF Looping
 	NEXT
 	PRINT "FOR - (Int)        = ";:IF I% = 10 Pass() ELSE Fail()
 	I% = 0
-	FOR J# OF FLOAT = 0.0 TO 9.0
+	FOR J# = 0.0 TO 9.0
 		I% = I% + 1
 	NEXT
 	PRINT "FOR (Float)        = ";:IF I% = 10 Pass() ELSE Fail()
 	I% = 0
-	FOR J# OF FLOAT = 0.0 TO 10.0 STEP 2.0
+	FOR J# = 0.0 TO 10.0 STEP 2.0
 		I% = I% + 1
 	NEXT
 	PRINT "FOR + Step (Float) = ";:IF I% = 6 Pass() ELSE Fail()
-#	PRINT "Case               = ";
-#	I%=1
-#	CASE I% OF
-#		WHEN 0, 1, 2: Pass()
-#		WHEN 3: Fail()
-#		OTHERWISE Fail()
-#	ENDCASE
-#	PRINT "Case (not first)   = ";
-#	I%=2
-#	CASE I% OF
-#		WHEN 0,1: Fail()
-#		WHEN 2: Pass()
-#		OTHERWISE Fail()
-#	ENDCASE
-#	PRINT "Case (Otherwise)   = ";
-#	I%=4
-#	CASE I% OF
-#		WHEN 0, 1, 2: Fail()
-#		WHEN 3: Fail()
-#		OTHERWISE Pass()
-#	ENDCASE
-#	PRINT "Case (String)      = ";
-#	A$="B"
-#    CASE A$ OF
-# 		WHEN "A":Fail()
-#	 	WHEN "B":Pass()
-#		OTHERWISE Fail()
-#	ENDCASE
+	PRINT "Case               = ";
+	I%=1
+	CASE I% OF
+		WHEN 0, 1, 2: Pass()
+		WHEN 3: Fail()
+		OTHERWISE Fail()
+	ENDCASE
+	PRINT "Case (not first)   = ";
+	I%=2
+	CASE I% OF
+		WHEN 0,1: Fail()
+		WHEN 2: Pass()
+		OTHERWISE Fail()
+	ENDCASE
+	PRINT "Case (Otherwise)   = ";
+	I%=4
+	CASE I% OF
+		WHEN 0, 1, 2: Fail()
+		WHEN 3: Fail()
+		OTHERWISE Pass()
+	ENDCASE
+	PRINT "Case (String)      = ";
+	A$="B"
+    CASE A$ OF
+ 		WHEN "A":Fail()
+	 	WHEN "B":Pass()
+		OTHERWISE Fail()
+	ENDCASE
     PRINT
 ENDDEF
 

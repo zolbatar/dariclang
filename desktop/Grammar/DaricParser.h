@@ -12,34 +12,36 @@
 class  DaricParser : public antlr4::Parser {
 public:
   enum {
-    COMMENT = 1, CONST = 2, DEF = 3, DIM = 4, ELSE = 5, END = 6, ENDDEF = 7, 
-    ENDIF = 8, ENDWHILE = 9, FOR = 10, IF = 11, MODULE = 12, NEXT = 13, 
-    OF = 14, PRINT = 15, PRIVATE = 16, REM = 17, REPEAT = 18, RETURN = 19, 
-    THEN = 20, STEP = 21, SWAP = 22, TO = 23, UNTIL = 24, WITH = 25, WHILE = 26, 
-    DEFRECORD = 27, RECORD = 28, ENDRECORD = 29, HPTIME = 30, TIME = 31, 
-    TIMES = 32, ABS = 33, ACS = 34, ASN = 35, ATN = 36, COS = 37, DEG = 38, 
-    EXP = 39, FLOOR = 40, LET = 41, LN = 42, LOG = 43, PI = 44, RAD = 45, 
-    ROUND = 46, SGN = 47, SIN = 48, SQR = 49, TAN = 50, FALSE = 51, TRUE = 52, 
-    ASC = 53, CHRS = 54, INSTR = 55, LEFTS = 56, MIDS = 57, RIGHTS = 58, 
-    LEN = 59, BYTE = 60, INT = 61, FLOAT = 62, STRING = 63, DOLLAR = 64, 
-    HASH = 65, COLON = 66, SEMICOLON = 67, DOT = 68, COMMA = 69, QUOTE = 70, 
-    NEWLINE = 71, PERCENT = 72, UNDERSCORE = 73, LPAREN = 74, RPAREN = 75, 
-    SOPEN = 76, SCLOSE = 77, EQ = 78, NE = 79, GT = 80, GE = 81, LT = 82, 
-    LE = 83, HAT = 84, PLUS = 85, MINUS = 86, MULTIPLY = 87, DIVIDE = 88, 
-    SHL = 89, SHR = 90, MOD = 91, DIV = 92, COMP = 93, NOT = 94, AND = 95, 
-    OR = 96, EOR = 97, STRINGLITERAL = 98, HEXNUMBER = 99, BINARYNUMBER = 100, 
-    FLOATLITERAL = 101, INTEGERLITERAL = 102, IDENTIFIER = 103, WS = 104
+    COMMENT = 1, CASE = 2, CONST = 3, DEF = 4, DIM = 5, ELSE = 6, END = 7, 
+    ENDCASE = 8, ENDDEF = 9, ENDIF = 10, ENDWHILE = 11, FOR = 12, IF = 13, 
+    MODULE = 14, NEXT = 15, OF = 16, OTHERWISE = 17, PRINT = 18, PRIVATE = 19, 
+    REM = 20, REPEAT = 21, RETURN = 22, THEN = 23, STEP = 24, SWAP = 25, 
+    TO = 26, UNTIL = 27, WHEN = 28, WITH = 29, WHILE = 30, DEFRECORD = 31, 
+    RECORD = 32, ENDRECORD = 33, HPTIME = 34, TIME = 35, TIMES = 36, ABS = 37, 
+    ACS = 38, ASN = 39, ATN = 40, COS = 41, DEG = 42, EXP = 43, FLOOR = 44, 
+    LET = 45, LN = 46, LOG = 47, PI = 48, RAD = 49, ROUND = 50, SGN = 51, 
+    SIN = 52, SQR = 53, TAN = 54, FALSE = 55, TRUE = 56, ASC = 57, CHRS = 58, 
+    INSTR = 59, LEFTS = 60, MIDS = 61, RIGHTS = 62, LEN = 63, BYTE = 64, 
+    INT = 65, FLOAT = 66, STRING = 67, DOLLAR = 68, HASH = 69, COLON = 70, 
+    SEMICOLON = 71, DOT = 72, COMMA = 73, QUOTE = 74, NEWLINE = 75, PERCENT = 76, 
+    UNDERSCORE = 77, LPAREN = 78, RPAREN = 79, SOPEN = 80, SCLOSE = 81, 
+    EQ = 82, NE = 83, GT = 84, GE = 85, LT = 86, LE = 87, HAT = 88, PLUS = 89, 
+    MINUS = 90, MULTIPLY = 91, DIVIDE = 92, SHL = 93, SHR = 94, MOD = 95, 
+    DIV = 96, COMP = 97, NOT = 98, AND = 99, OR = 100, EOR = 101, STRINGLITERAL = 102, 
+    HEXNUMBER = 103, BINARYNUMBER = 104, FLOATLITERAL = 105, INTEGERLITERAL = 106, 
+    IDENTIFIER = 107, WS = 108
   };
 
   enum {
     RuleProgram = 0, RuleStatements = 1, RuleStatementsl = 2, RuleStatement = 3, 
     RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
-    RuleConst = 8, RuleDim = 9, RuleExprcall = 10, RuleEnd = 11, RuleFor = 12, 
-    RuleIf = 13, RuleIfml = 14, RuleModule = 15, RuleParameter = 16, RulePrint = 17, 
-    RuleProcedure = 18, RuleRepeat = 19, RuleReturn = 20, RuleStruct = 21, 
-    RuleStructDim = 22, RuleStructInstance = 23, RuleSwap = 24, RuleWhile = 25, 
-    RuleVariable = 26, RuleExpression = 27, RuleType = 28, RuleTypeOrStruct = 29, 
-    RuleLiteral = 30, RuleFloatLiteral = 31, RuleIntegerLiteral = 32, RuleStringLiteral = 33
+    RuleCase = 8, RuleConst = 9, RuleDim = 10, RuleExprcall = 11, RuleEnd = 12, 
+    RuleFor = 13, RuleIf = 14, RuleIfml = 15, RuleModule = 16, RuleParameter = 17, 
+    RulePrint = 18, RuleProcedure = 19, RuleRepeat = 20, RuleReturn = 21, 
+    RuleStruct = 22, RuleStructDim = 23, RuleStructInstance = 24, RuleSwap = 25, 
+    RuleWhen = 26, RuleWhile = 27, RuleVariable = 28, RuleExpression = 29, 
+    RuleType = 30, RuleTypeOrStruct = 31, RuleLiteral = 32, RuleFloatLiteral = 33, 
+    RuleIntegerLiteral = 34, RuleStringLiteral = 35
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -67,6 +69,7 @@ public:
   class AssignContext;
   class AssignmentContext;
   class CallContext;
+  class CaseContext;
   class ConstContext;
   class DimContext;
   class ExprcallContext;
@@ -84,6 +87,7 @@ public:
   class StructDimContext;
   class StructInstanceContext;
   class SwapContext;
+  class WhenContext;
   class WhileContext;
   class VariableContext;
   class ExpressionContext;
@@ -151,6 +155,7 @@ public:
     antlr4::tree::TerminalNode *COMMENT();
     AssignContext *assign();
     CallContext *call();
+    CaseContext *case_();
     ConstContext *const_();
     DimContext *dim();
     EndContext *end();
@@ -243,6 +248,27 @@ public:
   };
 
   CallContext* call();
+
+  class  CaseContext : public antlr4::ParserRuleContext {
+  public:
+    CaseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *CASE();
+    ExpressionContext *expression();
+    antlr4::tree::TerminalNode *OF();
+    antlr4::tree::TerminalNode *ENDCASE();
+    SeparatorContext *separator();
+    std::vector<WhenContext *> when();
+    WhenContext* when(size_t i);
+    antlr4::tree::TerminalNode *OTHERWISE();
+    StatementsContext *statements();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  CaseContext* case_();
 
   class  ConstContext : public antlr4::ParserRuleContext {
   public:
@@ -573,6 +599,24 @@ public:
   };
 
   SwapContext* swap();
+
+  class  WhenContext : public antlr4::ParserRuleContext {
+  public:
+    WhenContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *WHEN();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    StatementsContext *statements();
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  WhenContext* when();
 
   class  WhileContext : public antlr4::ParserRuleContext {
   public:

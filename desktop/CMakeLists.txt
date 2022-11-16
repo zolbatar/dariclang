@@ -13,11 +13,11 @@ if (APPLE)
     else ()
         add_compile_options(-DSDL -DHAVE_FFSL -DCAPSTONE_HAS_X86)
     endif ()
-else()
+else ()
     add_compile_options(-DSDL -DHAVE_FFSL -DCAPSTONE_HAS_X86)
-endif()
+endif ()
 
-    include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
+include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()
 
 # Antlr4
@@ -65,6 +65,8 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerVariables.cpp
         Compiler/CompilerExpression.cpp
         Compiler/CompilerStructs.cpp
+        Compiler/CompilerLooping.cpp
+        Compiler/CompilerCase.cpp
 
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
@@ -100,6 +102,10 @@ add_executable(${PROJECT_NAME}
         Parser/Tokens/ParserCONST.cpp
         Parser/Tokens/ParserSWAP.cpp
         Parser/Tokens/ParserDIM.cpp
+        Parser/Tokens/ParserREPEAT.cpp
+        Parser/Tokens/ParserWHILE.cpp
+        Parser/Tokens/ParserFOR.cpp
+        Parser/Tokens/ParserCASE.cpp
 
         Variables/PrimitiveTypes.h
         Variables/Reference.h
@@ -122,15 +128,15 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Parser/Tokens/ParserREPEAT.cpp Parser/Tokens/ParserWHILE.cpp Compiler/CompilerLooping.cpp Parser/Tokens/ParserFOR.cpp)
+        Grammar/DaricVisitor.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS} ${LLD_LIBS})
 if (${ARCHITECTURE} STREQUAL "arm64")
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
-else()
+else ()
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
-endif()
+endif ()
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach (dir ${dirs})

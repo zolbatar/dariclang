@@ -119,6 +119,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::FOR:
                 TokenFor(token);
                 break;
+            case ParserTokenType::CASE:
+                TokenCase(token);
+                break;
             default:
                 assert(0);
         }
