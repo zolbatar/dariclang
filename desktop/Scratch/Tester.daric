@@ -7,6 +7,10 @@ CONST ccf=12.5
 DIM a1d OF INT[5]:DIM a2di OF INT[5,5]:DIM a2df OF FLOAT[5,5]:DIM a3d OF INT[5,5,5]
 a1d[3]=123:a2di[2,3]=456:a3d[1,2,3]=789
 
+DATA 1,2,3,4,5
+DATALABEL "Label"
+DATA 123
+
 DEFRECORD COORDINATE x OF FLOAT:y OF FLOAT ENDRECORD
 DEFRECORD COMPOUND
     i OF INT
@@ -39,9 +43,11 @@ SwapVars()
 Records()
 Variables()
 Looping()
+TestData()
 
 PRINT "::Other::"
 NestedCalling()
+TestReturnInOtherwise()
 
 DEF Arrays
  	PRINT "::Arrays::"
@@ -371,6 +377,24 @@ DEF Looping
 		OTHERWISE Fail()
 	ENDCASE
     PRINT
+ENDDEF
+
+DEF TestData
+	READ a1%, a2%, a3%
+	PRINT "Data (Int)         = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
+	RESTORE "Label"
+	READ a1%
+	PRINT "DataLabel          = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
+ENDDEF
+
+DEF TestReturnInOtherwise()
+    B$="5"
+	PRINT "Return inside DEF  = ";:
+    CASE B$ OF
+        WHEN "1","2","3","4":Fail()
+        OTHERWISE:Pass():	RETURN
+    ENDCASE
+	Fail()
 ENDDEF
 
 PRIVATE DEF Pass()

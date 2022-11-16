@@ -115,6 +115,10 @@ protected:
     std::any visitFor(DaricParser::ForContext *context);
     std::any visitCase(DaricParser::CaseContext *context);
     std::any visitWhen(DaricParser::WhenContext *context);
+    std::any visitData(DaricParser::DataContext *context);
+    std::any visitDataLabel(DaricParser::DataLabelContext *context);
+    std::any visitRestore(DaricParser::RestoreContext *context);
+    std::any visitRead(DaricParser::ReadContext *context);
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

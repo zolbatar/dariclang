@@ -39,6 +39,10 @@ public:
 
     virtual std::any visitConst(DaricParser::ConstContext *context) = 0;
 
+    virtual std::any visitData(DaricParser::DataContext *context) = 0;
+
+    virtual std::any visitDataLabel(DaricParser::DataLabelContext *context) = 0;
+
     virtual std::any visitDim(DaricParser::DimContext *context) = 0;
 
     virtual std::any visitExprcall(DaricParser::ExprcallContext *context) = 0;
@@ -60,6 +64,10 @@ public:
     virtual std::any visitProcedure(DaricParser::ProcedureContext *context) = 0;
 
     virtual std::any visitRepeat(DaricParser::RepeatContext *context) = 0;
+
+    virtual std::any visitRead(DaricParser::ReadContext *context) = 0;
+
+    virtual std::any visitRestore(DaricParser::RestoreContext *context) = 0;
 
     virtual std::any visitReturn(DaricParser::ReturnContext *context) = 0;
 

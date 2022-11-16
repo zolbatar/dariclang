@@ -1,5 +1,7 @@
+REM Thanks to ZXDunny for the original code
+
 MODEB -1,-1
-n%=200:r#=PI/2/235
+n%=200:r#=PI*2/235
 x#=0:t#=0:sz#=300:sw#=SCREENWIDTH()/2:sh#=SCREENHEIGHT()/2
 u#=0:v#=0
 REPEAT

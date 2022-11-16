@@ -3,6 +3,8 @@
 
 enum class ParserTokenType
 {
+    NONE,
+
 	ABS,
 	ACS,
 	ADD,
@@ -63,7 +65,9 @@ enum class ParserTokenType
 	PRINTFORMAT,
 	PROCEDURE,
 	RAD,
+    READ,
     REPEAT,
+    RESTORE,
 	RETURN,
 	RIGHTS,
 	ROUND,

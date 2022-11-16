@@ -50,7 +50,7 @@ add_definitions(${LLVM_DEFINITIONS_LIST})
 llvm_map_components_to_libnames(LLVM_LIBS all AArch64 X86 OrcJIT)
 
 # The standard Daric library
-file(GLOB LIBRARIES ../runtime/cmake-build-release/libDaricRuntimeShared.dylib ./libDaricRuntimeShared.dylib)
+file(GLOB LIBRARIES ../runtime/cmake-build-release/bin/libDaricRuntimeShared.dylib ./libDaricRuntimeShared.dylib)
 set(CMAKE_SKIP_RPATH FALSE)
 
 add_executable(${PROJECT_NAME}
@@ -128,14 +128,14 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp)
+        Grammar/DaricVisitor.cpp Parser/Tokens/ParserDATA.cpp)
 target_link_libraries(${PROJECT_NAME} ${LIBRARIES} ${CONAN_LIBS} ${ANTLR4_LIB} ${LLVM_LIBS} ${LLD_LIBS})
 if (${ARCHITECTURE} STREQUAL "arm64")
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/bin/*.* ${PROJECT_BINARY_DIR}/../Scratch/macOSM1)
 else ()
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/bin/${PROJECT_NAME} ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ../../runtime/cmake-build-release/bin/*.* ${PROJECT_BINARY_DIR}/../Scratch/macOSX64)
 endif ()
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

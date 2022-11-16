@@ -22,9 +22,7 @@ std::any Parser::visitStatementsl(DaricParser::StatementslContext *context) {
 
 std::any Parser::visitStatement(DaricParser::StatementContext *context) {
     if (context->COMMENT()) {
-        ParserToken comment = CreateToken(context);
-        comment.type = ParserTokenType::COMMENT;
-        return comment;
+        return CreateToken(context, ParserTokenType::COMMENT);
     }
     if (context->call()) {
         return std::any_cast<ParserToken>(visit(context->call()));
@@ -85,6 +83,18 @@ std::any Parser::visitStatement(DaricParser::StatementContext *context) {
     }
     if (context->case_()) {
         return std::any_cast<ParserToken>(visit(context->case_()));
+    }
+    if (context->data()) {
+        return std::any_cast<ParserToken>(visit(context->data()));
+    }
+    if (context->dataLabel()) {
+        return std::any_cast<ParserToken>(visit(context->dataLabel()));
+    }
+    if (context->restore()) {
+        return std::any_cast<ParserToken>(visit(context->restore()));
+    }
+    if (context->read()) {
+        return std::any_cast<ParserToken>(visit(context->read()));
     }
     assert(0);
     return NULL;

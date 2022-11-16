@@ -55,6 +55,14 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitData(DaricParser::DataContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDataLabel(DaricParser::DataLabelContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitDim(DaricParser::DimContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -96,6 +104,14 @@ public:
   }
 
   virtual std::any visitRepeat(DaricParser::RepeatContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitRead(DaricParser::ReadContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitRestore(DaricParser::RestoreContext *ctx) override {
     return visitChildren(ctx);
   }
 

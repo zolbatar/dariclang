@@ -12,36 +12,37 @@
 class  DaricParser : public antlr4::Parser {
 public:
   enum {
-    COMMENT = 1, CASE = 2, CONST = 3, DEF = 4, DIM = 5, ELSE = 6, END = 7, 
-    ENDCASE = 8, ENDDEF = 9, ENDIF = 10, ENDWHILE = 11, FOR = 12, IF = 13, 
-    MODULE = 14, NEXT = 15, OF = 16, OTHERWISE = 17, PRINT = 18, PRIVATE = 19, 
-    REM = 20, REPEAT = 21, RETURN = 22, THEN = 23, STEP = 24, SWAP = 25, 
-    TO = 26, UNTIL = 27, WHEN = 28, WITH = 29, WHILE = 30, DEFRECORD = 31, 
-    RECORD = 32, ENDRECORD = 33, HPTIME = 34, TIME = 35, TIMES = 36, ABS = 37, 
-    ACS = 38, ASN = 39, ATN = 40, COS = 41, DEG = 42, EXP = 43, FLOOR = 44, 
-    LET = 45, LN = 46, LOG = 47, PI = 48, RAD = 49, ROUND = 50, SGN = 51, 
-    SIN = 52, SQR = 53, TAN = 54, FALSE = 55, TRUE = 56, ASC = 57, CHRS = 58, 
-    INSTR = 59, LEFTS = 60, MIDS = 61, RIGHTS = 62, LEN = 63, BYTE = 64, 
-    INT = 65, FLOAT = 66, STRING = 67, DOLLAR = 68, HASH = 69, COLON = 70, 
-    SEMICOLON = 71, DOT = 72, COMMA = 73, QUOTE = 74, NEWLINE = 75, PERCENT = 76, 
-    UNDERSCORE = 77, LPAREN = 78, RPAREN = 79, SOPEN = 80, SCLOSE = 81, 
-    EQ = 82, NE = 83, GT = 84, GE = 85, LT = 86, LE = 87, HAT = 88, PLUS = 89, 
-    MINUS = 90, MULTIPLY = 91, DIVIDE = 92, SHL = 93, SHR = 94, MOD = 95, 
-    DIV = 96, COMP = 97, NOT = 98, AND = 99, OR = 100, EOR = 101, STRINGLITERAL = 102, 
-    HEXNUMBER = 103, BINARYNUMBER = 104, FLOATLITERAL = 105, INTEGERLITERAL = 106, 
-    IDENTIFIER = 107, WS = 108
+    COMMENT = 1, CASE = 2, CONST = 3, DATA = 4, DATALABEL = 5, DEF = 6, 
+    DIM = 7, ELSE = 8, END = 9, ENDCASE = 10, ENDDEF = 11, ENDIF = 12, ENDWHILE = 13, 
+    FOR = 14, IF = 15, MODULE = 16, NEXT = 17, OF = 18, OTHERWISE = 19, 
+    PRINT = 20, PRIVATE = 21, READ = 22, REM = 23, REPEAT = 24, RESTORE = 25, 
+    RETURN = 26, THEN = 27, STEP = 28, SWAP = 29, TO = 30, UNTIL = 31, WHEN = 32, 
+    WITH = 33, WHILE = 34, DEFRECORD = 35, RECORD = 36, ENDRECORD = 37, 
+    HPTIME = 38, TIME = 39, TIMES = 40, ABS = 41, ACS = 42, ASN = 43, ATN = 44, 
+    COS = 45, DEG = 46, EXP = 47, FLOOR = 48, LET = 49, LN = 50, LOG = 51, 
+    PI = 52, RAD = 53, ROUND = 54, SGN = 55, SIN = 56, SQR = 57, TAN = 58, 
+    FALSE = 59, TRUE = 60, ASC = 61, CHRS = 62, INSTR = 63, LEFTS = 64, 
+    MIDS = 65, RIGHTS = 66, LEN = 67, BYTE = 68, INT = 69, FLOAT = 70, STRING = 71, 
+    DOLLAR = 72, HASH = 73, COLON = 74, SEMICOLON = 75, DOT = 76, COMMA = 77, 
+    QUOTE = 78, NEWLINE = 79, PERCENT = 80, UNDERSCORE = 81, LPAREN = 82, 
+    RPAREN = 83, SOPEN = 84, SCLOSE = 85, EQ = 86, NE = 87, GT = 88, GE = 89, 
+    LT = 90, LE = 91, HAT = 92, PLUS = 93, MINUS = 94, MULTIPLY = 95, DIVIDE = 96, 
+    SHL = 97, SHR = 98, MOD = 99, DIV = 100, COMP = 101, NOT = 102, AND = 103, 
+    OR = 104, EOR = 105, STRINGLITERAL = 106, HEXNUMBER = 107, BINARYNUMBER = 108, 
+    FLOATLITERAL = 109, INTEGERLITERAL = 110, IDENTIFIER = 111, WS = 112
   };
 
   enum {
     RuleProgram = 0, RuleStatements = 1, RuleStatementsl = 2, RuleStatement = 3, 
     RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
-    RuleCase = 8, RuleConst = 9, RuleDim = 10, RuleExprcall = 11, RuleEnd = 12, 
-    RuleFor = 13, RuleIf = 14, RuleIfml = 15, RuleModule = 16, RuleParameter = 17, 
-    RulePrint = 18, RuleProcedure = 19, RuleRepeat = 20, RuleReturn = 21, 
-    RuleStruct = 22, RuleStructDim = 23, RuleStructInstance = 24, RuleSwap = 25, 
-    RuleWhen = 26, RuleWhile = 27, RuleVariable = 28, RuleExpression = 29, 
-    RuleType = 30, RuleTypeOrStruct = 31, RuleLiteral = 32, RuleFloatLiteral = 33, 
-    RuleIntegerLiteral = 34, RuleStringLiteral = 35
+    RuleCase = 8, RuleConst = 9, RuleData = 10, RuleDataLabel = 11, RuleDim = 12, 
+    RuleExprcall = 13, RuleEnd = 14, RuleFor = 15, RuleIf = 16, RuleIfml = 17, 
+    RuleModule = 18, RuleParameter = 19, RulePrint = 20, RuleProcedure = 21, 
+    RuleRepeat = 22, RuleRead = 23, RuleRestore = 24, RuleReturn = 25, RuleStruct = 26, 
+    RuleStructDim = 27, RuleStructInstance = 28, RuleSwap = 29, RuleWhen = 30, 
+    RuleWhile = 31, RuleVariable = 32, RuleExpression = 33, RuleType = 34, 
+    RuleTypeOrStruct = 35, RuleLiteral = 36, RuleFloatLiteral = 37, RuleIntegerLiteral = 38, 
+    RuleStringLiteral = 39
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -71,6 +72,8 @@ public:
   class CallContext;
   class CaseContext;
   class ConstContext;
+  class DataContext;
+  class DataLabelContext;
   class DimContext;
   class ExprcallContext;
   class EndContext;
@@ -82,6 +85,8 @@ public:
   class PrintContext;
   class ProcedureContext;
   class RepeatContext;
+  class ReadContext;
+  class RestoreContext;
   class ReturnContext;
   class StructContext;
   class StructDimContext;
@@ -157,6 +162,8 @@ public:
     CallContext *call();
     CaseContext *case_();
     ConstContext *const_();
+    DataContext *data();
+    DataLabelContext *dataLabel();
     DimContext *dim();
     EndContext *end();
     ForContext *for_();
@@ -165,7 +172,9 @@ public:
     ModuleContext *module();
     ProcedureContext *procedure();
     PrintContext *print();
+    ReadContext *read();
     RepeatContext *repeat();
+    RestoreContext *restore();
     ReturnContext *return_();
     StructContext *struct_();
     StructDimContext *structDim();
@@ -292,6 +301,37 @@ public:
   };
 
   ConstContext* const_();
+
+  class  DataContext : public antlr4::ParserRuleContext {
+  public:
+    DataContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *DATA();
+    std::vector<antlr4::tree::TerminalNode *> INTEGERLITERAL();
+    antlr4::tree::TerminalNode* INTEGERLITERAL(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  DataContext* data();
+
+  class  DataLabelContext : public antlr4::ParserRuleContext {
+  public:
+    DataLabelContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *DATALABEL();
+    antlr4::tree::TerminalNode *STRINGLITERAL();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  DataLabelContext* dataLabel();
 
   class  DimContext : public antlr4::ParserRuleContext {
   public:
@@ -499,6 +539,37 @@ public:
   };
 
   RepeatContext* repeat();
+
+  class  ReadContext : public antlr4::ParserRuleContext {
+  public:
+    ReadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *READ();
+    std::vector<VariableContext *> variable();
+    VariableContext* variable(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ReadContext* read();
+
+  class  RestoreContext : public antlr4::ParserRuleContext {
+  public:
+    RestoreContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *RESTORE();
+    antlr4::tree::TerminalNode *STRINGLITERAL();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  RestoreContext* restore();
 
   class  ReturnContext : public antlr4::ParserRuleContext {
   public:

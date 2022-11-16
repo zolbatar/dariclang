@@ -22,5 +22,7 @@ public:
 
     std::unordered_map<std::string, size_t> struct_indexes;
     std::vector<StructInfo> structs;
+    std::vector<T_I> data;
+    std::unordered_map<std::string, size_t> data_labels;
     size_t index_ptr = 0;
 };

@@ -17,3 +17,6 @@ cmake
 ./res/bindings, imgui_impl_sdl.h -> ../ImGuiBindings
 ./res/bindings, imgui_impl_opengl3.h -> ../ImGuiBindings
 ./res/bindings, imgui_impl_opengl3_loader.h -> ../ImGuiBindings
+bin, *.dll -> ./bin
+lib, *.dylib* -> ./bin
+lib, *.a* -> ./bin

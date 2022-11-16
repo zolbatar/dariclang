@@ -18,6 +18,8 @@ statement
     | call
     | case
     | const
+    | data
+    | dataLabel
     | dim
     | end
     | for
@@ -26,7 +28,9 @@ statement
     | module
     | procedure
     | print
+    | read
     | repeat
+    | restore
     | return
     | struct
     | structDim
@@ -44,6 +48,8 @@ assignment:     variable EQ expression ;
 call:           IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 case:           CASE expression OF separator? when+ (OTHERWISE statements)? ENDCASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
+data:           DATA INTEGERLITERAL (COMMA INTEGERLITERAL)* ;
+dataLabel:      DATALABEL STRINGLITERAL ;
 dim:            DIM IDENTIFIER OF? type SOPEN expression? (COMMA expression)* SCLOSE ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            END ;
@@ -55,6 +61,8 @@ parameter:      IDENTIFIER (OF? type)? ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      PRIVATE? DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
 repeat:         REPEAT statements UNTIL expression ;
+read:           READ variable (COMMA variable)* ;
+restore:        RESTORE STRINGLITERAL ;
 return:         RETURN expression? ;
 struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
 structDim:      DIM RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
@@ -195,6 +203,8 @@ COMMENT         : (REM | HASH | QUOTE) ~ [\r\n]* ;
 
 CASE            : 'CASE' | 'Case' ;
 CONST           : 'CONST' | 'Const' ;
+DATA            : 'DATA' | 'Data' ;
+DATALABEL       : 'DATALABEL' | 'DataLabel' ;
 DEF             : 'DEF' | 'Def' ;
 DIM             : 'DIM' | 'Dim' ;
 ELSE            : 'ELSE' | 'Else' ;
@@ -211,8 +221,10 @@ OF              : 'OF' | 'Of' ;
 OTHERWISE       : 'OTHERWISE' | 'Otherwise'     ;
 PRINT           : 'PRINT' | 'Print' ;
 PRIVATE         : 'PRIVATE' | 'Private' ;
+READ            : 'READ' | 'Read' ;
 REM             : 'REM' | 'Rem' ;
 REPEAT          : 'REPEAT' | 'Repeat' ;
+RESTORE         : 'RESTORE' | 'Restore' ;
 RETURN          : 'RETURN' | 'Return' ;
 THEN            : 'THEN' | 'Then' ;
 STEP            : 'STEP' | 'Step' ;
