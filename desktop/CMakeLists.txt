@@ -12,11 +12,14 @@ include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake
 conan_basic_setup()
 
 # Antlr4
-set(ANTLR_DIR "~/GitHub/antlr4/runtime/Cpp")
+set(ANTLR_DIR "/Users/daryl/GitHub/antlr4/runtime/Cpp")
 include_directories(${ANTLR_DIR}/runtime/src)
-link_directories(${ANTLR_DIR}/dist)
-set(ANTLR4_LIB antlr4-runtime.a)
-add_definitions(-DANTLR4CPP_STATIC)
+#link_directories(${ANTLR_DIR}/dist)
+#set(ANTLR4_LIB antlr4-runtime.a)
+add_library(antlr4-runtime SHARED IMPORTED)
+SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/dist/libantlr4-runtime.a)
+
+set(CMAKE_SKIP_RPATH TRUE)
 
 # LLVM
 if (${ARCHITECTURE} STREQUAL "arm64")
@@ -123,7 +126,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp Parser/Tokens/ParserDATA.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} ${ANTLR4_LIB} -lxar ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS} ${LLD_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} antlr4-runtime -lxar ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS} ${LLD_LIBS})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a ${PROJECT_BINARY_DIR}/../../dist/bin)
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
