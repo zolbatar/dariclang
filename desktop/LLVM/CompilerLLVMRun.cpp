@@ -55,9 +55,8 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk");
     args.push_back("-lc++");
     args.push_back("-lSystem");
-    args.push_back("-LmacOSX64");
-    args.push_back("-LmacOSM1");
-    args.push_back("-lDaricRuntimeStatic");
+    args.push_back("-lDaricRuntime");
+    args.push_back("-L.");
     args.push_back("-platform_version");
     args.push_back("macos");
     args.push_back("10.15.0");

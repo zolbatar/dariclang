@@ -31,6 +31,7 @@ public:
     void MakePermString(llvm::Value *v, llvm::IRBuilder<> *ir);
     void ClearPermString(llvm::Value *v, llvm::IRBuilder<> *ir);
     void ClearTempStrings(llvm::IRBuilder<> *ir);
+    llvm::GlobalVariable::LinkageTypes GetLinkage() { return llvm::GlobalVariable::InternalLinkage; }
 
     // Blocks
     llvm::BasicBlock *CreateAndInsertBB(std::string block_name, bool add_branch, size_t line_number,

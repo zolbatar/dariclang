@@ -1,26 +1,16 @@
 cmake_minimum_required(VERSION 3.20)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_OSX_ARCHITECTURES arm64;x86_64)
 project(runtime)
 
-set(CMAKE_CXX_STANDARD 11)
+include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
+conan_basic_setup()
 
-add_library(DaricRuntimeShared SHARED
+add_library(DaricRuntime STATIC
         Maths.cpp
         Print.cpp
         String.cpp
         Chrono.cpp
         Types.h
         Core.cpp)
-target_link_libraries(DaricRuntimeShared PRIVATE ${CONAN_LIBS})
-
-add_library(DaricRuntimeStatic STATIC
-        Maths.cpp
-        Print.cpp
-        String.cpp
-        Chrono.cpp
-        Types.h
-        Core.cpp)
-target_link_libraries(DaricRuntimeStatic PRIVATE ${CONAN_LIBS})
-
-message(${PROJECT_BINARY_DIR})
-add_custom_command(TARGET DaricRuntimeShared POST_BUILD COMMAND mv ${PROJECT_BINARY_DIR}/libDaricRuntimeShared.dylib ${PROJECT_BINARY_DIR}/bin)
-add_custom_command(TARGET DaricRuntimeStatic POST_BUILD COMMAND mv ${PROJECT_BINARY_DIR}/libDaricRuntimeStatic.a ${PROJECT_BINARY_DIR}/bin)
+target_link_libraries(DaricRuntime PRIVATE ${CONAN_LIBS})

@@ -3,7 +3,6 @@ imgui/1.88@
 sdl/2.24.1
 opengl/system
 glm/0.9.9.8
-#antlr4-cppruntime/4.10.1
 #cli11/2.2.0
 #assimp/5.2.2
 #box2d/2.4.1
@@ -17,6 +16,6 @@ cmake
 ./res/bindings, imgui_impl_sdl.h -> ../ImGuiBindings
 ./res/bindings, imgui_impl_opengl3.h -> ../ImGuiBindings
 ./res/bindings, imgui_impl_opengl3_loader.h -> ../ImGuiBindings
-bin, *.dll -> ./bin
-lib, *.dylib* -> ./bin
-lib, *.a* -> ./bin
+#bin, *.dll -> ../../dist
+#lib, *.dylib -> ../../dist
+#lib, *.a* -> ../../dist

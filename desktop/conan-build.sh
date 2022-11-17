@@ -1,7 +1,4 @@
 #!/bin/sh
-#conan install antlr4-cppruntime/4.10.1@ --build=antlr4-cppruntime --profile=Debug
-#conan install antlr4-cppruntime/4.10.1@ --build=antlr4-cppruntime --profile=Release
-
 conan install imgui/1.88@  --build=missing --profile=Debug
 conan install imgui/1.88@  --build=missing --profile=Release
 

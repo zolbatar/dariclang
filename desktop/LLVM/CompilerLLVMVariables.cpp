@@ -5,7 +5,7 @@ void CompilerLLVM::CreateConstant(const std::string &name, Primitive type, llvm:
     globals[name] = new llvm::GlobalVariable(*Module,
                                              TypeConversion(type),
                                              true,
-                                             llvm::GlobalValue::ExternalLinkage,
+                                             GetLinkage(),
                                              val,
                                              name);
 
@@ -17,7 +17,7 @@ void CompilerLLVM::CreateGlobal(const std::string &name, Primitive type, llvm::C
     globals[name] = new llvm::GlobalVariable(*Module,
                                              TypeConversion(type),
                                              false,
-                                             llvm::GlobalValue::ExternalLinkage,
+                                             GetLinkage(),
                                              val,
                                              name);
 

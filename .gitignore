@@ -7,3 +7,4 @@ desktop/Scratch/macOSM1/Daric
 desktop/Scratch/macOSX64/Daric
 *.a
 .DS_Store
+dist/bin/Daric

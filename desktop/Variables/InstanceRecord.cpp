@@ -20,7 +20,7 @@ std::shared_ptr<Instance> InstanceRecord::Build(const std::string &name,
             llvm.globals[name] = new llvm::GlobalVariable(*llvm.Module,
                                                           struct_type,
                                                           false,
-                                                          llvm::GlobalValue::ExternalLinkage,
+                                                          llvm.GetLinkage(),
                                                           llvm::ConstantAggregateZero::get(struct_type),
                                                           name);
             llvm.global_structs.insert(std::make_pair(name, struct_name));

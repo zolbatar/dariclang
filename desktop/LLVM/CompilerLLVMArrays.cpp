@@ -17,7 +17,7 @@ llvm::GlobalVariable *CompilerLLVM::CreateGlobalArray(std::string name,
     globals_array_dimensions[name] = new llvm::GlobalVariable(*Module,
                                                               typ,
                                                               false,
-                                                              llvm::GlobalVariable::ExternalLinkage,
+                                                              GetLinkage(),
                                                               init,
                                                               name + "_dimensions");
     globals_type.insert(std::make_pair(name, type));
@@ -27,7 +27,7 @@ llvm::GlobalVariable *CompilerLLVM::CreateGlobalArray(std::string name,
     globals[name] = new llvm::GlobalVariable(*Module,
                                              size_v,
                                              false,
-                                             llvm::GlobalValue::ExternalLinkage,
+                                             GetLinkage(),
                                              llvm::ConstantAggregateZero::get(size_v),
                                              name);
 

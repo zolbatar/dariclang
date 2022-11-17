@@ -210,7 +210,7 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
 
     if (!options.use_exit_as_end) {
         globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeInt, false,
-                                                             llvm::GlobalValue::ExternalLinkage,
+                                                             GetLinkage(),
                                                              llvm::ConstantInt::get(TypeInt, 0),
                                                              "QuitRequested");
     }
@@ -269,7 +269,7 @@ void CompilerLLVM::CreateLLVMPasses() {
 
 llvm::Function *CompilerLLVM::CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters) {
     auto func = llvm::Function::Create(llvm::FunctionType::get(ret, parameters, false),
-                                       llvm::Function::ExternalLinkage,
+                                       name == "Implicit" ? llvm::GlobalVariable::ExternalLinkage : GetLinkage(),
                                        name,
                                        Module.get());
     return func;
