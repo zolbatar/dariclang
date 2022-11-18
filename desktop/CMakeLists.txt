@@ -18,7 +18,11 @@ include_directories(${ANTLR_DIR}/runtime/src)
 add_library(antlr4-runtime STATIC IMPORTED)
 SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/dist/libantlr4-runtime.a)
 
-#set(CMAKE_SKIP_RPATH TRUE)
+# SDL
+set(SDL2_DIR "/Users/daryl/GitHub/SDL/build/SDL2")
+include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
+add_library(sdl2-runtime STATIC IMPORTED)
+SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
 
 # LLVM
 if (${ARCHITECTURE} STREQUAL "arm64")
@@ -39,14 +43,26 @@ file(GLOB LLD_LIBS
 execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
 execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
 
+# IMGUI
+set(IMGUI_DIR "/Users/daryl/Github/imgui")
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+
 # Zstd
 add_library(zstd-lib STATIC IMPORTED)
 SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION /Users/daryl/GitHub/zstd/build/cmake/lib/libzstd.a)
 string(REPLACE "-lzstd" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
-message(${LLVM_SYSTEM_LIBS})
+#message(${LLVM_SYSTEM_LIBS})
 
 add_executable(${PROJECT_NAME}
         main.cpp
+
+        ${IMGUI_DIR}/imgui_demo.cpp
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 
         ../runtime/String.cpp
         ../runtime/Maths.cpp
@@ -54,6 +70,9 @@ add_executable(${PROJECT_NAME}
         ../runtime/String.cpp
         ../runtime/Chrono.cpp
         ../runtime/Core.cpp
+
+        ../runtime/UI/UISDL.cpp
+        ../runtime/UI/Lodepng.cpp
 
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
@@ -128,7 +147,24 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp Parser/Tokens/ParserDATA.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} antlr4-runtime zstd-lib -lxar ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE
+        ${CONAN_LIBS}
+        antlr4-runtime
+        "-framework OpenGL"
+        "-framework Cocoa"
+        "-framework Carbon"
+        "-framework CoreAudio"
+        "-framework CoreVideo"
+        "-framework ForceFeedback"
+        "-framework Metal"
+        "-framework IOKit"
+        "-framework GameKit"
+        "-framework AudioToolbox"
+        "-framework CoreHaptics"
+        zstd-lib
+        -lxar -liconv
+        sdl2-runtime
+        ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

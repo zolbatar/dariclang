@@ -5,7 +5,7 @@
 #include "Variables/Shared.h"
 
 int main(int argc, char *argv[]) {
-    std::cout << "Welcome to Daric! (0.1 pre-release)" << std::endl;
+    std::cout << "Welcome to Daric! (0.2alpha)" << std::endl;
 
     std::ifstream file(argv[1]);
     if (!file.is_open()) {
