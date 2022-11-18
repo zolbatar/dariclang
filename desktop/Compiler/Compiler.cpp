@@ -10,7 +10,6 @@
 bool Compiler::Compile() {
 
     auto t1 = std::chrono::steady_clock::now();
-    std::cout << "Compiling..." << std::endl;
     switch (options.target) {
         case CompileTarget::EXE:
             std::cout << "Target: Standalone executable (via object file)" << std::endl;

@@ -163,6 +163,7 @@ private:
     void AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses);
     void CreateLLVMPasses();
     CompilerOptions options;
+    llvm::Triple TheTriple;
 
     std::unique_ptr<llvm::LLVMContext> Context = nullptr;
     std::unique_ptr<llvm::TargetMachine> Target = nullptr;

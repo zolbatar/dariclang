@@ -119,9 +119,6 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
         OLvl = llvm::CodeGenOpt::Aggressive;
     }
 
-    llvm::Triple TheTriple;
-    TheTriple.setTriple(llvm::sys::getDefaultTargetTriple());
-
     // Options
     std::string CPUArch = getCPUArch();
     std::string CPUStr = getCPUStr();
@@ -132,7 +129,24 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
         std::cout << "CPU Features: " << FeaturesStr << std::endl;
     }
 
+    // Due to a bug in LLVM (https://github.com/llvm/llvm-project/issues/55979), we need to do a bit of wrangling here
+    auto tri_raw = llvm::sys::getProcessTriple();
+    if (verbose)
+        std::cout << "Target Triple (raw): " << tri_raw << std::endl;
+    auto f = tri_raw.find_first_of('-');
+    tri_raw = tri_raw.substr(f);
+    if (CPUArch == "x86-64") {
+        tri_raw = "x86_64" + tri_raw;
+    } else {
+        tri_raw = "aarch64" + tri_raw;
+    }
+    if (verbose)
+        std::cout << "Target Triple (modified): " << tri_raw << std::endl;
+    TheTriple.setTriple(tri_raw);
+
     // Target
+    if (verbose)
+        std::cout << "Looking up target" << std::endl;
     llvm::TargetOptions Options;
     std::string Error;
     const llvm::Target *TheTarget = llvm::TargetRegistry::lookupTarget(CPUArch, TheTriple, Error);
@@ -140,16 +154,19 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
         std::cout << "LLVM Error code: " << Error << std::endl;
         exit(1);
     }
-
+    if (verbose)
+        std::cout << "Creating target machine" << std::endl;
     Target = std::unique_ptr<llvm::TargetMachine>(TheTarget->createTargetMachine(
             TheTriple.getTriple(), CPUStr, FeaturesStr,
-            Options, llvm::Reloc::Model::Static, llvm::None, OLvl, options.target != CompileTarget::EXE));
+            Options, llvm::None, llvm::None, OLvl, options.target != CompileTarget::EXE));
     if (Target == nullptr) {
         std::cout << "Couldn't allocate target machine\n";
         exit(1);
     }
 
     // LLVM Core stuff
+    if (verbose)
+        std::cout << "Creating module and context" << std::endl;
     Context = std::make_unique<llvm::LLVMContext>();
     Module = std::make_unique<llvm::Module>(module, *Context);
     auto dl = Target->createDataLayout();

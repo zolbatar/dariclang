@@ -44,13 +44,13 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     // LLD parameters
     auto arch = getCPUArch();
     if (arch == "x86-64") arch = "x86_64";
+    if (arch == "aarch64") arch = "arm64";
 
     std::vector<const char *> args;
     args.push_back("");
     args.push_back(p.c_str());
     args.push_back("-o");
     args.push_back(output_filename.c_str());
-//    args.push_back("-stdlib=libc++");
     args.push_back("-syslibroot");
     args.push_back("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk");
     args.push_back("-lc++");
@@ -59,9 +59,10 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-L.");
     args.push_back("-platform_version");
     args.push_back("macos");
-    args.push_back("10.15.0");
+    args.push_back("11.0.0");
     args.push_back("0.0.0");
     args.push_back("-arch");
+//    args.push_back("'x86_64;aarch64'");
     args.push_back(arch.c_str());
     args.push_back("-O3");
     args.push_back("-e");
@@ -98,7 +99,7 @@ void CompilerLLVM::Run() {
 
     // Run!
     Strings_Clear();
-    JIT jit(std::move(Module), std::move(Context));
+    JIT jit(std::move(Module), std::move(Context), TheTriple);
     jit.run();
     Strings_Summary();
 }

@@ -1,12 +1,13 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+#set(CMAKE_OSX_ARCHITECTURES "x86_64")
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
-
-set(CMAKE_VERBOSE_MAKEFILE ON)
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
 message(STATUS "Architecture: ${ARCHITECTURE}")
+message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
 
 include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()
@@ -14,12 +15,10 @@ conan_basic_setup()
 # Antlr4
 set(ANTLR_DIR "/Users/daryl/GitHub/antlr4/runtime/Cpp")
 include_directories(${ANTLR_DIR}/runtime/src)
-#link_directories(${ANTLR_DIR}/dist)
-#set(ANTLR4_LIB antlr4-runtime.a)
-add_library(antlr4-runtime SHARED IMPORTED)
+add_library(antlr4-runtime STATIC IMPORTED)
 SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/dist/libantlr4-runtime.a)
 
-set(CMAKE_SKIP_RPATH TRUE)
+#set(CMAKE_SKIP_RPATH TRUE)
 
 # LLVM
 if (${ARCHITECTURE} STREQUAL "arm64")
@@ -41,7 +40,10 @@ execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --libs OUTPUT_VARI
 execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 # Zstd
-link_directories(/Users/daryl/GitHub/zstd/build/cmake/lib)
+add_library(zstd-lib STATIC IMPORTED)
+SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION /Users/daryl/GitHub/zstd/build/cmake/lib/libzstd.a)
+string(REPLACE "-lzstd" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
+message(${LLVM_SYSTEM_LIBS})
 
 add_executable(${PROJECT_NAME}
         main.cpp
@@ -126,8 +128,8 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp Parser/Tokens/ParserDATA.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} antlr4-runtime -lxar ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS} ${LLD_LIBS})
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a ${PROJECT_BINARY_DIR}/../../dist/bin)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${CONAN_LIBS} antlr4-runtime zstd-lib -lxar ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach (dir ${dirs})
@@ -139,6 +141,6 @@ foreach (dir ${dirs})
 endforeach ()
 
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION bin
-        LIBRARY DESTINATION lib
-        ARCHIVE DESTINATION lib/static)
+        RUNTIME DESTINATION mac
+        LIBRARY DESTINATION mac
+        ARCHIVE DESTINATION mac)

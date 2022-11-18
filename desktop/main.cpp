@@ -5,7 +5,7 @@
 #include "Variables/Shared.h"
 
 int main(int argc, char *argv[]) {
-    std::cout << "Welcome to Daric!" << std::endl;
+    std::cout << "Welcome to Daric! (0.1 pre-release)" << std::endl;
 
     std::ifstream file(argv[1]);
     if (!file.is_open()) {
@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 
     // What sort of compile?
     CompilerOptions options;
-    options.output_ll_files = false;
+    options.output_ll_files = true;
     if (argc == 2) {
         options.target = CompileTarget::JIT;
         options.use_exit_as_end = false;
