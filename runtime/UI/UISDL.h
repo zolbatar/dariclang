@@ -31,6 +31,7 @@ public:
     ~UISDL();
 
     void Start();
+    void Shutdown();
     void Render3D();
     void ChangeMode(int64_t w, int64_t h, Mode mode);
     void SetFGColour(ImU32 colour);
@@ -79,11 +80,11 @@ private:
     ImU32 bgColour;
     std::atomic_bool flip_requested = false;
     const bool fullscreen = true;
+    std::atomic_bool done = false;
     float dpi_ratio;
     int desktop_screen_width, desktop_screen_height;
     SDL_Window *window;
     ImFont *fontMono;
-    bool jit_running = false;
     Mode mode = Mode::CLASSIC;
 
 //    std::vector<std::unique_ptr<RenderShape>> shapes;

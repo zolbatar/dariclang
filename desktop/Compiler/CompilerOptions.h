@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 enum class CompileTarget {
     INTERACTIVE,
@@ -12,5 +13,7 @@ struct CompilerOptions {
     bool optimise = true;
     bool use_exit_as_end = false;
     bool output_ll_files = false;
+    bool run;
+    std::ifstream* file;
 };
 

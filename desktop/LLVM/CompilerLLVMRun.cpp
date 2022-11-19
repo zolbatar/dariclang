@@ -98,7 +98,6 @@ void CompilerLLVM::Run() {
     }
 
     // Run!
-    Strings_Clear();
     JIT jit(std::move(Module), std::move(Context), TheTriple);
     jit.run();
     Strings_Summary();
