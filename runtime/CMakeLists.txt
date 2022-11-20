@@ -25,5 +25,5 @@ add_library(DaricRuntime STATIC
         String.cpp
         Chrono.cpp
         Types.h
-        Core.cpp)
+        Core.cpp Gfx2D.cpp)
 target_link_libraries(DaricRuntime PRIVATE ${CONAN_LIBS} sdl2-runtime)

@@ -13,6 +13,13 @@ struct Func {
     std::vector<std::string> parameter_names;
 };
 
+struct LibraryFunc {
+    void *func;
+    std::string func_name;
+    Primitive return_Type;
+    std::vector<Primitive> parameters;
+};
+
 class Compiler {
 public:
     Compiler(SharedState &state, Parser *parser, CompilerOptions options) :
@@ -34,6 +41,8 @@ private:
     llvm::IRBuilder<> *procedure_ir;
     std::unordered_map<std::string, Func> procedures;
     llvm::Value *CreateCall(std::string name, llvm::ArrayRef<llvm::Value *> vals);
+    void SetupLibrary();
+    std::unordered_map<std::string, LibraryFunc> library;
 
     llvm::Function *GetFunction() {
         return procedure != nullptr ? procedure : implicit;

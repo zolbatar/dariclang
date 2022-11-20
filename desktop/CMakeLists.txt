@@ -70,6 +70,7 @@ add_executable(${PROJECT_NAME}
         ../runtime/String.cpp
         ../runtime/Chrono.cpp
         ../runtime/Core.cpp
+        ../runtime/Gfx2D.cpp
 
         ../runtime/UI/UISDL.cpp
         ../runtime/UI/Lodepng.cpp
@@ -124,6 +125,7 @@ add_executable(${PROJECT_NAME}
         Parser/Tokens/ParserWHILE.cpp
         Parser/Tokens/ParserFOR.cpp
         Parser/Tokens/ParserCASE.cpp
+        Parser/Tokens/ParserDATA.cpp
 
         Variables/PrimitiveTypes.h
         Variables/Reference.h
@@ -146,7 +148,8 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Parser/Tokens/ParserDATA.cpp)
+        Grammar/DaricVisitor.cpp
+        Compiler/CompilerLibrary.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${CONAN_LIBS}
         antlr4-runtime

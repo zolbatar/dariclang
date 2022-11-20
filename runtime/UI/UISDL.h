@@ -31,7 +31,7 @@ public:
     ~UISDL();
 
     void Start();
-    void Shutdown();
+    bool Render();
     void Render3D();
     void ChangeMode(int64_t w, int64_t h, Mode mode);
     void SetFGColour(ImU32 colour);
@@ -66,7 +66,6 @@ private:
     void RunnerThread();
     void RunnerOptimisedThread();
     void _CreateWindow();
-    void Render();
     void Create3DBuffer();
     void SpriteActions();
     bool LoadTextureFromFile(const char *filename, GLuint *outTexture, int *outWidth, int *outHeight);
@@ -80,12 +79,13 @@ private:
     ImU32 bgColour;
     std::atomic_bool flip_requested = false;
     const bool fullscreen = true;
-    std::atomic_bool done = false;
     float dpi_ratio;
     int desktop_screen_width, desktop_screen_height;
     SDL_Window *window;
     ImFont *fontMono;
     Mode mode = Mode::CLASSIC;
+    float fps_values[64];
+    std::chrono::steady_clock::time_point fps_clock = std::chrono::steady_clock::now();
 
 //    std::vector<std::unique_ptr<RenderShape>> shapes;
 //    std::vector<std::unique_ptr<RenderShape>> shapesBackBuffer;

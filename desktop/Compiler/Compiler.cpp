@@ -27,6 +27,9 @@ bool Compiler::Compile() {
 #endif
     llvm.SetupProfile(options, parser->GetModule());
 
+    // Library
+    SetupLibrary();
+
     // Lookahead
     auto n = Primitive::NONE;
     implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});

@@ -45,7 +45,31 @@ void Compiler::TokenProcedure(ParserToken &t) {
 void Compiler::TokenCall(ParserToken &token) {
     auto ee = procedures.find(token.identifier);
     if (ee == procedures.end()) {
-        ProcedureNotFound(token, token.identifier);
+        // Check library
+        auto lf = library.find(token.identifier);
+        if (lf == library.end()) {
+            ProcedureNotFound(token, token.identifier);
+        }
+
+        // Right number of parameters?
+        if (token.children.size() != lf->second.parameters.size()) {
+            RaiseException("Parameter mismatch", token);
+        }
+
+        // Compile parameters
+        std::vector<llvm::Value *> vals;
+        auto i = 0;
+        for (auto &s: token.children) {
+            auto vt = CompileExpression(s);
+            if (vt.type != lf->second.parameters[i]) {
+                RaiseException("Parameter mismatch", token);
+            }
+            vals.push_back(vt.value);
+            i++;
+        }
+
+        CreateCall(lf->second.func_name, vals);
+        return;
     }
     auto f = &ee->second;
 

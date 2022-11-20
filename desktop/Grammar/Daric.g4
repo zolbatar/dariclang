@@ -45,7 +45,7 @@ separator
 
 assign:         LET? assignment (COMMA assignment)* (OF? type)? ;
 assignment:     variable EQ expression ;
-call:           IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
+call:           IDENTIFIER LPAREN? expression? (COMMA expression)* RPAREN? ;
 case:           CASE expression OF separator? when+ (OTHERWISE statements)? ENDCASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
 data:           DATA INTEGERLITERAL (COMMA INTEGERLITERAL)* ;
@@ -160,7 +160,6 @@ expression
     | expression AND expression
     | expression OR expression
     | expression EOR expression
-
     ;
 
 type
@@ -198,6 +197,8 @@ integerLiteral
 stringLiteral
     : STRINGLITERAL
     ;
+
+
 
 COMMENT         : (REM | HASH | QUOTE) ~ [\r\n]* ;
 

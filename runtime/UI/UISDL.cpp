@@ -50,10 +50,6 @@ UISDL::~UISDL() {
     SDL_Quit();
 }
 
-void UISDL::Shutdown() {
-    done = true;
-}
-
 void UISDL::Start() {
     // Decide GL+GLSL versions
     std::cout << "Setting up OpenGL version" << std::endl;
@@ -117,15 +113,6 @@ void UISDL::Start() {
 /*    console.Setup(desktop_screen_width, desktop_screen_height, dpi_ratio, desktop_screen_width / console_x_size,
                   desktop_screen_height / console_y_size, false);*/
 
-    // FPS stuff
-    float fps_values[64];
-    std::string fps_text = "0 FPS";
-    uint32_t fps_offset = 0;
-    for (auto i = 0; i < 64; i++) {
-        fps_values[i] = 0.0f;
-    }
-    std::chrono::steady_clock::time_point fps_clock = std::chrono::steady_clock::now();
-
     // 3D
     Create3DBuffer();
 //    world.SetupOpenGL3();
@@ -134,65 +121,76 @@ void UISDL::Start() {
     std::cout << "Setting up Dear ImGui backend" << std::endl;
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
+}
+
+bool UISDL::Render() {
+    ImGuiIO &io = ImGui::GetIO();
+
+    // FPS stuff
+    std::string fps_text = "0 FPS";
+    uint32_t fps_offset = 0;
+    for (auto i = 0; i < 64; i++) {
+        fps_values[i] = 0.0f;
+    }
 
     bool demo_output = false;
-    while (!done) {
-        // Process SDL events like keyboard & mouse
-        SDL_Event event;
-        while (SDL_PollEvent(&event)) {
-            ImGui_ImplSDL2_ProcessEvent(&event);
-            //input.ProcessEvent(event);
-            if (event.type == SDL_QUIT)
-                done = true;
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE
-                && event.window.windowID == SDL_GetWindowID(window))
-                done = true;
-        }
 
-        // This is so app thread can lock to load fonts etc before start of frame
-        begin_frame_lock.lock();
-        if (!new_font_requested.empty()) {
-            auto io = ImGui::GetIO();
-            io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), font_size * dpi_ratio);
-            io.Fonts->Build();
-            ImGui_ImplOpenGL3_CreateFontsTexture();
-            std::cout << "Loaded font: " << new_font_requested << std::endl;
-            new_font_requested.clear();
-        }
-        begin_frame_lock.unlock();
+    // Process SDL events like keyboard & mouse
+    SDL_Event event;
+    while (SDL_PollEvent(&event)) {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+        //input.ProcessEvent(event);
+        if (event.type == SDL_QUIT)
+            return true;
+        if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE
+            && event.window.windowID == SDL_GetWindowID(window))
+            return true;
+    }
 
-        SpriteActions();
+    // This is so app thread can lock to load fonts etc before start of frame
+    begin_frame_lock.lock();
+    if (!new_font_requested.empty()) {
+        auto io = ImGui::GetIO();
+        io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), font_size * dpi_ratio);
+        io.Fonts->Build();
+        ImGui_ImplOpenGL3_CreateFontsTexture();
+        std::cout << "Loaded font: " << new_font_requested << std::endl;
+        new_font_requested.clear();
+    }
+    begin_frame_lock.unlock();
 
-        const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
-        bool window_output = true;
-        // Generate this frame?
-        bool gen = false;
-        if (mode == Mode::BANKED) {
-            gen = flip_requested;
-        } else {
-            gen = true;
-        }
-        if (gen) {
-            glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
-            glClearColor(0.0, 0.0, 0.0, 1.0);
-            glClear(GL_COLOR_BUFFER_BIT);
+    SpriteActions();
 
-            // Start the Dear ImGui frame
-            ImGui_ImplOpenGL3_NewFrame();
-            ImGui_ImplSDL2_NewFrame(window);
-            ImGui::NewFrame();
+    const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
+    bool window_output = true;
+    // Generate this frame?
+    bool gen = false;
+    if (mode == Mode::BANKED) {
+        gen = flip_requested;
+    } else {
+        gen = true;
+    }
+    if (gen) {
+        glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
 
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-            ImGui::SetNextWindowPos(main_viewport->Pos);
-            ImGui::SetNextWindowSize(main_viewport->Size);
-            ImGui::Begin("Fullscreen", &window_output,
-                         ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
-                         ImGuiWindowFlags_NoSavedSettings |
-                         ImGuiWindowFlags_NoBackground);
+        // Start the Dear ImGui frame
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplSDL2_NewFrame(window);
+        ImGui::NewFrame();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::SetNextWindowPos(main_viewport->Pos);
+        ImGui::SetNextWindowSize(main_viewport->Size);
+        ImGui::Begin("Fullscreen", &window_output,
+                     ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoSavedSettings |
+                     ImGuiWindowFlags_NoBackground);
 
 
-            // Render shadows
+        // Render shadows
 /*                if (world.shadows) {
                     glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
                     world.RenderOpenGL3Shadow();
@@ -216,45 +214,42 @@ void UISDL::Start() {
 
 //                Render(); // For 3D
 
-            //console.Update(fontMono);
-            ImGui::End();
-            ImGui::PopStyleVar();
-            ImGui::PopStyleVar();
+        //console.Update(fontMono);
+        ImGui::End();
+        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();
 
-            // FPS histogram
-            ImGui::SetNextWindowPos(ImVec2(desktop_screen_width - 100, desktop_screen_height - 100));
-            ImGui::SetNextWindowSize(ImVec2(100, 50));
-            ImGui::Begin("Fullscreen", &window_output,
-                         ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
-                         ImGuiWindowFlags_NoSavedSettings);
-            ImGui::PlotHistogram("FPS", fps_values, IM_ARRAYSIZE(fps_values), 0, NULL, 0.0f, 100.0f,
-                                 ImVec2(100, 50.0f));
-            ImGui::TextUnformatted(fps_text.c_str());
-            ImGui::End();
+        // FPS histogram
+        ImGui::SetNextWindowPos(ImVec2(desktop_screen_width - 100, desktop_screen_height - 100));
+        ImGui::SetNextWindowSize(ImVec2(100, 50));
+        ImGui::Begin("Fullscreen", &window_output,
+                     ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
+                     ImGuiWindowFlags_NoSavedSettings);
+        ImGui::PlotHistogram("FPS", fps_values, IM_ARRAYSIZE(fps_values), 0, NULL, 0.0f, 100.0f,
+                             ImVec2(100, 50.0f));
+        ImGui::TextUnformatted(fps_text.c_str());
+        ImGui::End();
 
-            // Now render
-            ImGui::Render();
+        // Now render
+        ImGui::Render();
 
-            // Show
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-            SDL_GL_SwapWindow(window);
+        // Show
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        SDL_GL_SwapWindow(window);
 
-            // Save FPS to show a nice graph
-            frame_count++;
-            auto t = std::chrono::steady_clock::now();
-            auto total_time = static_cast<float>((t - fps_clock).count());
-            float fps = 1.0f / (total_time / 1000000000.0f);
-            fps_values[fps_offset] = fps;
-            fps_offset = (fps_offset + 1) % 64;
-            fps_clock = std::chrono::steady_clock::now();
-            fps_text = std::to_string((int) fps) + " FPS";
+        // Save FPS to show a nice graph
+        frame_count++;
+        auto t = std::chrono::steady_clock::now();
+        auto total_time = static_cast<float>((t - fps_clock).count());
+        float fps = 1.0f / (total_time / 1000000000.0f);
+        fps_values[fps_offset] = fps;
+        fps_offset = (fps_offset + 1) % 64;
+        fps_clock = std::chrono::steady_clock::now();
+        fps_text = std::to_string((int) fps) + " FPS";
 
-            flip_requested = false;
-        }
-
-        // Sleep!
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        flip_requested = false;
     }
+    return false;
 }
 
 void UISDL::_CreateWindow() {

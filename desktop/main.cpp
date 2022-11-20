@@ -1,15 +1,19 @@
 #include <iostream>
 #include <fstream>
 #include <thread>
+#include <chrono>
 #include "Parser/Parser.h"
 #include "Compiler/Compiler.h"
 #include "Variables/Shared.h"
 #include "../runtime/UI/UISDL.h"
 
-UISDL *ui;
+UISDL ui;
 
 CompilerOptions options;
 std::atomic_bool done = false;
+std::atomic_bool start_ui = false;
+bool ui_started = false;
+
 static void RunThread() {
     Instance::ClearStatic();
     Reference::ClearStatic();
@@ -48,7 +52,17 @@ int main(int argc, char *argv[]) {
     auto t = std::thread(&RunThread);
     t.detach();
     while (!done) {
-        
+        if (start_ui) {
+            ui.Start();
+            start_ui = false;
+            ui_started = true;
+        }
+        if (ui_started) {
+            if (ui.Render()) {
+                done = true;
+            }
+        }
+//        std::this_thread::sleep_for(std::chrono::microseconds(1000));
     }
     return 0;
 }
