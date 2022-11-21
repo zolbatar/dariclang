@@ -71,9 +71,15 @@ add_executable(${PROJECT_NAME}
         ../runtime/Chrono.cpp
         ../runtime/Core.cpp
         ../runtime/Gfx2D.cpp
-
+        ../runtime/UI/Console/Console.cpp
+        ../runtime/UI/Console/Console.h
         ../runtime/UI/UISDL.cpp
+        ../runtime/UI/UISDL.h
+        ../runtime/UI/RenderShapes.cpp
+        ../runtime/UI/RenderShapes.h
         ../runtime/UI/Lodepng.cpp
+        ../runtime/Input/Input.cpp
+        ../runtime/Input/Input.h
 
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
@@ -149,7 +155,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
-        Compiler/CompilerLibrary.cpp)
+        Compiler/CompilerLibrary.cpp Compiler/CompilerConstants.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${CONAN_LIBS}
         antlr4-runtime

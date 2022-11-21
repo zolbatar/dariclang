@@ -6,12 +6,11 @@ void Compiler::TokenRepeat(ParserToken &token) {
 
     // Body block
     CompileStatements(token.children[1].children);
-    bc = GetIR()->GetInsertBlock();
 
     // Terminator
     auto endBB = CreateAndInsertBB("REPEAT End", false, token);
     auto quitBB = CreateAndInsertBB("REPEAT Quit", false, token);
-    RetBrCheckSplit(bc, endBB);
+    RetBrCheckSplit(GetIR()->GetInsertBlock(), endBB);
     GetIR()->SetInsertPoint(endBB);
 
     // Calculate condition
@@ -44,7 +43,7 @@ void Compiler::TokenWhile(ParserToken &token) {
     // Body block
     GetIR()->SetInsertPoint(doBB);
     CompileStatements(token.children[1].children);
-    RetBrCheckSplit(doBB, bc);
+    RetBrCheckSplit(GetIR()->GetInsertBlock(), bc);
 
     // Terminator
     GetIR()->SetInsertPoint(quitBB);
@@ -106,7 +105,7 @@ void Compiler::TokenFor(ParserToken &t) {
     GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 0), finished);
 
     // Blocks
-    auto bodyBB = CreateAndInsertBB("FOR body", true, t);
+    auto bodyBB = CreateAndInsertBB("FOR body start", true, t);
     auto bodyEndBB = CreateAndInsertBB("FOR body end", false, t);
     auto bodyFlagBB = CreateAndInsertBB("FOR body flag", false, t);
     auto bodyFlag2BB = CreateAndInsertBB("FOR body flag2", false, t);
@@ -115,7 +114,7 @@ void Compiler::TokenFor(ParserToken &t) {
     // Body block
     GetIR()->SetInsertPoint(bodyBB);
     CompileStatements(t.children[0].children);
-    RetBrCheckSplit(bodyBB, bodyEndBB);
+    RetBrCheckSplit(GetIR()->GetInsertBlock(), bodyEndBB);
 
     // Body Terminator
     GetIR()->SetInsertPoint(bodyEndBB);

@@ -61,6 +61,7 @@ void Compiler::TokenCall(ParserToken &token) {
         auto i = 0;
         for (auto &s: token.children) {
             auto vt = CompileExpression(s);
+            llvm.AutoConversion(GetIR(), vt, lf->second.parameters[i]);
             if (vt.type != lf->second.parameters[i]) {
                 RaiseException("Parameter mismatch", token);
             }

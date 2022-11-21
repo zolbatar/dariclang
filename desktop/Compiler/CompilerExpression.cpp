@@ -33,7 +33,40 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
         case ParserTokenType::CALL: {
             auto rr = procedures.find(t.identifier);
             if (rr == procedures.end()) {
-                ProcedureNotFound(t, t.identifier);
+                // Check library
+                auto lf = library.find(t.identifier);
+                if (lf == library.end()) {
+                    ProcedureNotFound(t, t.identifier);
+                }
+
+                // Right number of parameters?
+                if (t.children.size() != lf->second.parameters.size()) {
+                    RaiseException("Parameter mismatch", t);
+                }
+
+                // Compile parameters
+                std::vector<llvm::Value *> vals;
+                auto i = 0;
+                for (auto &s: t.children) {
+                    auto vt = CompileExpression(s);
+                    llvm.AutoConversion(GetIR(), vt, lf->second.parameters[i]);
+                    if (vt.type != lf->second.parameters[i]) {
+                        RaiseException("Parameter mismatch", t);
+                    }
+                    vals.push_back(vt.value);
+                    i++;
+                }
+
+                ValueType vt;
+                vt.value = CreateCall(lf->second.func_name, vals);
+                vt.type = lf->second.return_Type;
+
+                // String, if so make permanent
+                if (vt.type == Primitive::STRING) {
+                    llvm.MakePermString(vt.value, GetIR());
+                    strip_strings = true;
+                }
+                return vt;
             }
             auto f = &rr->second;
 

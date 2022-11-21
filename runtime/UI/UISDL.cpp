@@ -12,14 +12,14 @@
 
 std::mutex sprite_lock;
 size_t last_sprite_index = 0;
-//extern Console console;
+extern Console console;
 //extern Sprites sprite;
 //extern size_t sprite_index;
-//extern LogWindow log_window;
-//extern Input input;
+extern Input input;
 //extern World world;
 size_t frame_count = 0;
 //extern SoftSynth soft_synth;
+//ImDrawListSharedData UISDL::sharedDataBackBuffer;
 
 UISDL::UISDL() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -42,6 +42,9 @@ UISDL::UISDL() {
     desktop_screen_width = dm.w;
     desktop_screen_height = dm.h;
     std::cout << "Desktop resolution: " << desktop_screen_width << "x" << desktop_screen_height << std::endl;
+
+    SetFGColour(ImGui::ColorConvertFloat4ToU32(ImVec4(1.0, 1.0, 1.0, 1.0)));
+    SetBGColour(ImGui::ColorConvertFloat4ToU32(ImVec4(0.0, 0.0, 0.0, 1.0)));
 }
 
 UISDL::~UISDL() {
@@ -50,7 +53,13 @@ UISDL::~UISDL() {
     SDL_Quit();
 }
 
-void UISDL::Start() {
+void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
+    if (w != -1 && h != -1) {
+        desktop_screen_width = w;
+        desktop_screen_height = h;
+    }
+    mode = banked ? Mode::BANKED : Mode::CLASSIC;
+
     // Decide GL+GLSL versions
     std::cout << "Setting up OpenGL version" << std::endl;
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -83,7 +92,7 @@ void UISDL::Start() {
     SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
     // Initialise SDL now and create window
-    _CreateWindow();
+    _CreateWindow(windowed);
 
     // Create context in window
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
@@ -105,16 +114,18 @@ void UISDL::Start() {
     io.Fonts->Build();
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    //ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
-    //ImGui::StyleColorsLight();
+    ImGui::StyleColorsLight();
 
     // Output window
-/*    console.Setup(desktop_screen_width, desktop_screen_height, dpi_ratio, desktop_screen_width / console_x_size,
-                  desktop_screen_height / console_y_size, false);*/
+    console.Setup(desktop_screen_width, desktop_screen_height, dpi_ratio,
+                  desktop_screen_width / console_x_size,
+                  desktop_screen_height / console_y_size,
+                  false);
 
     // 3D
-    Create3DBuffer();
+    //Create3DBuffer();
 //    world.SetupOpenGL3();
 
     // Setup Platform/Renderer backends
@@ -127,8 +138,6 @@ bool UISDL::Render() {
     ImGuiIO &io = ImGui::GetIO();
 
     // FPS stuff
-    std::string fps_text = "0 FPS";
-    uint32_t fps_offset = 0;
     for (auto i = 0; i < 64; i++) {
         fps_values[i] = 0.0f;
     }
@@ -139,30 +148,32 @@ bool UISDL::Render() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
         ImGui_ImplSDL2_ProcessEvent(&event);
-        //input.ProcessEvent(event);
-        if (event.type == SDL_QUIT)
+        input.ProcessEvent(event);
+        if (event.type == SDL_QUIT) {
             return true;
+        }
         if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE
-            && event.window.windowID == SDL_GetWindowID(window))
+            && event.window.windowID == SDL_GetWindowID(window)) {
             return true;
+        }
     }
 
     // This is so app thread can lock to load fonts etc before start of frame
-    begin_frame_lock.lock();
+/*    begin_frame_lock.lock();
     if (!new_font_requested.empty()) {
-        auto io = ImGui::GetIO();
         io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), font_size * dpi_ratio);
         io.Fonts->Build();
         ImGui_ImplOpenGL3_CreateFontsTexture();
         std::cout << "Loaded font: " << new_font_requested << std::endl;
         new_font_requested.clear();
     }
-    begin_frame_lock.unlock();
+    begin_frame_lock.unlock();*/
 
     SpriteActions();
 
     const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
     bool window_output = true;
+
     // Generate this frame?
     bool gen = false;
     if (mode == Mode::BANKED) {
@@ -171,14 +182,14 @@ bool UISDL::Render() {
         gen = true;
     }
     if (gen) {
-        glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
-        glClearColor(0.0, 0.0, 0.0, 1.0);
-        glClear(GL_COLOR_BUFFER_BIT);
-
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
         ImGui::NewFrame();
+
+        glViewport(0, 0, static_cast<int>(io.DisplaySize.x), static_cast<int>(io.DisplaySize.y));
+        glClearColor(0.0, 0.0, 0.0, 1.0);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
@@ -214,13 +225,14 @@ bool UISDL::Render() {
 
 //                Render(); // For 3D
 
-        //console.Update(fontMono);
+        RenderShapes();
+        console.Update(fontMono);
         ImGui::End();
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();
 
         // FPS histogram
-        ImGui::SetNextWindowPos(ImVec2(desktop_screen_width - 100, desktop_screen_height - 100));
+/*        ImGui::SetNextWindowPos(ImVec2(desktop_screen_width - 100, desktop_screen_height - 100));
         ImGui::SetNextWindowSize(ImVec2(100, 50));
         ImGui::Begin("Fullscreen", &window_output,
                      ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
@@ -228,7 +240,7 @@ bool UISDL::Render() {
         ImGui::PlotHistogram("FPS", fps_values, IM_ARRAYSIZE(fps_values), 0, NULL, 0.0f, 100.0f,
                              ImVec2(100, 50.0f));
         ImGui::TextUnformatted(fps_text.c_str());
-        ImGui::End();
+        ImGui::End();*/
 
         // Now render
         ImGui::Render();
@@ -252,13 +264,12 @@ bool UISDL::Render() {
     return false;
 }
 
-void UISDL::_CreateWindow() {
+void UISDL::_CreateWindow(bool windowed) {
     // Create window
     std::cout << "Creating SDL window\n";
     SDL_WindowFlags window_flags;
-    if (fullscreen) {
+    if (!windowed) {
         window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
-        //window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,
@@ -266,13 +277,6 @@ void UISDL::_CreateWindow() {
                                   desktop_screen_height,
                                   window_flags);
     } else {
-#ifdef __x86_64__
-        desktop_screen_width = 1920;
-        desktop_screen_height = 1080;
-#else
-        desktop_screen_width = 1280;
-        desktop_screen_height = 720;
-#endif
         window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric",
                                   SDL_WINDOWPOS_CENTERED,

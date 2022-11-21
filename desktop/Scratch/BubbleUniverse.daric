@@ -1,20 +1,20 @@
 REM Thanks to ZXDunny for the original code
 
-MODEB -1,-1
-n%=200:r#=PI*2/235
-x#=0:t#=0:sz#=300:sw#=SCREENWIDTH()/2:sh#=SCREENHEIGHT()/2
-u#=0:v#=0
+MODE -1,-1,BANKED
+n=250:r=PI/2/235
+x=0.0:t=0.0:sz=300.0
+u=0.0:v=0.0
+ORIGIN SWIDTH()/2,SHEIGHT()/2
 REPEAT
-    FOR i#=0 TO n%
-        FOR j#=0 TO n%
-            u#=SIN(i#+v#)+SIN(r#*i#+x#)
-            v#=COS(i#+v#)+COS(r#*i#+x#)
-            x#=u#+t#
-            FG i#,j#,99
-            xx#=(u#*sz#)+sw#:yy#=(v#*sz#)+sh#
-            PLOT xx#,yy#
+    FOR i=0 TO n
+        FOR j=0 TO n
+            u=SIN(i+v)+SIN(r*i+x)
+            v=COS(i+v)+COS(r*i+x)
+            x=u+t
+            FG i,j,(i+j)/2
+            PLOT u*sz,v*sz
         NEXT
     NEXT
-    t#=t#+0.0025
+    t=t+0.0025
     FLIP
 UNTIL FALSE

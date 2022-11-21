@@ -29,6 +29,7 @@ bool Compiler::Compile() {
 
     // Library
     SetupLibrary();
+    Constants();
 
     // Lookahead
     auto n = Primitive::NONE;

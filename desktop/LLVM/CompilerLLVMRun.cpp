@@ -59,7 +59,7 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-L.");
     args.push_back("-platform_version");
     args.push_back("macos");
-    args.push_back("11.0.0");
+    args.push_back("12.0.0");
     args.push_back("0.0.0");
     args.push_back("-arch");
 //    args.push_back("'x86_64;aarch64'");

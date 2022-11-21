@@ -1,1 +1,407 @@
-MODE 100,100
+PRINT "Daric Test Suite"
+PRINT "----------------"
+PRINT
+
+CONST constant=100
+CONST ccf=12.5
+DIM a1d OF INT[5]:DIM a2di OF INT[5,5]:DIM a2df OF FLOAT[5,5]:DIM a3d OF INT[5,5,5]
+a1d[3]=123:a2di[2,3]=456:a3d[1,2,3]=789
+
+#DATA 1,2,3,4,5
+#DATALABEL "Label"
+#DATA 123
+
+DEFRECORD COORDINATE x OF FLOAT:y OF FLOAT ENDRECORD
+DEFRECORD COMPOUND
+    i OF INT
+    f OF FLOAT
+    s OF STRING
+    xy OF COORDINATE
+ENDRECORD
+myrecord = RECORD OF COORDINATE(x=12.45)
+myrecord.y=100
+DIM RECORD myrecordarray OF COORDINATE[100]
+myrecordarray[10].x=123
+
+# INTMAP mymap OF COORDINATE
+# mymap<100>
+# STRINGMAP mystrmap OF FLOAT
+# VECTOR vec OF INT
+# myrecordarray[2] = myrecordarray[10]
+
+Arrays()
+Boolean()
+Chrono()
+Comparison()
+Conversion()
+Functions()
+Maths()
+Numbers()
+PrintFormatting()
+Strings()
+SwapVars()
+Records()
+Variables()
+Looping()
+TestData()
+
+PRINT "::Other::"
+NestedCalling()
+TestReturnInOtherwise()
+
+DEF Arrays
+ 	PRINT "::Arrays::"
+ 	SIZ%=6
+ 	DIM AA OF INT[SIZ%]
+ 	DIM ta1$ OF STRING[2]
+ 	AA[1] = 10
+ 	AA[6] = 15
+ 	PRINT "Index 1            = ";:IF AA[1] = 10 Pass() ELSE Fail()
+ 	PRINT "Index 6            = ";:IF AA[6] = 15 Pass() ELSE Fail()
+ 	a1d[2] = 321
+ 	PRINT "Global             = ";:IF a1d[3] = 123 AND a1d[2] = 321 Pass() ELSE Fail()
+    a2df[3,2] = 654.1
+ 	PRINT "Global (2d)        = ";:IF a2di[2,3] = 456 AND a2df[3,2] = 654.1 Pass() ELSE Fail()
+    a2df[3,2] = 650
+ 	PRINT "Global (Type conv.)= ";:IF a2df[3,2] = 650 Pass() ELSE Fail()
+ 	ta1$[1] = "Test"
+ 	ta1$[2] = ta1$[1]
+ 	PRINT "String arrays      = ";:IF ta1$[2] = "Test" Pass() ELSE Fail()
+REM 	PRINT "Size of 1D array   = ";:IF SIZE(ta1$[]) = 2 Pass() ELSE Fail()
+ 	DIM ta2$ OF STRING[2, 3]
+REM 	PRINT "Size of 2D array   = ";:IF SIZE(ta2$[]) = 6 Pass() ELSE Fail()
+ 	ta2$[1, 1] = "Test"
+ 	ta2$[2, 2] = ta2$[1, 1]
+ 	PRINT "2D arrays          = ";:IF ta2$[2, 2] = "Test" Pass() ELSE Fail()
+ 	PRINT
+ENDDEF
+
+DEF Boolean
+    PRINT "::Boolean::"
+    PRINT "Or                 = ";:IF ((&F0 OR &F0) = &F0) AND ((&F0 OR &0F) = &FF) Pass() ELSE Fail()
+    PRINT "Eor                = ";:IF ((1 EOR 1) = 0) AND ((1 EOR 0) = 1) AND ((0 EOR 0) = 0) Pass() ELSE Fail()
+    PRINT "And                = ";:IF ((&F0 AND &F0) = &F0) AND ((&F0 AND &0F) = &0) Pass() ELSE Fail()
+    PRINT "Not                = ";:IF NOT 1 = 0 Pass() ELSE Fail()
+    PRINT "Complement         = ";:IF ~1 = -2 Pass() ELSE Fail()
+    PRINT "True               = ";:IF TRUE Pass() ELSE Fail()
+    PRINT "False              = ";:IF NOT FALSE Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF Comparison
+    PRINT "::Comparison::"
+    PRINT "Int =              = ";:IF 5 = 5 Pass() ELSE Fail()
+    PRINT "Int <>             = ";:IF 5 <> 6 Pass() ELSE Fail()
+    PRINT "Int <              = ";:IF 5 < 10 Pass() ELSE Fail()
+    PRINT "Int <= (<)         = ";:IF 4 <= 5 Pass() ELSE Fail()
+    PRINT "Int <= (=)         = ";:IF 5 <= 5 Pass() ELSE Fail()
+    PRINT "Int >              = ";:IF 10 > 5 Pass() ELSE Fail()
+    PRINT "Int >= (>)         = ";:IF 10 >= 5 Pass() ELSE Fail()
+    PRINT "Int >= (>=)        = ";:IF 5 >= 5 Pass() ELSE Fail()
+    PRINT "Float =            = ";:IF 5.0 = 5.0 Pass() ELSE Fail()
+    PRINT "Float <>           = ";:IF 5.0 <> 6.0 Pass() ELSE Fail()
+    PRINT "Float <            = ";:IF 5.0 < 10.0 Pass() ELSE Fail()
+    PRINT "Float <= (<)       = ";:IF 4.0 <= 5.0 Pass() ELSE Fail()
+    PRINT "Float <= (=)       = ";:IF 5.0 <= 5.0 Pass() ELSE Fail()
+    PRINT "Float >            = ";:IF 10.0 > 5.0 Pass() ELSE Fail()
+    PRINT "Float >= (>)       = ";:IF 10.0 >= 5.0 Pass() ELSE Fail()
+    PRINT "Float >= (>=)      = ";:IF 5.0 >= 5.0 Pass() ELSE Fail()
+    PRINT "String =           = ";:IF "Fred" = "Fred" Pass() ELSE Fail()
+    PRINT "String <>          = ";:IF "Fred" <> "fred" Pass() ELSE Fail()
+    PRINT "String <           = ";:IF "Fred" < "fred" Pass() ELSE Fail()
+    PRINT "String <= (<)      = ";:IF "Fred" <= "fred" Pass() ELSE Fail()
+    PRINT "String <= (=)      = ";:IF "Fred" <= "Fred" Pass() ELSE Fail()
+    PRINT "String >           = ";:IF "fred" > "Fred" Pass() ELSE Fail()
+    PRINT "String >= (>)      = ";:IF "fred" >= "Fred" Pass() ELSE Fail()
+    PRINT "String >= (>=)     = ";:IF "Fred" >= "Fred" Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF Conversion
+    PRINT "::Conversion::"
+    PRINT "10 + 15.5          = ";:IF 10 + 15.5 = 25.5 Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF Maths
+    PRINT "::Maths::"
+    PRINT "- (Unary)          = ";:IF 2 - -2 = 4 Pass() ELSE Fail()
+    A=2:PRINT "- (Unary Var)      = ";:IF -A = -2 Pass() ELSE Fail()
+    PRINT "- (Int)            = ";:IF 10 - 8 = 2 Pass() ELSE Fail()
+    PRINT "+ (Int)            = ";:IF 10 + 8 = 18 Pass() ELSE Fail()
+    PRINT "* (Int)            = ";:IF 10 * 8 = 80 Pass() ELSE Fail()
+    PRINT "^ (Int)            = ";:IF 2 ^ 3 = 8 Pass() ELSE Fail()
+    PRINT "Mod (Int)          = ";:IF 11 MOD 5 = 1 Pass() ELSE Fail()
+    PRINT "Div (Int)          = ";:IF 11 DIV 5 = 2 Pass() ELSE Fail()
+    PRINT "Abs (Int)          = ";:IF ABS(-10) = 10 Pass() ELSE Fail()
+    PRINT "- (Float)          = ";:IF 10.5 - 8.25 = 2.25 Pass() ELSE Fail()
+    PRINT "+ (Float)          = ";:IF 10.4 + 8.1 = 18.5 Pass() ELSE Fail()
+    PRINT "* (Float)          = ";:IF 2.5 * 4.5 = 11.25 Pass() ELSE Fail()
+    PRINT "/ (Float)          = ";:IF 8.4 / 4.2 = 2.0 Pass() ELSE Fail()
+    PRINT "Floor              = ";:IF FLOOR(12.8) = 12.0 Pass() ELSE Fail()
+    PRINT "Round              = ";:IF ROUND(12.8) = 13.0 Pass() ELSE Fail()
+    PRINT "Ln                 = ";:IF INT(LN(16) * 100.0) = 277 Pass() ELSE Fail()
+    PRINT "Log                = ";:IF INT(LOG(16) * 100.0) = 120 Pass() ELSE Fail()
+    PRINT "Exp                = ";:IF INT(EXP(1) * 100.0) = 271 Pass() ELSE Fail()
+    PRINT "Atn                = ";:IF INT(ATN(3) * 100.0) = 124 Pass() ELSE Fail()
+    PRINT "Tan                = ";:IF INT(TAN(3) * 100.0) = -14 Pass() ELSE Fail()
+    PRINT "Sin                = ";:IF INT(SIN(3) * 100.0) = 14 Pass() ELSE Fail()
+    PRINT "Cos                = ";:IF INT(COS(3) * 100.0) = -98 Pass() ELSE Fail()
+    PRINT "Acs                = ";:IF INT(ACS(0.5) * 100.0) = 104 Pass() ELSE Fail()
+    PRINT "Asn                = ";:IF INT(ASN(0.5) * 100.0) = 52 Pass() ELSE Fail()
+    PRINT "Rad                = ";:IF INT(RAD(90) * 100.0) = 157 Pass() ELSE Fail()
+    PRINT "Deg                = ";:IF INT(DEG(1.5)) = 85 Pass() ELSE Fail()
+    PRINT "Pi                 = ";:IF INT(PI*100) = 314 Pass() ELSE Fail()
+    PRINT "Sgn (-)            = ";:IF SGN(-10) = -1 Pass() ELSE Fail()
+    PRINT "Sgn                = ";:IF SGN(0) = 0 Pass() ELSE Fail()
+    PRINT "Sgn (+)            = ";:IF SGN(10) = 1 Pass() ELSE Fail()
+    PRINT "Precedence         = ";:IF 2+3*4 = 14 Pass() ELSE Fail()
+    PRINT "Parentheses        = ";:IF (2+3)*4 = 20 Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF NestedCalling
+    Nested1()
+    RETURN
+ENDDEF
+
+DEF Nested1
+    Nested2()
+    RETURN
+ENDDEF
+
+DEF Nested2
+    PRINT "Nested DEFs        = ";:Pass()
+    RETURN
+ENDDEF
+
+DEF Numbers
+    PRINT "::Numbers::"
+    PRINT "Hex                = ";:IF &40 = 64 Pass() ELSE Fail()
+    PRINT "Binary             = ";:IF %100 = 4 Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF RetValues
+    PRINT "::Other::"
+    PRINT "Returning int      = ";:IF RetInteger()=100 Pass() ELSE Fail()
+    PRINT "Returning float    = ";:IF RetFloat()=146.45 Pass() ELSE Fail()
+    PRINT "Returning string   = ";:IF RetString()="ff" Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF RetInteger OF Int
+	RETURN 100
+ENDDEF
+
+DEF RetFloat OF Float
+	RETURN 146.45
+ENDDEF
+
+DEF RetString OF String
+	RETURN "ff"
+ENDDEF
+
+DEF Empty
+ENDDEF
+
+DEF PrintFormatting
+    PRINT "::Print Formatting::"
+    PRINT 123.456 WITH "[[%9.6f]]"
+    PRINT "Hello, world!" "Test: %s": REM Optional WITH
+    PRINT
+ENDDEF
+
+DEF Strings
+    PRINT "::Strings::"
+    PRINT "Asc                = ";:IF ASC("Fred") = 70 AND ASC("") = -1 Pass() ELSE Fail()
+    PRINT "Chr$               = ";:IF CHR$(65) = "A" Pass() ELSE Fail()
+    PRINT "Instr              = ";:IF INSTR("Test this this string", "this", 1) = 6 Pass() ELSE Fail()
+    PRINT "Instr (with start) = ";:IF INSTR("Test this this string", "this", 8) = 11 Pass() ELSE Fail()
+    PRINT "Left$              = ";:IF LEFT$("A test string", 6) = "A test" Pass() ELSE Fail()
+    PRINT "Mid$               = ";:IF MID$("A test string", 3, 4) = "test" Pass() ELSE Fail()
+    PRINT "Right$             = ";:IF RIGHT$("A test string", 6) = "string" Pass() ELSE Fail()
+    PRINT "Len                = ";:IF LEN("A test string") = 13 Pass() ELSE Fail()
+    PRINT "String to float    = ";:IF FLOAT("10.5") = 10.5 Pass() ELSE Fail()
+    PRINT "Float to string    = ";:IF STRING(10.5) = "10.500000" Pass() ELSE Fail()
+    PRINT "Float to formatted = ";:IF STRING(10.5 WITH "[[%9.6f]]") = "[[10.500000]]" Pass() ELSE Fail()
+    PRINT
+ENDDEF
+
+DEF SwapVars
+	PRINT "::Swap::"
+	swpa=1,swpb=2
+	swpf1=123.2,swpf2=456.2
+	swps1$="11",swps2$="22" OF STRING
+	SWAP swpa,swpb
+	SWAP swpf1,swpf2
+	SWAP swps1$,swps2$
+	SWAP myrecord.y, myrecord.x
+	PRINT "Swap integer       = ";:IF swpa=2 AND swpb=1 Pass() ELSE Fail()
+	PRINT "Swap float         = ";:IF swpf1=456.2 AND swpf2=123.2 Pass() ELSE Fail()
+	PRINT "Swap string        = ";:IF swps1$="22" AND swps2$="11" Pass() ELSE Fail()
+	PRINT
+ENDDEF
+
+DEF Variables()
+    A%=0,F=10,G=0
+    B#=0,C=123.45,H=0 FLOAT
+    D$="",E="Test" STRING
+ 	G=100
+ 	LET H=99.9
+
+    PRINT "::Variables::"
+    PRINT "Local integer (0)  = ";:IF A%=0 Pass() ELSE Fail()
+    PRINT "Local float (0)    = ";:IF B#=0.0 Pass() ELSE Fail()
+    PRINT "Local string (Blnk)= ";:IF D$="" Pass() ELSE Fail()
+    PRINT "Local integer      = ";:IF F=10 Pass() ELSE Fail()
+    PRINT "Local float        = ";:IF C=123.45 Pass() ELSE Fail()
+    PRINT "Local string       = ";:IF E="Test" Pass() ELSE Fail()
+    PRINT "Constants          = ";:IF constant=100 AND ccf=12.5 Pass() ELSE Fail()
+    PRINT "Implicit LET       = ";:IF G=100 Pass() ELSE Fail()
+    PRINT "Explicit LET       = ";:IF H=99.9 Pass() ELSE Fail()
+ 	PRINT
+ENDDEF
+
+DEF Chrono
+	PRINT "::Chrono::"
+	PRINT "Time               = ";:IF TIME >= 0 Pass() ELSE Fail()
+	PRINT "Time$              = ";:IF LEN(TIME$) = 24 Pass() ELSE Fail()
+	PRINT "HPTime             = ";:IF HPTIME >= 0 Pass() ELSE Fail()
+	PRINT
+ENDDEF
+
+DEF SendParameter(A,B OF Float,C$ OF String)
+	PRINT "Send parameter%    = ";:IF A = 25 Pass() ELSE Fail()
+	PRINT "Send parameter#    = ";:IF B = 123.1 Pass() ELSE Fail()
+	PRINT "Send parameter$    = ";:IF C$ = "Test" Pass() ELSE Fail()
+ENDDEF
+
+DEF Functions
+	PRINT "::Functions::"
+	RetValues()
+ 	SendParameter(15+10,123.1,"Test")
+	PRINT
+ENDDEF
+
+DEF Records
+	PRINT "::Records::"
+	myrecordl = RECORD COMPOUND(i=101,f=123.45,s="test")
+    myrecordl.xy.y=165.32
+    DIM RECORD myrecordarray2 OF COORDINATE[10]
+    myrecordarray2[5].y=345
+ 	PRINT "Load field (1)     = ";: IF myrecordl.i=101 AND myrecordl.f=123.45 AND myrecordl.s="test" Pass() ELSE Fail()
+	PRINT "Load field (2)     = ";: IF myrecordl.xy.y=165.32 Pass() ELSE Fail()
+	PRINT "Load field (3)     = ";: IF myrecord.y=12.45 AND myrecord.x=100.0 Pass() ELSE Fail(): REM Swapped earlier
+	PRINT "Load field (4)     = ";: IF myrecordarray[10].x=123 Pass() ELSE Fail()
+	PRINT "Load field (5)     = ";: IF myrecordarray2[5].y=345 Pass() ELSE Fail()
+#	PRINT "Size of type array = ";: IF SIZE(BB![]) = 5 Pass() ELSE Fail()
+	PRINT
+ENDDEF
+
+DEF Looping
+	PRINT "::Looping::"
+	PRINT "One line IF        = ";:IF 1 = 1 Pass() ELSE Fail()
+	PRINT "Multiline IF       = ";
+	IF 1 = 1 THEN
+		Pass()
+	ELSE
+		Fail()
+	ENDIF
+	I% = 0
+	REPEAT
+		I% = I% + 1
+	UNTIL I% = 10
+	PRINT "Repeat             = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	WHILE I% < 10
+		I% = I% + 1
+	ENDWHILE
+	PRINT "While              = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 1 TO 1
+		I% = I% + 1
+    NEXT
+	PRINT "FOR (Int/1 Iter)   = ";:IF I% = 1 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 0 TO 9
+		I% = I% + 1
+	NEXT
+	PRINT "FOR (Int)          = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 0 TO 10 STEP 2
+		I% = I% + 1
+	NEXT
+	PRINT "FOR + Step (Int)   = ";:IF I% = 6 Pass() ELSE Fail()
+	I% = 0
+	FOR J% = 9 TO 0 STEP -1
+		I% = I% + 1
+	NEXT
+	PRINT "FOR - (Int)        = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J# = 0.0 TO 9.0
+		I% = I% + 1
+	NEXT
+	PRINT "FOR (Float)        = ";:IF I% = 10 Pass() ELSE Fail()
+	I% = 0
+	FOR J# = 0.0 TO 10.0 STEP 2.0
+		I% = I% + 1
+	NEXT
+	PRINT "FOR + Step (Float) = ";:IF I% = 6 Pass() ELSE Fail()
+	PRINT "Case               = ";
+	I%=1
+	CASE I% OF
+		WHEN 0, 1, 2: Pass()
+		WHEN 3: Fail()
+		OTHERWISE Fail()
+	ENDCASE
+	PRINT "Case (not first)   = ";
+	I%=2
+	CASE I% OF
+		WHEN 0,1: Fail()
+		WHEN 2: Pass()
+		OTHERWISE Fail()
+	ENDCASE
+	PRINT "Case (Otherwise)   = ";
+	I%=4
+	CASE I% OF
+		WHEN 0, 1, 2: Fail()
+		WHEN 3: Fail()
+		OTHERWISE Pass()
+	ENDCASE
+	PRINT "Case (String)      = ";
+	A$="B"
+    CASE A$ OF
+ 		WHEN "A":Fail()
+	 	WHEN "B":Pass()
+		OTHERWISE Fail()
+	ENDCASE
+    PRINT
+ENDDEF
+
+DEF TestData
+#	READ a1%, a2%, a3%
+#	PRINT "Data (Int)         = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
+#	RESTORE "Label"
+#	READ a1%
+#	PRINT "DataLabel          = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
+ENDDEF
+
+DEF TestReturnInOtherwise()
+    B$="5"
+	PRINT "Return inside DEF  = ";:
+    CASE B$ OF
+        WHEN "1","2","3","4":Fail()
+        OTHERWISE:Pass():	RETURN
+    ENDCASE
+	Fail()
+ENDDEF
+
+PRIVATE DEF Pass()
+    PRINT "PASS!"
+ENDDEF
+
+PRIVATE DEF Fail()
+    PRINT "!! FAILED TEST !!"
+    END
+ENDDEF
