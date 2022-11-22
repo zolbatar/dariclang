@@ -37,7 +37,9 @@ void Compiler::TokenProcedure(ParserToken &t) {
     }
 
     CompileStatements(t.children);
-    DefaultReturn(return_type, t);
+    if (!llvm.CheckReturn(GetIR())) {
+        DefaultReturn(return_type, t);
+    }
     procedure = nullptr;
     Instance::ClearLocals(llvm);
 }
@@ -84,6 +86,7 @@ void Compiler::TokenCall(ParserToken &token) {
     auto i = 0;
     for (auto &s: token.children) {
         auto vt = CompileExpression(s);
+        llvm.AutoConversion(GetIR(), vt, f->parameters[i]);
         if (vt.type != f->parameters[i]) {
             RaiseException("Parameter mismatch", token);
         }
@@ -95,7 +98,6 @@ void Compiler::TokenCall(ParserToken &token) {
 }
 
 void Compiler::TokenReturn(ParserToken &token) {
-    CreateAndInsertBB("RETURN", true, token);
     if (token.children.empty()) {
         DefaultReturn(return_type, token);
     } else {
@@ -103,6 +105,4 @@ void Compiler::TokenReturn(ParserToken &token) {
         llvm.AutoConversion(GetIR(), ret_value, return_type);
         GetIR()->CreateRet(ret_value.value);
     }
-
-    CreateAndInsertBB("RETURN end", false, token);
 }

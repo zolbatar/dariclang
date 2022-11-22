@@ -13,8 +13,8 @@ void Parser::Parse(std::istream *source) {
         parser.removeErrorListeners();
         DaricErrorListener errorListener;
         parser.addErrorListener(&errorListener);
-        parser.setBuildParseTree(true);
-        parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::SLL);
+        //parser.setBuildParseTree(true);
+        parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
         DaricParser::ProgramContext *tree = parser.program();
         visitProgram(tree);
     } catch (CustomException &ex) {

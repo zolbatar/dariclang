@@ -64,6 +64,7 @@ add_executable(${PROJECT_NAME}
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 
+        ../runtime/Random.cpp
         ../runtime/String.cpp
         ../runtime/Maths.cpp
         ../runtime/Print.cpp
@@ -175,6 +176,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         sdl2-runtime
         ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${SDL2_DIR}/libSDL2.a /Users/daryl/Shared/Daric/mac/)
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach (dir ${dirs})

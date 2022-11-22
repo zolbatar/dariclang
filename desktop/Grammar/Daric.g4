@@ -45,7 +45,7 @@ separator
 
 assign:         LET? assignment (COMMA assignment)* (OF? type)? ;
 assignment:     variable EQ expression ;
-call:           IDENTIFIER LPAREN? expression? (COMMA expression)* RPAREN? ;
+call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
 case:           CASE expression OF separator? when+ (OTHERWISE statements)? ENDCASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
 data:           DATA INTEGERLITERAL (COMMA INTEGERLITERAL)* ;

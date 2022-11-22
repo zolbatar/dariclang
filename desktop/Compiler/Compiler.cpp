@@ -145,8 +145,17 @@ void Compiler::Run() {
     llvm.Run();
 }
 
-llvm::BasicBlock *Compiler::CreateAndInsertBB(std::string block_name, bool add_branch, ParserToken &token) {
-    return llvm.CreateAndInsertBB(std::move(block_name), add_branch, token.line, GetFunction(), GetIR());
+llvm::BasicBlock *Compiler::CreateBB(std::string block_name, ParserToken &token) {
+    return llvm.CreateBB(block_name, token.line);
+}
+
+void Compiler::AddBB(llvm::BasicBlock *bb) {
+//    GetIR()->SetInsertPoint(bb);
+    llvm.AddBB(bb, GetFunction(), GetIR());
+}
+
+llvm::BasicBlock *Compiler::CreateAndInsertBB(std::string block_name, bool branch, ParserToken &token) {
+    return llvm.CreateAndInsertBB(std::move(block_name), branch, token.line, GetFunction(), GetIR());
 }
 
 void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {
@@ -154,12 +163,9 @@ void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {
 }
 
 void Compiler::TokenEnd(ParserToken &token) {
-    auto t = Primitive::INT;
     if (!options.use_exit_as_end) {
-        llvm.StoreGlobal("~QuitRequested", GetIR(), llvm.CreateConstantInt(t, 1));
-        auto block = CreateAndInsertBB("END", true, token);
+        llvm.StoreGlobal("~QuitRequested", GetIR(), llvm.CreateConstantInt(Primitive::INT, 1));
         GetIR()->CreateRetVoid();
-        CreateAndInsertBB("END end", false, token);
     } else {
         CreateCall("daric_end", {});
     }

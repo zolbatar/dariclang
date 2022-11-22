@@ -5,23 +5,23 @@
 #define M_PI    3.14159265358979323846264338327950288   /**< pi */
 #endif
 
-extern "C" double pi() {
+extern "C" T_F pi() {
     return M_PI;
 }
 
-extern "C" double my_atan(double v) {
+extern "C" T_F my_atan(T_F v) {
     return std::atan(v);
 }
 
-extern "C" double deg(double v) {
+extern "C" T_F deg(T_F v) {
     return (v * 180.0) / M_PI;
 }
 
-extern "C" double rad(double v) {
+extern "C" T_F rad(T_F v) {
     return (v * M_PI) / 180.0;
 }
 
-extern "C" int64_t sgn(double v1) {
+extern "C" T_I sgn(T_F v1) {
     int64_t r = 0;
     if (v1 < 0) {
         r = -1;

@@ -1259,10 +1259,6 @@ tree::TerminalNode* DaricParser::CallContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::CallContext::LPAREN() {
-  return getToken(DaricParser::LPAREN, 0);
-}
-
 std::vector<DaricParser::ExpressionContext *> DaricParser::CallContext::expression() {
   return getRuleContexts<DaricParser::ExpressionContext>();
 }
@@ -1277,6 +1273,10 @@ std::vector<tree::TerminalNode *> DaricParser::CallContext::COMMA() {
 
 tree::TerminalNode* DaricParser::CallContext::COMMA(size_t i) {
   return getToken(DaricParser::COMMA, i);
+}
+
+tree::TerminalNode* DaricParser::CallContext::LPAREN() {
+  return getToken(DaricParser::LPAREN, 0);
 }
 
 tree::TerminalNode* DaricParser::CallContext::RPAREN() {
@@ -1318,7 +1318,7 @@ DaricParser::CallContext* DaricParser::call() {
     switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 12, _ctx)) {
     case 1: {
       setState(166);
-      match(DaricParser::LPAREN);
+      antlrcpp::downCast<CallContext *>(_localctx)->name = match(DaricParser::LPAREN);
       break;
     }
 
@@ -1356,7 +1356,7 @@ DaricParser::CallContext* DaricParser::call() {
     _la = _input->LA(1);
     if (_la == DaricParser::RPAREN) {
       setState(179);
-      match(DaricParser::RPAREN);
+      antlrcpp::downCast<CallContext *>(_localctx)->name = match(DaricParser::RPAREN);
     }
    
   }

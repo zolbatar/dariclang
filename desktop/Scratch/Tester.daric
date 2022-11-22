@@ -348,6 +348,16 @@ DEF Looping
 		I% = I% + 1
 	NEXT
 	PRINT "FOR + Step (Float) = ";:IF I% = 6 Pass() ELSE Fail()
+
+	I%=0
+	FOR N=0 TO 9
+        FOR M=0 TO 9
+        I%=I%+1
+        NEXT
+    NEXT
+    PRINT I%
+	PRINT "NESTED FOR         = ";:IF I% = 100 Pass() ELSE Fail()
+
 	PRINT "Case               = ";
 	I%=1
 	CASE I% OF

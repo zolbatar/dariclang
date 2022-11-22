@@ -10,6 +10,7 @@
 #include "../Variables/PrimitiveTypes.h"
 #include "../Variables/Shared.h"
 #include "../Compiler/CompilerOptions.h"
+#include "llvm/Transforms/Utils/BuildLibCalls.h"
 
 struct ValueType {
     llvm::Value *value;
@@ -34,10 +35,15 @@ public:
     llvm::GlobalVariable::LinkageTypes GetLinkage() { return llvm::GlobalVariable::InternalLinkage; }
 
     // Blocks
-    llvm::BasicBlock *CreateAndInsertBB(std::string block_name, bool add_branch, size_t line_number,
+    llvm::BasicBlock *CreateBB(std::string block_name, size_t line_number);
+    llvm::BasicBlock *CreateAndInsertBB(std::string block_name,
+                                        bool branch,
+                                        size_t line_number,
                                         llvm::Function *func,
                                         llvm::IRBuilder<> *builder);
+    void AddBB(llvm::BasicBlock *bc, llvm::Function *func, llvm::IRBuilder<> *builder);
     void RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2, llvm::IRBuilder<> *builder);
+    bool CheckReturn(llvm::IRBuilder<> *builder);
 
     // Variables and values
     llvm::GlobalVariable *GetGlobal(const std::string &name);

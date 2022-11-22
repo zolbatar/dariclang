@@ -56,7 +56,7 @@ void UISDL::RenderShapes() {
     shapes_lock.lock();
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     if (mode == Mode::CLASSIC) {
-        std::cout << "Rendering " << shapesBackBuffer.size() << " shapes" << std::endl;
+        // std::cout << "Rendering " << shapesBackBuffer.size() << " shapes" << std::endl;
         for (auto it = shapesBackBuffer.begin(); it != shapesBackBuffer.end(); ++it) {
             it->get()->AddToList(draw_list);
         }
@@ -117,55 +117,55 @@ void UISDL::LineWidth(float x1, float y1, float x2, float y2, float w) {
 }
 
 void UISDL::Rectangle(float x1, float y1, float x2, float y2) {
-    auto p1 = ImVec2(x1, y1);
-    auto p2 = ImVec2(x2, y2);
+    auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
+    auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeRectangle(p1, p2, fgColour, 1.0f));
     shapes_lock.unlock();
 }
 
 void UISDL::FilledRectangle(float x1, float y1, float x2, float y2) {
-    auto p1 = ImVec2(x1, y1);
-    auto p2 = ImVec2(x2, y2);
+    auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
+    auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeRectangleFilled(p1, p2, fgColour));
     shapes_lock.unlock();
 }
 
 void UISDL::Circle(float xc, float yc, float r) {
-    auto p = ImVec2(xc, yc);
+    auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, 1.0f));
     shapes_lock.unlock();
 }
 
 void UISDL::CircleWidth(float xc, float yc, float r, float w) {
-    auto p = ImVec2(xc, yc);
+    auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, w));
     shapes_lock.unlock();
 }
 
 void UISDL::FilledCircle(float xc, float yc, float r) {
-    auto p = ImVec2(xc, yc);
+    auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeCircleFilled(p, r, fgColour));
     shapes_lock.unlock();
 }
 
 void UISDL::Triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-    auto p1 = ImVec2(x1, y1);
-    auto p2 = ImVec2(x2, y2);
-    auto p3 = ImVec2(x3, y3);
+    auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
+    auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
+    auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeTriangle(p1, p2, p3, fgColour, 1.0f));
     shapes_lock.unlock();
 }
 
 void UISDL::FilledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
-    auto p1 = ImVec2(x1, y1);
-    auto p2 = ImVec2(x2, y2);
-    auto p3 = ImVec2(x3, y3);
+    auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
+    auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
+    auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeTriangleFilled(p1, p2, p3, fgColour));
     shapes_lock.unlock();
@@ -173,9 +173,9 @@ void UISDL::FilledTriangle(float x1, float y1, float x2, float y2, float x3, flo
 
 void UISDL::ShadedTriangle(float x1, float y1, float x2, float y2, float x3, float y3, ImU32 colour1, ImU32 colour2,
                            ImU32 colour3, bool flat) {
-    auto p1 = ImVec2(x1, y1);
-    auto p2 = ImVec2(x2, y2);
-    auto p3 = ImVec2(x3, y3);
+    auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
+    auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
+    auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeTriangleShaded(p1, p2, p3, colour1, colour2, colour3));
     shapes_lock.unlock();
@@ -183,7 +183,7 @@ void UISDL::ShadedTriangle(float x1, float y1, float x2, float y2, float x3, flo
 
 void UISDL::DrawText(ImFont *font, float size, float x, float y, float w, float h, std::string text) {
     auto p1 = ImVec2(x, y);
-    auto p2 = ImVec2(x + w, y + h);
+    auto p2 = ImVec2(x + w + origin_x, y + h + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeText(font, size, p1, p2, fgColour, text));
     shapes_lock.unlock();

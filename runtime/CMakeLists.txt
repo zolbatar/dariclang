@@ -6,24 +6,38 @@ project(runtime)
 include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()
 
-# SDL
-set(SDL2_DIR "/Users/daryl/GitHub/SDL/build/")
-include_directories(${SDL2_DIR}/include)
-add_library(sdl2-runtime STATIC IMPORTED)
-SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/SDL2/libSDL2.a)
-
-# IMGUI
 # IMGUI
 set(IMGUI_DIR "/Users/daryl/Github/imgui")
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
 
+# SDL
+set(SDL2_DIR "/Users/daryl/GitHub/SDL/build/SDL2")
+include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
+add_library(sdl2-runtime STATIC IMPORTED)
+SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
+
 add_library(DaricRuntime STATIC
+        main.cpp
+
         UI/UISDL.cpp
+        UI/RenderShapes.cpp
         UI/Lodepng.cpp
+        UI/Console/Console.cpp
+
+        ${IMGUI_DIR}/imgui_draw.cpp
+        ${IMGUI_DIR}/imgui_tables.cpp
+        ${IMGUI_DIR}/imgui_widgets.cpp
+        ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
+        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+
+        Input/Input.cpp
+
         Maths.cpp
         Print.cpp
         String.cpp
         Chrono.cpp
+        Random.cpp
         Types.h
         Core.cpp Gfx2D.cpp)
-target_link_libraries(DaricRuntime PRIVATE ${CONAN_LIBS} sdl2-runtime)
+target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime)

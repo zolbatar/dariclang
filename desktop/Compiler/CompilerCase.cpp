@@ -3,10 +3,9 @@
 void Compiler::TokenCase(ParserToken &token) {
 
     auto bc = CreateAndInsertBB("CASE", true, token);
-    auto endBB = CreateAndInsertBB("CASE terminate", false, token);
+    auto endBB = CreateBB("CASE terminate", token);
 
     // Expression to match against
-    GetIR()->SetInsertPoint(bc);
     auto expr = CompileExpression(token.children[0]);
 
     // A case is a sequence of IF statements basically with an else clause
@@ -18,8 +17,8 @@ void Compiler::TokenCase(ParserToken &token) {
             // Loop through each WHEN in turn
             for (auto j = 1; j < entry.children.size(); j++) {
                 auto whenComp = CreateAndInsertBB("WHEN comparison", true, token);
-                auto whenBody = CreateAndInsertBB("WHEN body", false, token);
-                auto whenBodyEnd = CreateAndInsertBB("WHEN body not true", false, token);
+                auto whenBody = CreateBB("WHEN body", token);
+                auto whenBodyEnd = CreateBB("WHEN body not true", token);
                 GetIR()->SetInsertPoint(whenComp);
 
                 // Get expression to compare against
@@ -30,10 +29,10 @@ void Compiler::TokenCase(ParserToken &token) {
                 auto comp = llvm.ComparisonEQ(GetIR(), when_expr, expr);
                 comp.value = GetIR()->CreateTrunc(comp.value, llvm.TypeBit);
                 GetIR()->CreateCondBr(comp.value, whenBody, whenBodyEnd);
-                GetIR()->SetInsertPoint(whenBody);
+                AddBB(whenBody);
                 CompileStatements(entry.children[0].children);
                 RetBrCheckSplit(GetIR()->GetInsertBlock(), endBB);
-                GetIR()->SetInsertPoint(whenBodyEnd);
+                AddBB(whenBodyEnd);
             }
         } else {
             // Must be an OTHERWISE
@@ -44,5 +43,5 @@ void Compiler::TokenCase(ParserToken &token) {
     }
     if (!otherwise)
         GetIR()->CreateBr(endBB);
-    GetIR()->SetInsertPoint(endBB);
+    AddBB(endBB);
 }

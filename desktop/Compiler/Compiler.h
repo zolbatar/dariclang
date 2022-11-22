@@ -1,4 +1,5 @@
 #pragma once
+
 #include <map>
 #include <vector>
 #include "../LLVM/CompilerLLVM.h"
@@ -42,7 +43,11 @@ private:
     std::unordered_map<std::string, Func> procedures;
     llvm::Value *CreateCall(std::string name, llvm::ArrayRef<llvm::Value *> vals);
     void SetupLibrary();
+    void AddLibraryCall(std::string name, std::string func, Primitive ret, std::string parameters);
     std::unordered_map<std::string, LibraryFunc> library;
+
+    std::string GetScratchName(size_t line);
+    size_t scratch_index = 0;
 
     llvm::Function *GetFunction() {
         return procedure != nullptr ? procedure : implicit;
@@ -87,7 +92,9 @@ private:
 
     std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 
-    llvm::BasicBlock *CreateAndInsertBB(std::string block_name, bool add_branch, ParserToken &token);
+    llvm::BasicBlock *CreateBB(std::string block_name, ParserToken &token);
+    llvm::BasicBlock *CreateAndInsertBB(std::string block_name, bool branch, ParserToken &token);
+    void AddBB(llvm::BasicBlock *bb);
     void RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2);
     void DefaultReturn(Primitive t, ParserToken &token);
 

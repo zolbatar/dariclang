@@ -34,7 +34,9 @@ static void RunThread() {
             c.CreateExecutable();
     }
     if (ui_started) {
+        console.SetColour(0xFFFFFFFF);
         console.WriteString("Program finished. Press a key to quit.");
+        ui->Flip(true);
         input.CheckForKeypress();
     }
     done = true;

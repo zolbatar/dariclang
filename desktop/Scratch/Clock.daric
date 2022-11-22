@@ -1,0 +1,20 @@
+MODE -1,-1,BANKED
+ORIGIN SWIDTH()/2,SHEIGHT()/2
+h=SHEIGHT()
+FOR I=0 TO 1000
+    CLS
+    S=INT(MID$(TIME$,23,2))
+    M=INT(MID$(TIME$,20,2))
+    H=INT(MID$(TIME$,17,2))
+
+    si=h*0.4:A=180-(S*6):x=SIN(RAD(A))*si:y=COS(RAD(A))*si
+    FG 255,0,0:LINEW 0,0,x,y,1
+
+    si=h*0.35:A=180-(M*6):x=SIN(RAD(A))*si:y=COS(RAD(A))*si
+    FG 60,60,60:LINEW 0,0,x,y,2
+
+    si=h*0.2:A=180-(H*30):x=SIN(RAD(A))*si:y=COS(RAD(A))*si
+    FG 255,255,255:LINEW 0,0,x,y,3
+    FLIP
+NEXT
+

@@ -53,20 +53,52 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back(output_filename.c_str());
     args.push_back("-syslibroot");
     args.push_back("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk");
+
+    // Libraries
+    args.push_back("-L.");
     args.push_back("-lc++");
     args.push_back("-lSystem");
     args.push_back("-lDaricRuntime");
-    args.push_back("-L.");
+    args.push_back("-lSDL2");
+    args.push_back("-liconv");
+
+    // Frameworks (on Mac)
+    args.push_back("-framework");
+    args.push_back("OpenGL");
+    args.push_back("-framework");
+    args.push_back("Cocoa");
+    args.push_back("-framework");
+    args.push_back("Carbon");
+    args.push_back("-framework");
+    args.push_back("CoreAudio");
+    args.push_back("-framework");
+    args.push_back("CoreVideo");
+    args.push_back("-framework");
+    args.push_back("ForceFeedback");
+    args.push_back("-framework");
+    args.push_back("Metal");
+    args.push_back("-framework");
+    args.push_back("IOKit");
+    args.push_back("-framework");
+    args.push_back("GameKit");
+    args.push_back("-framework");
+    args.push_back("AudioToolbox");
+    args.push_back("-framework");
+    args.push_back("CoreHaptics");
+
+    // Mac platform stuff
     args.push_back("-platform_version");
     args.push_back("macos");
     args.push_back("12.0.0");
     args.push_back("0.0.0");
+
+    // Arch
     args.push_back("-arch");
 //    args.push_back("'x86_64;aarch64'");
     args.push_back(arch.c_str());
     args.push_back("-O3");
-    args.push_back("-e");
-    args.push_back("_Implicit");
+//    args.push_back("-e");
+//    args.push_back("_Implicit");
     lld::macho::link(args, out_s, llvm::outs(), true,
                      false);
     system(("rm " + p).c_str());

@@ -1,0 +1,26 @@
+MODE -1,-1,BANKED
+w=SWIDTH():h=SHEIGHT()
+FOR ITER = 1 TO 100
+    GraphicsSingle()
+    FLIP
+NEXT
+
+DEF GraphicsSingle()
+    FOR I = 1 TO 50
+        FG RND(255), RND(255), RND(255)
+        LINEW RND(w), RND(h), RND(w), RND(h), RND(10)+1
+
+        FG RND(255), RND(255), RND(255)
+        TRIANGLEFILL RND(w), RND(h), RND(w), RND(h), RND(w), RND(h)
+
+        FG RND(255), RND(255), RND(255)
+        BG RND(255), RND(255), RND(255)
+        CIRCLEW RND(w), RND(h), RND(150)+20, RND(10)+1
+        CIRCLEFILL RND(w), RND(h), RND(150)+20
+
+        COL1=COLOUR(RND(255), RND(255), RND(255))
+        COL2=COLOUR(RND(255), RND(255), RND(255))
+        COL3=COLOUR(RND(255), RND(255), RND(255))
+        TRIANGLESHADED RND(w), RND(h), COL1, RND(w), RND(h), COL2, RND(w), RND(h), COL3
+    NEXT
+ENDDEF

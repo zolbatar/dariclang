@@ -8,10 +8,10 @@ void Compiler::TokenRepeat(ParserToken &token) {
     CompileStatements(token.children[1].children);
 
     // Terminator
-    auto endBB = CreateAndInsertBB("REPEAT End", false, token);
-    auto quitBB = CreateAndInsertBB("REPEAT Quit", false, token);
+    auto endBB = CreateBB("REPEAT End", token);
+    auto quitBB = CreateBB("REPEAT Quit", token);
     RetBrCheckSplit(GetIR()->GetInsertBlock(), endBB);
-    GetIR()->SetInsertPoint(endBB);
+    AddBB(endBB);
 
     // Calculate condition
     auto value_type = CompileExpression(token.children[0]);
@@ -21,17 +21,16 @@ void Compiler::TokenRepeat(ParserToken &token) {
 
     // Check condition
     GetIR()->CreateCondBr(value_type.value, quitBB, bc);
-    GetIR()->SetInsertPoint(quitBB);
+    AddBB(quitBB);
 }
 
 void Compiler::TokenWhile(ParserToken &token) {
     // Core block
     auto bc = CreateAndInsertBB("WHILE", true, token);
-    auto doBB = CreateAndInsertBB("WHILE Do", false, token);
-    auto quitBB = CreateAndInsertBB("WHILE Quit", false, token);
+    auto doBB = CreateBB("WHILE Do", token);
+    auto quitBB = CreateBB("WHILE Quit", token);
 
     // Calculate condition
-    GetIR()->SetInsertPoint(bc);
     auto value_type = CompileExpression(token.children[0]);
     auto t = Primitive::INT;
     llvm.AutoConversion(GetIR(), value_type, t);
@@ -41,12 +40,12 @@ void Compiler::TokenWhile(ParserToken &token) {
     GetIR()->CreateCondBr(value_type.value, doBB, quitBB);
 
     // Body block
-    GetIR()->SetInsertPoint(doBB);
+    AddBB(doBB);
     CompileStatements(token.children[1].children);
     RetBrCheckSplit(GetIR()->GetInsertBlock(), bc);
 
     // Terminator
-    GetIR()->SetInsertPoint(quitBB);
+    AddBB(quitBB);
 }
 
 void Compiler::TokenFor(ParserToken &t) {
@@ -100,24 +99,21 @@ void Compiler::TokenFor(ParserToken &t) {
     ref->SetValue(from, std::vector<ValueType>(), llvm, GetIR(), t);
 
     // Flag to indicate completion
-    auto temp_name = "FOR temp (" + std::to_string(t.line) + ")";
+    auto temp_name = GetScratchName(t.line);
     auto finished = GetIR()->CreateAlloca(llvm.TypeBit, nullptr, temp_name);
     GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 0), finished);
 
     // Blocks
-    auto bodyBB = CreateAndInsertBB("FOR body start", true, t);
-    auto bodyEndBB = CreateAndInsertBB("FOR body end", false, t);
-    auto bodyFlagBB = CreateAndInsertBB("FOR body flag", false, t);
-    auto bodyFlag2BB = CreateAndInsertBB("FOR body flag2", false, t);
-    auto endBB = CreateAndInsertBB("FOR body terminate", false, t);
+    auto bodyEndBB = CreateBB("FOR body end", t);
+    auto bodyFlagBB = CreateBB("FOR body flag", t);
+    auto bodyFlag2BB = CreateBB("FOR body flag2", t);
+    auto endBB = CreateBB("FOR body terminate", t);
 
     // Body block
-    GetIR()->SetInsertPoint(bodyBB);
+    auto bodyBB = CreateAndInsertBB("FOR body start", true, t);
     CompileStatements(t.children[0].children);
     RetBrCheckSplit(GetIR()->GetInsertBlock(), bodyEndBB);
-
-    // Body Terminator
-    GetIR()->SetInsertPoint(bodyEndBB);
+    AddBB(bodyEndBB);
 
     // Add step to loop variable
     auto v = ref->GetValue(std::vector<ValueType>(), llvm, GetIR(), t);
@@ -129,13 +125,17 @@ void Compiler::TokenFor(ParserToken &t) {
     cond.value = GetIR()->CreateTrunc(cond.value, llvm.TypeBit);
 
     GetIR()->CreateCondBr(GetIR()->CreateLoad(llvm.TypeBit, finished), endBB, bodyFlagBB);
-    GetIR()->SetInsertPoint(bodyFlagBB);
+    AddBB(bodyFlagBB);
     GetIR()->CreateCondBr(cond.value, bodyFlag2BB, bodyBB);
-    GetIR()->SetInsertPoint(bodyFlag2BB);
+    AddBB(bodyFlag2BB);
     GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 1), finished);
     GetIR()->CreateBr(bodyBB);
 
     // Body Terminator
-    GetIR()->SetInsertPoint(endBB);
+    AddBB(endBB);
+}
+
+std::string Compiler::GetScratchName(size_t line) {
+    return "Scratch: (" + std::to_string(line) + ")" + std::to_string(scratch_index++);
 }
 

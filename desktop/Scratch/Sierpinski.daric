@@ -1,0 +1,16 @@
+MODE -1,-1,BANKED
+WHILE TRUE
+    DrawTriangle 8,0,0,1000
+    FLIP
+ENDWHILE
+
+DEF DrawTriangle(l,x OF FLOAT,y OF FLOAT,s OF FLOAT)
+	IF l > 0 THEN
+		FG RND(255),RND(255),RND(255)
+		TRIANGLE x,y,x+s,y,x,y+s
+		s2=s/2
+		DrawTriangle l-1,x,y,s2
+		DrawTriangle l-1,x+s2,y,s2
+		DrawTriangle l-1,x,y+s2,s2
+	ENDIF
+ENDDEF
