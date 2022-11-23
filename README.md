@@ -42,7 +42,7 @@ Mac
 
 To run the standard test file, do either of the following from the binary directory (i.e. mac):
 
-./Daric Tester.daric
+./Daric Tester.daric\
 ./Daric Tester.daric Tester && ./Tester
 
 The second option will create an executable. Replace Tester.daric with any of the other source files.
