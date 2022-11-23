@@ -7,9 +7,9 @@ CONST ccf=12.5
 DIM a1d OF INT[5]:DIM a2di OF INT[5,5]:DIM a2df OF FLOAT[5,5]:DIM a3d OF INT[5,5,5]
 a1d[3]=123:a2di[2,3]=456:a3d[1,2,3]=789
 
-#DATA 1,2,3,4,5
-#DATALABEL "Label"
-#DATA 123
+DATA 1,2,3,4,5
+DATALABEL "Label"
+DATA 123
 
 DEFRECORD COORDINATE x OF FLOAT:y OF FLOAT ENDRECORD
 DEFRECORD COMPOUND
@@ -356,7 +356,7 @@ DEF Looping
         NEXT
     NEXT
     PRINT I%
-	PRINT "NESTED FOR         = ";:IF I% = 100 Pass() ELSE Fail()
+	PRINT "Nested FOR         = ";:IF I% = 100 Pass() ELSE Fail()
 
 	PRINT "Case               = ";
 	I%=1
@@ -390,11 +390,12 @@ DEF Looping
 ENDDEF
 
 DEF TestData
-#	READ a1%, a2%, a3%
-#	PRINT "Data (Int)         = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
-#	RESTORE "Label"
-#	READ a1%
-#	PRINT "DataLabel          = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
+	READ a1%, a2%, a3%
+	PRINT "Data (Int)         = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
+	RESTORE "Label"
+	READ a1%
+	PRINT "DataLabel          = ";:IF a1%=123 Pass() ELSE Fail()
+	PRINT
 ENDDEF
 
 DEF TestReturnInOtherwise()

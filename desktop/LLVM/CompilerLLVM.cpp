@@ -112,7 +112,7 @@ static std::string getFeaturesStr() {
     return Features.getString();
 }
 
-void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
+void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, SharedState &state) {
     llvm::CodeGenOpt::Level OLvl = llvm::CodeGenOpt::Default;
     this->options = options;
     if (options.optimise) {
@@ -179,6 +179,22 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module) {
     TypeByte = llvm::Type::getInt8Ty(Module->getContext());
     TypeInt = llvm::Type::getInt64Ty(Module->getContext());
     TypeString = llvm::Type::getInt8PtrTy(Module->getContext());
+
+    // Build DATA
+    auto stackInt = state.data.size();
+    auto typ = llvm::ArrayType::get(TypeInt, stackInt);
+    std::vector<llvm::Constant *> values;
+    for (auto &iv: state.data) {
+        values.push_back(llvm::ConstantInt::get(TypeInt, iv));
+    }
+    auto data = llvm::ConstantArray::get(typ, values);
+    globals["~DATA"] = new llvm::GlobalVariable(*Module,
+                                                llvm::ArrayType::get(TypeInt, stackInt),
+                                                true,
+                                                GetLinkage(),
+                                                data,
+                                                "DATA");
+    globals["~DATAPtr"] = new llvm::GlobalVariable(*Module, TypeInt, false, llvm::GlobalValue::InternalLinkage, llvm::ConstantInt::get(TypeInt, 0), "DATAPtr");
 
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);

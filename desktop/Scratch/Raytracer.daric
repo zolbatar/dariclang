@@ -7,11 +7,13 @@ FOR N=0 TO HH-1
 
         U=(M-(WW/2)+0.5)/(WW/2)
         V=(N-(HH/2)+0.5)/(WW/2)
-        W=1/SQR(U*U+V*V+1)
-
+        W=1.0/SQR(U*U+V*V+1)
         U=U*W
         V=V*W
+
+        REM This is top/bottom
         I=SGN(U)
+
         T=0
         REPEAT
             E=X-I:F=Y-I
@@ -20,6 +22,8 @@ FOR N=0 TO HH-1
             IF D>0.0 THEN
                 TT=-P-SQR(D)
                 IF TT>0.0 THEN
+
+                    REM This generates the spheres
                     X=X+TT*U
                     Y=Y+TT*V
                     Z=Z-TT*W
@@ -31,6 +35,7 @@ FOR N=0 TO HH-1
                     V=V-P*F
                     W=W+P*G
                     I=-I
+
                     T=1
                 ELSE
                     T=0
@@ -39,10 +44,13 @@ FOR N=0 TO HH-1
                 T=1
             ENDIF
         UNTIL T=1
+
+        REM This generates the checkerboard
         IF V<0.0 THEN
             P=(Y+2)/V
-            V=-V*((INT(X-U*P)+INT(Z-W*P) AND 1)/2+0.3)+0.2
+            V=-V*((INT(X-U*P)+INT(Z-W*P) AND 1)/2.0+0.3)+0.2
         ENDIF
+
         S=V*255
         FG S,S,S
         PLOT M,(HH-1)-N

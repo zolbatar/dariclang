@@ -190,10 +190,10 @@ void daricParserInitialize() {
   	3,72,36,0,207,203,1,0,0,0,208,211,1,0,0,0,209,207,1,0,0,0,209,210,1,0,
   	0,0,210,216,1,0,0,0,211,209,1,0,0,0,212,214,5,18,0,0,213,212,1,0,0,0,
   	213,214,1,0,0,0,214,215,1,0,0,0,215,217,3,68,34,0,216,213,1,0,0,0,216,
-  	217,1,0,0,0,217,19,1,0,0,0,218,219,5,4,0,0,219,224,5,110,0,0,220,221,
-  	5,77,0,0,221,223,5,110,0,0,222,220,1,0,0,0,223,226,1,0,0,0,224,222,1,
+  	217,1,0,0,0,217,19,1,0,0,0,218,219,5,4,0,0,219,224,3,76,38,0,220,221,
+  	5,77,0,0,221,223,3,76,38,0,222,220,1,0,0,0,223,226,1,0,0,0,224,222,1,
   	0,0,0,224,225,1,0,0,0,225,21,1,0,0,0,226,224,1,0,0,0,227,228,5,5,0,0,
-  	228,229,5,106,0,0,229,23,1,0,0,0,230,231,5,7,0,0,231,233,5,111,0,0,232,
+  	228,229,3,78,39,0,229,23,1,0,0,0,230,231,5,7,0,0,231,233,5,111,0,0,232,
   	234,5,18,0,0,233,232,1,0,0,0,233,234,1,0,0,0,234,235,1,0,0,0,235,236,
   	3,68,34,0,236,238,5,84,0,0,237,239,3,66,33,0,238,237,1,0,0,0,238,239,
   	1,0,0,0,239,244,1,0,0,0,240,241,5,77,0,0,241,243,3,66,33,0,242,240,1,
@@ -235,7 +235,7 @@ void daricParserInitialize() {
   	368,369,5,24,0,0,369,370,3,2,1,0,370,371,5,31,0,0,371,372,3,66,33,0,372,
   	45,1,0,0,0,373,374,5,22,0,0,374,379,3,64,32,0,375,376,5,77,0,0,376,378,
   	3,64,32,0,377,375,1,0,0,0,378,381,1,0,0,0,379,377,1,0,0,0,379,380,1,0,
-  	0,0,380,47,1,0,0,0,381,379,1,0,0,0,382,383,5,25,0,0,383,384,5,106,0,0,
+  	0,0,380,47,1,0,0,0,381,379,1,0,0,0,382,383,5,25,0,0,383,384,3,78,39,0,
   	384,49,1,0,0,0,385,387,5,26,0,0,386,388,3,66,33,0,387,386,1,0,0,0,387,
   	388,1,0,0,0,388,51,1,0,0,0,389,390,5,35,0,0,390,394,5,111,0,0,391,393,
   	3,8,4,0,392,391,1,0,0,0,393,396,1,0,0,0,394,392,1,0,0,0,394,395,1,0,0,
@@ -1626,12 +1626,12 @@ tree::TerminalNode* DaricParser::DataContext::DATA() {
   return getToken(DaricParser::DATA, 0);
 }
 
-std::vector<tree::TerminalNode *> DaricParser::DataContext::INTEGERLITERAL() {
-  return getTokens(DaricParser::INTEGERLITERAL);
+std::vector<DaricParser::IntegerLiteralContext *> DaricParser::DataContext::integerLiteral() {
+  return getRuleContexts<DaricParser::IntegerLiteralContext>();
 }
 
-tree::TerminalNode* DaricParser::DataContext::INTEGERLITERAL(size_t i) {
-  return getToken(DaricParser::INTEGERLITERAL, i);
+DaricParser::IntegerLiteralContext* DaricParser::DataContext::integerLiteral(size_t i) {
+  return getRuleContext<DaricParser::IntegerLiteralContext>(i);
 }
 
 std::vector<tree::TerminalNode *> DaricParser::DataContext::COMMA() {
@@ -1672,7 +1672,7 @@ DaricParser::DataContext* DaricParser::data() {
     setState(218);
     match(DaricParser::DATA);
     setState(219);
-    match(DaricParser::INTEGERLITERAL);
+    integerLiteral();
     setState(224);
     _errHandler->sync(this);
     _la = _input->LA(1);
@@ -1680,7 +1680,7 @@ DaricParser::DataContext* DaricParser::data() {
       setState(220);
       match(DaricParser::COMMA);
       setState(221);
-      match(DaricParser::INTEGERLITERAL);
+      integerLiteral();
       setState(226);
       _errHandler->sync(this);
       _la = _input->LA(1);
@@ -1706,8 +1706,8 @@ tree::TerminalNode* DaricParser::DataLabelContext::DATALABEL() {
   return getToken(DaricParser::DATALABEL, 0);
 }
 
-tree::TerminalNode* DaricParser::DataLabelContext::STRINGLITERAL() {
-  return getToken(DaricParser::STRINGLITERAL, 0);
+DaricParser::StringLiteralContext* DaricParser::DataLabelContext::stringLiteral() {
+  return getRuleContext<DaricParser::StringLiteralContext>(0);
 }
 
 
@@ -1739,7 +1739,7 @@ DaricParser::DataLabelContext* DaricParser::dataLabel() {
     setState(227);
     match(DaricParser::DATALABEL);
     setState(228);
-    match(DaricParser::STRINGLITERAL);
+    stringLiteral();
    
   }
   catch (RecognitionException &e) {
@@ -2950,8 +2950,8 @@ tree::TerminalNode* DaricParser::RestoreContext::RESTORE() {
   return getToken(DaricParser::RESTORE, 0);
 }
 
-tree::TerminalNode* DaricParser::RestoreContext::STRINGLITERAL() {
-  return getToken(DaricParser::STRINGLITERAL, 0);
+DaricParser::StringLiteralContext* DaricParser::RestoreContext::stringLiteral() {
+  return getRuleContext<DaricParser::StringLiteralContext>(0);
 }
 
 
@@ -2983,7 +2983,7 @@ DaricParser::RestoreContext* DaricParser::restore() {
     setState(382);
     match(DaricParser::RESTORE);
     setState(383);
-    match(DaricParser::STRINGLITERAL);
+    stringLiteral();
    
   }
   catch (RecognitionException &e) {

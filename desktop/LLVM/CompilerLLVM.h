@@ -25,7 +25,7 @@ struct FuncBuilder {
 class CompilerLLVM {
 public:
     CompilerLLVM();
-    void SetupProfile(CompilerOptions options, std::string module);
+    void SetupProfile(CompilerOptions options, std::string module, SharedState &state);
     llvm::Function *CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters);
     llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
     void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);

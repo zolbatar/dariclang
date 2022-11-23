@@ -156,7 +156,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
-        Compiler/CompilerLibrary.cpp Compiler/CompilerConstants.cpp)
+        Compiler/CompilerLibrary.cpp Compiler/CompilerConstants.cpp Compiler/CompilerRead.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${CONAN_LIBS}
         antlr4-runtime

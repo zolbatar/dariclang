@@ -27,14 +27,19 @@ static void RunThread() {
     Parser parser(state);
     parser.Parse(options.file);
     Compiler c(state, &parser, std::move(options));
+    auto t1 = std::chrono::steady_clock::now();
     if (c.Compile()) {
         if (options.run) {
+            t1 = std::chrono::steady_clock::now();
             c.Run();
         } else
             c.CreateExecutable();
     }
     if (ui_started) {
+        auto t2 = std::chrono::steady_clock::now();
+        auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
         console.SetColour(0xFFFFFFFF);
+//        console.WriteString("Program finished in " + std::to_string(time_span.count()) + "ms. Press a key to quit.");
         console.WriteString("Program finished. Press a key to quit.");
         ui->Flip(true);
         input.CheckForKeypress();
@@ -80,7 +85,7 @@ int main(int argc, char *argv[]) {
                 do_quit();
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
     do_quit();
     return 0;

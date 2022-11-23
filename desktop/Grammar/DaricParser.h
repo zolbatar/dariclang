@@ -308,8 +308,8 @@ public:
     DataContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DATA();
-    std::vector<antlr4::tree::TerminalNode *> INTEGERLITERAL();
-    antlr4::tree::TerminalNode* INTEGERLITERAL(size_t i);
+    std::vector<IntegerLiteralContext *> integerLiteral();
+    IntegerLiteralContext* integerLiteral(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
 
@@ -325,7 +325,7 @@ public:
     DataLabelContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DATALABEL();
-    antlr4::tree::TerminalNode *STRINGLITERAL();
+    StringLiteralContext *stringLiteral();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -563,7 +563,7 @@ public:
     RestoreContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *RESTORE();
-    antlr4::tree::TerminalNode *STRINGLITERAL();
+    StringLiteralContext *stringLiteral();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

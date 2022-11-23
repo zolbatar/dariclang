@@ -25,7 +25,7 @@ bool Compiler::Compile() {
 #ifdef CATCH_ERRORS
     try {
 #endif
-    llvm.SetupProfile(options, parser->GetModule());
+    llvm.SetupProfile(options, parser->GetModule(), state);
 
     // Library
     SetupLibrary();
@@ -68,6 +68,7 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
     for (auto &token: statements) {
         //std::cout << "Line: " << token.line << std::endl;
         switch (token.type) {
+            case ParserTokenType::NONE:
             case ParserTokenType::PARAMETER:
                 break;
             case ParserTokenType::STRUCT:
@@ -124,6 +125,12 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
                 break;
             case ParserTokenType::CASE:
                 TokenCase(token);
+                break;
+            case ParserTokenType::READ:
+                TokenRead(token);
+                break;
+            case ParserTokenType::RESTORE:
+                TokenRestore(token);
                 break;
             default:
                 assert(0);

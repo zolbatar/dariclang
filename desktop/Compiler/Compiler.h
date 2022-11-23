@@ -24,7 +24,7 @@ struct LibraryFunc {
 class Compiler {
 public:
     Compiler(SharedState &state, Parser *parser, CompilerOptions options) :
-            state(state), options(options), parser(parser) {}
+            state(state), options(options), parser(parser) {   }
     bool Compile();
     void Run();
     void CreateExecutable();
@@ -89,6 +89,8 @@ private:
     void TokenWhile(ParserToken &t);
     void TokenFor(ParserToken &t);
     void TokenCase(ParserToken &t);
+    void TokenRead(ParserToken &t);
+    void TokenRestore(ParserToken &t);
 
     std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 
