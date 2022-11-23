@@ -45,7 +45,6 @@ Variables()
 Looping()
 TestData()
 
-PRINT "::Other::"
 NestedCalling()
 TestReturnInOtherwise()
 
@@ -67,9 +66,9 @@ DEF Arrays
  	ta1$[1] = "Test"
  	ta1$[2] = ta1$[1]
  	PRINT "String arrays      = ";:IF ta1$[2] = "Test" Pass() ELSE Fail()
-REM 	PRINT "Size of 1D array   = ";:IF SIZE(ta1$[]) = 2 Pass() ELSE Fail()
+ 	PRINT "Size of 1D array   = ";:IF SIZE ta1$ = 2 Pass() ELSE Fail()
  	DIM ta2$ OF STRING[2, 3]
-REM 	PRINT "Size of 2D array   = ";:IF SIZE(ta2$[]) = 6 Pass() ELSE Fail()
+ 	PRINT "Size of 2D array   = ";:IF SIZE(ta2$) = 6 Pass() ELSE Fail()
  	ta2$[1, 1] = "Test"
  	ta2$[2, 2] = ta2$[1, 1]
  	PRINT "2D arrays          = ";:IF ta2$[2, 2] = "Test" Pass() ELSE Fail()
@@ -355,7 +354,6 @@ DEF Looping
         I%=I%+1
         NEXT
     NEXT
-    PRINT I%
 	PRINT "Nested FOR         = ";:IF I% = 100 Pass() ELSE Fail()
 
 	PRINT "Case               = ";

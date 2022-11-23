@@ -93,6 +93,9 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerStructs.cpp
         Compiler/CompilerLooping.cpp
         Compiler/CompilerCase.cpp
+        Compiler/CompilerLibrary.cpp
+        Compiler/CompilerConstants.cpp
+        Compiler/CompilerRead.cpp
 
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
@@ -155,8 +158,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp
-        Compiler/CompilerLibrary.cpp Compiler/CompilerConstants.cpp Compiler/CompilerRead.cpp)
+        Grammar/DaricVisitor.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${CONAN_LIBS}
         antlr4-runtime

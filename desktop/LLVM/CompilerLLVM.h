@@ -86,6 +86,7 @@ public:
                                              llvm::Value *sz,
                                              llvm::Type *type);
     llvm::AllocaInst *GetLocalArrayDimensions(std::string name);
+    llvm::Value *GetArraySize(std::string name, llvm::IRBuilder<> *ir);
 
     // Conversion
     llvm::Type *TypeConversion(Primitive type);

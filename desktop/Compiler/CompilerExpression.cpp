@@ -449,6 +449,15 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             llvm.AddTempString(vt.value, GetIR());
             return vt;
         }
+        case ParserTokenType::SIZE: {
+            ValueType vt;
+            vt.type = Primitive::INT;
+            vt.value = llvm.GetArraySize(t.identifier, GetIR());
+            if (!vt.value) {
+                RaiseException("Error getting array dimensions", t);
+            }
+            return vt;
+        }
         default:
             assert(0);
     }

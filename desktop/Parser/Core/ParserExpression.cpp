@@ -143,7 +143,14 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		return SingleExpression(context, ParserTokenType::TAN);
 	}
 
-	// Chrono
+    // Array
+    if (context->SIZE() != NULL) {
+        auto ps = CreateToken(context, ParserTokenType::SIZE);
+        ps.identifier = context->IDENTIFIER()->getText();
+        return ps;
+    }
+
+    // Chrono
 	if (context->HPTIME() != NULL) {
 		return CreateToken(context, ParserTokenType::HPTIME);
 	}

@@ -35,9 +35,9 @@ llvm::GlobalVariable *CompilerLLVM::CreateGlobalArray(std::string name,
 }
 
 llvm::AllocaInst *CompilerLLVM::CreateLocalArrayStage1(std::string name,
-                                              llvm::IRBuilder<> *ir,
-                                              size_t sz,
-                                              Primitive type) {
+                                                       llvm::IRBuilder<> *ir,
+                                                       size_t sz,
+                                                       Primitive type) {
     locals_array_dimensions[name] = ir->CreateAlloca(TypeInt,
                                                      llvm::ConstantInt::get(TypeInt, sz),
                                                      name + "_dimensions");
@@ -47,9 +47,24 @@ llvm::AllocaInst *CompilerLLVM::CreateLocalArrayStage1(std::string name,
 }
 
 llvm::AllocaInst *CompilerLLVM::CreateLocalArrayStage2(std::string name,
-                                                      llvm::IRBuilder<> *ir,
-                                                      llvm::Value *sz,
-                                                      llvm::Type *type) {
+                                                       llvm::IRBuilder<> *ir,
+                                                       llvm::Value *sz,
+                                                       llvm::Type *type) {
     locals[name] = ir->CreateAlloca(type, sz, name);
     return locals[name];
+}
+
+llvm::Value *CompilerLLVM::GetArraySize(std::string name, llvm::IRBuilder<> *ir) {
+    if (globals_array_dimensions.contains(name)) {
+        auto ptr = ir->CreateGEP(TypeInt,
+                                 globals_array_dimensions[name],
+                                 {llvm::ConstantInt::get(TypeInt, globals_array_num_dimensions[name] - 1)});
+        return ir->CreateLoad(TypeInt, ptr);
+    } else if (locals_array_dimensions.contains(name)) {
+        auto ptr = ir->CreateGEP(TypeInt,
+                                 locals_array_dimensions[name],
+                                 {llvm::ConstantInt::get(TypeInt, locals_array_num_dimensions[name] - 1)});
+        return ir->CreateLoad(TypeInt, ptr);
+    }
+    return nullptr;
 }

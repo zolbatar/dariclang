@@ -72,6 +72,7 @@ enum class ParserTokenType
 	RIGHTS,
 	ROUND,
 	SIN,
+    SIZE,
 	SGN,
 	SHL,
 	SHR,

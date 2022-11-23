@@ -135,6 +135,9 @@ expression
     | RIGHTS LPAREN? expression COMMA expression RPAREN?
     | LEN expression
 
+    // Array functions
+    | SIZE LPAREN? IDENTIFIER RPAREN?
+
     // Maths
     | <assoc=right> expression HAT expression
     | expression DIVIDE expression
@@ -228,6 +231,7 @@ REPEAT          : 'REPEAT' | 'Repeat' ;
 RESTORE         : 'RESTORE' | 'Restore' ;
 RETURN          : 'RETURN' | 'Return' ;
 THEN            : 'THEN' | 'Then' ;
+SIZE            : 'SIZE' | 'Size' ;
 STEP            : 'STEP' | 'Step' ;
 SWAP            : 'SWAP' | 'Swap ' ;
 TO              : 'TO' | 'To' ;
