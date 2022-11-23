@@ -40,9 +40,9 @@ executable.
 Mac
 ---
 
-To run the standard test file, do either of the following from the binary directory:
+To run the standard test file, do either of the following from the binary directory (i.e. mac):
 
-macOSX64/Daric Tester.daric
-macOSX64/Daric Tester.daric tester && ./Tester
+./Daric Tester.daric\
+./Daric Tester.daric Tester && ./Tester
 
-The second option will create an executable. Replace X64 with M1 if running Apple Silicon.
+The second option will create an executable. Replace Tester.daric with any of the other source files.
