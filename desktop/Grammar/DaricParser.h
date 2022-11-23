@@ -506,7 +506,6 @@ public:
     antlr4::tree::TerminalNode *IDENTIFIER();
     StatementsContext *statements();
     antlr4::tree::TerminalNode *ENDDEF();
-    antlr4::tree::TerminalNode *PRIVATE();
     TypeContext *type();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<ParameterContext *> parameter();
@@ -737,8 +736,8 @@ public:
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *RPAREN();
     LiteralContext *literal();
-    VariableContext *variable();
     ExprcallContext *exprcall();
+    VariableContext *variable();
     antlr4::tree::TerminalNode *MINUS();
     antlr4::tree::TerminalNode *PLUS();
     antlr4::tree::TerminalNode *INT();

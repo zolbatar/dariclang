@@ -59,7 +59,7 @@ ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)
 module:         MODULE IDENTIFIER ;
 parameter:      IDENTIFIER (OF? type)? ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
-procedure:      PRIVATE? DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
+procedure:      DEF IDENTIFIER (OF? type)? LPAREN? parameter? (COMMA parameter)* RPAREN? separator* statements ENDDEF ;
 repeat:         REPEAT statements UNTIL expression ;
 read:           READ variable (COMMA variable)* ;
 restore:        RESTORE stringLiteral ;
@@ -80,8 +80,8 @@ variable
 expression
     : LPAREN expression RPAREN
     | literal
-    | variable
     | exprcall
+    | variable
 
     // Unary
     | MINUS expression

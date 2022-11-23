@@ -1,0 +1,36 @@
+PRINT "Daric File I/O Test Suite"
+PRINT "-------------------------"
+PRINT
+
+File()
+
+DEF File()
+	PRINT "BPUT THEN BGET     = ";
+	C%=OPENOUT("Test")
+	BPUT C%, ASC("A")
+	CLOSE C%
+	C%=OPENIN("Test")
+	V%=BGET(C%)
+	IF V% = 65 Pass() ELSE Fail()
+	CLOSE C%
+
+	C%=OPENIN("Test")
+	PRINT "Tell               = ";:IF TELL(C%)=0 Pass() ELSE Fail()
+	SEEK(C%,1)
+	PRINT "Seek               = ";:IF TELL(C%)=1 Pass() ELSE Fail()
+	CLOSE C%
+
+	PRINT "Delete             = ";
+	DELETE "Test":Pass()
+	PRINT "List Files         = ";:PRINT DIR(".")
+	PRINT "Files Index 0      = ";:PRINT DIRENTRY(0)
+ENDDEF
+
+DEF Pass()
+    PRINT "PASS!"
+ENDDEF
+
+DEF Fail()
+    PRINT "!! FAILED TEST !!"
+    END
+ENDDEF

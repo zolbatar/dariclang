@@ -33,6 +33,7 @@ add_library(DaricRuntime STATIC
 
         Input/Input.cpp
 
+        FileIO.cpp
         Maths.cpp
         Print.cpp
         String.cpp

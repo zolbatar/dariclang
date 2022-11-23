@@ -64,6 +64,7 @@ add_executable(${PROJECT_NAME}
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 
+        ../runtime/FileIO.cpp
         ../runtime/Random.cpp
         ../runtime/String.cpp
         ../runtime/Maths.cpp

@@ -13,6 +13,10 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
                 pars.push_back(Primitive::FLOAT);
                 pars_t.push_back(llvm.TypeFloat);
                 break;
+            case 'S':
+                pars.push_back(Primitive::STRING);
+                pars_t.push_back(llvm.TypeString);
+                break;
             default:
                 assert(0);
         }
@@ -46,4 +50,19 @@ void Compiler::SetupLibrary() {
     // Random
     AddLibraryCall("RND", "rndi", Primitive::INT, "I");
     AddLibraryCall("RNDF", "rndf", Primitive::FLOAT, "F");
+
+    // File I/O
+    AddLibraryCall("OPENIN", "fileio_openin", Primitive::INT, "S");
+    AddLibraryCall("OPENOUT", "fileio_openout", Primitive::INT, "S");
+    AddLibraryCall("OPENUP", "fileio_openup", Primitive::INT, "S");
+    AddLibraryCall("EOF", "fileio_eof", Primitive::INT, "I");
+    AddLibraryCall("CLOSE", "fileio_close", Primitive::NONE, "I");
+    AddLibraryCall("BGET", "fileio_bget", Primitive::INT, "I");
+    AddLibraryCall("BPUT", "fileio_bput", Primitive::NONE, "II");
+    AddLibraryCall("SGET", "fileio_getsh", Primitive::STRING, "I");
+    AddLibraryCall("TELL", "fileio_ptr", Primitive::INT, "I");
+    AddLibraryCall("SEEK", "fileio_sptr", Primitive::NONE, "II");
+    AddLibraryCall("DIR", "fileio_list_files", Primitive::INT, "S");
+    AddLibraryCall("DIRENTRY", "fileio_get_filename", Primitive::STRING, "I");
+    AddLibraryCall("DELETE", "fileio_delete", Primitive::NONE, "S");
 }

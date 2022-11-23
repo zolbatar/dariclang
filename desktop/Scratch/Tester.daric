@@ -44,7 +44,6 @@ Records()
 Variables()
 Looping()
 TestData()
-
 NestedCalling()
 TestReturnInOtherwise()
 
@@ -160,6 +159,7 @@ DEF Maths
 ENDDEF
 
 DEF NestedCalling
+	PRINT "::Nested Calling::"
     Nested1()
     RETURN
 ENDDEF
@@ -388,6 +388,7 @@ DEF Looping
 ENDDEF
 
 DEF TestData
+	PRINT "::Data::"
 	READ a1%, a2%, a3%
 	PRINT "Data (Int)         = ";:IF a1%=1 AND a2%=2 AND a3%=3 Pass() ELSE Fail()
 	RESTORE "Label"
@@ -406,11 +407,11 @@ DEF TestReturnInOtherwise()
 	Fail()
 ENDDEF
 
-PRIVATE DEF Pass()
+DEF Pass()
     PRINT "PASS!"
 ENDDEF
 
-PRIVATE DEF Fail()
+DEF Fail()
     PRINT "!! FAILED TEST !!"
     END
 ENDDEF
