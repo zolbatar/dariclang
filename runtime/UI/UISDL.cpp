@@ -159,7 +159,6 @@ bool UISDL::Render() {
     }
 
     // This is so app thread can lock to load fonts etc before start of frame
-/*    begin_frame_lock.lock();
     if (!new_font_requested.empty()) {
         io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), font_size * dpi_ratio);
         io.Fonts->Build();
@@ -167,7 +166,6 @@ bool UISDL::Render() {
         std::cout << "Loaded font: " << new_font_requested << std::endl;
         new_font_requested.clear();
     }
-    begin_frame_lock.unlock();*/
 
     SpriteActions();
 

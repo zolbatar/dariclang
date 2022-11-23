@@ -13,7 +13,7 @@ std::any Parser::visitConst(DaricParser::ConstContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::CONSTANT);
     for (int i = 0; i < context->IDENTIFIER().size(); i++) {
         auto assign = std::any_cast<ParserToken>(visit(context->literal(i)));
-        ps.identifier = context->IDENTIFIER(i)->getText();
+        assign.identifier = context->IDENTIFIER(i)->getText();
         ps.children.push_back(std::move(assign));
     }
     return ps;

@@ -222,6 +222,7 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sha
     Module->getOrInsertFunction("times", TypeString);
 
     // String
+    Module->getOrInsertFunction("add_string", TypeString, TypeString, TypeString);
     Module->getOrInsertFunction("String_Compare", TypeInt, TypeString, TypeString);
     Module->getOrInsertFunction("Add_Temp_String", TypeNone, TypeString);
     Module->getOrInsertFunction("Make_Perm_String", TypeNone, TypeString);

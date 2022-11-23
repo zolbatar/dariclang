@@ -31,7 +31,16 @@ extern "C" void Strings_Summary() {
 #endif
 }
 
-extern "C" int64_t String_Compare(const char *s1, const char *s2) {
+extern "C" T_S add_string(T_S v1, T_S v2) {
+    std::string v1s(v1);
+    std::string v2s(v2);
+    auto v3s = v1s + v2s;
+    auto m = (char *) malloc(v3s.length() + 1);
+    strcpy(m, v3s.c_str());
+    return m;
+}
+
+extern "C" T_I String_Compare(T_S s1, T_S s2) {
     return strcmp(s1, s2);
 }
 
@@ -42,7 +51,7 @@ extern "C" void Add_Temp_String(const char *v) {
     temp_strings.insert(v);
 }
 
-extern "C" void Clear_Perm_String(const char *v) {
+extern "C" void Clear_Perm_String(T_S v) {
     auto f = perm_strings.find(v);
     if (f != perm_strings.end()) {
 #ifdef DEBUG
@@ -53,7 +62,7 @@ extern "C" void Clear_Perm_String(const char *v) {
     }
 }
 
-extern "C" void Make_Perm_String(const char *v) {
+extern "C" void Make_Perm_String(T_S v) {
     auto f = temp_strings.find(v);
     if (f != temp_strings.end()) {
 #ifdef DEBUG
@@ -74,7 +83,7 @@ extern "C" void Clear_Temp_Strings() {
     temp_strings.clear();
 }
 
-extern "C" int64_t asc(const char *v) {
+extern "C" T_I asc(T_S v) {
     std::string vs(v);
     int64_t c = -1;
     if (vs.length() != 0) {
@@ -83,7 +92,7 @@ extern "C" int64_t asc(const char *v) {
     return c;
 }
 
-extern "C" char *chrs(int64_t v) {
+extern "C" T_S chrs(T_I v) {
     v &= 0xFF;
     auto vs = (char *) malloc(2);
     vs[0] = v;
@@ -91,7 +100,7 @@ extern "C" char *chrs(int64_t v) {
     return vs;
 }
 
-extern "C" int64_t instr(const char *string, const char *substring, int64_t start) {
+extern "C" T_I instr(T_S string, T_S substring, T_I start) {
     auto s1 = std::string(string);
     auto s2 = std::string(substring);
     if (start >= s1.length())
@@ -104,7 +113,7 @@ extern "C" int64_t instr(const char *string, const char *substring, int64_t star
     return v;
 }
 
-extern "C" const char *lefts(const char *v2, int64_t v1) {
+extern "C" T_S lefts(T_S v2, T_I v1) {
     auto ss = std::string(v2);
     try {
         ss = ss.substr(0, v1).c_str();
@@ -118,7 +127,7 @@ extern "C" const char *lefts(const char *v2, int64_t v1) {
     return NULL;
 }
 
-extern "C" const char *mids(const char *v3, int64_t v1, int64_t v2) {
+extern "C" T_S mids(T_S v3, T_I v1, T_I v2) {
     auto ss = std::string(v3);
     try {
         ss = ss.substr(v1 - 1, v2).c_str();
@@ -132,7 +141,7 @@ extern "C" const char *mids(const char *v3, int64_t v1, int64_t v2) {
     return NULL;
 }
 
-extern "C" const char *rights(const char *v2, int64_t v1) {
+extern "C" T_S rights(T_S v2, T_I v1) {
     auto ss = std::string(v2);
     try {
         auto l = ss.length();
@@ -147,11 +156,11 @@ extern "C" const char *rights(const char *v2, int64_t v1) {
     return NULL;
 }
 
-extern "C" int64_t len(const char *v) {
+extern "C" T_I len(T_S v) {
     return strlen(v);
 }
 
-extern "C" int64_t string_to_int(const char *v) {
+extern "C" T_I string_to_int(T_S v) {
     auto ss = std::string(v);
     try {
         return std::stoi(ss);
@@ -161,7 +170,7 @@ extern "C" int64_t string_to_int(const char *v) {
     }
 }
 
-extern "C" double string_to_float(const char *v) {
+extern "C" T_F string_to_float(T_S v) {
     auto ss = std::string(v);
     try {
         return std::stod(ss);
@@ -171,7 +180,7 @@ extern "C" double string_to_float(const char *v) {
     }
 }
 
-extern "C" const char *float_to_string(double vi) {
+extern "C" T_S float_to_string(T_F vi) {
     char buffer[512];
     snprintf(buffer, 512, "%f", vi);
     auto m = (char *) malloc(strlen(buffer) + 1);
@@ -179,7 +188,7 @@ extern "C" const char *float_to_string(double vi) {
     return m;
 }
 
-extern "C" const char *int_to_string(int64_t vi) {
+extern "C" T_S int_to_string(T_I vi) {
     char buffer[512];
     snprintf(buffer, 512, "%lld", vi);
     auto m = (char *) malloc(strlen(buffer) + 1);
@@ -187,7 +196,7 @@ extern "C" const char *int_to_string(int64_t vi) {
     return m;
 }
 
-extern "C" const char *float_to_string_with(double vi, const char *f) {
+extern "C" T_S float_to_string_with(T_F vi, T_S f) {
     char buffer[512];
     snprintf(buffer, 512, f, vi);
     auto m = (char *) malloc(strlen(buffer) + 1);
@@ -195,7 +204,7 @@ extern "C" const char *float_to_string_with(double vi, const char *f) {
     return m;
 }
 
-extern "C" const char *int_to_string_with(int64_t vi, const char *f) {
+extern "C" T_S int_to_string_with(T_I vi, T_S f) {
     char buffer[512];
     snprintf(buffer, 512, f, vi);
     auto m = (char *) malloc(strlen(buffer) + 1);

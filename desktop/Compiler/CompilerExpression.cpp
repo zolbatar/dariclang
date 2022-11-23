@@ -122,8 +122,18 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             auto t1 = CompileExpression(t.children[0]);
             auto t2 = CompileExpression(t.children[1]);
             switch (t.type) {
-                case ParserTokenType::ADD:
-                    return llvm.MathsAdd(GetIR(), t1, t2);
+                case ParserTokenType::ADD: {
+                    if (t1.type == Primitive::STRING && t2.type == Primitive::STRING) {
+                        ValueType vt;
+                        vt.type = Primitive::STRING;
+                        vt.value = CreateCall("add_string", {t1.value, t2.value});
+                        llvm.MakePermString(vt.value, GetIR());
+                        strip_strings = true;
+                        return vt;
+                    } else {
+                        return llvm.MathsAdd(GetIR(), t1, t2);
+                    }
+                }
                 case ParserTokenType::MINUS:
                     return llvm.MathsMinus(GetIR(), t1, t2);
                 case ParserTokenType::DIVIDE:

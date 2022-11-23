@@ -64,6 +64,7 @@ add_executable(${PROJECT_NAME}
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 
+        ../runtime/FontsText.cpp
         ../runtime/FileIO.cpp
         ../runtime/Random.cpp
         ../runtime/String.cpp
@@ -81,6 +82,7 @@ add_executable(${PROJECT_NAME}
         ../runtime/UI/RenderShapes.h
         ../runtime/UI/Lodepng.cpp
         ../runtime/UI/Sprite.cpp
+        ../runtime/UI/Text.cpp
         ../runtime/Input/Input.cpp
         ../runtime/Input/Input.h
         ../runtime/Sprites.cpp

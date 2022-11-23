@@ -38,18 +38,29 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("TRIANGLE", "gfx2d_triangle", Primitive::NONE, "IIIIII");
     AddLibraryCall("TRIANGLEFILL", "gfx2d_trianglefilled", Primitive::NONE, "IIIIII");
     AddLibraryCall("TRIANGLESHADED", "gfx2d_triangleshaded", Primitive::NONE, "IIIIIIIII");
-    AddLibraryCall("CIRCLE", "gfx2d_circle", Primitive::NONE, "III");
-    AddLibraryCall("CIRCLEW", "gfx2d_circlew", Primitive::NONE, "IIII");
-    AddLibraryCall("CIRCLEFILL", "gfx2d_circlefilled", Primitive::NONE, "III");
+    AddLibraryCall("CIRCLE", "gfx2d_circle", Primitive::NONE, "IIF");
+    AddLibraryCall("CIRCLEW", "gfx2d_circlew", Primitive::NONE, "IIFF");
+    AddLibraryCall("CIRCLEFILL", "gfx2d_circlefilled", Primitive::NONE, "IIF");
     AddLibraryCall("LINE", "gfx2d_line", Primitive::NONE, "IIII");
-    AddLibraryCall("LINEW", "gfx2d_linew", Primitive::NONE, "IIIII");
+    AddLibraryCall("LINEW", "gfx2d_linew", Primitive::NONE, "IIIIF");
     AddLibraryCall("FG", "gfx2d_fg", Primitive::NONE, "III");
     AddLibraryCall("BG", "gfx2d_bg", Primitive::NONE, "III");
     AddLibraryCall("COLOUR", "gfx2d_createcolour", Primitive::INT, "III");
+    AddLibraryCall("CURSORON", "gfx2d_cursoron", Primitive::NONE, "");
+    AddLibraryCall("CURSOROFF", "gfx2d_cursoroff", Primitive::NONE, "");
+
+    // Sprites
     AddLibraryCall("LOADSPRITE", "sprites_load", Primitive::INT, "S");
     AddLibraryCall("DELETESPRITE", "sprites_delete", Primitive::NONE, "I");
     AddLibraryCall("GRABSPRITE", "sprites_create", Primitive::INT, "IIII");
     AddLibraryCall("DRAWSPRITE", "sprites_draw", Primitive::NONE, "IIIIFF");
+
+    // Text
+    AddLibraryCall("LOADFONT", "text_loadfont", Primitive::INT, "S");
+    AddLibraryCall("SETFONT", "text_setfont", Primitive::NONE, "IF");
+    AddLibraryCall("TEXT", "text_left", Primitive::NONE, "IIS");
+    AddLibraryCall("TEXTRIGHT", "text_right", Primitive::NONE, "IIS");
+    AddLibraryCall("TEXTCENTRE", "text_centre", Primitive::NONE, "IIS");
 
     // Random
     AddLibraryCall("RND", "rndi", Primitive::INT, "I");

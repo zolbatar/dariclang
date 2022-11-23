@@ -24,6 +24,7 @@ add_library(DaricRuntime STATIC
         UI/Lodepng.cpp
         UI/Console/Console.cpp
         UI/Sprite.cpp
+        UI/Text.cpp
 
         ${IMGUI_DIR}/imgui_draw.cpp
         ${IMGUI_DIR}/imgui_tables.cpp
@@ -34,6 +35,7 @@ add_library(DaricRuntime STATIC
 
         Input/Input.cpp
 
+        FontsText.cpp
         Sprites.cpp
         FileIO.cpp
         Maths.cpp

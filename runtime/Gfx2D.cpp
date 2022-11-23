@@ -30,7 +30,7 @@ extern "C" void gfx2d_line(T_I x1, T_I y1, T_I x2, T_I y2) {
     ui->Line(x1, y1, x2, y2);
 }
 
-extern "C" void gfx2d_linew(T_I x1, T_I y1, T_I x2, T_I y2, T_I w) {
+extern "C" void gfx2d_linew(T_I x1, T_I y1, T_I x2, T_I y2, T_F w) {
     if (!ui_started)
         return;
     ui->LineWidth(x1, y1, x2, y2, w);
@@ -102,19 +102,19 @@ extern "C" T_I gfx2d_createcolour(T_I r, T_I g, T_I b) {
     return im;
 }
 
-extern "C" void gfx2d_circle(T_I x1, T_I y1, T_I r) {
+extern "C" void gfx2d_circle(T_I x1, T_I y1, T_F r) {
     if (!ui_started)
         return;
     ui->Circle(x1, y1, r);
 }
 
-extern "C" void gfx2d_circlew(T_I x1, T_I y1, T_I w, T_I r) {
+extern "C" void gfx2d_circlew(T_I x1, T_I y1, T_F w, T_F r) {
     if (!ui_started)
         return;
     ui->CircleWidth(x1, y1, w, r);
 }
 
-extern "C" void gfx2d_circlefilled(T_I x1, T_I y1, T_I r) {
+extern "C" void gfx2d_circlefilled(T_I x1, T_I y1, T_F r) {
     if (!ui_started)
         return;
     ui->FilledCircle(x1, y1, r);
@@ -137,3 +137,16 @@ extern "C" void gfx2d_triangleshaded(T_I x1, T_I y1, T_I c1, T_I x2, T_I y2, T_I
         return;
     ui->ShadedTriangle(x1, y1, x2, y2, x3, y3, c1, c2, c3, false);
 }
+
+extern "C" void gfx2d_cursoroff() {
+    if (!ui_started)
+        return;
+    console.CursorOff();
+}
+
+extern "C" void gfx2d_cursoron() {
+    if (!ui_started)
+        return;
+    console.CursorOn();
+}
+
