@@ -46,6 +46,10 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("FG", "gfx2d_fg", Primitive::NONE, "III");
     AddLibraryCall("BG", "gfx2d_bg", Primitive::NONE, "III");
     AddLibraryCall("COLOUR", "gfx2d_createcolour", Primitive::INT, "III");
+    AddLibraryCall("LOADSPRITE", "sprites_load", Primitive::INT, "S");
+    AddLibraryCall("DELETESPRITE", "sprites_delete", Primitive::NONE, "I");
+    AddLibraryCall("GRABSPRITE", "sprites_create", Primitive::INT, "IIII");
+    AddLibraryCall("DRAWSPRITE", "sprites_draw", Primitive::NONE, "IIIIFF");
 
     // Random
     AddLibraryCall("RND", "rndi", Primitive::INT, "I");

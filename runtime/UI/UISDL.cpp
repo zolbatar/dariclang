@@ -13,8 +13,8 @@
 std::mutex sprite_lock;
 size_t last_sprite_index = 0;
 extern Console console;
-//extern Sprites sprite;
-//extern size_t sprite_index;
+extern Sprites sprite;
+extern size_t sprite_index;
 extern Input input;
 //extern World world;
 size_t frame_count = 0;
@@ -363,7 +363,7 @@ void UISDL::Create3DBuffer() {
 }
 
 void UISDL::SpriteActions() {
-/*    sprite_lock.lock();
+    sprite_lock.lock();
     while (last_sprite_index != sprite_index) {
         auto s = sprite.GetSprite(last_sprite_index);
         for (auto it = s->banks.begin(); it != s->banks.end(); ++it) {
@@ -412,7 +412,7 @@ void UISDL::SpriteActions() {
         }
         last_sprite_index++;
     }
-    sprite_lock.unlock();*/
+    sprite_lock.unlock();
 }
 
 bool UISDL::LoadTextureFromFile(const char *filename, GLuint *outTexture, int *outWidth, int *outHeight) {

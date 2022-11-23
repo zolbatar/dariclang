@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <string>
 #include <memory>
-//#include "Sprite.h"
+#include "Sprite.h"
 
 void AddTriangleFilledMultiColor(ImDrawList *draw_list, const ImVec2 &a, const ImVec2 &b, const ImVec2 &c, ImU32 col_a,
                                  ImU32 col_b, ImU32 col_c);
@@ -270,7 +270,7 @@ private:
     float size;
 };
 
-/*class ShapeSprite : public RenderShape {
+class ShapeSprite : public RenderShape {
 public:
     ShapeSprite(SpriteBank *bank,
                 ImVec2 pos[4],
@@ -297,4 +297,4 @@ private:
     SpriteBank *bank;
     ImVec2 pos[4], uvs[4];
     float scale, angle;
-};*/
+};

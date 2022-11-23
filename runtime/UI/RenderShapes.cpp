@@ -224,8 +224,7 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
     return ImVec2(v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a);
 }
 
-/*void UISDL::Sprite(SpriteBank *sb, float sx, float sy, float rot_d, float scale, bool flipped)
-{
+void UISDL::Sprite(SpriteBank *sb, float sx, float sy, float rot_d, float scale, bool flipped) {
     // Convert degrees to radians
     auto rot = rot_d * M_PI / 180.0;
     auto center = ImVec2(sx + (sb->width) / 2, sy + (sb->height / 2));
@@ -254,5 +253,3 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
     assert(l2 > l1);
     shapes_lock.unlock();
 }
-
-*/

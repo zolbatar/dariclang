@@ -58,7 +58,7 @@ public:
     void Origin(float x, float y);
     void Clip(float x1, float y1, float x2, float y2);
     void ClipOff();
-//    void Sprite(SpriteBank *sb, float sx, float sy, float rot, float scale, bool flipped);
+    void Sprite(SpriteBank *sb, float sx, float sy, float rot, float scale, bool flipped);
     int64_t GetScreenWidth() { return desktop_screen_width; }
     int64_t GetScreenHeight() { return desktop_screen_height; }
     float GetDPIRatio() { return dpi_ratio; }

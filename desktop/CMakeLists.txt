@@ -80,8 +80,10 @@ add_executable(${PROJECT_NAME}
         ../runtime/UI/RenderShapes.cpp
         ../runtime/UI/RenderShapes.h
         ../runtime/UI/Lodepng.cpp
+        ../runtime/UI/Sprite.cpp
         ../runtime/Input/Input.cpp
         ../runtime/Input/Input.h
+        ../runtime/Sprites.cpp
 
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp

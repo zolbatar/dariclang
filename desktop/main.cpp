@@ -53,7 +53,7 @@ void do_quit() {
 }
 
 int main(int argc, char *argv[]) {
-    std::cout << "Welcome to Daric! (0.3alpha)" << std::endl;
+    std::cout << "Welcome to Daric! (0.5alpha)" << std::endl;
     options.file = new std::ifstream(argv[1]);
     if (!options.file->is_open()) {
         std::cout << "Can't open source file\n";
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]) {
     }
 
     // What sort of compile?
-    options.output_ll_files = true;
+    options.output_ll_files = false;
     if (argc == 2) {
         options.target = CompileTarget::JIT;
         options.use_exit_as_end = false;
@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
                 do_quit();
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+//        std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
     do_quit();
     return 0;
