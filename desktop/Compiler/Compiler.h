@@ -6,115 +6,165 @@
 #include "../Parser/Parser.h"
 #include "CompilerOptions.h"
 
-struct Func {
-    llvm::Function *func;
-    Primitive return_type;
-    std::vector<Primitive> parameters;
-    std::vector<llvm::Type *> llvm_parameters;
-    std::vector<std::string> parameter_names;
+class FuncParameter
+{
+ public:
+	FuncParameter(Reference* ref, bool is_ref) : ref(ref), is_ref(is_ref)
+	{
+	}
+
+	std::string GetName()
+	{
+		return ref->GetName();
+	}
+
+	Primitive GetDataType()
+	{
+		return ref->GetDataType();
+	}
+
+	llvm::Type* GetLLVMType(CompilerLLVM& llvm)
+	{
+		return ref->GetLLVMType(is_ref, llvm);
+	}
+
+	bool ConvertToOutputValue(ValueType& vt, llvm::IRBuilder<>* ir, CompilerLLVM& llvm)
+	{
+		ref->Convert(vt, llvm, ir);
+		return vt.type == ref->GetDataType();
+	}
+
+ private:
+	Reference* ref;
+	bool is_ref = false;
 };
 
-struct LibraryFunc {
-    void *func;
-    std::string func_name;
-    Primitive return_Type;
-    std::vector<Primitive> parameters;
+struct Func
+{
+	llvm::Function* func;
+	Primitive return_type;
+	std::vector<FuncParameter> parameters;
 };
 
-class Compiler {
-public:
-    Compiler(SharedState &state, Parser *parser, CompilerOptions options) :
-            state(state), options(options), parser(parser) {   }
-    bool Compile();
-    void Run();
-    void CreateExecutable();
+struct LibraryFunc
+{
+	void* func;
+	std::string func_name;
+	Primitive return_Type;
+	std::vector<Primitive> parameters;
+};
 
-private:
-    CompilerOptions options;
-    SharedState &state;
-    Parser *parser;
-    bool strip_strings = false;
-    CompilerLLVM llvm;
-    llvm::Function *implicit = nullptr;
-    llvm::IRBuilder<> *implicit_ir;
-    llvm::Function *procedure = nullptr;
-    Primitive return_type;
-    llvm::IRBuilder<> *procedure_ir;
-    std::unordered_map<std::string, Func> procedures;
-    llvm::Value *CreateCall(std::string name, llvm::ArrayRef<llvm::Value *> vals);
-    void SetupLibrary();
-    void AddLibraryCall(std::string name, std::string func, Primitive ret, std::string parameters);
-    std::unordered_map<std::string, LibraryFunc> library;
+class Compiler
+{
+ public:
+	Compiler(SharedState& state, Parser* parser, CompilerOptions options)
+		: state(state), options(options), parser(parser)
+	{
+	}
 
-    std::string GetScratchName(size_t line);
-    size_t scratch_index = 0;
+	bool Compile();
 
-    llvm::Function *GetFunction() {
-        return procedure != nullptr ? procedure : implicit;
-    }
-    llvm::IRBuilder<> *GetIR() {
-        return procedure != nullptr ? procedure_ir : implicit_ir;
-    }
-    llvm::Function *GetFunctionImplicit() {
-        return implicit;
-    }
-    llvm::IRBuilder<> *GetIRImplicit() {
-        return implicit_ir;
-    }
+	void Run();
 
-    ValueType CompileExpression(ParserToken &t);
-    void GenericVariable(ParserToken &token, Scope scope);
-    void CreateGlobalDimensions(Reference *var, Primitive type1, llvm::Type *type2);
-    void CreateLocalDimensions(Reference *var, Primitive type1, llvm::Type *type2);
-    void Constants();
-    void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
+	void CreateExecutable();
 
-    void CreateLookaheadProc(ParserToken &t);
-    void CompileStatements(std::vector<ParserToken> &statements);
-    void TokenCall(ParserToken &token);
-    void TokenEnd(ParserToken &token);
-    void TokenGlobal(ParserToken &token);
-    void TokenIf(ParserToken &token);
-    void TokenLocal(ParserToken &token);
-    void TokenProcedure(ParserToken &t);
-    void TokenPrint(ParserToken &t);
-    void TokenReturn(ParserToken &t);
-    void TokenConst(ParserToken &t);
-    void TokenSwap(ParserToken &t);
-    void TokenDim(ParserToken &t);
-    void TokenStruct(ParserToken &t);
-    void TokenStructInstance(ParserToken &t);
-    void TokenStructArray(ParserToken &t);
-    void TokenRepeat(ParserToken &t);
-    void TokenWhile(ParserToken &t);
-    void TokenFor(ParserToken &t);
-    void TokenCase(ParserToken &t);
-    void TokenRead(ParserToken &t);
-    void TokenRestore(ParserToken &t);
+ private:
+	CompilerOptions options;
+	SharedState& state;
+	Parser* parser;
+	bool strip_strings = false;
+	CompilerLLVM llvm;
+	llvm::Function* implicit = nullptr;
+	llvm::IRBuilder<>* implicit_ir;
+	llvm::Function* procedure = nullptr;
+	Primitive return_type;
+	llvm::IRBuilder<>* procedure_ir;
+	std::unordered_map<std::string, Func> procedures;
 
-    std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
+	llvm::Value* CreateCall(std::string name, llvm::ArrayRef<llvm::Value*> vals);
+	void SetupLibrary();
+	void AddLibraryCall(std::string name, std::string func, Primitive ret, std::string parameters);
+	std::unordered_map<std::string, LibraryFunc> library;
 
-    llvm::BasicBlock *CreateBB(std::string block_name, ParserToken &token);
-    llvm::BasicBlock *CreateAndInsertBB(std::string block_name, bool branch, ParserToken &token);
-    void AddBB(llvm::BasicBlock *bb);
-    void RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2);
-    void DefaultReturn(Primitive t, ParserToken &token);
+	std::string GetScratchName(size_t line);
+	size_t scratch_index = 0;
+	llvm::Function* GetFunction()
+	{
+		return procedure != nullptr ? procedure : implicit;
+	}
+	llvm::IRBuilder<>* GetIR()
+	{
+		return procedure != nullptr ? procedure_ir : implicit_ir;
+	}
+	llvm::Function* GetFunctionImplicit()
+	{
+		return implicit;
+	}
+	llvm::IRBuilder<>* GetIRImplicit()
+	{
+		return implicit_ir;
+	}
 
-    static void TypeError(ParserToken &token);
-    static void RaiseException(std::string msg, ParserToken &t) {
-        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, msg);
-    }
-    static void SyntaxError(ParserToken &t) {
-        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Syntax error");
-    }
-    static void VariableNotFound(ParserToken &t, std::string name) {
-        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Variable '" + name + "' not found");
-    }
-    static void VariableAlreadyExists(ParserToken &t, std::string name) {
-        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position,
-                              "Variable '" + name + "' already defined");
-    }
-    static void ProcedureNotFound(ParserToken &t, std::string name) {
-        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Procedure '" + name + "' not found");
-    }
+	ValueType CompileExpression(ParserToken& t);
+	void GenericVariable(ParserToken& token, Scope scope);
+	void CreateGlobalDimensions(Reference* var, Primitive type1, llvm::Type* type2);
+	void CreateLocalDimensions(Reference* var, Primitive type1, llvm::Type* type2);
+	void Constants();
+	void CreateConstant(const std::string& name, Primitive type, llvm::Constant* val);
+	void CreateLookaheadProc(ParserToken& t);
+	void CompileStatements(std::vector<ParserToken>& statements);
+	void TokenCall(ParserToken& token);
+	void TokenEnd(ParserToken& token);
+	void TokenGlobal(ParserToken& token);
+	void TokenIf(ParserToken& token);
+	void TokenLocal(ParserToken& token);
+	void TokenProcedure(ParserToken& t);
+	void TokenPrint(ParserToken& t);
+	void TokenReturn(ParserToken& t);
+	void TokenConst(ParserToken& t);
+	void TokenSwap(ParserToken& t);
+	void TokenDim(ParserToken& t);
+	void TokenStruct(ParserToken& t);
+	void TokenStructInstance(ParserToken& t);
+	void TokenStructArray(ParserToken& t);
+	void TokenRepeat(ParserToken& t);
+	void TokenWhile(ParserToken& t);
+	void TokenFor(ParserToken& t);
+	void TokenCase(ParserToken& t);
+	void TokenRead(ParserToken& t);
+	void TokenRestore(ParserToken& t);
+
+	std::vector<ValueType> ProcessIndices(Reference* ref, ParserToken& t);
+	llvm::BasicBlock* CreateBB(std::string block_name, ParserToken& token);
+	llvm::BasicBlock* CreateAndInsertBB(std::string block_name, bool branch, ParserToken& token);
+	void AddBB(llvm::BasicBlock* bb);
+	void RetBrCheckSplit(llvm::BasicBlock* bb1, llvm::BasicBlock* bb2);
+	void DefaultReturn(Primitive t, ParserToken& token);
+
+	static void TypeError(ParserToken& token);
+	static void RaiseException(std::string msg, ParserToken& t)
+	{
+		throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, msg);
+	}
+	static void SyntaxError(ParserToken& t)
+	{
+		throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Syntax error");
+	}
+	static void VariableNotFound(ParserToken& t, std::string name)
+	{
+		throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Variable '" + name + "' not found");
+	}
+
+	static void VariableAlreadyExists(ParserToken& t, std::string name)
+	{
+		throw CustomException(ExceptionType::COMPILER,
+			t.line,
+			t.char_position,
+			"Variable '" + name + "' already defined");
+	}
+
+	static void ProcedureNotFound(ParserToken& t, std::string name)
+	{
+		throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, "Procedure '" + name + "' not found");
+	}
 };

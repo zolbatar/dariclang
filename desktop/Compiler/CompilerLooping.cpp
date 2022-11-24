@@ -50,8 +50,7 @@ void Compiler::TokenWhile(ParserToken &token) {
 
 void Compiler::TokenFor(ParserToken &t) {
     auto ref = Reference::Get(t.reference);
-
-    auto from = CompileExpression(t.children[1]);
+	auto from = CompileExpression(t.children[1]);
 
     // String?
     if (ref->GetDataType() == Primitive::STRING) {

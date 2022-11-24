@@ -57,7 +57,7 @@ public:
     // Core store/load
     void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
     void CreateGlobal(const std::string &name, Primitive type, llvm::Constant *val);
-    void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir);
+	void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir);
     void StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     void StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     llvm::Constant *CreateConstantInt(Primitive type, T_I v);

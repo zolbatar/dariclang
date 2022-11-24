@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-set(CMAKE_OSX_ARCHITECTURES "x86_64")
+set(CMAKE_OSX_ARCHITECTURES "arm64")
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -25,11 +25,7 @@ add_library(sdl2-runtime STATIC IMPORTED)
 SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
 
 # LLVM
-if (${ARCHITECTURE} STREQUAL "arm64")
-    set(CORE_LLVM_DIR /opt/homebrew/Cellar/llvm/15.0.4/)
-else ()
-    set(CORE_LLVM_DIR /Users/daryl/GitHub/llvm-project/)
-endif ()
+set(CORE_LLVM_DIR /Users/daryl/GitHub/llvm-project/)
 include_directories(
         ${CORE_LLVM_DIR}llvm/include
         ${CORE_LLVM_DIR}lld/include

@@ -70,6 +70,7 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
         switch (token.type) {
             case ParserTokenType::NONE:
             case ParserTokenType::PARAMETER:
+            case ParserTokenType::PARAMETER_REF:
                 break;
             case ParserTokenType::STRUCT:
                 TokenStruct(token);

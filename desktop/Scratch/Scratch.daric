@@ -1,1 +1,7 @@
-        FG RND(255), RND(255), RND(255)
+A=100
+TEST(A)
+PRINT A
+
+DEF TEST(REF A)
+    A=200
+ENDDEF

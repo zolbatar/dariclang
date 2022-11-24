@@ -80,8 +80,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             auto i = 0;
             for (auto &s: t.children) {
                 auto vt = CompileExpression(s);
-                llvm.AutoConversion(GetIR(), vt, f->parameters[i]);
-                if (vt.type != f->parameters[i]) {
+				if (!f->parameters[i].ConvertToOutputValue(vt, GetIR(), llvm)) {
                     RaiseException("Parameter mismatch", t);
                 }
                 vals.push_back(vt.value);

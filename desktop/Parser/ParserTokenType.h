@@ -60,6 +60,7 @@ enum class ParserTokenType
 	OR,
     OTHERWISE,
 	PARAMETER,
+    PARAMETER_REF,
 	PI,
 	PRINT,
 	PRINTFORMAT,

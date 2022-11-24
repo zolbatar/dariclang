@@ -15,7 +15,7 @@ public:
     COMMENT = 1, CASE = 2, CONST = 3, DATA = 4, DATALABEL = 5, DEF = 6, 
     DIM = 7, ELSE = 8, END = 9, ENDCASE = 10, ENDDEF = 11, ENDIF = 12, ENDWHILE = 13, 
     FOR = 14, IF = 15, MODULE = 16, NEXT = 17, OF = 18, OTHERWISE = 19, 
-    PRINT = 20, PRIVATE = 21, READ = 22, REM = 23, REPEAT = 24, RESTORE = 25, 
+    PRINT = 20, READ = 21, REF = 22, REM = 23, REPEAT = 24, RESTORE = 25, 
     RETURN = 26, THEN = 27, SIZE = 28, STEP = 29, SWAP = 30, TO = 31, UNTIL = 32, 
     WHEN = 33, WITH = 34, WHILE = 35, DEFRECORD = 36, RECORD = 37, ENDRECORD = 38, 
     HPTIME = 39, TIME = 40, TIMES = 41, ABS = 42, ACS = 43, ASN = 44, ATN = 45, 
@@ -469,6 +469,7 @@ public:
     ParameterContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *REF();
     TypeContext *type();
     antlr4::tree::TerminalNode *OF();
 
@@ -506,13 +507,13 @@ public:
     antlr4::tree::TerminalNode *IDENTIFIER();
     StatementsContext *statements();
     antlr4::tree::TerminalNode *ENDDEF();
-    TypeContext *type();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<ParameterContext *> parameter();
     ParameterContext* parameter(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
     antlr4::tree::TerminalNode *RPAREN();
+    TypeContext *type();
     std::vector<SeparatorContext *> separator();
     SeparatorContext* separator(size_t i);
     antlr4::tree::TerminalNode *OF();

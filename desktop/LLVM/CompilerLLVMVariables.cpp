@@ -30,7 +30,6 @@ void CompilerLLVM::CreateLocal(const std::string &name, Primitive type, llvm::IR
     locals_type[name] = type;
 }
 
-
 void CompilerLLVM::StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val) {
     assert(globals.contains(name));
     ir->CreateStore(val, globals[name]);

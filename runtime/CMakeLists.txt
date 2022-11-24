@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_OSX_ARCHITECTURES arm64;x86_64)
-project(runtime)
+set(CMAKE_OSX_ARCHITECTURES arm64)
+project(DaricRuntime)
 
 include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()

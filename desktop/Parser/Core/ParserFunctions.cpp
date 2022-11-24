@@ -28,12 +28,17 @@ std::any Parser::visitProcedure(DaricParser::ProcedureContext *context) {
 
 std::any Parser::visitParameter(DaricParser::ParameterContext *context) {
     ParserToken ps = CreateToken(context);
-    ps.type = ParserTokenType::PARAMETER;
-    ps.identifier = context->IDENTIFIER()->getText();
-    if (context->type()) {
-        ps.data_type = std::any_cast<Primitive>(visit(context->type()));
+	auto r = Reference::Create(state, context->IDENTIFIER()->getText());
+	ps.reference = r->GetRef();
+    if (context->REF()) {
+        ps.type = ParserTokenType::PARAMETER_REF;
     } else {
-        ps.data_type = Primitive::INT;
+        ps.type = ParserTokenType::PARAMETER;
+    }
+    if (context->type()) {
+		r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
+    } else {
+        r->SetDataType(Primitive::INT);
     }
     return ps;
 }
