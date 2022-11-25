@@ -37,9 +37,9 @@ InstanceRecordArray::InstanceRecordArray(const std::string &name,
 void InstanceRecordArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     llvm::Value *gep;
     if (scope == Scope::LOCAL) {
-        gep = ir->CreateStructGEP(llvm.locals[name]->getAllocatedType(), idx, field_index);
+        gep = ir->CreateStructGEP(struct_type, idx, field_index);
     } else {
-        gep = ir->CreateStructGEP(llvm.globals[name]->getValueType(), idx, field_index);
+        gep = ir->CreateStructGEP(struct_type, idx, field_index);
     }
     ir->CreateStore(v, gep);
 }
@@ -47,9 +47,9 @@ void InstanceRecordArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_ind
 void InstanceRecordArray::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     llvm::Value *gep;
     if (scope == Scope::LOCAL) {
-        gep = ir->CreateStructGEP(llvm.locals[name]->getAllocatedType(), idx, field_index);
+        gep = ir->CreateStructGEP(struct_type, idx, field_index);
     } else {
-        gep = ir->CreateStructGEP(llvm.globals[name]->getValueType(), idx, field_index);
+        gep = ir->CreateStructGEP(struct_type, idx, field_index);
     }
     vt.value = ir->CreateLoad(llvm.TypeConversion(vt.type), gep);
 }

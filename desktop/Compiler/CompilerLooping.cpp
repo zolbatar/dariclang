@@ -50,7 +50,7 @@ void Compiler::TokenWhile(ParserToken &token) {
 
 void Compiler::TokenFor(ParserToken &t) {
     auto ref = Reference::Get(t.reference);
-	auto from = CompileExpression(t.children[1]);
+    auto from = CompileExpression(t.children[1]);
 
     // String?
     if (ref->GetDataType() == Primitive::STRING) {
@@ -63,10 +63,10 @@ void Compiler::TokenFor(ParserToken &t) {
         if (ref->GetDataType() == Primitive::NONE) {
             ref->SetDataType(from.type);
         }
-        ref->CreateInstance(llvm, GetIR(), t.scope);
+        ref->CreateInstance(llvm, GetIR(), t.scope, false);
     }
     if (!ref->FindInstance())
-        RaiseException("Variable error", t);
+        VariableError(t, ref->GetName());
 
     auto to = CompileExpression(t.children[2]);
     ValueType step;

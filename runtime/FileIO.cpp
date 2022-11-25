@@ -62,7 +62,7 @@ extern "C" void fileio_bput(T_I channel, T_I byte) {
     fputc(byte, g->second);
 }
 
-extern "C" T_I eof(T_I channel) {
+extern "C" T_I fileio_eof(T_I channel) {
     auto g = channels.find(channel);
     return feof(g->second);
 }

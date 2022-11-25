@@ -196,6 +196,8 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sha
                                                 "DATA");
     globals["~DATAPtr"] = new llvm::GlobalVariable(*Module, TypeInt, false, llvm::GlobalValue::InternalLinkage, llvm::ConstantInt::get(TypeInt, 0), "DATAPtr");
 
+    Module->getOrInsertFunction("daric_end", TypeNone);
+
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);
     Module->getOrInsertFunction("PrintFloat", TypeNone, TypeFloat);
@@ -288,7 +290,7 @@ void CompilerLLVM::CreateLLVMPasses() {
     }
 
     std::error_code EC;
-    llvm::StringRef filename_s(options.output_filename + ".o");
+    std::string filename_s(options.output_filename + ".o");
     llvm::raw_fd_ostream out_s(filename_s, EC, llvm::sys::fs::CreationDisposition::CD_CreateAlways);
     if (options.target == CompileTarget::EXE) {
         if (Target->addPassesToEmitFile(passes, out_s, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {

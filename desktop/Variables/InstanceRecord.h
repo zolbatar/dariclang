@@ -9,19 +9,20 @@ public:
                                            llvm::StructType *struct_type,
                                            Scope scope,
                                            CompilerLLVM &llvm,
-                                           llvm::IRBuilder<> *ir);
+                                           llvm::IRBuilder<> *ir,
+                                           bool is_ref);
     InstanceRecord(const std::string &name,
                    const std::string &struct_name,
                    llvm::StructType *struct_type,
                    Scope scope,
                    CompilerLLVM &llvm,
-                   llvm::IRBuilder<> *ir);
+                   llvm::IRBuilder<> *ir,
+                   bool is_ref);
 
     size_t IndicesCount() override { return 0; }
-    std::string& GetStructName() override { return struct_name; }
+    std::string &GetStructName() override { return struct_name; }
     InstanceType GetInstanceType() override { return InstanceType::RECORD; }
     Primitive GetType() override { return Primitive::NONE; }
-    llvm::StructType *GetStructType() override { return struct_type; };
 
     void Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) override;
     void Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) override;

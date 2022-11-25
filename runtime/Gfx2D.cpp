@@ -27,6 +27,7 @@ extern "C" void gfx2d_mode(T_I w, T_I h, T_I flags) {
 extern "C" void gfx2d_line(T_I x1, T_I y1, T_I x2, T_I y2) {
     if (!ui_started)
         return;
+    std::cout << x1 << "," << y1 << " " << x2 << "," << y2 << std::endl;
     ui->Line(x1, y1, x2, y2);
 }
 

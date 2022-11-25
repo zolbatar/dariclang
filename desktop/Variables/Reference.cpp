@@ -1,7 +1,7 @@
 #include "Reference.h"
 #include <utility>
 
-std::vector<Reference> Reference::references;
+std::unordered_map<size_t, Reference> Reference::references;
 size_t Reference::index_ptr = 0;
 
 Reference::Reference(SharedState &state, std::string name) : state(state) {
@@ -10,13 +10,14 @@ Reference::Reference(SharedState &state, std::string name) : state(state) {
 }
 
 Reference *Reference::Create(SharedState &state, std::string name) {
-    references.emplace_back(Reference(state, std::move(name)));
-    auto r = &references.back();
-    return r;
+    auto ref = Reference(state, std::move(name));
+    auto index = ref.index;
+    references.insert(std::make_pair(ref.index, ref));
+    return &references.find(index)->second;
 }
 
 Reference *Reference::Get(size_t index) {
-    return &references[index];
+    return &references.find(index)->second;
 }
 
 void Reference::SetAsArray() {
@@ -39,6 +40,20 @@ bool Reference::InstanceExists() {
     return Instance::Exists(name);
 }
 
+bool Reference::FindInstanceUnknownInstanceType() {
+    instance = Instance::FindInstance(name);
+    if (!instance)
+        return false;
+    this->data_type = instance->GetType();
+
+    // Validate
+    instance_type = instance->GetInstanceType();
+//    if (instance->IndicesCount() != indices.size())
+//        return false;
+
+    return true;
+}
+
 bool Reference::FindInstance() {
     instance = Instance::FindInstance(name);
     if (!instance)
@@ -54,18 +69,20 @@ bool Reference::FindInstance() {
     return true;
 }
 
-void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope) {
+void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref) {
     switch (instance_type) {
         case InstanceType::PRIMITIVE:
-            instance = InstancePrimitive::Build(name, data_type, scope, llvm, ir);
+            instance = InstancePrimitive::Build(name, data_type, scope, llvm, ir, is_ref);
             break;
         case InstanceType::ARRAY:
             instance = InstancePrimitiveArray::Build(name, data_type, scope, indices.size(), llvm, ir);
             break;
         case InstanceType::RECORD:
-            instance = InstanceRecord::Build(name, struct_name, llvm_struct_type, scope, llvm, ir);
+            SetLLVMStructType(llvm.GetStruct(GetStructName()));
+            instance = InstanceRecord::Build(name, struct_name, llvm_struct_type, scope, llvm, ir, is_ref);
             break;
         case InstanceType::RECORD_ARRAY:
+            SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance = InstanceRecordArray::Build(name, struct_name, llvm_struct_type, scope, indices.size(), llvm, ir);
             break;
         default:
@@ -100,6 +117,32 @@ void Reference::SetValue(ValueType vt,
                                     : LocalIndex(indices_val, llvm, ir),
                           ss.index, llvm, ir);
             break;
+        }
+        default:
+            assert(0);
+    }
+}
+
+llvm::Value *Reference::GetPointer(const std::vector<ValueType> &indices_val,
+                                   CompilerLLVM &llvm,
+                                   llvm::IRBuilder<> *ir,
+                                   ParserToken &token) {
+    switch (instance_type) {
+        case InstanceType::RECORD:
+        case InstanceType::PRIMITIVE: {
+            if (instance->GetScope() == Scope::GLOBAL) {
+                return llvm.globals[name];
+            } else if (instance->GetScope() == Scope::LOCAL) {
+                return llvm.locals[name];
+            }
+        }
+        case InstanceType::ARRAY:
+        case InstanceType::RECORD_ARRAY: {
+            if (instance->GetScope() == Scope::GLOBAL) {
+                return GlobalIndex(indices_val, llvm, ir);
+            } else if (instance->GetScope() == Scope::LOCAL) {
+                return LocalIndex(indices_val, llvm, ir);
+            }
         }
         default:
             assert(0);
@@ -180,9 +223,8 @@ llvm::Value *Reference::LocalIndex(std::vector<ValueType> indices_val, CompilerL
     return ir->CreateGEP(glob_v->getAllocatedType(), glob_v, {index});
 }
 
-llvm::Value *Reference::GlobalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+llvm::Value *Reference::GlobalIndexPtr(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
-    auto glob_v = llvm.GetGlobal(name);
     auto glob = llvm.GetGlobalArrayDimensions(name);
     for (auto i = 0; i < indices_val.size() - 1; i++) {
 
@@ -194,6 +236,12 @@ llvm::Value *Reference::GlobalIndex(std::vector<ValueType> indices_val, Compiler
         auto m = ir->CreateMul(size, indices_val[i + 1].value);
         index = ir->CreateAdd(index, m);
     }
+    return index;
+}
+
+llvm::Value *Reference::GlobalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+    auto glob_v = llvm.GetGlobal(name);
+    auto index = GlobalIndexPtr(indices_val, llvm, ir);
     return ir->CreateGEP(glob_v->getValueType(), glob_v, {llvm::ConstantInt::get(llvm.TypeInt, 0), index});
 }
 
