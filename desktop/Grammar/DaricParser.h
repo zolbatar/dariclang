@@ -468,8 +468,10 @@ public:
   public:
     ParameterContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *REF();
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    antlr4::tree::TerminalNode *RECORD();
     TypeContext *type();
     antlr4::tree::TerminalNode *OF();
 
@@ -508,6 +510,8 @@ public:
     StatementsContext *statements();
     antlr4::tree::TerminalNode *ENDDEF();
     antlr4::tree::TerminalNode *LPAREN();
+    std::vector<antlr4::tree::TerminalNode *> NEWLINE();
+    antlr4::tree::TerminalNode* NEWLINE(size_t i);
     std::vector<ParameterContext *> parameter();
     ParameterContext* parameter(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();

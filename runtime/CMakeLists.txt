@@ -35,6 +35,7 @@ add_library(DaricRuntime STATIC
 
         Input/Input.cpp
 
+        KeyboardMouse.cpp
         FontsText.cpp
         Sprites.cpp
         FileIO.cpp

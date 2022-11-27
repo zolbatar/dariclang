@@ -57,9 +57,10 @@ public:
     // Core store/load
     void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
     void CreateGlobal(const std::string &name, Primitive type, llvm::Constant *val);
-	void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir);
+    void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir, bool is_ref);
     void StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     void StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
+    void StoreLocalPointer(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     llvm::Constant *CreateConstantInt(Primitive type, T_I v);
     llvm::Constant *CreateConstantFloat(Primitive type, T_F v);
     llvm::Constant *CreateConstantString(llvm::IRBuilder<> *ir, llvm::Function *func,
@@ -164,6 +165,7 @@ public:
     std::unordered_map<std::string, std::string> local_structs;
     std::unordered_map<std::string, llvm::GlobalVariable *> globals;
     std::unordered_map<std::string, llvm::AllocaInst *> locals;
+    std::unordered_map<std::string, bool> locals_isref;
     std::unordered_map<std::string, Primitive> globals_type;
     std::unordered_map<std::string, Primitive> locals_type;
 private:

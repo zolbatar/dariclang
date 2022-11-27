@@ -19,10 +19,10 @@ void Parser::Parse(std::istream *source) {
         visitProgram(tree);
     } catch (CustomException &ex) {
         ex.OutputToStdout();
-        return;
+        exit(1);
     }
     catch (std::exception &ex) {
         std::cout << "Exception: " << ex.what() << std::endl;
-        return;
+        exit(1);
     }
 }

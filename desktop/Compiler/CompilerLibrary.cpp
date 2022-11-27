@@ -1,20 +1,20 @@
 #include "Compiler.h"
 
 void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret, std::string parameters) {
-    std::vector<Primitive> pars;
+    std::vector<LibraryFuncParameter> pars;
     std::vector<llvm::Type *> pars_t;
     for (auto c: parameters) {
         switch (c) {
             case 'I':
-                pars.push_back(Primitive::INT);
+                pars.push_back(LibraryFuncParameter(Primitive::INT, false));
                 pars_t.push_back(llvm.TypeInt);
                 break;
             case 'F':
-                pars.push_back(Primitive::FLOAT);
+                pars.push_back(LibraryFuncParameter(Primitive::FLOAT, false));
                 pars_t.push_back(llvm.TypeFloat);
                 break;
             case 'S':
-                pars.push_back(Primitive::STRING);
+                pars.push_back(LibraryFuncParameter(Primitive::STRING, false));
                 pars_t.push_back(llvm.TypeString);
                 break;
             default:
@@ -80,4 +80,14 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("DIR", "fileio_list_files", Primitive::INT, "S");
     AddLibraryCall("DIRENTRY", "fileio_get_filename", Primitive::STRING, "I");
     AddLibraryCall("DELETE", "fileio_delete", Primitive::NONE, "S");
+
+    // Keyboard & Mouse
+    AddLibraryCall("WAITKEY", "kbm_waitkey", Primitive::INT, "I");
+    AddLibraryCall("WAITKEY$", "kbm_waitkeys", Primitive::STRING, "I");
+    AddLibraryCall("KEYDOWN", "kbm_keydown", Primitive::INT, "I");
+    AddLibraryCall("GET", "kbm_get", Primitive::INT, "I");
+    AddLibraryCall("GET$", "kbm_gets", Primitive::STRING, "I");
+    AddLibraryCall("MOUSEX", "kbm_mousex", Primitive::INT, "");
+    AddLibraryCall("MOUSEY", "kbm_mousey", Primitive::INT, "");
+    AddLibraryCall("MOUSESTATE", "kbm_mousestate", Primitive::INT, "");
 }

@@ -3,7 +3,7 @@
 void Compiler::GenericVariable(ParserToken &token, Scope scope) {
     for (auto &s: token.children) {
         auto ref = Reference::Get(s.reference);
-        auto value_type = CompileExpression(s.children[0]);
+         auto value_type = CompileExpression(s.children[0]);
 
         // If no type, try and auto-guess it from the expression
         if (ref->GetDataType() == Primitive::NONE) {
@@ -13,7 +13,7 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
         // If it's a primitive type, we create the variable if we need to
         if (ref->GetInstanceType() == InstanceType::PRIMITIVE) {
             if (!ref->InstanceExists()) {
-                ref->CreateInstance(llvm, GetIR(), scope);
+                ref->CreateInstance(llvm, GetIR(), scope, false);
             }
         }
 
@@ -46,6 +46,7 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
         // String? Release previous value
         if (value_type.type == Primitive::STRING) {
             llvm.ClearPermString(ref->GetValue(ProcessIndices(ref, s), llvm, GetIR(), token).value, GetIR());
+            llvm.MakePermString(value_type.value, GetIR());
         }
 
         // And finally save the value
@@ -105,12 +106,12 @@ void Compiler::TokenSwap(ParserToken &t) {
     if (!var1->InstanceExists())
         VariableNotFound(t, var1->GetName());
     if (!var1->FindInstance())
-        RaiseException("Variable error", t);
+        VariableError(t, var1->GetName());
     auto var2 = Reference::Get(t.children[1].reference);
     if (!var2->InstanceExists())
         VariableNotFound(t, var1->GetName());
     if (!var2->FindInstance())
-        RaiseException("Variable error", t);
+        VariableError(t, var2->GetName());
 
     if (var1->GetDataType() != var2->GetDataType()) {
         RaiseException("Types must be the same for SWAP", t);
@@ -177,11 +178,11 @@ void Compiler::TokenDim(ParserToken &t) {
     if (procedure == nullptr) {
         if (t.scope != Scope::GLOBAL) return;
         CreateGlobalDimensions(var, var->GetDataType(), llvm.TypeConversion(var->GetDataType()));
-        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL);
+        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL, false);
     } else {
         if (t.scope != Scope::LOCAL) return;
         CreateLocalDimensions(var, var->GetDataType(), llvm.TypeConversion(var->GetDataType()));
-        var->CreateInstance(llvm, GetIR(), Scope::LOCAL);
+        var->CreateInstance(llvm, GetIR(), Scope::LOCAL, false);
     }
 }
 

@@ -17,20 +17,18 @@ void Compiler::TokenStructInstance(ParserToken &t) {
 
     // Do we have this struct?
     if (!state.StructExists(ref->GetStructName()))
-        RaiseException("Record '" + ref->GetStructName() + "' not found", t);
+        RecordNotFound(t, ref->GetStructName());
 
     // So fetch the struct info from LLVM and the parser
     auto struct_index = state.GetStructIndex(ref->GetStructName());
     auto si = state.GetStruct(struct_index);
-    auto llvm_struct = llvm.GetStruct(ref->GetStructName());
 
     // Start creating an instance
     if (Instance::Exists(ref->GetName())) {
         VariableAlreadyExists(t, ref->GetName());
     }
 
-    ref->SetLLVMStructType(llvm_struct);
-    ref->CreateInstance(llvm, GetIR(), t.scope);
+    ref->CreateInstance(llvm, GetIR(), t.scope, false);
     auto instance = ref->GetInstance();
 
     // Initialise any fields?
@@ -55,7 +53,7 @@ void Compiler::TokenStructArray(ParserToken &t) {
 
     // Do we have this struct?
     if (!state.StructExists(var->GetStructName()))
-        RaiseException("Record '" + var->GetStructName() + "' not found", t);
+        RecordNotFound(t, var->GetStructName());
 
     // So fetch the struct info from LLVM and the parser
     auto llvm_struct = llvm.GetStruct(var->GetStructName());
@@ -63,10 +61,10 @@ void Compiler::TokenStructArray(ParserToken &t) {
     if (procedure == nullptr) {
         if (t.scope != Scope::GLOBAL) return;
         CreateGlobalDimensions(var, Primitive::NONE, llvm_struct);
-        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL);
+        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL, false);
     } else {
         if (t.scope != Scope::LOCAL) return;
         CreateLocalDimensions(var, Primitive::NONE, llvm_struct);
-        var->CreateInstance(llvm, GetIR(), Scope::LOCAL);
+        var->CreateInstance(llvm, GetIR(), Scope::LOCAL, false);
     }
 }

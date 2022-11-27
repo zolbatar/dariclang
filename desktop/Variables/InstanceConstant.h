@@ -18,8 +18,10 @@ public:
     size_t IndicesCount() override { return 0; }
     Primitive GetType() override { return type; }
     InstanceType GetInstanceType() override { return InstanceType::PRIMITIVE; }
-    std::string &GetStructName() override { assert(0); return name; }
-    llvm::StructType *GetStructType() override { assert(0); return nullptr; };
+    std::string &GetStructName() override {
+        assert(0);
+        return name;
+    }
 
     void Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) override;
     void Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) override { assert(0); };

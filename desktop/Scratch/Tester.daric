@@ -270,7 +270,9 @@ DEF Chrono
 	PRINT
 ENDDEF
 
-DEF SendParameter(A,B OF Float,C$ OF String)
+DEF SendParameter(  A,
+                    B OF Float,
+                    C$ OF String)
 	PRINT "Send parameter%    = ";:IF A = 25 Pass() ELSE Fail()
 	PRINT "Send parameter#    = ";:IF B = 123.1 Pass() ELSE Fail()
 	PRINT "Send parameter$    = ";:IF C$ = "Test" Pass() ELSE Fail()
@@ -280,7 +282,40 @@ DEF Functions
 	PRINT "::Functions::"
 	RetValues()
  	SendParameter(15+10,123.1,"Test")
+    AA=100:B="Old value"
+    DIM AB OF INT[10]
+    RefInt(AA)
+	PRINT "Int by reference   = ";:IF AA = 500 Pass() ELSE Fail()
+    RefInt(AB[5])
+	PRINT "Int by ref. array  = ";:IF AB[5] = 500 Pass() ELSE Fail()
+    RefInt(a1d[5])
+	PRINT "Int by g.ref. array= ";:IF a1d[5] = 500 Pass() ELSE Fail()
+    RefString(B)
+	PRINT "String by ref.     = ";:IF B = "New value" Pass() ELSE Fail()
+    locrec = RECORD OF COORDINATE(x=12.56)
+    TestRec(locrec)
+	PRINT "Record by ref.     = ";:IF locrec.y = 111.22 Pass() ELSE Fail()
+    DIM RECORD locarray OF COORDINATE[5]
+    TestRecArray(locarray[2])
+    PRINT locarray[2].y
+	PRINT "Record by ref. arr = ";:IF locarray[2].y = 222.44 Pass() ELSE Fail()
 	PRINT
+ENDDEF
+
+DEF TestRecArray(REF A RECORD OF COORDINATE)
+    A.y = 222.44
+ENDDEF
+
+DEF RefInt(REF A)
+    A=500
+ENDDEF
+
+DEF RefString(REF A OF STRING)
+    A="New value"
+ENDDEF
+
+DEF TestRec(REF A RECORD OF COORDINATE)
+    A.y = 111.22
 ENDDEF
 
 DEF Records

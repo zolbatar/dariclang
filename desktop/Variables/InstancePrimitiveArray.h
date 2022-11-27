@@ -21,7 +21,6 @@ public:
     Primitive GetType() override { return type; }
     InstanceType GetInstanceType() override { return InstanceType::ARRAY; }
     std::string &GetStructName() override { assert(0); return name; }
-    llvm::StructType *GetStructType() override { assert(0); return nullptr; };
 
     void Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) override;
     void Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) override;

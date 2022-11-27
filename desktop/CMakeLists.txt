@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
 #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-set(CMAKE_OSX_ARCHITECTURES "arm64")
+set(CMAKE_OSX_ARCHITECTURES "x86_64")
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -60,6 +60,7 @@ add_executable(${PROJECT_NAME}
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
 
+        ../runtime/KeyboardMouse.cpp
         ../runtime/FontsText.cpp
         ../runtime/FileIO.cpp
         ../runtime/Random.cpp

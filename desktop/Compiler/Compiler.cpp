@@ -4,7 +4,7 @@
 #include "Compiler.h"
 #include "llvm/Bitcode/BitcodeWriter.h"
 
-//#define CATCH_ERRORS 1
+#define CATCH_ERRORS 1
 //#define PERF 1
 
 bool Compiler::Compile() {
@@ -40,6 +40,9 @@ bool Compiler::Compile() {
             case ParserTokenType::PROCEDURE:
                 CreateLookaheadProc(token);
                 break;
+            case ParserTokenType::STRUCT:
+                TokenStruct(token);
+                break;
             default:
                 // Do nothing
                 break;
@@ -71,9 +74,7 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::NONE:
             case ParserTokenType::PARAMETER:
             case ParserTokenType::PARAMETER_REF:
-                break;
             case ParserTokenType::STRUCT:
-                TokenStruct(token);
                 break;
             case ParserTokenType::STRUCT_INSTANCE:
                 TokenStructInstance(token);
@@ -174,6 +175,7 @@ void Compiler::TokenEnd(ParserToken &token) {
     if (!options.use_exit_as_end) {
         llvm.StoreGlobal("~QuitRequested", GetIR(), llvm.CreateConstantInt(Primitive::INT, 1));
         GetIR()->CreateRetVoid();
+        CreateAndInsertBB("Post set quit requested", false, token);
     } else {
         CreateCall("daric_end", {});
     }

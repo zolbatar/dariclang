@@ -1,7 +1,34 @@
-A=100
-TEST(A)
-PRINT A
+defrecord MyRec
+    x int
+    y int
+endrecord
 
-DEF TEST(REF A)
-    A=200
-ENDDEF
+#DIM aaa of INT[10]
+#aaa[2] = 10
+#Tessss(aaa[2])
+#PRINT aaa[2]
+
+#Test()
+#A=RECORD OF MyRec
+#A.y=100
+
+DIM RECORD aa of MyRec[5]
+aa[2].y=10
+TestRec(aa[2])
+print aa[2].y
+
+#DEF Tessss(REF a)
+#a=100
+#ENDDEF
+
+#DEF Test()
+#DIM RECORD aaa of MyRec[5]
+#TestRec(aaa[2])
+#print aaa[2].y
+#ENDDEF
+
+def TestRec(REF A record of MyRec)
+    PRINT A.y
+    A.y = 100
+enddef
+

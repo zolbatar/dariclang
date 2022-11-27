@@ -4,6 +4,8 @@
 #include "../Grammar/DaricParser.h"
 #include "../Exception/Exception.h"
 
+const int line_length_scan = 1024;
+
 class DaricErrorListener : public antlr4::BaseErrorListener {
     void syntaxError(antlr4::Recognizer *recognizer,
                      antlr4::Token *offendingSymbol,
@@ -11,6 +13,39 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
                      size_t charPositionInLine,
                      const std::string &msg,
                      std::exception_ptr e) override {
-        throw CustomException(ExceptionType::PARSER, line, charPositionInLine, msg);
+
+        // Get some characters around the error position
+        auto stream = offendingSymbol->getInputStream();
+        auto start = (int64_t) offendingSymbol->getStartIndex() - line_length_scan;
+        if (start < 0) start = 0;
+        auto end = (int64_t) offendingSymbol->getStopIndex() + line_length_scan;
+        if (end > stream->size()) end = stream->size() - 1;
+        antlr4::misc::Interval interval((unsigned long) start, (unsigned long) end);
+        auto ee = stream->getText(interval);
+
+        // Now scan for start of line
+        int cc = 0;
+        for (auto i = (offendingSymbol->getStartIndex() - start); i >= 0; i--) {
+            if (ee[i] == '\n') {
+                ee = ee.substr(i + 1);
+                break;
+            }
+            cc++;
+        }
+
+        // Now scan for end of line
+        for (auto i = 0; i < ee.size(); i++) {
+            if (ee[i] == '\n') {
+                ee = ee.substr(0, i);
+                break;
+            }
+        }
+
+        // Now show error place
+        std::cout << ee << std::endl;
+        for (auto i = 0; i < cc-1; i++)
+            std::cout << " ";
+        std::cout << "^" << std::endl;
+        throw CustomException(ExceptionType::PARSER, line, charPositionInLine, "Parsing error");
     }
 };

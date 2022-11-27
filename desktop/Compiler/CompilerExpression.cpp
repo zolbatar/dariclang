@@ -26,7 +26,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             if (!ref->InstanceExists())
                 VariableNotFound(t, ref->GetName());
             if (!ref->FindInstance()) {
-                RaiseException("Variable error", t);
+                VariableError(t, ref->GetName());
             }
             return ref->GetValue(ProcessIndices(ref, t), llvm, GetIR(), t);
         }
@@ -49,8 +49,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 auto i = 0;
                 for (auto &s: t.children) {
                     auto vt = CompileExpression(s);
-                    llvm.AutoConversion(GetIR(), vt, lf->second.parameters[i]);
-                    if (vt.type != lf->second.parameters[i]) {
+                    if (!lf->second.parameters[i].ConvertToOutputValue(vt, GetIR(), llvm)) {
                         RaiseException("Parameter mismatch", t);
                     }
                     vals.push_back(vt.value);
@@ -58,6 +57,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 }
 
                 ValueType vt;
+                std::cout << lf->second.func_name << std::endl;
                 vt.value = CreateCall(lf->second.func_name, vals);
                 vt.type = lf->second.return_Type;
 
@@ -80,7 +80,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             auto i = 0;
             for (auto &s: t.children) {
                 auto vt = CompileExpression(s);
-				if (!f->parameters[i].ConvertToOutputValue(vt, GetIR(), llvm)) {
+                if (!f->parameters[i].ConvertToOutputValue(vt, GetIR(), llvm)) {
                     RaiseException("Parameter mismatch", t);
                 }
                 vals.push_back(vt.value);
