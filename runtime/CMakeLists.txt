@@ -16,6 +16,12 @@ include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
 add_library(sdl2-runtime STATIC IMPORTED)
 SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
 
+# ASSIMP
+set(ASSIMP_DIR "/Users/daryl/GitHub/assimp")
+include_directories(${ASSIMP_DIR}/include)
+add_library(assimp-runtime STATIC IMPORTED)
+SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
+
 add_library(DaricRuntime STATIC
         main.cpp
 
@@ -25,6 +31,13 @@ add_library(DaricRuntime STATIC
         UI/Console/Console.cpp
         UI/Sprite.cpp
         UI/Text.cpp
+
+        Graphics3D.cpp
+        Graphics3D/EngineWorld.cpp
+        Graphics3D/EngineShapeSection.cpp
+        Graphics3D/EngineShape.cpp
+        Graphics3D/EngineOpenGL3SendObject.cpp
+        Graphics3D/EngineOpenGL3.cpp
 
         ${IMGUI_DIR}/imgui_draw.cpp
         ${IMGUI_DIR}/imgui_tables.cpp
@@ -46,4 +59,4 @@ add_library(DaricRuntime STATIC
         Random.cpp
         Types.h
         Core.cpp Gfx2D.cpp)
-target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime)
+target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime assimp-runtime)

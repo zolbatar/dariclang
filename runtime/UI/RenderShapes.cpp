@@ -4,26 +4,11 @@
 #include "Console/Console.h"
 #include "RenderShapes.h"
 #include "UISDL.h"
-//#include "../Runtime/Software3D/Engine.h"
+#include "../Graphics3D/Engine.h"
 
-//extern World world;
+extern World world;
 extern Console console;
 std::mutex shapes_lock;
-
-void UISDL::ChangeMode(int64_t w, int64_t h, Mode mode) {
-    this->mode = mode;
-/*	if (native_resolution)
-	{
-		console.Setup(sdl.getDesktopScreenWidth(), sdl.getDesktopScreenHeight(), sdl.GetDPIRatio(), sdl.getDesktopScreenWidth() / 16,
-			sdl.getDesktopScreenHeight() / 32, filename != "", mode == Mode::BANKED);
-	}
-	else
-	{
-		console.Setup(legacyX, legacyY, sdl.GetDPIRatio(), w / 8, h / 8, filename != "", mode == Mode::BANKED);
-	}
-	newBufferNeeded = true;*/
-    Cls();
-}
 
 void UISDL::SetFGColour(ImU32 colour) {
     fgColour = colour;

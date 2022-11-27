@@ -2,7 +2,7 @@
 #imgui/1.88@
 #sdl/2.24.1
 #opengl/system
-#glm/0.9.9.8
+glm/0.9.9.8
 #cli11/2.2.0
 #assimp/5.2.2
 #box2d/2.4.1

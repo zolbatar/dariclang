@@ -24,6 +24,12 @@ include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
 add_library(sdl2-runtime STATIC IMPORTED)
 SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
 
+# ASSIMP
+set(ASSIMP_DIR "/Users/daryl/GitHub/assimp")
+include_directories(${ASSIMP_DIR}/include)
+add_library(assimp-runtime STATIC IMPORTED)
+SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
+
 # LLVM
 set(CORE_LLVM_DIR /Users/daryl/GitHub/llvm-project/)
 include_directories(
@@ -83,6 +89,12 @@ add_executable(${PROJECT_NAME}
         ../runtime/Input/Input.cpp
         ../runtime/Input/Input.h
         ../runtime/Sprites.cpp
+        ../runtime/Graphics3D.cpp
+        ../runtime/Graphics3D/EngineOpenGL3.cpp
+        ../runtime/Graphics3D/EngineOpenGL3SendObject.cpp
+        ../runtime/Graphics3D/EngineShape.cpp
+        ../runtime/Graphics3D/EngineShapeSection.cpp
+        ../runtime/Graphics3D/EngineWorld.cpp
 
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
@@ -178,6 +190,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
         zstd-lib
         -lxar -liconv
         sdl2-runtime
+        assimp-runtime
         ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${SDL2_DIR}/libSDL2.a /Users/daryl/Shared/Daric/mac/)

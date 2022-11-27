@@ -1,9 +1,9 @@
 #include <iostream>
 #include <atomic>
 #include <memory>
-#include <mutex>
 #include <thread>
 #include "UISDL.h"
+#include "../Graphics3D/Engine.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -16,10 +16,9 @@ extern Console console;
 extern Sprites sprite;
 extern size_t sprite_index;
 extern Input input;
-//extern World world;
+extern World world;
 size_t frame_count = 0;
 //extern SoftSynth soft_synth;
-//ImDrawListSharedData UISDL::sharedDataBackBuffer;
 
 UISDL::UISDL() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -125,8 +124,8 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
                   false);
 
     // 3D
-    //Create3DBuffer();
-//    world.SetupOpenGL3();
+    Create3DBuffer();
+    world.SetupOpenGL3();
 
     // Setup Platform/Renderer backends
     std::cout << "Setting up Dear ImGui backend" << std::endl;
@@ -200,28 +199,26 @@ bool UISDL::Render() {
 
 
         // Render shadows
-/*                if (world.shadows) {
-                    glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
-                    world.RenderOpenGL3Shadow();
-                    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-                }
+        if (world.shadows) {
+            glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
+            world.RenderOpenGL3Shadow();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
 
-                // Render 3D
-                world.Cleanup();
-                if (!msaa)
-                    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
-                else
-                    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D_msaa);
-                world.RenderOpenGL3(depthTexture);
-                if (msaa) {
-                    glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo3D_msaa);
-                    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
-                    glBlitFramebuffer(0, 0, desktop_screen_width, desktop_screen_height, 0, 0, desktop_screen_width,
-                                      desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-                }
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);*/
-
-//                Render(); // For 3D
+        // Render 3D
+        world.Cleanup();
+        if (!msaa)
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
+        else
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D_msaa);
+        world.RenderOpenGL3(depthTexture);
+        if (msaa) {
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo3D_msaa);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
+            glBlitFramebuffer(0, 0, desktop_screen_width, desktop_screen_height, 0, 0, desktop_screen_width,
+                              desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        }
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
         RenderShapes();
         console.Update(fontMono);
@@ -336,7 +333,7 @@ void UISDL::Create3DBuffer() {
     }
 
     // Depth buffer (for shadows)
-/*    glGenFramebuffers(1, &depthFB);
+    glGenFramebuffers(1, &depthFB);
     glGenTextures(1, &depthTexture);
     glBindTexture(GL_TEXTURE_2D, depthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, world.shadow_width * world.shadow_precision,
@@ -350,7 +347,7 @@ void UISDL::Create3DBuffer() {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
     glDrawBuffer(GL_NONE);
     glReadBuffer(GL_NONE);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Always check that our framebuffer is ok
     s = glCheckFramebufferStatus(GL_FRAMEBUFFER);

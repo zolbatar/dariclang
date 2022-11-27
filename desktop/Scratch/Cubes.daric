@@ -1,54 +1,53 @@
-CONST PROP%=0,MONO%=1,SERIF%=2
-CONST SOLID%=0,WIREFRAME%=1
-cube_shp%=0
-MODEB -1,-1
-w%=SCREENWIDTH()
-h%=SCREENHEIGHT()
+CONST PROP=0,MONO=1,SERIF=2
+CONST SOLID=0,WIREFRAME=1
+cube_shp=0
+
+MODE 1280,1024,BANKED OR WINDOWED
+w=SWIDTH()
+h=SHEIGHT()
 
 CreateCube()
-s%=2
-cube1%=OBJECT(cube_shp%, -s%, 0, 0, 0, 0, 0, s%, SOLID%)
-cube2%=OBJECT(cube_shp%, s%, 0, 0, 0, 0, 0, s%, WIREFRAME%)
+cube1=OBJECT(cube_shp, -2, 0, 0, 0, 0, 0, 2, SOLID)
+cube2=OBJECT(cube_shp, 2, 0, 0, 0, 0, 0, 2, WIREFRAME)
 CAMERA 0,5,10,0,1,0,0,0,0
-SETFONT PROP%, 30
+SETFONT PROP, 30
 FG &FF,&FF,&FF
-FOR R# = 0.0 TO 360.0 STEP 0.25
+FOR R = 0.0 TO 360.0 STEP 0.25
     CLS
-    TEXTCENTRE w%/2, h%/2-30, "This is some text behind 3D objects!!"
-    ROTATE cube1%, 0, R#, 0
-    ROTATE cube2%, 0, 360.0 - R#, 0
+    TEXTCENTRE w/2, h/2-30, "This is some text behind 3D objects!!"
+    ROTATE cube1, 0, R, 0
+    ROTATE cube2, 0, 360.0 - R, 0
     RENDER
-    TEXTCENTRE w%/2, h%/2+30, "This is some text on top of 3D!!"
-    PRINT "Some normal text"
+    TEXTCENTRE w/2, h/2+30, "This is some text on top of 3D!!"
     FLIP
 NEXT
-DELETEOBJECT cube1%
-DELETEOBJECT cube2%
-DELETESHAPE cube_shp%
+OBJECTDELETE cube1
+OBJECTDELETE cube2
+SHAPEDELETE cube_shp
 
 REM ** Create a random RGB colour **
-DEF GetRandomColour%()
+DEF GetRandomColour() OF INT
 	RETURN COLOUR(RND(180)+64,RND(180)+64,RND(180)+64)
 ENDDEF
 
 DEF CreateCube()
 	REM ** Build vertices **
-    col%=GetRandomColour%()
-	VERTEX -0.5,  0.5,  0.5, col%
-	VERTEX  0.5,  0.5,  0.5, col%
-	VERTEX  0.5, -0.5,  0.5, col%
-	VERTEX -0.5, -0.5,  0.5, col%
-	VERTEX -0.5,  0.5, -0.5, col%
-	VERTEX  0.5,  0.5, -0.5, col%
-	VERTEX  0.5, -0.5, -0.5, col%
-	VERTEX -0.5, -0.5, -0.5, col%
+    col=GetRandomColour()
+	VERTEX -0.5,  0.5,  0.5, col
+	VERTEX  0.5,  0.5,  0.5, col
+	VERTEX  0.5, -0.5,  0.5, col
+    VERTEX -0.5, -0.5,  0.5, col
+	VERTEX -0.5,  0.5, -0.5, col
+	VERTEX  0.5,  0.5, -0.5, col
+	VERTEX  0.5, -0.5, -0.5, col
+	VERTEX -0.5, -0.5, -0.5, col
 
 	REM ** Build triangle faces **
-	col%=GetRandomColour%():FACE 4, 2, 1, col%:FACE 4, 3, 2, col%:REM Front
-    col%=GetRandomColour%():FACE 6, 7, 8, col%:FACE 6, 8, 5, col%:REM Back
-	col%=GetRandomColour%():FACE 4, 8, 7, col%:FACE 4, 7, 3, col%:REM Top
-	col%=GetRandomColour%():FACE 5, 1, 2, col%:FACE 6, 2, 5, col%:REM Bottom
-	col%=GetRandomColour%():FACE 5, 8, 4, col%:FACE 5, 4, 1, col%:REM Left
-	col%=GetRandomColour%():FACE 2, 3, 7, col%:FACE 2, 7, 6, col%:REM Right
-	cube_shp%=SHAPE()
+	col=GetRandomColour():FACE 3, 1, 0, col:FACE 3, 2, 1, col:REM Front
+    col=GetRandomColour():FACE 5, 6, 7, col:FACE 5, 7, 4, col:REM Back
+	col=GetRandomColour():FACE 3, 7, 6, col:FACE 3, 6, 2, col:REM Top
+	col=GetRandomColour():FACE 4, 0, 1, col:FACE 5, 1, 4, col:REM Bottom
+	col=GetRandomColour():FACE 4, 7, 3, col:FACE 4, 3, 0, col:REM Left
+	col=GetRandomColour():FACE 1, 2, 6, col:FACE 1, 6, 5, col:REM Right
+	cube_shp=SHAPE()
 ENDDEF

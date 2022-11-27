@@ -57,7 +57,6 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 }
 
                 ValueType vt;
-                std::cout << lf->second.func_name << std::endl;
                 vt.value = CreateCall(lf->second.func_name, vals);
                 vt.type = lf->second.return_Type;
 
