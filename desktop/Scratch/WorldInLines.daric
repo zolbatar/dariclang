@@ -1,46 +1,39 @@
-#MODE 1280,1024,WINDOWED
-#w=SWIDTH():h=SHEIGHT()
-w=1280:h=1024
+MODE -1,-1,BANKED
+w=SWIDTH():h=SHEIGHT()
 CONST PROP%=0,c1%=-300,ys%=20:ms%=100
 DEFRECORD MapPoint x OF FLOAT:y OF FLOAT ENDRECORD
-gCentrex=0.0:gCentrey=0.0:gScale=30.0:gRound=100.0
+gCentrex=0.0:gCentrey=0.0:gScale=3.0:gRound=100.0
 DIM RECORD p OF MapPoint[1000000]
 
 CLS
-PRINT "Loading territory polygons...";
 c%=DIR("GIS")
-PRINT " files"
-PRINT "Loading";
 points=0
 FOR I%=0 TO c%-1
     p$=DIRENTRY(I%)
-    PRINT ".";
     LoadPolygon(p$)
 NEXT
-PRINT
-PRINT "Rendering..."
 x=0:y=0:buttons%=0:last_x=0:last_y=0:dragging%=0:render%=1
 REPEAT
     IF render%=1 Render():render%=0
-#    x=MOUSEX():y=MOUSEY():buttons%=MOUSESTATE()
-#    IF (buttons% AND 4) = 4 THEN
-#        IF dragging% =0 THEN
-#            last_x=MOUSEX():last_y=MOUSEY():buttons%=MOUSESTATE()
-#            dragging%=1
-#        ELSE
-#            dx=x-last_x:dy=y-last_y
-#            gCentrex=gCentrex+dx/gScale
-#            gCentrey=gCentrey-dy/gScale
-#            last_x=x:last_y=y
-#            render%=1
-#        ENDIF
-#    ELSE
-#        dragging%=0
-#    ENDIF
-#    IF KEYDOWN(KEY_Z%) = 1 gScale=gScale+0.5:render%=1
-#    IF KEYDOWN(KEY_x) = 1 gScale=gScale-0.5:render%=1
+    x=MOUSEX():y=MOUSEY():buttons%=MOUSESTATE()
+    IF (buttons% AND 4) = 4 THEN
+        IF dragging% =0 THEN
+            last_x=MOUSEX():last_y=MOUSEY():buttons%=MOUSESTATE()
+            dragging%=1
+        ELSE
+            dx=x-last_x:dy=y-last_y
+            gCentrex=gCentrex+dx/gScale
+            gCentrey=gCentrey-dy/gScale
+            last_x=x:last_y=y
+            render%=1
+        ENDIF
+    ELSE
+        dragging%=0
+    ENDIF
+    IF KEYDOWN(KEY_Z) = 1 gScale=gScale+0.5:render%=1
+    IF KEYDOWN(KEY_X) = 1 gScale=gScale-0.5:render%=1
     IF KEYDOWN(KEY_P) = 1 Animate()
-#    IF gScale < 1.0 gScale=1.0:render%=1
+    IF gScale < 1.0 gScale=1.0:render%=1
 UNTIL KEYDOWN(KEY_ESCAPE) = 1
 
 DEF Animate()
@@ -91,7 +84,7 @@ DEF Render()
 	TEXTCENTRE w / 2, 0, "Press left mouse button to drag"+CHR$(10)
 	TEXTCENTRE w / 2, -1, "z - Zoom In, x - Zoom Out, p - Animate, q - Quit"+CHR$(10)
 	TEXTCENTRE w / 2, -1, String(points) + "/400370 points"
-#	FLIP
+	FLIP
 ENDDEF
 
 DEF LoadPolygon(filename$ STRING)
@@ -99,7 +92,6 @@ DEF LoadPolygon(filename$ STRING)
 	skip=0
 	WHILE EOF(f%)=0
 		S$=SGET(f%)
-		PRINT S$
 		IF LEN(S$) > 0 THEN
 			IF S$ = "---" THEN
                 p[points].x = 0.0
@@ -110,18 +102,10 @@ DEF LoadPolygon(filename$ STRING)
 				skip=skip+1
                 p1%=INSTR(S$, ",", 1)
                 p2%=LEN(S$)
-                PRINT S$
-                PRINT p1%
-                PRINT p2%
                 s1$=MID$(S$,1,p1%-1)
-                PRINT s1$
                 s2$=MID$(S$,p1%+1,p2%-p1%)
-                PRINT s2$
-                END
                 p[points].y = FLOAT(s1$)
                 p[points].x = FLOAT(s2$)
-                PRINT p[points].x;
-                PRINT p[points].y
                 points=points+1
                 skip=0
 			ENDIF
@@ -129,7 +113,6 @@ DEF LoadPolygon(filename$ STRING)
 			CLOSE f%
 			RETURN
 		ENDIF
-		END
 	ENDWHILE
 	CLOSE(f%)
 ENDDEF

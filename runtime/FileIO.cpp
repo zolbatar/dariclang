@@ -85,7 +85,8 @@ extern "C" T_S fileio_getsh(T_I channel) {
     }
 
     // Copy string and add to free stack
-    auto m = (char *) malloc(strlen(buffer) + 1);
+    auto m = (char *) malloc(strlen(buffer));
+    buffer[strlen(buffer)-1]=0;
     strcpy(m, buffer);
     return m;
 }
