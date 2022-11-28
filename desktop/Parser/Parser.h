@@ -119,6 +119,7 @@ protected:
     std::any visitDataLabel(DaricParser::DataLabelContext *context);
     std::any visitRestore(DaricParser::RestoreContext *context);
     std::any visitRead(DaricParser::ReadContext *context);
+    std::any visitOption(DaricParser::OptionContext *context);
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

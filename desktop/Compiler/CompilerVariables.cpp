@@ -45,12 +45,12 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
 
         // String? Release previous value
         if (value_type.type == Primitive::STRING) {
-            llvm.ClearPermString(ref->GetValue(ProcessIndices(ref, s), llvm, GetIR(), token).value, GetIR());
+            llvm.ClearPermString(ref->GetValue(option_base, ProcessIndices(ref, s), llvm, GetIR(), token).value, GetIR());
             llvm.MakePermString(value_type.value, GetIR());
         }
 
         // And finally save the value
-        ref->SetValue(value_type, ProcessIndices(ref, s), llvm, GetIR(), token);
+        ref->SetValue(option_base, value_type, ProcessIndices(ref, s), llvm, GetIR(), token);
     }
 
     // String?
@@ -117,10 +117,10 @@ void Compiler::TokenSwap(ParserToken &t) {
         RaiseException("Types must be the same for SWAP", t);
     }
 
-    auto v1 = var1->GetValue(ProcessIndices(var1, t), llvm, GetIR(), t);
-    auto v2 = var2->GetValue(ProcessIndices(var2, t), llvm, GetIR(), t);
-    var1->SetValue(v2, ProcessIndices(var1, t), llvm, GetIR(), t);
-    var2->SetValue(v1, ProcessIndices(var2, t), llvm, GetIR(), t);
+    auto v1 = var1->GetValue(option_base, ProcessIndices(var1, t), llvm, GetIR(), t);
+    auto v2 = var2->GetValue(option_base, ProcessIndices(var2, t), llvm, GetIR(), t);
+    var1->SetValue(option_base, v2, ProcessIndices(var1, t), llvm, GetIR(), t);
+    var2->SetValue(option_base, v1, ProcessIndices(var2, t), llvm, GetIR(), t);
 }
 
 void Compiler::CreateLocalDimensions(Reference *var, Primitive type1, llvm::Type *type2) {

@@ -28,15 +28,21 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             if (!ref->FindInstance()) {
                 VariableError(t, ref->GetName());
             }
-            return ref->GetValue(ProcessIndices(ref, t), llvm, GetIR(), t);
+            return ref->GetValue(option_base, ProcessIndices(ref, t), llvm, GetIR(), t);
         }
         case ParserTokenType::CALL: {
             auto rr = procedures.find(t.identifier);
             if (rr == procedures.end()) {
+
                 // Check library
                 auto lf = library.find(t.identifier);
                 if (lf == library.end()) {
                     ProcedureNotFound(t, t.identifier);
+                }
+
+                // Return type?
+                if (lf->second.return_Type == Primitive::NONE) {
+                    RaiseException("No return type for procedure", t);
                 }
 
                 // Right number of parameters?
@@ -68,6 +74,11 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 return vt;
             }
             auto f = &rr->second;
+
+            // Return type?
+            if (f->return_type == Primitive::NONE) {
+                RaiseException("No return type for procedure", t);
+            }
 
             // Right number of parameters?
             if (t.children.size() != f->parameters.size()) {

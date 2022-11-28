@@ -95,7 +95,7 @@ void Compiler::TokenFor(ParserToken &t) {
     }
 
     // Set init loop variable value
-    ref->SetValue(from, std::vector<ValueType>(), llvm, GetIR(), t);
+    ref->SetValue(option_base, from, std::vector<ValueType>(), llvm, GetIR(), t);
 
     // Flag to indicate completion
     auto temp_name = GetScratchName(t.line);
@@ -115,9 +115,9 @@ void Compiler::TokenFor(ParserToken &t) {
     AddBB(bodyEndBB);
 
     // Add step to loop variable
-    auto v = ref->GetValue(std::vector<ValueType>(), llvm, GetIR(), t);
+    auto v = ref->GetValue(option_base, std::vector<ValueType>(), llvm, GetIR(), t);
     auto nv = llvm.MathsAdd(GetIR(), v, step);
-    ref->SetValue(nv, std::vector<ValueType>(), llvm, GetIR(), t);
+    ref->SetValue(option_base, nv, std::vector<ValueType>(), llvm, GetIR(), t);
 
     // Have we completed?
     auto cond = llvm.ComparisonEQ(GetIR(), nv, to);

@@ -26,6 +26,7 @@ statement
     | if
     | ifml
     | module
+    | option
     | procedure
     | print
     | read
@@ -57,6 +58,7 @@ for:            FOR IDENTIFIER (OF? type)? EQ expression TO expression (STEP exp
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
 module:         MODULE IDENTIFIER ;
+option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
 parameter:      REF? ((IDENTIFIER (OF? type)?) | (IDENTIFIER RECORD OF? IDENTIFIER)) ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      DEF IDENTIFIER LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? (OF? type)? separator* statements ENDDEF ;
@@ -201,8 +203,6 @@ stringLiteral
     : STRINGLITERAL
     ;
 
-
-
 COMMENT         : (REM | HASH) ~ [\r\n]* ;
 
 CASE            : 'CASE' | 'Case' | 'case' ;
@@ -222,6 +222,7 @@ IF              : 'IF' | 'If' | 'if' ;
 MODULE          : 'MODULE' | 'Module' | 'module' ;
 NEXT            : 'NEXT' | 'Next' | 'next' ;
 OF              : 'OF' | 'Of' | 'of' ;
+OPTION          : 'OPTION' | 'Option' | 'option' ;
 OTHERWISE       : 'OTHERWISE' | 'Otherwise' | 'otherwise' ;
 PRINT           : 'PRINT' | 'Print' | 'print' ;
 READ            : 'READ' | 'Read' | 'read' ;

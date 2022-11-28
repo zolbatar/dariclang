@@ -57,6 +57,8 @@ public:
 
     virtual std::any visitModule(DaricParser::ModuleContext *context) = 0;
 
+    virtual std::any visitOption(DaricParser::OptionContext *context) = 0;
+
     virtual std::any visitParameter(DaricParser::ParameterContext *context) = 0;
 
     virtual std::any visitPrint(DaricParser::PrintContext *context) = 0;

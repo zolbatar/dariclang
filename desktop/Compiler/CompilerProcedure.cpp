@@ -119,7 +119,7 @@ void Compiler::TokenCall(ParserToken &token) {
             if (!ref->FindInstanceUnknownInstanceType()) {
                 VariableError(s, ref->GetName());
             }
-            auto value = ref->GetPointer(ProcessIndices(ref, s), llvm, GetIR(), s);
+            auto value = ref->GetPointer(option_base, ProcessIndices(ref, s), llvm, GetIR(), s);
             vals.push_back(value);
         }
         i++;

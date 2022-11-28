@@ -91,6 +91,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitOption(DaricParser::OptionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitParameter(DaricParser::ParameterContext *ctx) override {
     return visitChildren(ctx);
   }

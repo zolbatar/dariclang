@@ -90,7 +90,7 @@ void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope 
     }
 }
 
-void Reference::SetValue(ValueType vt,
+void Reference::SetValue(bool option_base, ValueType vt,
                          const std::vector<ValueType> &indices_val,
                          CompilerLLVM &llvm,
                          llvm::IRBuilder<> *ir,
@@ -101,8 +101,8 @@ void Reference::SetValue(ValueType vt,
             break;
         case InstanceType::ARRAY:
             instance->Set(vt.value, instance->GetScope() == Scope::GLOBAL
-                                    ? GlobalIndex(indices_val, llvm, ir)
-                                    : LocalIndex(indices_val, llvm, ir),
+                                    ? GlobalIndex(option_base, indices_val, llvm, ir)
+                                    : LocalIndex(option_base, indices_val, llvm, ir),
                           0, llvm, ir);
             break;
         case InstanceType::RECORD: {
@@ -113,8 +113,8 @@ void Reference::SetValue(ValueType vt,
         case InstanceType::RECORD_ARRAY: {
             auto ss = FindFieldInStruct(token, llvm);
             instance->Set(vt.value, instance->GetScope() == Scope::GLOBAL
-                                    ? GlobalIndex(indices_val, llvm, ir)
-                                    : LocalIndex(indices_val, llvm, ir),
+                                    ? GlobalIndex(option_base, indices_val, llvm, ir)
+                                    : LocalIndex(option_base, indices_val, llvm, ir),
                           ss.index, llvm, ir);
             break;
         }
@@ -123,7 +123,7 @@ void Reference::SetValue(ValueType vt,
     }
 }
 
-llvm::Value *Reference::GetPointer(const std::vector<ValueType> &indices_val,
+llvm::Value *Reference::GetPointer(bool option_base, const std::vector<ValueType> &indices_val,
                                    CompilerLLVM &llvm,
                                    llvm::IRBuilder<> *ir,
                                    ParserToken &token) {
@@ -139,9 +139,9 @@ llvm::Value *Reference::GetPointer(const std::vector<ValueType> &indices_val,
         case InstanceType::ARRAY:
         case InstanceType::RECORD_ARRAY: {
             if (instance->GetScope() == Scope::GLOBAL) {
-                return GlobalIndex(indices_val, llvm, ir);
+                return GlobalIndex(option_base, indices_val, llvm, ir);
             } else if (instance->GetScope() == Scope::LOCAL) {
-                return LocalIndex(indices_val, llvm, ir);
+                return LocalIndex(option_base, indices_val, llvm, ir);
             }
         }
         default:
@@ -149,7 +149,7 @@ llvm::Value *Reference::GetPointer(const std::vector<ValueType> &indices_val,
     }
 }
 
-ValueType Reference::GetValue(const std::vector<ValueType> &indices_val,
+ValueType Reference::GetValue(bool option_base, const std::vector<ValueType> &indices_val,
                               CompilerLLVM &llvm,
                               llvm::IRBuilder<> *ir,
                               ParserToken &token) {
@@ -160,8 +160,8 @@ ValueType Reference::GetValue(const std::vector<ValueType> &indices_val,
             break;
         case InstanceType::ARRAY:
             instance->Get(vt, instance->GetScope() == Scope::GLOBAL
-                              ? GlobalIndex(indices_val, llvm, ir)
-                              : LocalIndex(indices_val, llvm, ir),
+                              ? GlobalIndex(option_base, indices_val, llvm, ir)
+                              : LocalIndex(option_base, indices_val, llvm, ir),
                           0, llvm, ir);
             break;
         case InstanceType::RECORD: {
@@ -174,8 +174,8 @@ ValueType Reference::GetValue(const std::vector<ValueType> &indices_val,
             auto ss = FindFieldInStruct(token, llvm);
             vt.type = ss.member->type;
             instance->Get(vt, instance->GetScope() == Scope::GLOBAL
-                              ? GlobalIndex(indices_val, llvm, ir)
-                              : LocalIndex(indices_val, llvm, ir),
+                              ? GlobalIndex(option_base, indices_val, llvm, ir)
+                              : LocalIndex(option_base, indices_val, llvm, ir),
                           ss.index, llvm, ir);
             break;
         }
@@ -205,7 +205,7 @@ StructSearch Reference::FindFieldInStruct(ParserToken &token, CompilerLLVM &llvm
     return ss;
 }
 
-llvm::Value *Reference::LocalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+llvm::Value *Reference::LocalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
     auto glob_v = llvm.GetLocal(name);
     auto glob = llvm.GetLocalArrayDimensions(name);
@@ -216,14 +216,18 @@ llvm::Value *Reference::LocalIndex(std::vector<ValueType> indices_val, CompilerL
                                  {llvm::ConstantInt::get(llvm.TypeInt, i)});
         auto size = ir->CreateLoad(llvm.TypeInt, ptr);
 
+        // 0 or 1 base index
+        auto value = indices_val[i + 1].value;
+        if (option_base) value = ir->CreateSub(value, llvm::ConstantInt::get(llvm.TypeInt, 1));
+
         // Now multiply this dimension and add to the current index
-        auto m = ir->CreateMul(size, indices_val[i + 1].value);
+        auto m = ir->CreateMul(size, value);
         index = ir->CreateAdd(index, m);
     }
     return ir->CreateGEP(glob_v->getAllocatedType(), glob_v, {index});
 }
 
-llvm::Value *Reference::GlobalIndexPtr(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+llvm::Value *Reference::GlobalIndexPtr(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
     auto glob = llvm.GetGlobalArrayDimensions(name);
     for (auto i = 0; i < indices_val.size() - 1; i++) {
@@ -232,16 +236,20 @@ llvm::Value *Reference::GlobalIndexPtr(std::vector<ValueType> indices_val, Compi
         auto ptr = ir->CreateGEP(llvm.TypeInt, glob, {llvm::ConstantInt::get(llvm.TypeInt, i)});
         auto size = ir->CreateLoad(llvm.TypeInt, ptr);
 
+        // 0 or 1 base index
+        auto value = indices_val[i + 1].value;
+        if (option_base) value = ir->CreateSub(value, llvm::ConstantInt::get(llvm.TypeInt, 1));
+
         // Now multiply this dimension and add to the current index
-        auto m = ir->CreateMul(size, indices_val[i + 1].value);
+        auto m = ir->CreateMul(size, value);
         index = ir->CreateAdd(index, m);
     }
     return index;
 }
 
-llvm::Value *Reference::GlobalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+llvm::Value *Reference::GlobalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     auto glob_v = llvm.GetGlobal(name);
-    auto index = GlobalIndexPtr(indices_val, llvm, ir);
+    auto index = GlobalIndexPtr(option_base, indices_val, llvm, ir);
     return ir->CreateGEP(glob_v->getValueType(), glob_v, {llvm::ConstantInt::get(llvm.TypeInt, 0), index});
 }
 

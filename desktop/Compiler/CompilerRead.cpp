@@ -21,7 +21,7 @@ void Compiler::TokenRead(ParserToken &t) {
 
         // And set variable
         vt.type = Primitive::INT;
-        ref->SetValue(vt, std::vector<ValueType>(), llvm, GetIR(), t);
+        ref->SetValue(option_base, vt, std::vector<ValueType>(), llvm, GetIR(), t);
 
         // Increment pointer
         auto vv = GetIR()->CreateAdd(index, llvm::ConstantInt::get(llvm.TypeInt, 1));

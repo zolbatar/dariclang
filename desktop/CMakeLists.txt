@@ -96,6 +96,9 @@ add_executable(${PROJECT_NAME}
         ../runtime/Graphics3D/EngineShapeSection.cpp
         ../runtime/Graphics3D/EngineWorld.cpp
 
+        Library/StringLib.h
+        Library/StringLib.cpp
+
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/Compiler.h
@@ -172,7 +175,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp)
+        Grammar/DaricVisitor.cpp Compiler/CompilerOption.cpp)
 target_link_libraries(${PROJECT_NAME} PRIVATE
         ${CONAN_LIBS}
         antlr4-runtime

@@ -57,6 +57,7 @@ enum class ParserTokenType
 	NE,
 	NEWLINE,
 	NOT,
+    OPTIONBASE,
 	OR,
     OTHERWISE,
 	PARAMETER,

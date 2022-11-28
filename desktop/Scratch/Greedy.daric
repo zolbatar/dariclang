@@ -1,0 +1,117 @@
+REM This Is all about performance measurement, it makes HEAVY use of floating point And trigonetry
+REM The result should be 8586070.837
+
+OPTION BASE 1
+
+DIM line$ OF STRING[4]
+DIM used% OF INT[500]
+DIM callId$ OF STRING[500]
+DIM resourceId$ OF STRING[10]
+DIM resourcex OF FLOAT[10]
+DIM resourcey OF FLOAT[10]
+DIM callx OF FLOAT[500]
+DIM cally OF FLOAT[500]
+I%=1:numCalls% = 0:numResources% = 0:J% =0
+earthRadius = 6367450.0:convertRad = PI / 180.0:convertDeg = 180.0 / PI
+
+CLS
+T%=TIME
+Load()
+PRINT numResources% WITH "Num resources: %d"
+PRINT numCalls% WITH "Num calls: %d"
+FOR K%=1 TO 100
+    total=0.0
+    ResetUsed()
+    PRINT K%;
+    PRINT ": ";
+    FOR C%=1 TO numResources%
+        FOR D%=0 TO 49
+            O=100000000.0
+            L%=-1
+            FOR A%=1 TO numCalls%
+                If used%[A%] = 0 THEN
+                    D=CalcDistance(resourcex[C%],resourcey[C%],callx[A%],cally[A%])
+                    If D < O THEN
+                        O=D
+                        L%=A%
+                    ENDIF
+                ENDIF
+            NEXT
+            used%[L%]=1
+            total=total + O
+        NEXT
+    NEXT
+    PRINT total
+NEXT
+PRINT "Finished in ";:Print ((Time-T%)/100.0);:Print " seconds"
+
+DEF AddCall()
+    numCalls%=numCalls%+1
+    callId$[numCalls%]=line$[1]
+    callx[numCalls%]=FLOAT(line$[2])
+    cally[numCalls%]=FLOAT(line$[3])
+ENDDEF
+
+DEF AddResource()
+    numResources%=numResources%+1
+    resourceId$[numResources%]=line$[1]
+    resourcex[numResources%]=FLOAT(line$[2])
+    resourcey[numResources%]=FLOAT(line$[3])
+ENDDEF
+
+DEF AddToList()
+    If I%=4 AddCall()
+    If I%=3 AddResource()
+    line$[0]="":line$[1]="":line$[2]="":line$[3]=""
+    I%=1
+ENDDEF
+
+DEF atan2(y OF FLOAT,x OF FLOAT) OF FLOAT
+    IF x > 0.0 RETURN ATN(y/x)
+    IF y > 0.0 RETURN ATN(y/x) + PI
+    RETURN ATN(y/x) - PI
+ENDDEF
+
+DEF CalcDistance(la1 OF FLOAT,lo1 OF FLOAT,la2 OF FLOAT,lo2 OF FLOAT) OF FLOAT
+    startLat=la1 * convertRad
+    startLon=lo1 * convertRad
+    endLat=la2 * convertRad
+    endLon=lo2 * convertRad
+    lon=endLon - startLon
+    lat=endLat - startLat
+    sinHLat=SIN(lat * 0.5)
+    sinHLon=SIN(lon * 0.5)
+    a=(sinHLat * sinHLat) + (COS(startLat) * COS(endLat)) * (sinHLon * sinHLon)
+    c=atan2(SQR(a), SQR(1.0-a))
+    D=earthRadius * (c + c)
+    RETURN D
+ENDDEF
+
+DEF ResetUsed()
+    For A%=1 TO 500
+        used%[A%] = 0
+    Next
+ENDDEF
+
+DEF InitialStrings()
+    For A%=1 TO 500
+        line$[A%] = ""
+    Next
+ENDDEF
+
+DEF Load()
+    T%=TIME
+    channel%=OPENIN("Data.txt")
+    IF channel%=-1 PRINT "Data.txt file not found":END
+
+    line$[0]="":line$[1]="":line$[2]="":line$[3]=""
+    I%=1
+    InitialStrings()
+    REPEAT
+        a%=BGET(channel%)
+        IF a%=ASC(",") I%=I%+1 ELSE line$[I%] = line$[I%] + Chr$(a%)
+        IF a%=10 AddToList()
+    UNTIL EOF(channel%)=1
+    CLOSE channel%
+    PRINT "Imported in ";:Print ((TIME-T%)/100.0);:Print " seconds"
+ENDDEF

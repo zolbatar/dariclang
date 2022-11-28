@@ -25,32 +25,32 @@ bool Compiler::Compile() {
 #ifdef CATCH_ERRORS
     try {
 #endif
-    llvm.SetupProfile(options, parser->GetModule(), state);
+        llvm.SetupProfile(options, parser->GetModule(), state);
 
-    // Library
-    SetupLibrary();
-    Constants();
+        // Library
+        SetupLibrary();
+        Constants();
 
-    // Lookahead
-    auto n = Primitive::NONE;
-    implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
-    implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
-    for (auto &token: parser->GetStatements()) {
-        switch (token.type) {
-            case ParserTokenType::PROCEDURE:
-                CreateLookaheadProc(token);
-                break;
-            case ParserTokenType::STRUCT:
-                TokenStruct(token);
-                break;
-            default:
-                // Do nothing
-                break;
+        // Lookahead
+        auto n = Primitive::NONE;
+        implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
+        implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
+        for (auto &token: parser->GetStatements()) {
+            switch (token.type) {
+                case ParserTokenType::PROCEDURE:
+                    CreateLookaheadProc(token);
+                    break;
+                case ParserTokenType::STRUCT:
+                    TokenStruct(token);
+                    break;
+                default:
+                    // Do nothing
+                    break;
+            }
         }
-    }
 
-    CompileStatements(parser->GetStatements());
-    implicit_ir->CreateRetVoid();
+        CompileStatements(parser->GetStatements());
+        implicit_ir->CreateRetVoid();
 #ifdef CATCH_ERRORS
     }
     catch (CustomException &ex) {
@@ -133,6 +133,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
                 break;
             case ParserTokenType::RESTORE:
                 TokenRestore(token);
+                break;
+            case ParserTokenType::OPTIONBASE:
+                TokenOptionBase(token);
                 break;
             default:
                 assert(0);

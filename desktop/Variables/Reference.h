@@ -36,16 +36,16 @@ public:
     std::shared_ptr<Instance> GetInstance() { return instance; }
 
     // Value
-    void SetValue(ValueType vt,
+    void SetValue(bool option_base, ValueType vt,
                   const std::vector<ValueType> &indices_val,
                   CompilerLLVM &llvm,
                   llvm::IRBuilder<> *ir,
                   ParserToken &token);
-    ValueType GetValue(const std::vector<ValueType> &indices_val,
+    ValueType GetValue(bool option_base, const std::vector<ValueType> &indices_val,
                        CompilerLLVM &llvm,
                        llvm::IRBuilder<> *ir,
                        ParserToken &token);
-    llvm::Value *GetPointer(const std::vector<ValueType> &indices_val,
+    llvm::Value *GetPointer(bool option_base, const std::vector<ValueType> &indices_val,
                             CompilerLLVM &llvm,
                             llvm::IRBuilder<> *ir,
                             ParserToken &token);
@@ -99,9 +99,9 @@ public:
 
 private:
     SharedState &state;
-    llvm::Value *LocalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
-    llvm::Value *GlobalIndexPtr(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
-    llvm::Value *GlobalIndex(std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    llvm::Value *LocalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    llvm::Value *GlobalIndexPtr(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
+    llvm::Value *GlobalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     static std::unordered_map<size_t, Reference> references;
 
     static void RaiseException(std::string msg, ParserToken &t) {
