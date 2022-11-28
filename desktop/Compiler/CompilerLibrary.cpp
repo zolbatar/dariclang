@@ -31,6 +31,9 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
 
 void Compiler::SetupLibrary() {
 
+    // Core
+    AddLibraryCall("SLEEP", "_sleep", Primitive::NONE, "F");
+
     // 2D Graphics
     AddLibraryCall("MODE", "gfx2d_mode", Primitive::NONE, "III");
     AddLibraryCall("ORIGIN", "gfx2d_origin", Primitive::NONE, "II");
@@ -112,4 +115,12 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("MOUSEX", "kbm_mousex", Primitive::INT, "");
     AddLibraryCall("MOUSEY", "kbm_mousey", Primitive::INT, "");
     AddLibraryCall("MOUSESTATE", "kbm_mousestate", Primitive::INT, "");
+
+    // Software synth
+    AddLibraryCall("LOADWAV", "audio_loadwav", Primitive::INT, "S");
+    AddLibraryCall("PLAYWAV", "audio_play", Primitive::NONE, "I");
+    AddLibraryCall("VOLUME", "audio_volume", Primitive::NONE, "IF");
+    AddLibraryCall("SOUND", "audio_sound", Primitive::NONE, "IFF");
+    AddLibraryCall("TONE", "audio_tone", Primitive::INT, "S");
+    AddLibraryCall("ENVELOPE", "audio_envelope", Primitive::INT, "IFFFFFI");
 }

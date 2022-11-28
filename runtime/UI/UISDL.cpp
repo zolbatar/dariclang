@@ -19,7 +19,6 @@ extern size_t sprite_index;
 extern Input input;
 extern World world;
 size_t frame_count = 0;
-//extern SoftSynth soft_synth;
 extern std::filesystem::path exe_path;
 
 UISDL::UISDL() {

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.20)
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-#set(CMAKE_OSX_ARCHITECTURES "x86_64")
+#set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+set(CMAKE_OSX_ARCHITECTURES "x86_64")
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -95,6 +95,21 @@ add_executable(${PROJECT_NAME}
         ../runtime/Graphics3D/EngineShape.cpp
         ../runtime/Graphics3D/EngineShapeSection.cpp
         ../runtime/Graphics3D/EngineWorld.cpp
+        ../runtime/Audio.cpp
+        ../runtime/Sound/SoftSynth.cpp
+        ../runtime/Sound/SoundGenerator.cpp
+        ../runtime/Sound/Synthesizer.cpp
+        ../runtime/Sound/generators/Instrument.cpp
+        ../runtime/Sound/generators/InstrumentCustom.cpp
+        ../runtime/Sound/generators/MonophonicInstrument.cpp
+        ../runtime/Sound/generators/PolyphonicInstrument.cpp
+        ../runtime/Sound/generators/PolyphonicInstrumentCustom.cpp
+        ../runtime/Sound/generators/Sequencer.cpp
+        ../runtime/Sound/generators/Tone.cpp
+        ../runtime/Sound/generators/ToneCustom.cpp
+        ../runtime/Sound/middleware/WAVWriter.cpp
+        ../runtime/Sound/utils/Envelope.cpp
+        ../runtime/Sound/utils/Waveforms.cpp
 
         Library/StringLib.h
         Library/StringLib.cpp

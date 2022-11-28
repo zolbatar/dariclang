@@ -33,6 +33,22 @@ add_library(DaricRuntime STATIC
         UI/Sprite.cpp
         UI/Text.cpp
 
+        Audio.cpp
+        Sound/SoftSynth.cpp
+        Sound/SoundGenerator.cpp
+        Sound/Synthesizer.cpp
+        Sound/generators/Instrument.cpp
+        Sound/generators/InstrumentCustom.cpp
+        Sound/generators/MonophonicInstrument.cpp
+        Sound/generators/PolyphonicInstrument.cpp
+        Sound/generators/PolyphonicInstrumentCustom.cpp
+        Sound/generators/Sequencer.cpp
+        Sound/generators/Tone.cpp
+        Sound/generators/ToneCustom.cpp
+        Sound/middleware/WAVWriter.cpp
+        Sound/utils/Envelope.cpp
+        Sound/utils/Waveforms.cpp
+
         Graphics3D.cpp
         Graphics3D/EngineWorld.cpp
         Graphics3D/EngineShapeSection.cpp

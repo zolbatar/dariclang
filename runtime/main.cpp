@@ -2,8 +2,11 @@
 #include <chrono>
 #include "UI/UISDL.h"
 #include "Input/Input.h"
+#include "Sound/SoftSynth.h"
 
 UISDL *ui;
+extern std::shared_ptr<SoftSynth> soft_synth;
+extern "C" void audio_init();
 
 std::atomic_bool done = false;
 std::atomic_bool start_ui = false;
@@ -13,6 +16,7 @@ size_t screen_flags;
 std::atomic_bool ui_started = false;
 extern Console console;
 extern Input input;
+std::filesystem::path exe_path;
 
 extern "C" void Implicit();
 
@@ -27,6 +31,9 @@ void do_quit() {
 }
 
 int main(int argc, char *argv[]) {
+    exe_path = std::filesystem::path{argv[0]}.parent_path();
+    soft_synth = std::make_shared<SoftSynth>();
+    audio_init();
     auto t = std::thread(&RunThread);
     t.detach();
     while (!done) {
