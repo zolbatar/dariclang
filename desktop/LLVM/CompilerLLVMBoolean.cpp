@@ -52,7 +52,7 @@ ValueType CompilerLLVM::BooleanNOT(llvm::IRBuilder<> *ir, ValueType &t1) {
 		case Primitive::INT:
 		case Primitive::BYTE:
 			vt.value = ir->CreateICmpEQ(t1.value, llvm::ConstantInt::get(TypeInt, 0), "NOT");
-			vt.value = ir->CreateSExt(vt.value, TypeConversion(t1.type));
+			vt.value = ir->CreateZExt(vt.value, TypeConversion(t1.type));
 			break;
 		default:
 			assert(0);

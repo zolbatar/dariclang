@@ -104,7 +104,7 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("WAITKEY$", "kbm_waitkeys", Primitive::STRING, "I");
     AddLibraryCall("KEYDOWN", "kbm_keydown", Primitive::INT, "I");
     AddLibraryCall("GET", "kbm_get", Primitive::INT, "I");
-    AddLibraryCall("GET$", "kbm_gets", Primitive::STRING, "I");
+    AddLibraryCall("GET$", "kbm_gets", Primitive::STRING, "");
     AddLibraryCall("MOUSEX", "kbm_mousex", Primitive::INT, "");
     AddLibraryCall("MOUSEY", "kbm_mousey", Primitive::INT, "");
     AddLibraryCall("MOUSESTATE", "kbm_mousestate", Primitive::INT, "");

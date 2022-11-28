@@ -8,7 +8,6 @@
 //#define PERF 1
 
 bool Compiler::Compile() {
-
     auto t1 = std::chrono::steady_clock::now();
     switch (options.target) {
         case CompileTarget::EXE:
@@ -65,6 +64,10 @@ bool Compiler::Compile() {
     std::cout << "Compilation took " << std::setprecision(2) << time_span << " seconds" <<  std::endl;
 #endif
     return true;
+}
+
+void Compiler::CompileAdditional() {
+    this->option_base = false;
 }
 
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {

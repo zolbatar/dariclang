@@ -1,6 +1,7 @@
 #include <iostream>
 #include <atomic>
 #include <memory>
+#include <filesystem>
 #include <thread>
 #include "UISDL.h"
 #include "../Graphics3D/Engine.h"
@@ -19,6 +20,7 @@ extern Input input;
 extern World world;
 size_t frame_count = 0;
 //extern SoftSynth soft_synth;
+extern std::filesystem::path exe_path;
 
 UISDL::UISDL() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -105,10 +107,9 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
     io.Fonts->Clear();
-    io.Fonts->AddFontFromFileTTF("Roboto-Regular.ttf", font_size * dpi_ratio);
-    fontMono =
-            io.Fonts->AddFontFromFileTTF("RobotoMono-Regular.ttf", font_size * dpi_ratio);
-    io.Fonts->AddFontFromFileTTF("RobotoSerif-Regular.ttf", font_size * dpi_ratio);
+    io.Fonts->AddFontFromFileTTF((exe_path / "Roboto-Regular.ttf").c_str(), font_size * dpi_ratio);
+    fontMono = io.Fonts->AddFontFromFileTTF((exe_path / "RobotoMono-Regular.ttf").c_str(), font_size * dpi_ratio);
+    io.Fonts->AddFontFromFileTTF((exe_path / "RobotoSerif-Regular.ttf").c_str(), font_size * dpi_ratio);
     io.FontGlobalScale /= dpi_ratio;
     io.Fonts->Build();
 

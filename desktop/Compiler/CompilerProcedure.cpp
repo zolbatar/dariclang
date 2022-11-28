@@ -42,6 +42,11 @@ void Compiler::TokenProcedure(ParserToken &t) {
     for (auto &Arg: f->func->args()) {
         auto pp = &f->parameters[i];
         auto ref = pp->GetReference();
+
+        if (ref->FindInstance()) {
+            RaiseException("Variable name already exists, are you shadowing a global variable", t);
+        }
+
         ref->CreateInstance(llvm, GetIR(), Scope::LOCAL, pp->IsRef());
         if (!pp->IsRef()) {
             ref->GetInstance()->Set(&Arg, nullptr, 0, llvm, procedure_ir);
@@ -136,4 +141,8 @@ void Compiler::TokenReturn(ParserToken &token) {
         llvm.AutoConversion(GetIR(), ret_value, return_type);
         GetIR()->CreateRet(ret_value.value);
     }
+
+    // We definitely want a new block here
+    auto bb = CreateAndInsertBB("Post-RETURN", false, token);
+    GetIR()->SetInsertPoint(bb);
 }

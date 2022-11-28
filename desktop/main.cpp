@@ -2,11 +2,11 @@
 #include <fstream>
 #include <thread>
 #include <chrono>
+#include <filesystem>
 #include "Parser/Parser.h"
 #include "Compiler/Compiler.h"
 #include "Variables/Shared.h"
 #include "../runtime/UI/UISDL.h"
-#include "../runtime/Input/Input.h"
 
 UISDL *ui;
 
@@ -19,6 +19,7 @@ size_t screen_flags;
 std::atomic_bool ui_started = false;
 extern Console console;
 extern Input input;
+std::filesystem::path exe_path;
 
 static void RunThread() {
     Instance::ClearStatic();
@@ -53,6 +54,8 @@ void do_quit() {
 }
 
 int main(int argc, char *argv[]) {
+    exe_path = std::filesystem::path{argv[0]}.parent_path();
+
     std::cout << "Welcome to Daric!\n" << std::endl;
     options.file = new std::ifstream(argv[1]);
     if (!options.file->is_open()) {
@@ -61,7 +64,7 @@ int main(int argc, char *argv[]) {
     }
 
     // What sort of compile?
-    options.output_ll_files = true;
+    options.output_ll_files = false;
     if (argc == 2) {
         options.target = CompileTarget::JIT;
         options.use_exit_as_end = true;

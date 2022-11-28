@@ -6,13 +6,12 @@
 #include "llvm/Support/FileSystem.h"
 #include "lld/Common/Driver.h"
 #include "llvm/CodeGen/CommandFlags.h"
-
-
 #include "lld/Common/TargetOptionsCommandFlags.h"
 #include "llvm/ADT/Triple.h"
 #include "llvm/CodeGen/CommandFlags.h"
 #include "llvm/Target/TargetOptions.h"
 
+extern std::filesystem::path exe_path;
 extern std::string getCPUArch();
 
 extern "C" void print(const char *format, ...) {
@@ -56,6 +55,8 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
 
     // Libraries
     args.push_back("-L.");
+    auto aa = std::string("-L") + std::string(exe_path.c_str());
+    args.push_back(aa.c_str());
     args.push_back("-lc++");
     args.push_back("-lSystem");
     args.push_back("-lDaricRuntime");

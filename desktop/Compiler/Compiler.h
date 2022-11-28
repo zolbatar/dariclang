@@ -59,9 +59,8 @@ public:
     }
 
     bool Compile();
-
+    void CompileAdditional();
     void Run();
-
     void CreateExecutable();
 
 private:
