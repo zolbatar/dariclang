@@ -15,18 +15,27 @@ There is a modern HTML5 online version compiling to WebAssembly and using WebGL 
 * Standard library:
   * 2D - line drawing, circle, etc. Either renders immediately, or using back buffer flipping.
   * 3D - hardware accelerated engine, using OpenGL3 and shaders to render.
-  * Sound, a soft synthesizer based on https://github.com/airloaf/VSSynth
+  * Sound, a soft synthesizer based on https://github.com/airloaf/VSSynth. VERY EXPERIMENTAL
   * Simple TIME$ function and a low and high precision timer.
 
 The following examples are in the repo:
 
 * BubbleUniverse - A 2d simple maths model that would make a good screensaver! Thanks to ZXDunny.
 * Clock - A simple 2D clock.
+* Cubes - Spinning 3D cubes.
+* Fonts - Displays some of the font capability (using Roboto).
 * Graphics2D - Runs some 2D rendering tests very quickly.
+* Greedy - A performance tester.
+* Load3D - Allows loading of 3D models using either a Daric importer or the very powerful assimp.
 * Mandelbrot - The classic mandelbrot.
 * Raytracer - Based on some example code uploaded to the BBCMicroBot, no idea who originally created it. 
 * Sierpinski - Sierpinski triangles.
+* Sound - Experimental sound stuff.
+* Sprites - Throws around some sprites.
+* Terrain - A simple 3D terrain demo using perlin noise.
 * Tester - Standard compiler and language tests
+* TesterFileIO = Test file I/O library.
+* WorldInLines = A fairy clever tool that renders world polygon maps.
 
 Running
 -------
