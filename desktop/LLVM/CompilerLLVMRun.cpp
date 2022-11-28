@@ -61,6 +61,8 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-lSystem");
     args.push_back("-lDaricRuntime");
     args.push_back("-lSDL2");
+    args.push_back("-lassimp");
+    args.push_back("-lzlibstatic");
     args.push_back("-liconv");
 
     // Frameworks (on Mac)

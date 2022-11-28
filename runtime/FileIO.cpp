@@ -51,13 +51,13 @@ extern "C" T_I fileio_openup(T_S filename) {
     return r;
 }
 
-extern "C" T_I fileio_bget(T_I channel) {
+extern "C" T_B fileio_bget(T_I channel) {
     auto g = channels.find(channel);
     char b = fgetc(g->second);
     return b;
 }
 
-extern "C" void fileio_bput(T_I channel, T_I byte) {
+extern "C" void fileio_bput(T_I channel, T_B byte) {
     auto g = channels.find(channel);
     fputc(byte, g->second);
 }

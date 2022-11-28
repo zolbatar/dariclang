@@ -5,6 +5,10 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
     std::vector<llvm::Type *> pars_t;
     for (auto c: parameters) {
         switch (c) {
+            case 'B':
+                pars.push_back(LibraryFuncParameter(Primitive::BYTE, false));
+                pars_t.push_back(llvm.TypeByte);
+                break;
             case 'I':
                 pars.push_back(LibraryFuncParameter(Primitive::INT, false));
                 pars_t.push_back(llvm.TypeInt);
@@ -90,8 +94,8 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("OPENUP", "fileio_openup", Primitive::INT, "S");
     AddLibraryCall("EOF", "fileio_eof", Primitive::INT, "I");
     AddLibraryCall("CLOSE", "fileio_close", Primitive::NONE, "I");
-    AddLibraryCall("BGET", "fileio_bget", Primitive::INT, "I");
-    AddLibraryCall("BPUT", "fileio_bput", Primitive::NONE, "II");
+    AddLibraryCall("BGET", "fileio_bget", Primitive::BYTE, "I");
+    AddLibraryCall("BPUT", "fileio_bput", Primitive::NONE, "IB");
     AddLibraryCall("SGET", "fileio_getsh", Primitive::STRING, "I");
     AddLibraryCall("TELL", "fileio_ptr", Primitive::INT, "I");
     AddLibraryCall("SEEK", "fileio_sptr", Primitive::NONE, "II");
