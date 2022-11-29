@@ -25,7 +25,7 @@ class Input
 {
 public:
     void ProcessEvent(SDL_Event &event);
-    std::optional<Event> CheckForKeypress();
+    void CheckForKeypress();
     char Get();
     std::string GetString();
     int Inkey(int timeout_or_keycode);

@@ -1,4 +1,5 @@
 #include <thread>
+#include <cstdarg>
 #include <filesystem>
 #include "../Compiler/Compiler.h"
 #include "../JIT/JIT.h"
@@ -55,7 +56,7 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
 
     // Libraries
     args.push_back("-L.");
-    auto aa = std::string("-L") + std::string(exe_path.c_str());
+    auto aa = std::string("-L") + std::string(exe_path.generic_string().c_str());
     args.push_back(aa.c_str());
     args.push_back("-lc++");
     args.push_back("-lSystem");

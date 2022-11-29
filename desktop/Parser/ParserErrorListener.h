@@ -16,11 +16,11 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 
         // Get some characters around the error position
         auto stream = offendingSymbol->getInputStream();
-        auto start = (int64_t) offendingSymbol->getStartIndex() - line_length_scan;
+        size_t start = (int64_t) offendingSymbol->getStartIndex() - line_length_scan;
         if (start < 0) start = 0;
-        auto end = (int64_t) offendingSymbol->getStopIndex() + line_length_scan;
+        size_t end = (int64_t) offendingSymbol->getStopIndex() + line_length_scan;
         if (end > stream->size()) end = stream->size() - 1;
-        antlr4::misc::Interval interval((unsigned long) start, (unsigned long) end);
+        antlr4::misc::Interval interval(start, end);
         auto ee = stream->getText(interval);
 
         // Now scan for start of line

@@ -42,19 +42,18 @@ const bool verbose = false;
 
 CompilerLLVM::CompilerLLVM() {
     LLVMInitializeX86Target();
-    LLVMInitializeAArch64Target();
-
     LLVMInitializeX86TargetInfo();
-    LLVMInitializeAArch64TargetInfo();
-
     LLVMInitializeX86TargetMC();
-    LLVMInitializeAArch64TargetMC();
-
     LLVMInitializeX86AsmPrinter();
-    LLVMInitializeAArch64AsmPrinter();
-
     LLVMInitializeX86AsmParser();
+
+#ifdef __APPLE__
+    LLVMInitializeAArch64Target();
+    LLVMInitializeAArch64TargetInfo();
+    LLVMInitializeAArch64TargetMC();
+    LLVMInitializeAArch64AsmPrinter();
     LLVMInitializeAArch64AsmParser();
+#endif
 }
 
 std::string MCPU = "native";
@@ -77,7 +76,7 @@ std::string getCPUArch() {
         }
     }
 #endif
-#ifdef WINDOWS
+#ifdef _WIN64
     return "x86-64";
 #endif
 }
@@ -266,7 +265,7 @@ void CompilerLLVM::AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::leg
         builder.SLPVectorize = true;
         builder.VerifyInput = true;
     }
-    Target->adjustPassManager(builder);
+//    Target->adjustPassManager(builder);
     builder.populateFunctionPassManager(fnPasses);
     builder.populateModulePassManager(passes);
 }

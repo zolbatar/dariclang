@@ -1,5 +1,6 @@
 #include <thread>
 #include <chrono>
+#include <filesystem>
 #include "UI/UISDL.h"
 #include "Input/Input.h"
 #include "Sound/SoftSynth.h"

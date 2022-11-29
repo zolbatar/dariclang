@@ -14,7 +14,7 @@ SDL_AudioDeviceID deviceId;
 SDL_AudioSpec wavSpec;
 std::vector<Audio> samples;
 
-extern "C" T_I audio_init() {
+extern "C" void audio_init() {
     deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
 }
 

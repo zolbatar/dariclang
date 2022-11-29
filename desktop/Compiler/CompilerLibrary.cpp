@@ -32,7 +32,7 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
 void Compiler::SetupLibrary() {
 
     // Core
-    AddLibraryCall("SLEEP", "_sleep", Primitive::NONE, "F");
+    AddLibraryCall("SLEEP", "__sleep", Primitive::NONE, "F");
 
     // 2D Graphics
     AddLibraryCall("MODE", "gfx2d_mode", Primitive::NONE, "III");

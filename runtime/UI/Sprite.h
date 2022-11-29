@@ -1,8 +1,9 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 
 typedef uint32_t GLuint;
 
@@ -42,5 +43,5 @@ public:
     size_t bank_width, bank_height;
     size_t bank_x1, bank_y1, bank_x2, bank_y2;
 private:
-    std::map<int, Sprite> sprites;
+    std::unordered_map<size_t, Sprite> sprites;
 };

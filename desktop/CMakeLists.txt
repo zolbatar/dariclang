@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
-#set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-set(CMAKE_OSX_ARCHITECTURES "x86_64")
+if (APPLE)
+    #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+endif()
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -12,47 +14,84 @@ message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
 include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+if (APPLE)
+    set(GITHUB /Users/daryl/Github)
+else()
+    set(GITHUB C:/Users/d_dud/GitHub)
+endif()
+
 # Antlr4
-set(ANTLR_DIR "/Users/daryl/GitHub/antlr4/runtime/Cpp")
-include_directories(${ANTLR_DIR}/runtime/src)
+set(ANTLR_DIR ${GITHUB}/antlr4/runtime/Cpp)
 add_library(antlr4-runtime STATIC IMPORTED)
-SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/dist/libantlr4-runtime.a)
+include_directories(${ANTLR_DIR}/runtime/src)
+if (APPLE)
+    SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/dist/libantlr4-runtime.a)
+else()
+    SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/runtime/bin/vs-2019/x64/ReleaseStatic/antlr4-runtime.lib)
+endif()
+
+# IMGUI
+set(IMGUI_DIR ${GITHUB}/imgui)
+include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
 
 # SDL
-set(SDL2_DIR "/Users/daryl/GitHub/SDL/build/SDL2")
-include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
+set(SDL2_DIR ${GITHUB}/SDL_BUILD)
 add_library(sdl2-runtime STATIC IMPORTED)
-SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
+if (APPLE)
+    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
+    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
+else()
+    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
+    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
+endif()
 
 # ASSIMP
-set(ASSIMP_DIR "/Users/daryl/GitHub/assimp")
+set(ASSIMP_DIR ${GITHUB}/assimp)
 include_directories(${ASSIMP_DIR}/include)
 add_library(assimp-runtime STATIC IMPORTED)
-SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
+if (APPLE)
+    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
+else()
+    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/Release/assimp-vc143-mt.lib)
+endif()
 
 # LLVM
-set(CORE_LLVM_DIR /Users/daryl/GitHub/llvm-project/)
+set(CORE_LLVM_DIR ${GITHUB}/llvm-project/)
 include_directories(
         ${CORE_LLVM_DIR}llvm/include
         ${CORE_LLVM_DIR}lld/include
         ${CORE_LLVM_DIR}build/include)
-link_directories(
-        ${CORE_LLVM_DIR}build/lib)
-file(GLOB LLD_LIBS
-        ${CORE_LLVM_DIR}build/lib/liblldCommon.a
-        ${CORE_LLVM_DIR}build/lib/liblldELF.a
-        ${CORE_LLVM_DIR}build/lib/liblldMachO.a)
-execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+if (APPLE)
+    link_directories(${CORE_LLVM_DIR}build/lib)
+    file(GLOB LLD_LIBS
+            ${CORE_LLVM_DIR}build/lib/liblldCommon.a
+            ${CORE_LLVM_DIR}build/lib/liblldELF.a
+            ${CORE_LLVM_DIR}build/lib/liblldMachO.a)
+    execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+else()
+    link_directories(${CORE_LLVM_DIR}build/Release/lib)
+    file(GLOB LLD_LIBS
+            ${CORE_LLVM_DIR}build/lib/Release/liblldCommon.a
+            ${CORE_LLVM_DIR}build/lib/liblldELF.a)
+    execute_process(COMMAND ${CORE_LLVM_DIR}build/Release/bin/llvm-config.exe --libs --libnames OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    execute_process(COMMAND ${CORE_LLVM_DIR}build/Release/bin/llvm-config.exe --system-libs --libnames OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+    message(${LLVM_SYSTEM_LIBS})
+    set(LLVM_SYSTEM_LIBS "")
+endif()
 
 # IMGUI
-set(IMGUI_DIR "/Users/daryl/Github/imgui")
+set(IMGUI_DIR ${GITHUB}/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
 
 # Zstd
 add_library(zstd-lib STATIC IMPORTED)
-SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION /Users/daryl/GitHub/zstd/build/cmake/lib/libzstd.a)
-string(REPLACE "-lzstd" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
+if (APPLE)
+    SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION ${GITHUB}/zstd/build/cmake/lib/libzstd.a)
+    string(REPLACE "-lzstd" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
+else()
+    SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION ${GITHUB}/zstd/build/cmake/lib/Release/zstd_static.lib)
+endif()
 #message(${LLVM_SYSTEM_LIBS})
 
 add_executable(${PROJECT_NAME}
@@ -191,25 +230,36 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp Compiler/CompilerOption.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE
-        ${CONAN_LIBS}
-        antlr4-runtime
-        "-framework OpenGL"
-        "-framework Cocoa"
-        "-framework Carbon"
-        "-framework CoreAudio"
-        "-framework CoreVideo"
-        "-framework ForceFeedback"
-        "-framework Metal"
-        "-framework IOKit"
-        "-framework GameKit"
-        "-framework AudioToolbox"
-        "-framework CoreHaptics"
-        zstd-lib
-        -lxar -liconv
-        sdl2-runtime
-        assimp-runtime
-        ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            ${CONAN_LIBS}
+            antlr4-runtime
+            "-framework OpenGL"
+            "-framework Cocoa"
+            "-framework Carbon"
+            "-framework CoreAudio"
+            "-framework CoreVideo"
+            "-framework ForceFeedback"
+            "-framework Metal"
+            "-framework IOKit"
+            "-framework GameKit"
+            "-framework AudioToolbox"
+            "-framework CoreHaptics"
+            zstd-lib
+            -lxar -liconv
+            sdl2-runtime
+            assimp-runtime
+            ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+else()
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            ${CONAN_LIBS}
+            antlr4-runtime
+            psapi.lib shell32.lib ole32.lib uuid.lib advapi32.lib
+            zstd-lib
+            sdl2-runtime
+            assimp-runtime
+            ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+endif()
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${SDL2_DIR}/libSDL2.a /Users/daryl/Shared/Daric/mac/)
 

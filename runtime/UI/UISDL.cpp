@@ -106,9 +106,12 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     ImGuiIO &io = ImGui::GetIO();
     (void) io;
     io.Fonts->Clear();
-    io.Fonts->AddFontFromFileTTF((exe_path / "Roboto-Regular.ttf").c_str(), font_size * dpi_ratio);
-    fontMono = io.Fonts->AddFontFromFileTTF((exe_path / "RobotoMono-Regular.ttf").c_str(), font_size * dpi_ratio);
-    io.Fonts->AddFontFromFileTTF((exe_path / "RobotoSerif-Regular.ttf").c_str(), font_size * dpi_ratio);
+    std::string p1 = (exe_path / "Roboto-Regular.ttf").generic_string();
+    std::string p2 = (exe_path / "RobotoMono-Regular.ttf").generic_string();
+    std::string p3 = (exe_path / "RobotoSerif-Regular.ttf").generic_string();
+    io.Fonts->AddFontFromFileTTF(p1.c_str(), font_size * dpi_ratio);
+    fontMono = io.Fonts->AddFontFromFileTTF(p2.c_str(), font_size * dpi_ratio);
+    io.Fonts->AddFontFromFileTTF(p3.c_str(), font_size * dpi_ratio);
     io.FontGlobalScale /= dpi_ratio;
     io.Fonts->Build();
 

@@ -2,7 +2,7 @@
 #include "UI/UISDL.h"
 
 extern Console console;
-extern bool ui_started;
+extern std::atomic_bool ui_started;
 
 extern "C" void PrintInteger(T_I v) {
     if (!ui_started) {

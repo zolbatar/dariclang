@@ -29,7 +29,7 @@ int Sprites::GrabSprite(int x, int y, int w, int h) {
         sb.state = SpriteState::GRAB;
         s.banks.push_back(std::move(sb));
     }
-    auto index = sprite_index++;
+    size_t index = sprite_index++;
     sprites.insert(std::make_pair(index, std::move(s)));
     sprite_lock.unlock();
 

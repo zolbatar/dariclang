@@ -1,27 +1,44 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-#set(CMAKE_OSX_ARCHITECTURES arm64)
+if (APPLE)
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+    #set(CMAKE_OSX_ARCHITECTURES arm64)
+endif()
 project(DaricRuntime)
 
 include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
 conan_basic_setup()
 
+if (APPLE)
+    set(GITHUB /Users/daryl/Github)
+else()
+    set(GITHUB C:/Users/d_dud/GitHub)
+endif()
+
 # IMGUI
-set(IMGUI_DIR "/Users/daryl/Github/imgui")
+set(IMGUI_DIR ${GITHUB}/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
 
 # SDL
-set(SDL2_DIR "/Users/daryl/GitHub/SDL/build/SDL2")
-include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
+set(SDL2_DIR ${GITHUB}/SDL_BUILD)
 add_library(sdl2-runtime STATIC IMPORTED)
-SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
+if (APPLE)
+    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
+    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
+else()
+    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
+    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
+endif()
 
 # ASSIMP
-set(ASSIMP_DIR "/Users/daryl/GitHub/assimp")
+set(ASSIMP_DIR ${GITHUB}/assimp)
 include_directories(${ASSIMP_DIR}/include)
 add_library(assimp-runtime STATIC IMPORTED)
-SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
+if (APPLE)
+    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
+else()
+    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/Release/assimp-vc143-mt.lib)
+endif()
 
 add_library(DaricRuntime STATIC
         main.cpp

@@ -83,7 +83,7 @@ void Input::ProcessEvent(SDL_Event &event)
     }
 }
 
-std::optional<Event> Input::CheckForKeypress()
+void Input::CheckForKeypress()
 {
     // Wait for key in buffer
     while (buffer.empty()) {

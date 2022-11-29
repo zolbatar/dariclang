@@ -1,6 +1,7 @@
 #include <iostream>
 #include <sstream>
 #include <memory>
+#include <cassert>
 #include "SoftSynth.h"
 
 std::shared_ptr<SoftSynth> soft_synth;
