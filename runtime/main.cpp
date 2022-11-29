@@ -5,7 +5,7 @@
 #include "Input/Input.h"
 #include "Sound/SoftSynth.h"
 
-UISDL *ui;
+UISDL *ui = nullptr;
 extern std::shared_ptr<SoftSynth> soft_synth;
 extern "C" void audio_init();
 

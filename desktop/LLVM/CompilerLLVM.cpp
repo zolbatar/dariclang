@@ -196,6 +196,7 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sha
     globals["~DATAPtr"] = new llvm::GlobalVariable(*Module, TypeInt, false, llvm::GlobalValue::InternalLinkage, llvm::ConstantInt::get(TypeInt, 0), "DATAPtr");
 
     Module->getOrInsertFunction("daric_end", TypeNone);
+    Module->getOrInsertFunction("kbm_escape_pressed", TypeInt);
 
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);

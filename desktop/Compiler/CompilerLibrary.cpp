@@ -36,6 +36,8 @@ void Compiler::SetupLibrary() {
 
     // 2D Graphics
     AddLibraryCall("MODE", "gfx2d_mode", Primitive::NONE, "III");
+    AddLibraryCall("BANKEDON", "gfx2d_bankedon", Primitive::NONE, "");
+    AddLibraryCall("BANKEDOFF", "gfx2d_bankedoff", Primitive::NONE, "");
     AddLibraryCall("ORIGIN", "gfx2d_origin", Primitive::NONE, "II");
     AddLibraryCall("SWIDTH", "gfx2d_swidth", Primitive::INT, "");
     AddLibraryCall("SHEIGHT", "gfx2d_sheight", Primitive::INT, "");

@@ -53,6 +53,14 @@ UISDL::~UISDL() {
     SDL_Quit();
 }
 
+void UISDL::BankedOn() {
+    mode = Mode::BANKED;
+}
+
+void UISDL::BankedOff() {
+    mode = Mode::CLASSIC;
+}
+
 void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     if (w != -1 && h != -1) {
         desktop_screen_width = w;
@@ -267,7 +275,7 @@ void UISDL::_CreateWindow(bool windowed) {
     std::cout << "Creating SDL window\n";
     SDL_WindowFlags window_flags;
     if (!windowed) {
-        window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
+        window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,
@@ -275,7 +283,7 @@ void UISDL::_CreateWindow(bool windowed) {
                                   desktop_screen_height,
                                   window_flags);
     } else {
-        window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
+        window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,

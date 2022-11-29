@@ -35,10 +35,11 @@ public:
     ~UISDL();
 
     void Start(size_t w, size_t h, bool windowed, bool banked);
+    void BankedOn();
+    void BankedOff();
     bool Render();
     void RenderShapes();
     void Render3D();
-    void ChangeMode(int64_t w, int64_t h, Mode mode);
     void SetFGColour(ImU32 colour);
     void SetBGColour(ImU32 colour);
     void Cls();

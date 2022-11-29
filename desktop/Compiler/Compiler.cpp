@@ -30,10 +30,16 @@ bool Compiler::Compile() {
         SetupLibrary();
         Constants();
 
-        // Lookahead
+        // Setup implicit
         auto n = Primitive::NONE;
         implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
         implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
+
+        // Set IsMain value
+        auto ptr = InstancePrimitive::Build("Main", Primitive::INT, Scope::GLOBAL, llvm, GetIR(), false);
+        ptr->Set(llvm::ConstantInt::get(llvm.TypeInt, 1), nullptr, 0, llvm, GetIR());
+
+        // Looahead
         for (auto &token: parser->GetStatements()) {
             switch (token.type) {
                 case ParserTokenType::PROCEDURE:

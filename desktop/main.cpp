@@ -68,10 +68,10 @@ int main(int argc, char *argv[]) {
     }
 
     // What sort of compile?
-    options.output_ll_files = false;
+    options.output_ll_files = true;
     if (argc == 2) {
         options.target = CompileTarget::JIT;
-        options.use_exit_as_end = true;
+        options.use_exit_as_end = false;
     } else {
         options.target = CompileTarget::EXE;
         options.output_filename = std::string(argv[2]);

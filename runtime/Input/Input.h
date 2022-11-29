@@ -34,7 +34,6 @@ public:
     void Mouse(int *x, int *y, int *state);
 
     void ClearEscapePressed() { escape_pressed = false; }
-
     bool IsEscapePressed() { return escape_pressed; }
 
 private:

@@ -3,6 +3,7 @@
 #include "Types.h"
 #include "UI/UISDL.h"
 #include "UI/Console/Console.h"
+#include "Graphics3D/Engine.h"
 
 extern UISDL *ui;
 extern Console console;
@@ -11,6 +12,18 @@ extern std::atomic_bool start_ui;
 extern size_t screen_width;
 extern size_t screen_height;
 extern size_t screen_flags;
+
+extern "C" void gfx2d_bankedon() {
+    if (!ui_started)
+        return;
+    ui->BankedOn();
+}
+
+extern "C" void gfx2d_bankedoff() {
+    if (!ui_started)
+        return;
+    ui->BankedOff();
+}
 
 extern "C" void gfx2d_mode(T_I w, T_I h, T_I flags) {
     screen_width = w;
