@@ -35,10 +35,6 @@ bool Compiler::Compile() {
         implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
         implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
 
-        // Set IsMain value
-        auto ptr = InstancePrimitive::Build("Main", Primitive::INT, Scope::GLOBAL, llvm, GetIR(), false);
-        ptr->Set(llvm::ConstantInt::get(llvm.TypeInt, 1), nullptr, 0, llvm, GetIR());
-
         // Looahead
         for (auto &token: parser->GetStatements()) {
             switch (token.type) {
@@ -217,5 +213,5 @@ void Compiler::TypeError(ParserToken &token) {
 }
 
 llvm::Value *Compiler::CreateCall(std::string name, llvm::ArrayRef<llvm::Value *> vals) {
-    return llvm.CreateCall(name, GetIR(), GetFunction(), vals, procedures.contains(name));
+    return llvm.CreateCall(name, GetIR(), GetFunction(), vals, procedures.contains(name), return_type);
 }

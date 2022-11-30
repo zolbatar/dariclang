@@ -21,6 +21,7 @@ std::any Parser::visitStatementsl(DaricParser::StatementslContext *context) {
 }
 
 std::any Parser::visitStatement(DaricParser::StatementContext *context) {
+    //std::cout << context->getStart()->getLine() << std::endl;
     if (context->COMMENT()) {
         return CreateToken(context, ParserTokenType::COMMENT);
     }

@@ -85,7 +85,7 @@ void UISDL::Render3D() {
     shapes_lock.unlock();
 }
 
-void UISDL::Line(int x1, int y1, int x2, int y2) {
+void UISDL::Line(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
@@ -93,7 +93,7 @@ void UISDL::Line(int x1, int y1, int x2, int y2) {
     shapes_lock.unlock();
 }
 
-void UISDL::LineWidth(int x1, int y1, int x2, int y2, float w) {
+void UISDL::LineWidth(float x1, float y1, float x2, float y2, float w) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
@@ -101,7 +101,7 @@ void UISDL::LineWidth(int x1, int y1, int x2, int y2, float w) {
     shapes_lock.unlock();
 }
 
-void UISDL::Rectangle(int x1, int y1, int x2, int y2) {
+void UISDL::Rectangle(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
@@ -109,36 +109,36 @@ void UISDL::Rectangle(int x1, int y1, int x2, int y2) {
     shapes_lock.unlock();
 }
 
-void UISDL::FilledRectangle(int x1, int y1, int x2, int y2) {
+void UISDL::FilledRectangle(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeRectangleFilled(p1, p2, fgColour));
+    shapesBackBuffer.emplace_back(new ShapeRectangleFilled(p1, p2, bgColour));
     shapes_lock.unlock();
 }
 
-void UISDL::Circle(int xc, int yc, float r) {
+void UISDL::Circle(float xc, float yc, float r) {
     auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, 1.0f));
     shapes_lock.unlock();
 }
 
-void UISDL::CircleWidth(int xc, int yc, float r, float w) {
+void UISDL::CircleWidth(float xc, float yc, float r, float w) {
     auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
     shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, w));
     shapes_lock.unlock();
 }
 
-void UISDL::FilledCircle(int xc, int yc, float r) {
+void UISDL::FilledCircle(float xc, float yc, float r) {
     auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeCircleFilled(p, r, fgColour));
+    shapesBackBuffer.emplace_back(new ShapeCircleFilled(p, r, bgColour));
     shapes_lock.unlock();
 }
 
-void UISDL::Triangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+void UISDL::Triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
@@ -147,16 +147,16 @@ void UISDL::Triangle(int x1, int y1, int x2, int y2, int x3, int y3) {
     shapes_lock.unlock();
 }
 
-void UISDL::FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3) {
+void UISDL::FilledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeTriangleFilled(p1, p2, p3, fgColour));
+    shapesBackBuffer.emplace_back(new ShapeTriangleFilled(p1, p2, p3, bgColour));
     shapes_lock.unlock();
 }
 
-void UISDL::ShadedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, ImU32 colour1, ImU32 colour2,
+void UISDL::ShadedTriangle(float x1, float y1, float x2, float y2, float x3, float y3, ImU32 colour1, ImU32 colour2,
                            ImU32 colour3, bool flat) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
@@ -166,7 +166,7 @@ void UISDL::ShadedTriangle(int x1, int y1, int x2, int y2, int x3, int y3, ImU32
     shapes_lock.unlock();
 }
 
-void UISDL::DrawText(ImFont *font, float size, int x, int y, int w, int h, std::string text) {
+void UISDL::DrawText(ImFont *font, float size, float x, float y, float w, float h, std::string text) {
     auto p1 = ImVec2(x, y);
     auto p2 = ImVec2(x + w + origin_x, y + h + origin_y);
     shapes_lock.lock();
@@ -174,7 +174,7 @@ void UISDL::DrawText(ImFont *font, float size, int x, int y, int w, int h, std::
     shapes_lock.unlock();
 }
 
-void UISDL::Plot(int x, int y) {
+void UISDL::Plot(float x, float y) {
     auto p1 = ImVec2(x + origin_x, y + origin_y);
     auto p2 = ImVec2(x + 1 + origin_x, y + 1 + origin_y);
     shapes_lock.lock();
@@ -182,12 +182,12 @@ void UISDL::Plot(int x, int y) {
     shapes_lock.unlock();
 }
 
-void UISDL::Origin(int x, int y) {
+void UISDL::Origin(float x, float y) {
     origin_x = x;
     origin_y = y;
 }
 
-void UISDL::Clip(int x1, int y1, int x2, int y2) {
+void UISDL::Clip(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1, y1);
     auto p2 = ImVec2(x2, y2);;
     shapes_lock.lock();

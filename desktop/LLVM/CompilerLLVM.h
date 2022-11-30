@@ -44,6 +44,7 @@ public:
     void AddBB(llvm::BasicBlock *bc, llvm::Function *func, llvm::IRBuilder<> *builder);
     void RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2, llvm::IRBuilder<> *builder);
     bool CheckReturn(llvm::IRBuilder<> *builder);
+    void DefaultReturn(Primitive t, llvm::IRBuilder<> *ir);
 
     // Variables and values
     llvm::GlobalVariable *GetGlobal(const std::string &name);
@@ -99,7 +100,7 @@ public:
                             llvm::IRBuilder<> *ir,
                             llvm::Function *this_func,
                             llvm::ArrayRef<llvm::Value *> vals,
-                            bool user_function);
+                            bool user_function, Primitive default_return_type);
 
     // Maths
     ValueType MathsAdd(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);

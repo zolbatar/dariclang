@@ -5,7 +5,8 @@ llvm::Value *CompilerLLVM::CreateCall(std::string &name,
                                       llvm::IRBuilder<> *ir,
                                       llvm::Function *this_func,
                                       llvm::ArrayRef<llvm::Value *> vals,
-                                      bool user_function) {
+                                      bool user_function,
+                                      Primitive default_return_type) {
     auto func = Module->getFunction(name);
     if (!func)
         return nullptr;
@@ -23,7 +24,7 @@ llvm::Value *CompilerLLVM::CreateCall(std::string &name,
             ir->SetInsertPoint(block);
             ir->CreateCondBr(test, block_quit, block_cont);
             ir->SetInsertPoint(block_quit);
-            ir->CreateRetVoid();
+            DefaultReturn(default_return_type, ir);
             ir->SetInsertPoint(block_cont);
             return v;
         } else {
@@ -37,11 +38,30 @@ llvm::Value *CompilerLLVM::CreateCall(std::string &name,
             ir->SetInsertPoint(block);
             ir->CreateCondBr(test, block_quit, block_cont);
             ir->SetInsertPoint(block_quit);
-            ir->CreateRetVoid();
+            DefaultReturn(default_return_type, ir);
             ir->SetInsertPoint(block_cont);
             return v;
         }
     } else {
         return v;
+    }
+}
+
+void CompilerLLVM::DefaultReturn(Primitive t, llvm::IRBuilder<> *ir) {
+    switch (t) {
+        case Primitive::NONE:
+            ir->CreateRetVoid();
+            break;
+        case Primitive::INT:
+            ir->CreateRet(llvm::ConstantInt::get(TypeInt, 0));
+            break;
+        case Primitive::FLOAT:
+            ir->CreateRet(llvm::ConstantFP::get(TypeFloat, 0.0));
+            break;
+        case Primitive::STRING:
+            ir->CreateRet(ir->CreateGlobalStringPtr(""));
+            break;
+        default:
+            assert(0);
     }
 }

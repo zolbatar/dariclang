@@ -10,12 +10,14 @@
 
 Sprites sprite;
 size_t sprite_index = 0;
-extern std::mutex sprite_lock;
 const int sprite_create_wait = 10;
 extern UISDL *ui;
+extern std::atomic_bool ui_started;
+extern "C" void gfx_uicheck();
 
 int Sprites::GrabSprite(int x, int y, int w, int h) {
-    sprite_lock.lock();
+    gfx_uicheck();
+    ui->GetSpriteLock()->lock();
     Sprite s;
     int banks = 1;
     for (auto i = 0; i < banks; i++) {
@@ -31,49 +33,49 @@ int Sprites::GrabSprite(int x, int y, int w, int h) {
     }
     size_t index = sprite_index++;
     sprites.insert(std::make_pair(index, std::move(s)));
-    sprite_lock.unlock();
+    ui->GetSpriteLock()->unlock();
 
     // Wait for all banks to be created and loaded
     auto ss = sprites.find(index);
     bool created = false;
     while (!created) {
         std::this_thread::sleep_for(std::chrono::microseconds(sprite_create_wait));
-        sprite_lock.lock();
+        ui->GetSpriteLock()->unlock();
         created = true;
         for (auto i = 0; i < banks; i++) {
             if (ss->second.banks[i].id == 0) {
                 created = false;
             }
         }
-        sprite_lock.unlock();
+        ui->GetSpriteLock()->unlock();
     }
 
     return static_cast<int>(index);
 }
 
 void Sprites::DeleteSprite(int handle) {
-    sprite_lock.lock();
+    ui->GetSpriteLock()->lock();
     auto sprite = sprites.find(handle);
     for (auto i = 0; i < sprite->second.banks.size(); i++) {
         sprite->second.banks[i].state = SpriteState::_DELETE;
     }
-    sprite_lock.unlock();
+    ui->GetSpriteLock()->unlock();
 }
 
 bool Sprites::DrawSprite(int handle, int bank, double sx, double sy, double rot, double scale) {
-    sprite_lock.lock();
+    ui->GetSpriteLock()->lock();
     auto sprite = sprites.find(handle);
 
     // Does sprite exist?
     if (sprite == sprites.end()) {
-        sprite_lock.unlock();
+        ui->GetSpriteLock()->unlock();
         return false;
     }
     auto s = &sprite->second;
 
     // Does bank exist?
     if (bank >= s->banks.size()) {
-        sprite_lock.unlock();
+        ui->GetSpriteLock()->unlock();
         return false;
     }
 
@@ -81,12 +83,12 @@ bool Sprites::DrawSprite(int handle, int bank, double sx, double sy, double rot,
     if (sb->state == SpriteState::OK) {
         ui->Sprite(sb, sx, sy, rot, scale, sb->flipped);
     }
-    sprite_lock.unlock();
+    ui->GetSpriteLock()->unlock();
     return true;
 }
 
 int Sprites::LoadSprite(std::string filename) {
-    sprite_lock.lock();
+    ui->GetSpriteLock()->lock();
 
     // Create sprite
     Sprite s;
@@ -101,7 +103,7 @@ int Sprites::LoadSprite(std::string filename) {
     // And save and return
     auto index = sprite_index++;
     sprites.insert(std::make_pair(index, std::move(s)));
-    sprite_lock.unlock();
+    ui->GetSpriteLock()->unlock();
 
     // Now fetch back
     auto ss = sprites.find(index);

@@ -16,11 +16,11 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 
         // Get some characters around the error position
         auto stream = offendingSymbol->getInputStream();
-        size_t start = (int64_t) offendingSymbol->getStartIndex() - line_length_scan;
+        int64_t start = (int64_t) offendingSymbol->getStartIndex() - line_length_scan;
         if (start < 0) start = 0;
-        size_t end = (int64_t) offendingSymbol->getStopIndex() + line_length_scan;
+        int64_t end = (int64_t) offendingSymbol->getStopIndex() + line_length_scan;
         if (end > stream->size()) end = stream->size() - 1;
-        antlr4::misc::Interval interval(start, end);
+        antlr4::misc::Interval interval(static_cast<size_t>(start), static_cast<size_t>(end));
         auto ee = stream->getText(interval);
 
         // Now scan for start of line
@@ -43,7 +43,7 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 
         // Now show error place
         std::cout << ee << std::endl;
-        for (auto i = 0; i < cc-1; i++)
+        for (auto i = 0; i < cc - 1; i++)
             std::cout << " ";
         std::cout << "^" << std::endl;
         throw CustomException(ExceptionType::PARSER, line, charPositionInLine, "Parsing error");

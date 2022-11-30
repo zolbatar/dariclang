@@ -13,15 +13,20 @@ extern size_t screen_width;
 extern size_t screen_height;
 extern size_t screen_flags;
 
-extern "C" void gfx2d_bankedon() {
-    if (!ui_started)
+extern "C" void gfx_uicheck() {
+    if (ui_started)
         return;
+    std::cout << "This operation requires a graphics mode" << std::endl;
+    exit(1);
+}
+
+extern "C" void gfx2d_bankedon() {
+    gfx_uicheck();
     ui->BankedOn();
 }
 
 extern "C" void gfx2d_bankedoff() {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     ui->BankedOff();
 }
 
@@ -37,57 +42,69 @@ extern "C" void gfx2d_mode(T_I w, T_I h, T_I flags) {
     }
 }
 
-extern "C" void gfx2d_line(T_I x1, T_I y1, T_I x2, T_I y2) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_line(T_F x1, T_F y1, T_F x2, T_F y2) {
+    gfx_uicheck();
     ui->Line(x1, y1, x2, y2);
 }
 
-extern "C" void gfx2d_linew(T_I x1, T_I y1, T_I x2, T_I y2, T_F w) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_linew(T_F x1, T_F y1, T_F x2, T_F y2, T_F w) {
+    gfx_uicheck();
     ui->LineWidth(x1, y1, x2, y2, w);
 }
 
+extern "C" void gfx2d_rectangle(T_F x1, T_F y1, T_F x2, T_F y2) {
+    gfx_uicheck();
+    ui->Line(x1, y1, x2, y1);
+    ui->Line(x1, y2, x2, y2);
+    ui->Line(x1, y1, x1, y2);
+    ui->Line(x2, y1, x2, y2);
+}
+
+extern "C" void gfx2d_rectanglew(T_F x1, T_F y1, T_F x2, T_F y2, T_F w) {
+    gfx_uicheck();
+    ui->LineWidth(x1, y1, x2, y1, w);
+    ui->LineWidth(x1, y2, x2, y2, w);
+    ui->LineWidth(x1, y1, x1, y2, w);
+    ui->LineWidth(x2, y1, x2, y2, w);
+}
+
+extern "C" void gfx2d_rectanglefill(T_F x1, T_F y1, T_F x2, T_F y2) {
+    gfx_uicheck();
+    ui->FilledRectangle(x1, y1, x2, y2);
+}
+
 extern "C" T_I gfx2d_swidth() {
-    if (!ui_started)
-        return 0;
+    gfx_uicheck();
     return ui->GetScreenWidth();
 }
 
 extern "C" T_I gfx2d_sheight() {
-    if (!ui_started)
-        return 0;
+    gfx_uicheck();
     return ui->GetScreenHeight();
 }
 
 extern "C" void gfx2d_flip() {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     ui->Flip(true);
 }
 
 extern "C" void gfx2d_cls() {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     ui->Cls();
 }
 
-extern "C" void gfx2d_plot(T_I x, T_I y) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_plot(T_F x, T_F y) {
+    gfx_uicheck();
     ui->Plot(x, y);
 }
 
-extern "C" void gfx2d_origin(T_I x, T_I y) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_origin(T_F x, T_F y) {
+    gfx_uicheck();
     ui->Origin(x, y);
 }
 
 extern "C" void gfx2d_fg(T_I r, T_I g, T_I b) {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     auto v1 = static_cast<float>(r) / 255.0f;
     auto v2 = static_cast<float>(g) / 255.0f;
     auto v3 = static_cast<float>(b) / 255.0f;
@@ -97,8 +114,7 @@ extern "C" void gfx2d_fg(T_I r, T_I g, T_I b) {
 }
 
 extern "C" void gfx2d_bg(T_I r, T_I g, T_I b) {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     auto v1 = static_cast<float>(r) / 255.0f;
     auto v2 = static_cast<float>(g) / 255.0f;
     auto v3 = static_cast<float>(b) / 255.0f;
@@ -108,6 +124,7 @@ extern "C" void gfx2d_bg(T_I r, T_I g, T_I b) {
 }
 
 extern "C" T_I gfx2d_createcolour(T_I r, T_I g, T_I b) {
+    gfx_uicheck();
     auto v1 = static_cast<float>(b) / 255.0f;
     auto v2 = static_cast<float>(g) / 255.0f;
     auto v3 = static_cast<float>(r) / 255.0f;
@@ -115,51 +132,43 @@ extern "C" T_I gfx2d_createcolour(T_I r, T_I g, T_I b) {
     return im;
 }
 
-extern "C" void gfx2d_circle(T_I x1, T_I y1, T_F r) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_circle(T_F x1, T_F y1, T_F r) {
+    gfx_uicheck();
     ui->Circle(x1, y1, r);
 }
 
-extern "C" void gfx2d_circlew(T_I x1, T_I y1, T_F w, T_F r) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_circlew(T_F x1, T_F y1, T_F w, T_F r) {
+    gfx_uicheck();
     ui->CircleWidth(x1, y1, w, r);
 }
 
-extern "C" void gfx2d_circlefilled(T_I x1, T_I y1, T_F r) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_circlefilled(T_F x1, T_F y1, T_F r) {
+    gfx_uicheck();
     ui->FilledCircle(x1, y1, r);
 }
 
-extern "C" void gfx2d_triangle(T_I x1, T_I y1, T_I x2, T_I y2, T_I x3, T_I y3) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_triangle(T_F x1, T_F y1, T_F x2, T_F y2, T_F x3, T_F y3) {
+    gfx_uicheck();
     ui->Triangle(x1, y1, x2, y2, x3, y3);
 }
 
-extern "C" void gfx2d_trianglefilled(T_I x1, T_I y1, T_I x2, T_I y2, T_I x3, T_I y3) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_trianglefilled(T_F x1, T_F y1, T_F x2, T_F y2, T_F x3, T_F y3) {
+    gfx_uicheck();
     ui->FilledTriangle(x1, y1, x2, y2, x3, y3);
 }
 
-extern "C" void gfx2d_triangleshaded(T_I x1, T_I y1, T_I c1, T_I x2, T_I y2, T_I c2, T_I x3, T_I y3, T_I c3) {
-    if (!ui_started)
-        return;
+extern "C" void gfx2d_triangleshaded(T_F x1, T_F y1, T_I c1, T_F x2, T_F y2, T_I c2, T_F x3, T_F y3, T_I c3) {
+    gfx_uicheck();
     ui->ShadedTriangle(x1, y1, x2, y2, x3, y3, c1, c2, c3, false);
 }
 
 extern "C" void gfx2d_cursoroff() {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     console.CursorOff();
 }
 
 extern "C" void gfx2d_cursoron() {
-    if (!ui_started)
-        return;
+    gfx_uicheck();
     console.CursorOn();
 }
 

@@ -11,7 +11,6 @@
 #include "stb_image.h"
 #include "Lodepng.h"
 
-std::mutex sprite_lock;
 size_t last_sprite_index = 0;
 extern Console console;
 extern Sprites sprite;
@@ -170,6 +169,7 @@ bool UISDL::Render() {
 
     // This is so app thread can lock to load fonts etc before start of frame
     if (!new_font_requested.empty()) {
+        ImGui_ImplOpenGL3_DestroyFontsTexture();
         io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), font_size * dpi_ratio);
         io.Fonts->Build();
         ImGui_ImplOpenGL3_CreateFontsTexture();
@@ -275,7 +275,7 @@ void UISDL::_CreateWindow(bool windowed) {
     std::cout << "Creating SDL window\n";
     SDL_WindowFlags window_flags;
     if (!windowed) {
-        window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
+        window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,
@@ -283,7 +283,7 @@ void UISDL::_CreateWindow(bool windowed) {
                                   desktop_screen_height,
                                   window_flags);
     } else {
-        window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
+        window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,

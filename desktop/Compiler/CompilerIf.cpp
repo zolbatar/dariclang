@@ -1,8 +1,21 @@
 #include "Compiler.h"
 
 void Compiler::TokenIf(ParserToken &token) {
+
+    // Is this the special _main_ element?
+    bool is_special = false;
+    ValueType special;
+    if (token.children.size() == 3 && token.children[0].type == ParserTokenType::VARIABLE) {
+        auto ref = Reference::Get(token.children[0].reference);
+        if (ref->GetName() == "MAIN") {
+            is_special = true;
+            special.type = Primitive::INT;
+            special.value = llvm::ConstantInt::get(llvm.TypeInt, compiling_main_file);
+        }
+    }
+
     auto bc = CreateAndInsertBB("IF Single Line", true, token);
-    auto value_type = CompileExpression(token.children[0]);
+    auto value_type = is_special ? special : CompileExpression(token.children[0]);
     auto t = Primitive::INT;
     llvm.AutoConversion(GetIR(), value_type, t);
     value_type.value = GetIR()->CreateIntCast(value_type.value, llvm.TypeBit, true);

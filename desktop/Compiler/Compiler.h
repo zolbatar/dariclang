@@ -67,6 +67,7 @@ private:
     CompilerOptions options;
     SharedState &state;
     Parser *parser;
+    bool compiling_main_file = true;
     bool strip_strings = false;
     CompilerLLVM llvm;
     llvm::Function *implicit = nullptr;

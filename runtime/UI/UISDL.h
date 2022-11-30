@@ -44,21 +44,21 @@ public:
     void SetBGColour(ImU32 colour);
     void Cls();
     void Flip(bool userSpecified);
-    void Line(int x1, int y1, int x2, int y2);
-    void LineWidth(int x1, int y1, int x2, int y2, float w);
-    void Rectangle(int x1, int y1, int x2, int y2);
-    void FilledRectangle(int x1, int y1, int x2, int y2);
-    void Circle(int x, int y, float r);
-    void CircleWidth(int x, int y, float r, float w);
-    void FilledCircle(int x, int y, float r);
-    void Triangle(int x1, int y1, int x2, int y2, int x3, int y3);
-    void FilledTriangle(int x1, int y1, int x2, int y2, int x3, int y3);
-    void ShadedTriangle(int x1, int y1, int x2, int y2, int x3, int y3,
+    void Line(float x1, float y1, float x2, float y2);
+    void LineWidth(float x1, float y1, float x2, float y2, float w);
+    void Rectangle(float x1, float y1, float x2, float y2);
+    void FilledRectangle(float x1, float y1, float x2, float y2);
+    void Circle(float x, float y, float r);
+    void CircleWidth(float x, float y, float r, float w);
+    void FilledCircle(float x, float y, float r);
+    void Triangle(float x1, float y1, float x2, float y2, float x3, float y3);
+    void FilledTriangle(float x1, float y1, float x2, float y2, float x3, float y3);
+    void ShadedTriangle(float x1, float y1, float x2, float y2, float x3, float y3,
                         uint32_t colour1, uint32_t colour2, uint32_t colour3, bool flat);
-    void DrawText(ImFont *font, float size, int x, int y, int w, int h, std::string text);
-    void Plot(int x, int y);
-    void Origin(int x, int y);
-    void Clip(int x1, int y1, int x2, int y2);
+    void DrawText(ImFont *font, float size, float x, float y, float w, float h, std::string text);
+    void Plot(float x, float y);
+    void Origin(float x, float y);
+    void Clip(float x1, float y1, float x2, float y2);
     void ClipOff();
     void Sprite(SpriteBank *sb, int sx, int sy, float rot, float scale, bool flipped);
     int64_t GetScreenWidth() { return desktop_screen_width; }
@@ -68,7 +68,9 @@ public:
     void RequestFontLoad(std::string font) {
         new_font_requested = font;
     }
+    bool IsFontRequestActive() { return !new_font_requested.empty(); }
     ImU32 GetFGColour() { return fgColour; }
+    std::mutex* GetSpriteLock() { return &sprite_lock; }
 
 private:
     void _CreateWindow(bool windowed);
@@ -76,16 +78,17 @@ private:
     void SpriteActions();
     bool LoadTextureFromFile(const char *filename, GLuint *outTexture, int *outWidth, int *outHeight);
 
+    std::mutex sprite_lock;
     std::string fps_text = "0 FPS";
     uint32_t fps_offset = 0;
     std::string new_font_requested;
-    const float font_size = 20.0f;
+    const float font_size = 80.0f;
     const int console_x_size = 8;
     const int console_y_size = 16;
     ImU32 fgColour;
     ImU32 bgColour;
-    int64_t origin_x = 0;
-    int64_t origin_y = 0;
+    float origin_x = 0.0;
+    float origin_y = 0.0;
     std::atomic_bool flip_requested = false;
     float dpi_ratio;
     int desktop_screen_width, desktop_screen_height;

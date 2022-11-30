@@ -38,20 +38,23 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("MODE", "gfx2d_mode", Primitive::NONE, "III");
     AddLibraryCall("BANKEDON", "gfx2d_bankedon", Primitive::NONE, "");
     AddLibraryCall("BANKEDOFF", "gfx2d_bankedoff", Primitive::NONE, "");
-    AddLibraryCall("ORIGIN", "gfx2d_origin", Primitive::NONE, "II");
+    AddLibraryCall("ORIGIN", "gfx2d_origin", Primitive::NONE, "FF");
     AddLibraryCall("SWIDTH", "gfx2d_swidth", Primitive::INT, "");
     AddLibraryCall("SHEIGHT", "gfx2d_sheight", Primitive::INT, "");
     AddLibraryCall("FLIP", "gfx2d_flip", Primitive::NONE, "");
     AddLibraryCall("CLS", "gfx2d_cls", Primitive::NONE, "");
-    AddLibraryCall("PLOT", "gfx2d_plot", Primitive::NONE, "II");
-    AddLibraryCall("TRIANGLE", "gfx2d_triangle", Primitive::NONE, "IIIIII");
-    AddLibraryCall("TRIANGLEFILL", "gfx2d_trianglefilled", Primitive::NONE, "IIIIII");
-    AddLibraryCall("TRIANGLESHADED", "gfx2d_triangleshaded", Primitive::NONE, "IIIIIIIII");
-    AddLibraryCall("CIRCLE", "gfx2d_circle", Primitive::NONE, "IIF");
-    AddLibraryCall("CIRCLEW", "gfx2d_circlew", Primitive::NONE, "IIFF");
-    AddLibraryCall("CIRCLEFILL", "gfx2d_circlefilled", Primitive::NONE, "IIF");
-    AddLibraryCall("LINE", "gfx2d_line", Primitive::NONE, "IIII");
-    AddLibraryCall("LINEW", "gfx2d_linew", Primitive::NONE, "IIIIF");
+    AddLibraryCall("PLOT", "gfx2d_plot", Primitive::NONE, "FF");
+    AddLibraryCall("RECTANGLE", "gfx2d_rectangle", Primitive::NONE, "FFFF");
+    AddLibraryCall("RECTANGLEW", "gfx2d_rectanglew", Primitive::NONE, "FFFFF");
+    AddLibraryCall("RECTANGLEFILL", "gfx2d_rectanglefill", Primitive::NONE, "FFFF");
+    AddLibraryCall("TRIANGLE", "gfx2d_triangle", Primitive::NONE, "FFFFFF");
+    AddLibraryCall("TRIANGLEFILL", "gfx2d_trianglefilled", Primitive::NONE, "FFFFFF");
+    AddLibraryCall("TRIANGLESHADED", "gfx2d_triangleshaded", Primitive::NONE, "FFIFFIFFI");
+    AddLibraryCall("CIRCLE", "gfx2d_circle", Primitive::NONE, "FFF");
+    AddLibraryCall("CIRCLEW", "gfx2d_circlew", Primitive::NONE, "FFFF");
+    AddLibraryCall("CIRCLEFILL", "gfx2d_circlefilled", Primitive::NONE, "FFF");
+    AddLibraryCall("LINE", "gfx2d_line", Primitive::NONE, "FFFF");
+    AddLibraryCall("LINEW", "gfx2d_linew", Primitive::NONE, "FFFFF");
     AddLibraryCall("FG", "gfx2d_fg", Primitive::NONE, "III");
     AddLibraryCall("BG", "gfx2d_bg", Primitive::NONE, "III");
     AddLibraryCall("COLOUR", "gfx2d_createcolour", Primitive::INT, "III");
@@ -62,7 +65,7 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("LOADSPRITE", "sprites_load", Primitive::INT, "S");
     AddLibraryCall("DELETESPRITE", "sprites_delete", Primitive::NONE, "I");
     AddLibraryCall("GRABSPRITE", "sprites_create", Primitive::INT, "IIII");
-    AddLibraryCall("DRAWSPRITE", "sprites_draw", Primitive::NONE, "IIIIFF");
+    AddLibraryCall("DRAWSPRITE", "sprites_draw", Primitive::NONE, "IIFFFF");
 
     // 3D Graphics
     AddLibraryCall("OBJECT", "gfx3d_object", Primitive::INT, "IFFFFFFFI");
@@ -112,7 +115,7 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("WAITKEY", "kbm_waitkey", Primitive::INT, "I");
     AddLibraryCall("WAITKEY$", "kbm_waitkeys", Primitive::STRING, "I");
     AddLibraryCall("KEYDOWN", "kbm_keydown", Primitive::INT, "I");
-    AddLibraryCall("GET", "kbm_get", Primitive::INT, "I");
+    AddLibraryCall("GET", "kbm_get", Primitive::INT, "");
     AddLibraryCall("GET$", "kbm_gets", Primitive::STRING, "");
     AddLibraryCall("MOUSEX", "kbm_mousex", Primitive::INT, "");
     AddLibraryCall("MOUSEY", "kbm_mousey", Primitive::INT, "");
