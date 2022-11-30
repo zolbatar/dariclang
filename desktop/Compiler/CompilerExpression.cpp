@@ -477,6 +477,12 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             }
             return vt;
         }
+        case ParserTokenType::MAIN: {
+            ValueType vt;
+            vt.type = Primitive::INT;
+            vt.value = llvm::ConstantInt::get(llvm.TypeInt, compiling_main_file);
+            return vt;
+        }
         default:
             assert(0);
     }

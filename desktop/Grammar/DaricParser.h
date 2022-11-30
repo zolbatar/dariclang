@@ -14,30 +14,31 @@ public:
   enum {
     COMMENT = 1, CASE = 2, CONST = 3, DATA = 4, DATALABEL = 5, DEF = 6, 
     DIM = 7, ELSE = 8, END = 9, ENDCASE = 10, ENDDEF = 11, ENDIF = 12, ENDWHILE = 13, 
-    FOR = 14, IF = 15, MODULE = 16, NEXT = 17, OF = 18, OPTION = 19, OTHERWISE = 20, 
+    FOR = 14, IF = 15, IMPORT = 16, NEXT = 17, OF = 18, OPTION = 19, OTHERWISE = 20, 
     PRINT = 21, READ = 22, REF = 23, REM = 24, REPEAT = 25, RESTORE = 26, 
     RETURN = 27, THEN = 28, SIZE = 29, STEP = 30, SWAP = 31, TO = 32, UNTIL = 33, 
-    WHEN = 34, WITH = 35, WHILE = 36, DEFRECORD = 37, RECORD = 38, ENDRECORD = 39, 
-    HPTIME = 40, TIME = 41, TIMES = 42, ABS = 43, ACS = 44, ASN = 45, ATN = 46, 
-    COS = 47, DEG = 48, EXP = 49, FLOOR = 50, LET = 51, LN = 52, LOG = 53, 
-    PI = 54, RAD = 55, ROUND = 56, SGN = 57, SIN = 58, SQR = 59, TAN = 60, 
-    FALSE = 61, TRUE = 62, ASC = 63, CHRS = 64, INSTR = 65, LEFTS = 66, 
-    MIDS = 67, RIGHTS = 68, LEN = 69, BYTE = 70, INT = 71, FLOAT = 72, STRING = 73, 
-    DOLLAR = 74, HASH = 75, COLON = 76, SEMICOLON = 77, DOT = 78, COMMA = 79, 
-    QUOTE = 80, NEWLINE = 81, PERCENT = 82, UNDERSCORE = 83, LPAREN = 84, 
-    RPAREN = 85, SOPEN = 86, SCLOSE = 87, EQ = 88, NE = 89, GT = 90, GE = 91, 
-    LT = 92, LE = 93, HAT = 94, PLUS = 95, MINUS = 96, MULTIPLY = 97, DIVIDE = 98, 
-    SHL = 99, SHR = 100, MOD = 101, DIV = 102, COMP = 103, NOT = 104, AND = 105, 
-    OR = 106, EOR = 107, STRINGLITERAL = 108, HEXNUMBER = 109, BINARYNUMBER = 110, 
-    FLOATLITERAL = 111, INTEGERLITERAL = 112, IDENTIFIER = 113, WS = 114
+    WHEN = 34, WITH = 35, WHILE = 36, MAIN = 37, DEFRECORD = 38, RECORD = 39, 
+    ENDRECORD = 40, HPTIME = 41, TIME = 42, TIMES = 43, ABS = 44, ACS = 45, 
+    ASN = 46, ATN = 47, COS = 48, DEG = 49, EXP = 50, FLOOR = 51, LET = 52, 
+    LN = 53, LOG = 54, PI = 55, RAD = 56, ROUND = 57, SGN = 58, SIN = 59, 
+    SQR = 60, TAN = 61, FALSE = 62, TRUE = 63, ASC = 64, CHRS = 65, INSTR = 66, 
+    LEFTS = 67, MIDS = 68, RIGHTS = 69, LEN = 70, BYTE = 71, INT = 72, FLOAT = 73, 
+    STRING = 74, DOLLAR = 75, HASH = 76, COLON = 77, SEMICOLON = 78, DOT = 79, 
+    COMMA = 80, QUOTE = 81, NEWLINE = 82, PERCENT = 83, UNDERSCORE = 84, 
+    LPAREN = 85, RPAREN = 86, SOPEN = 87, SCLOSE = 88, EQ = 89, NE = 90, 
+    GT = 91, GE = 92, LT = 93, LE = 94, HAT = 95, PLUS = 96, MINUS = 97, 
+    MULTIPLY = 98, DIVIDE = 99, SHL = 100, SHR = 101, MOD = 102, DIV = 103, 
+    COMP = 104, NOT = 105, AND = 106, OR = 107, EOR = 108, STRINGLITERAL = 109, 
+    HEXNUMBER = 110, BINARYNUMBER = 111, FLOATLITERAL = 112, INTEGERLITERAL = 113, 
+    IDENTIFIER = 114, WS = 115
   };
 
   enum {
     RuleProgram = 0, RuleStatements = 1, RuleStatementsl = 2, RuleStatement = 3, 
     RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
     RuleCase = 8, RuleConst = 9, RuleData = 10, RuleDataLabel = 11, RuleDim = 12, 
-    RuleExprcall = 13, RuleEnd = 14, RuleFor = 15, RuleIf = 16, RuleIfml = 17, 
-    RuleModule = 18, RuleOption = 19, RuleParameter = 20, RulePrint = 21, 
+    RuleExprcall = 13, RuleEnd = 14, RuleFor = 15, RuleImportlib = 16, RuleIf = 17, 
+    RuleIfml = 18, RuleOption = 19, RuleParameter = 20, RulePrint = 21, 
     RuleProcedure = 22, RuleRepeat = 23, RuleRead = 24, RuleRestore = 25, 
     RuleReturn = 26, RuleStruct = 27, RuleStructDim = 28, RuleStructInstance = 29, 
     RuleSwap = 30, RuleWhen = 31, RuleWhile = 32, RuleVariable = 33, RuleExpression = 34, 
@@ -78,9 +79,9 @@ public:
   class ExprcallContext;
   class EndContext;
   class ForContext;
+  class ImportlibContext;
   class IfContext;
   class IfmlContext;
-  class ModuleContext;
   class OptionContext;
   class ParameterContext;
   class PrintContext;
@@ -170,7 +171,7 @@ public:
     ForContext *for_();
     IfContext *if_();
     IfmlContext *ifml();
-    ModuleContext *module();
+    ImportlibContext *importlib();
     OptionContext *option();
     ProcedureContext *procedure();
     PrintContext *print();
@@ -413,6 +414,20 @@ public:
 
   ForContext* for_();
 
+  class  ImportlibContext : public antlr4::ParserRuleContext {
+  public:
+    ImportlibContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IMPORT();
+    StringLiteralContext *stringLiteral();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ImportlibContext* importlib();
+
   class  IfContext : public antlr4::ParserRuleContext {
   public:
     IfContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -451,20 +466,6 @@ public:
   };
 
   IfmlContext* ifml();
-
-  class  ModuleContext : public antlr4::ParserRuleContext {
-  public:
-    ModuleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *MODULE();
-    antlr4::tree::TerminalNode *IDENTIFIER();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  ModuleContext* module();
 
   class  OptionContext : public antlr4::ParserRuleContext {
   public:
@@ -758,6 +759,7 @@ public:
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *RPAREN();
+    antlr4::tree::TerminalNode *MAIN();
     LiteralContext *literal();
     ExprcallContext *exprcall();
     VariableContext *variable();

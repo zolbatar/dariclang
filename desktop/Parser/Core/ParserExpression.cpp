@@ -15,7 +15,12 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		return CreateToken(context, ParserTokenType::FALSE);
 	}
 
-	// Maths
+    if (context->MAIN() != NULL) {
+        return CreateToken(context, ParserTokenType::MAIN);
+    }
+
+
+    // Maths
 	if (context->HAT() != NULL) {
 		return DoubleExpression(context, ParserTokenType::HAT);
 	}

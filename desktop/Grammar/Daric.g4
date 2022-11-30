@@ -25,7 +25,7 @@ statement
     | for
     | if
     | ifml
-    | module
+    | importlib
     | option
     | procedure
     | print
@@ -55,9 +55,9 @@ dim:            DIM IDENTIFIER OF? type SOPEN expression? (COMMA expression)* SC
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            END ;
 for:            FOR IDENTIFIER (OF? type)? EQ expression TO expression (STEP expression)? statements NEXT ;
+importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
-module:         MODULE IDENTIFIER ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
 parameter:      REF? ((IDENTIFIER (OF? type)?) | (IDENTIFIER RECORD OF? IDENTIFIER)) ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
@@ -81,6 +81,7 @@ variable
 
 expression
     : LPAREN expression RPAREN
+    | MAIN
     | literal
     | exprcall
     | variable
@@ -219,7 +220,7 @@ ENDIF           : 'ENDIF' | 'EndIf' | 'endif' ;
 ENDWHILE        : 'ENDWHILE' | 'EndWhile' | 'endwhile' ;
 FOR             : 'FOR' | 'For' | 'for' ;
 IF              : 'IF' | 'If' | 'if' ;
-MODULE          : 'MODULE' | 'Module' | 'module' ;
+IMPORT          : 'IMPORT' | 'Import' | 'import' ;
 NEXT            : 'NEXT' | 'Next' | 'next' ;
 OF              : 'OF' | 'Of' | 'of' ;
 OPTION          : 'OPTION' | 'Option' | 'option' ;
@@ -240,6 +241,8 @@ UNTIL           : 'UNTIL' | 'Until' | 'until' ;
 WHEN            : 'WHEN' | 'When' | 'when' ;
 WITH            : 'WITH' | 'With' | 'with' ;
 WHILE           : 'WHILE' | 'While' | 'while' ;
+
+MAIN            : '@MAIN' | '@Main' | '@main' ;
 
 DEFRECORD       : 'DEFRECORD' | 'DefRecord' | 'defrecord' ;
 RECORD          : 'RECORD' | 'Record' | 'record' ;

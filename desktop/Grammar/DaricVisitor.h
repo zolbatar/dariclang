@@ -51,11 +51,11 @@ public:
 
     virtual std::any visitFor(DaricParser::ForContext *context) = 0;
 
+    virtual std::any visitImportlib(DaricParser::ImportlibContext *context) = 0;
+
     virtual std::any visitIf(DaricParser::IfContext *context) = 0;
 
     virtual std::any visitIfml(DaricParser::IfmlContext *context) = 0;
-
-    virtual std::any visitModule(DaricParser::ModuleContext *context) = 0;
 
     virtual std::any visitOption(DaricParser::OptionContext *context) = 0;
 

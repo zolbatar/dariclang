@@ -40,8 +40,8 @@ std::any Parser::visitStatement(DaricParser::StatementContext *context) {
     if (context->ifml()) {
         return std::any_cast<ParserToken>(visit(context->ifml()));
     }
-    if (context->module()) {
-        return std::any_cast<ParserToken>(visit(context->module()));
+    if (context->importlib()) {
+        return std::any_cast<ParserToken>(visit(context->importlib()));
     }
     if (context->print()) {
         return std::any_cast<ParserToken>(visit(context->print()));

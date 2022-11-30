@@ -79,15 +79,15 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitImportlib(DaricParser::ImportlibContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitIf(DaricParser::IfContext *ctx) override {
     return visitChildren(ctx);
   }
 
   virtual std::any visitIfml(DaricParser::IfmlContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitModule(DaricParser::ModuleContext *ctx) override {
     return visitChildren(ctx);
   }
 

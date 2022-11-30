@@ -90,7 +90,6 @@ protected:
     std::any visitIfml(DaricParser::IfmlContext *context);
     std::any visitIntegerLiteral(DaricParser::IntegerLiteralContext *context);
     std::any visitLiteral(DaricParser::LiteralContext *context);
-    std::any visitModule(DaricParser::ModuleContext *context);
     std::any visitParameter(DaricParser::ParameterContext *context);
     std::any visitPrint(DaricParser::PrintContext *context);
     std::any visitProcedure(DaricParser::ProcedureContext *context);
@@ -120,6 +119,7 @@ protected:
     std::any visitRestore(DaricParser::RestoreContext *context);
     std::any visitRead(DaricParser::ReadContext *context);
     std::any visitOption(DaricParser::OptionContext *context);
+    std::any visitImportlib(DaricParser::ImportlibContext *context);
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
