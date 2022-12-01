@@ -42,7 +42,6 @@ void Text::PrintCharacter(ImFont *font, float size, char c, float *cursor_x, flo
 
 void Text::PrintText(ImFont *font, float size, std::string text, float cursor_x, float cursor_y)
 {
-    std::cout << text;
     if (cursor_x == -1.0)
         cursor_x = lastCursorX;
     if (cursor_y == -1.0)

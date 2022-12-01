@@ -372,6 +372,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
         }
         case ParserTokenType::CHRS: {
             ValueType vt = CompileExpression(t.children[0]);
+            llvm.AutoConversion(GetIR(), vt, Primitive::INT);
             if (vt.type != Primitive::INT) {
                 TypeError(t);
             }
