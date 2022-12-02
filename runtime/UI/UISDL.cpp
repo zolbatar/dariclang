@@ -54,10 +54,12 @@ UISDL::~UISDL() {
 
 void UISDL::BankedOn() {
 	mode = Mode::BANKED;
+	Flip(true);
 }
 
 void UISDL::BankedOff() {
 	mode = Mode::CLASSIC;
+	Flip(true);
 }
 
 void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
@@ -394,7 +396,7 @@ void UISDL::SpriteActions() {
                     GLuint image_texture;
                     glGenTextures(1, &image_texture);
                     glBindTexture(GL_TEXTURE_2D, image_texture);
-                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, it->width * 2, it->height * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+                    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, it->width * 2, it->height * 2, 0, GL_RGBA, GL_UNSIGNED_BYTE,
                                  NULL);
 
                     // Setup filtering parameters for display
@@ -408,7 +410,7 @@ void UISDL::SpriteActions() {
                     glBindFramebuffer(GL_FRAMEBUFFER, 0);
                     auto yy = desktop_screen_height - (it->y * 2);
                     auto xx = it->x * 2;
-                    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, xx, yy, it->width * 2, it->height * 2, 0);
+                    glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, xx, yy, it->width * 2, it->height * 2, 0);
                     it->id = image_texture;
                     //std::cout << "Created sprite with ID: " << it->id << std::endl;
                     it->state = SpriteState::OK;
@@ -447,7 +449,7 @@ bool UISDL::LoadTextureFromFile(const char *filename, GLuint *outTexture, int *o
 #if defined(GL_UNPACK_ROW_LENGTH) && !defined(__EMSCRIPTEN__)
     glPixelStorei(GL_UNPACK_ROW_LENGTH, 0);
 #endif
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, image_width, image_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
     stbi_image_free(image_data);
 
     *outTexture = image_texture;

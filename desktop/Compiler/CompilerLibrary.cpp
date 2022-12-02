@@ -48,6 +48,8 @@ void Compiler::SetupLibrary() {
 	AddLibraryCall("CIRCLE", "gfx2d_circle", Primitive::NONE, "FFF");
 	AddLibraryCall("CIRCLEW", "gfx2d_circlew", Primitive::NONE, "FFFF");
 	AddLibraryCall("CIRCLEFILL", "gfx2d_circlefilled", Primitive::NONE, "FFF");
+	AddLibraryCall("CLIPON", "gfx2d_clipon", Primitive::NONE, "FFFF");
+	AddLibraryCall("CLIPOFF", "gfx2d_clipoff", Primitive::NONE, "");
 	AddLibraryCall("LINE", "gfx2d_line", Primitive::NONE, "FFFF");
 	AddLibraryCall("LINEW", "gfx2d_linew", Primitive::NONE, "FFFFF");
 	AddLibraryCall("FG", "gfx2d_fg", Primitive::NONE, "III");

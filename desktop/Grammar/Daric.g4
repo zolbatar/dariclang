@@ -5,8 +5,9 @@ program
     ;
 
 statements
-    : (separator* statement (separator | EOF)?)*
-        ;
+    : separator+
+    | (separator* statement (separator | EOF)?)*
+    ;
 
 statementsl
     : (COLON* statement (COLON | EOF)?)+

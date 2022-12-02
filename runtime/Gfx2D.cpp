@@ -103,6 +103,16 @@ extern "C" void gfx2d_origin(T_F x, T_F y) {
 	ui->Origin(x, y);
 }
 
+extern "C" void gfx2d_clipon(T_F x1, T_F y1, T_F x2, T_F y2) {
+	gfx_uicheck();
+	ui->Clip(x1, y1, x2, y2);
+}
+
+extern "C" void gfx2d_clipoff() {
+	gfx_uicheck();
+	ui->ClipOff();
+}
+
 extern "C" void gfx2d_fg(T_I r, T_I g, T_I b) {
 	gfx_uicheck();
 	auto v1 = static_cast<float>(r) / 255.0f;

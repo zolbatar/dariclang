@@ -68,6 +68,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
 		DefaultReturn(return_type, t);
 	}
 	procedure = nullptr;
+	return_type = Primitive::NONE;
 	Instance::ClearLocals(llvm);
 }
 

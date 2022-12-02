@@ -123,10 +123,10 @@ public:
   public:
     StatementsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<StatementContext *> statement();
-    StatementContext* statement(size_t i);
     std::vector<SeparatorContext *> separator();
     SeparatorContext* separator(size_t i);
+    std::vector<StatementContext *> statement();
+    StatementContext* statement(size_t i);
     std::vector<antlr4::tree::TerminalNode *> EOF();
     antlr4::tree::TerminalNode* EOF(size_t i);
 
