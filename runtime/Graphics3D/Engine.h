@@ -31,7 +31,7 @@ public:
 
 enum class RenderType {
     Solid,
-    Wireframe
+    Wireframe,
 };
 
 class ShapeSection {

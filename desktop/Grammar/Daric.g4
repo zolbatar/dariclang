@@ -13,8 +13,7 @@ statementsl
     ;
 
 statement
-    : COMMENT
-    | assign
+    : assign
     | call
     | case
     | const
@@ -47,7 +46,7 @@ separator
 assign:         LET? assignment (COMMA assignment)* (OF? type)? ;
 assignment:     variable EQ expression ;
 call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
-case:           CASE expression OF separator? when+ (OTHERWISE statements)? ENDCASE ;
+case:           CASE expression OF separator? when* (OTHERWISE statements)? ENDCASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
@@ -204,7 +203,8 @@ stringLiteral
     : STRINGLITERAL
     ;
 
-COMMENT         : (REM | HASH) ~ [\r\n]* ;
+BlockComment:   '#{' .*? '}#' -> skip;
+LineComment:    (REM | HASH) ~ [\r\n]* -> skip;
 
 CASE            : 'CASE' | 'Case' | 'case' ;
 CONST           : 'CONST' | 'Const' | 'const' ;

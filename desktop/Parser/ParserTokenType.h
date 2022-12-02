@@ -17,7 +17,6 @@ enum class ParserTokenType
 	CALL,
     CASE,
 	CHRS,
-	COMMENT,
 	COMPLEMENT,
 	CONSTANT,
 	COS,

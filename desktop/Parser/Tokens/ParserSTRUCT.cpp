@@ -53,8 +53,8 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     }
 
     // Add to token
-	state.AddStruct(ps.identifier, ti, ps.reference);
 	ps.reference = state.GetNextRefIndex();
+	state.AddStruct(ps.identifier, ti, ps.reference);
 
     return ps;
 }

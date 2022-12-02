@@ -29,9 +29,9 @@ private:
 class Parser : DaricVisitor {
 public:
 	Parser(SourceFileData &state) : state(state) {}
-	void Parse(std::istream *source);
-
-	std::string GetModule() { return module; }
+	std::vector<std::string> Parse(std::istream &source);
+	void setFilename(std::string name) { filename = name; }
+	std::string GetFilename() { return filename; }
 
 	std::vector<ParserToken> &GetStatements() {
 		return statements;
@@ -39,24 +39,25 @@ public:
 
 private:
 	SourceFileData &state;
+	std::string filename;
+	std::vector<std::string> additional_files;
 	std::vector<ParserToken> statements;
-	std::string module = "Daric";
 	std::unordered_map<std::string, Procedure> procedures;
 	Procedure *current_procedure = nullptr;
 
 	void RaiseException(std::string msg, antlr4::ParserRuleContext *context) {
-		throw CustomException(ExceptionType::PARSER, context->getStart()->getLine(),
+		throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
 							  context->getStart()->getCharPositionInLine(), msg);
 	}
 
 	void TypeError(antlr4::ParserRuleContext *context) {
-		throw CustomException(ExceptionType::PARSER, context->getStart()->getLine(),
+		throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
 							  context->getStart()->getCharPositionInLine(),
 							  "Unexpected type");
 	}
 
 	void SyntaxError(antlr4::ParserRuleContext *context) {
-		throw CustomException(ExceptionType::PARSER, context->getStart()->getLine(),
+		throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
 							  context->getStart()->getCharPositionInLine(),
 							  "Syntax error");
 	}
@@ -64,6 +65,7 @@ private:
 	ParserToken CreateToken(antlr4::ParserRuleContext *context) {
 		ParserToken p;
 		p.line = context->getStart()->getLine();
+		p.filename = this->filename;
 		p.char_position = context->getStart()->getCharPositionInLine();
 		return p;
 	}
@@ -72,6 +74,7 @@ private:
 		ParserToken p;
 		p.scope = current_procedure == nullptr ? Scope::GLOBAL : Scope::LOCAL;
 		p.type = type;
+		p.filename = this->filename;
 		p.line = context->getStart()->getLine();
 		p.char_position = context->getStart()->getCharPositionInLine();
 

@@ -88,7 +88,8 @@ void ShapeSection::CreateOpenGL3Vertex(PosColorVertex *v, bool solid, ImVec4 &tc
     verticesNormals.push_back(std::move(vn1));
 }
 
-void ShapeSection::MoveInVerticesAndFaces(std::vector<PosColorVertex> *vertices_in, std::vector<MeshTriangle> *faces_in) {
+void
+ShapeSection::MoveInVerticesAndFaces(std::vector<PosColorVertex> *vertices_in, std::vector<MeshTriangle> *faces_in) {
     vertices.swap(*vertices_in);
     triangles.swap(*faces_in);
 }

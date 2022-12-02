@@ -21,7 +21,7 @@ bool Compiler::Compile() {
 #ifdef CATCH_ERRORS
 	try {
 #endif
-		llvm.SetupProfile(options, parser->GetModule(), state);
+		llvm.SetupProfile(options, "Daric", state);
 
 		// Library
 		SetupLibrary();
@@ -32,20 +32,31 @@ bool Compiler::Compile() {
 		implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
 		implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
 
-		// Looahead
-		for (auto &token : parser->GetStatements()) {
-			switch (token.type) {
-			case ParserTokenType::PROCEDURE:CreateLookaheadProc(token);
-				break;
-			case ParserTokenType::STRUCT:TokenStruct(token);
-				break;
-			default:
-				// Do nothing
-				break;
+		// Looahead (across all files)
+		for (auto &p : parsers) {
+			for (auto &token : p.GetStatements()) {
+				switch (token.type) {
+				case ParserTokenType::PROCEDURE:CreateLookaheadProc(token);
+					break;
+				case ParserTokenType::STRUCT:TokenStruct(token);
+					break;
+				default:
+					// Do nothing
+					break;
+				}
 			}
 		}
 
-		CompileStatements(parser->GetStatements());
+		// Do actual compile
+		auto idx = 0;
+		for (auto &p : parsers) {
+			compiling_main_file = idx == parsers.size() - 1;
+			this->option_base = false;
+			CompileStatements(p.GetStatements());
+			idx++;
+		}
+
+		// Finish up the implicit function
 		implicit_ir->CreateRetVoid();
 #ifdef CATCH_ERRORS
 	}
@@ -63,15 +74,11 @@ bool Compiler::Compile() {
 	return true;
 }
 
-void Compiler::CompileAdditional() {
-	this->option_base = false;
-}
-
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
 	for (auto &token : statements) {
 		//std::cout << "Line: " << token.line << std::endl;
 		switch (token.type) {
-		case ParserTokenType::IMPORT: break;
+		case ParserTokenType::IMPORT:
 		case ParserTokenType::NONE:
 		case ParserTokenType::PARAMETER:
 		case ParserTokenType::PARAMETER_REF:
@@ -156,8 +163,8 @@ void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {
 void Compiler::TokenEnd(ParserToken &token) {
 	if (!options.use_exit_as_end) {
 		llvm.StoreGlobal("~QuitRequested", GetIR(), llvm.CreateConstantInt(Primitive::INT, 1));
-		GetIR()->CreateRetVoid();
-		CreateAndInsertBB("Post set quit requested", false, token);
+		DefaultReturn(return_type, token);
+//		CreateAndInsertBB("Post set quit requested", false, token);
 	} else {
 		CreateCall("daric_end", {});
 	}

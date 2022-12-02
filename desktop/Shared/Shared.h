@@ -17,7 +17,7 @@ struct StructInfo {
 class SourceFileData {
 public:
 	bool StructExists(std::string name) { return struct_indexes.contains(name); }
-	size_t GetStructIndex(std::string name) { return struct_indexes.find(name)->second; }
+	size_t GetStructIndex(std::string name);
 	StructInfo *GetStruct(size_t index) { return &structs[index]; }
 	std::unordered_map<std::string, size_t>::iterator FindDataLabel(std::string name);
 	std::unordered_map<std::string, size_t>::iterator DataLabelEnd() { return data_labels.end(); }

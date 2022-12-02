@@ -27,6 +27,7 @@ public:
     void ProcessEvent(SDL_Event &event);
     void CheckForKeypress();
     char Get();
+	void Clear();
     std::string GetString();
     int Inkey(int timeout_or_keycode);
     std::string Inkeys(int timeout_or_keycode);

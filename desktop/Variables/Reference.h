@@ -105,7 +105,7 @@ private:
     static std::unordered_map<size_t, Reference> references;
 
     static void RaiseException(std::string msg, ParserToken &t) {
-        throw CustomException(ExceptionType::COMPILER, t.line, t.char_position, std::move(msg));
+        throw CustomException(ExceptionType::COMPILER, t.filename, t.line, t.char_position, std::move(msg));
     }
 
     // Link to instance (used during compilation)

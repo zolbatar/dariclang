@@ -12,6 +12,7 @@ std::any Parser::visitImportlib(DaricParser::ImportlibContext* context)
 	{
 		RaiseException("Imported file '" + value.sv + "' does not exist", context);
 	}
+	additional_files.push_back(pth.generic_string());
 
 	ps.identifier = value.identifier;
 	return ps;

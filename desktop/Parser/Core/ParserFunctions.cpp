@@ -4,9 +4,8 @@ std::any Parser::visitProcedure(DaricParser::ProcedureContext *context) {
     auto name = context->IDENTIFIER()->getText();
     procedures.insert(std::make_pair(name, Procedure(name)));
     current_procedure = &procedures.find(name)->second;
-    ParserToken ps = CreateToken(context);
+    ParserToken ps = CreateToken(context, ParserTokenType::PROCEDURE);
     ps.identifier = name;
-    ps.type = ParserTokenType::PROCEDURE;
     if (!context->type()) {
         ps.data_type = Primitive::NONE;
     } else {

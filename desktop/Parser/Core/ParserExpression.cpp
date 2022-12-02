@@ -15,12 +15,12 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		return CreateToken(context, ParserTokenType::FALSE);
 	}
 
-    if (context->MAIN() != NULL) {
-        return CreateToken(context, ParserTokenType::MAIN);
-    }
+	if (context->MAIN() != NULL) {
+		return CreateToken(context, ParserTokenType::MAIN);
+	}
 
 
-    // Maths
+	// Maths
 	if (context->HAT() != NULL) {
 		return DoubleExpression(context, ParserTokenType::HAT);
 	}
@@ -40,8 +40,7 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		// Unary plus?
 		if (context->expression().size() == 1) {
 			return std::any_cast<ParserToken>(visit(context->expression(0)));
-		}
-		else {
+		} else {
 			return DoubleExpression(context, ParserTokenType::ADD);
 		}
 	}
@@ -52,8 +51,7 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 			auto v = std::any_cast<ParserToken>(visit(context->expression(0)));
 			t.children.push_back(std::move(v));
 			return t;
-		}
-		else {
+		} else {
 			return DoubleExpression(context, ParserTokenType::MINUS);
 		}
 	}
@@ -148,14 +146,14 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		return SingleExpression(context, ParserTokenType::TAN);
 	}
 
-    // Array
-    if (context->SIZE() != NULL) {
-        auto ps = CreateToken(context, ParserTokenType::SIZE);
-        ps.identifier = context->IDENTIFIER()->getText();
-        return ps;
-    }
+	// Array
+	if (context->SIZE() != NULL) {
+		auto ps = CreateToken(context, ParserTokenType::SIZE);
+		ps.identifier = context->IDENTIFIER()->getText();
+		return ps;
+	}
 
-    // Chrono
+	// Chrono
 	if (context->HPTIME() != NULL) {
 		return CreateToken(context, ParserTokenType::HPTIME);
 	}
@@ -176,8 +174,7 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 	if (context->STRING() != NULL) {
 		if (context->expression().size() == 1) {
 			return SingleExpression(context, ParserTokenType::STRING);
-		}
-		else {
+		} else {
 			return DoubleExpression(context, ParserTokenType::STRING_WITH_FORMAT);
 		}
 	}
@@ -212,8 +209,7 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		return visit(context->literal());
 	}
 	if (context->variable() != NULL) {
-		ParserToken t = CreateToken(context);
-		t.type = ParserTokenType::VARIABLE;
+		ParserToken t = CreateToken(context, ParserTokenType::VARIABLE);
 		auto r = std::any_cast<Reference *>(visit(context->variable()));
 		t.reference = r->GetRef();
 		return t;

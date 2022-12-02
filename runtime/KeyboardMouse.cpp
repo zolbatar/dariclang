@@ -3,6 +3,10 @@
 
 extern Input input;
 
+extern "C" void kbm_clear() {
+  input.Clear();
+}
+
 extern "C" T_I kbm_waitkey(T_I timeout) {
     auto v = input.Inkey(timeout);
     return v;

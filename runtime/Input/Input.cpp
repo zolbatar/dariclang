@@ -12,6 +12,8 @@ char Input::Get()
     }
     auto t = buffer.front();
     buffer.pop();
+	while (!key_events.empty())
+		key_events.pop();
     return t;
 }
 
@@ -22,6 +24,8 @@ std::string Input::GetString()
     }
     auto t = buffer.front();
     buffer.pop();
+	while (!key_events.empty())
+		key_events.pop();
     return std::string(1, t);
 }
 
@@ -78,7 +82,7 @@ void Input::ProcessEvent(SDL_Event &event)
             break;
         }
         default:
-            // std::cout << event.type << std::endl;
+            //std::cout << event.type << std::endl;
             break;
     }
 }
@@ -90,6 +94,8 @@ void Input::CheckForKeypress()
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
     buffer.pop();
+	while (!key_events.empty())
+		key_events.pop();
 }
 
 int Input::Inkey(int timeout_or_keycode)
@@ -113,6 +119,11 @@ int Input::Inkey(int timeout_or_keycode)
         } while (get_clock() - clock < timeout_or_keycode);
         return -1;
     }
+}
+
+void Input::Clear() {
+	while (!key_events.empty())
+		key_events.pop();
 }
 
 std::string Input::Inkeys(int timeout_or_keycode)
