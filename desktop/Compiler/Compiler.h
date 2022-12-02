@@ -54,7 +54,7 @@ struct LibraryFunc {
 
 class Compiler {
 public:
-    Compiler(SharedState &state, Parser *parser, CompilerOptions options)
+    Compiler(SourceFileData &state, Parser *parser, CompilerOptions options)
             : state(state), options(options), parser(parser) {
     }
 
@@ -65,7 +65,7 @@ public:
 
 private:
     CompilerOptions options;
-    SharedState &state;
+	SourceFileData &state;
     Parser *parser;
     bool compiling_main_file = true;
     bool strip_strings = false;

@@ -111,7 +111,7 @@ static std::string getFeaturesStr() {
     return Features.getString();
 }
 
-void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, SharedState &state) {
+void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, SourceFileData &state) {
     llvm::CodeGenOpt::Level OLvl = llvm::CodeGenOpt::Default;
     this->options = options;
     if (options.optimise) {
@@ -180,10 +180,10 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sha
     TypeString = llvm::Type::getInt8PtrTy(Module->getContext());
 
     // Build DATA
-    auto stackInt = state.data.size();
+    auto stackInt = state.GetData().size();
     auto typ = llvm::ArrayType::get(TypeInt, stackInt);
     std::vector<llvm::Constant *> values;
-    for (auto &iv: state.data) {
+    for (auto &iv: state.GetData()) {
         values.push_back(llvm::ConstantInt::get(TypeInt, iv));
     }
     auto data = llvm::ConstantArray::get(typ, values);

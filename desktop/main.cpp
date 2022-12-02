@@ -6,7 +6,7 @@
 #include <filesystem>
 #include "Parser/Parser.h"
 #include "Compiler/Compiler.h"
-#include "Variables/Shared.h"
+#include "Shared/SourceFile.h"
 #include "../runtime/UI/UISDL.h"
 #include "../runtime/Sound/SoftSynth.h"
 
@@ -21,34 +21,13 @@ size_t screen_width;
 size_t screen_height;
 size_t screen_flags;
 std::atomic_bool ui_started = false;
-extern Console console;
-extern Input input;
 std::filesystem::path exe_path;
 
 static void RunThread() {
     Instance::ClearStatic();
     Reference::ClearStatic();
-    SharedState state;
-    Parser parser(state);
-    parser.Parse(options.file);
-    Compiler c(state, &parser, std::move(options));
-    auto t1 = std::chrono::steady_clock::now();
-    if (c.Compile()) {
-        if (options.run) {
-            t1 = std::chrono::steady_clock::now();
-            c.Run();
-        } else
-            c.CreateExecutable();
-    }
-    if (ui_started) {
-        auto t2 = std::chrono::steady_clock::now();
-        auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-        console.SetColour(0xFFFFFFFF);
-//        console.WriteString("Program finished in " + std::to_string(time_span.count()) + "ms. Press a key to quit.");
-        console.WriteString("Program finished. Press a key to quit.");
-        ui->Flip(true);
-        input.CheckForKeypress();
-    }
+    SourceFile state(options);
+    state.ParseCompileAndRun();
     done = true;
 }
 
@@ -60,7 +39,7 @@ void do_quit() {
 int main(int argc, char *argv[]) {
     exe_path = std::filesystem::path{argv[0]}.parent_path();
 
-    std::cout << "Welcome to Daric!\n" << std::endl;
+    std::cout << "Welcome to Daric!" << std::endl;
     options.file = new std::ifstream(argv[1]);
     if (!options.file->is_open()) {
         std::cout << "Can't open source file\n";

@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 if (APPLE)
     #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
@@ -156,6 +157,7 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/Compiler.h
+        Compiler/CompilerOption.cpp
         Compiler/CompilerPrint.cpp
         Compiler/CompilerProcedure.cpp
         Compiler/CompilerIf.cpp
@@ -211,8 +213,8 @@ add_executable(${PROJECT_NAME}
         Variables/PrimitiveTypes.h
         Variables/Reference.h
         Variables/Reference.cpp
-        Variables/Shared.cpp
-        Variables/Shared.h
+        Shared/Shared.h
+        Shared/Shared.cpp
         Variables/Instance.cpp
         Variables/Instance.h
         Variables/InstancePrimitive.cpp
@@ -229,7 +231,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Compiler/CompilerOption.cpp)
+        Grammar/DaricVisitor.cpp Shared/SourceFile.cpp Shared/SourceFile.h)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}
@@ -260,8 +262,10 @@ else()
             assimp-runtime
             ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
 endif()
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${SDL2_DIR}/libSDL2.a /Users/daryl/Shared/Daric/mac/)
+if (APPLE)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${SDL2_DIR}/libSDL2.a /Users/daryl/Shared/Daric/mac/)
+endif()
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach (dir ${dirs})

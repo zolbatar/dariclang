@@ -3,14 +3,14 @@
 std::any Parser::visitData(DaricParser::DataContext *context) {
     for (auto i = 0; i < context->integerLiteral().size(); i++) {
         auto value = std::any_cast<ParserToken>(visit(context->integerLiteral(i)));
-        state.data.push_back(value.iv);
+        state.AddDataValue(value.iv);
     }
     return CreateToken(context, ParserTokenType::NONE);
 }
 
 std::any Parser::visitDataLabel(DaricParser::DataLabelContext *context) {
     auto value = std::any_cast<ParserToken>(visit(context->stringLiteral()));
-    state.data_labels.insert(std::make_pair(value.sv, state.data.size()));
+    state.AddDataLabel(value.sv);
     return CreateToken(context, ParserTokenType::NONE);
 }
 

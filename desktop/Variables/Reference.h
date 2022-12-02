@@ -3,7 +3,7 @@
 #include <utility>
 #include "../Exception/Exception.h"
 #include "../Parser/ParserToken.h"
-#include "../Variables/Shared.h"
+#include "../Shared/Shared.h"
 #include "../LLVM/CompilerLLVM.h"
 #include "Instance.h"
 #include "InstanceConstant.h"
@@ -20,8 +20,8 @@ struct StructSearch {
 
 class Reference {
 public:
-    Reference(SharedState &state, std::string name);
-    static Reference *Create(SharedState &state, std::string name);
+    Reference(SourceFileData &state, std::string name);
+    static Reference *Create(SourceFileData &state, std::string name);
     static Reference *Get(size_t index);
 
     // Get/set state
@@ -98,7 +98,7 @@ public:
     }
 
 private:
-    SharedState &state;
+	SourceFileData &state;
     llvm::Value *LocalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndexPtr(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);

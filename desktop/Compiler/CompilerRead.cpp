@@ -30,8 +30,8 @@ void Compiler::TokenRead(ParserToken &t) {
 }
 
 void Compiler::TokenRestore(ParserToken &t) {
-    auto ff = state.data_labels.find(t.sv);
-    if (ff == state.data_labels.end()) {
+    auto ff =state.FindDataLabel(t.sv);
+    if (ff == state.DataLabelEnd()) {
         RaiseException("Unable to find DATALABEL '" + t.sv + "'", t);
     }
     auto index = ff->second;

@@ -4,12 +4,12 @@
 std::unordered_map<size_t, Reference> Reference::references;
 size_t Reference::index_ptr = 0;
 
-Reference::Reference(SharedState &state, std::string name) : state(state) {
+Reference::Reference(SourceFileData &state, std::string name) : state(state) {
     this->name = std::move(name);
     this->index = index_ptr++;
 }
 
-Reference *Reference::Create(SharedState &state, std::string name) {
+Reference *Reference::Create(SourceFileData &state, std::string name) {
     auto ref = Reference(state, std::move(name));
     auto index = ref.index;
     references.insert(std::make_pair(ref.index, ref));

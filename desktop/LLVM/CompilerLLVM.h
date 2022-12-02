@@ -8,7 +8,7 @@
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/IRBuilder.h"
 #include "../Variables/PrimitiveTypes.h"
-#include "../Variables/Shared.h"
+#include "../Shared/Shared.h"
 #include "../Compiler/CompilerOptions.h"
 #include "llvm/Transforms/Utils/BuildLibCalls.h"
 
@@ -25,7 +25,7 @@ struct FuncBuilder {
 class CompilerLLVM {
 public:
     CompilerLLVM();
-    void SetupProfile(CompilerOptions options, std::string module, SharedState &state);
+    void SetupProfile(CompilerOptions options, std::string module, SourceFileData &state);
     llvm::Function *CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters);
     llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
     void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);

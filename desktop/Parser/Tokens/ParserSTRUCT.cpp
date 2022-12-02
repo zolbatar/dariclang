@@ -37,10 +37,10 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
             ti.fields.push_back(std::move(sm));
         } else {
             // Get child struct
-            auto f2 = state.struct_indexes.find(f->type.name);
-            if (f2 == state.struct_indexes.end())
+            auto f2 = state.FindStructIndices(f->type.name);
+            if (f2 == state.StructIndicesEnd())
                 RaiseException("Struct '" + f->type.name + "' not found", context);
-            auto child_struct = &state.structs[f2->second].fields;
+            auto child_struct = &state.GetStructInfo(f2->second).fields;
 
             // Add child fields
             for (auto f3 = child_struct->begin(); f3 != child_struct->end(); f3++) {
@@ -53,9 +53,8 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
     }
 
     // Add to token
-    state.structs.push_back(std::move(ti));
-    ps.reference = state.index_ptr++;
-    state.struct_indexes.insert(std::make_pair(ps.identifier, ps.reference));
+	state.AddStruct(ps.identifier, ti, ps.reference);
+	ps.reference = state.GetNextRefIndex();
 
     return ps;
 }
