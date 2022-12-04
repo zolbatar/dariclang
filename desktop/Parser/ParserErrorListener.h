@@ -28,7 +28,8 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 
 		// Now scan for start of line
 		int cc = 0;
-		for (auto i = (offendingSymbol->getStartIndex() - start); i >= 0; i--) {
+		int64_t si = offendingSymbol->getStartIndex();
+		for (auto i = (si - start); i > 0; i--) {
 			if (ee[i] == '\n') {
 				ee = ee.substr(i + 1);
 				break;

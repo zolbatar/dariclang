@@ -3,7 +3,7 @@
 #include "../Grammar/DaricParser.h"
 #include "ParserErrorListener.h"
 
-#define CATCH 1
+//#define CATCH 1
 extern std::string parser_filename;
 
 std::vector<std::string> Parser::Parse(std::istream &source) {
@@ -13,6 +13,7 @@ std::vector<std::string> Parser::Parse(std::istream &source) {
 		// Call Antlr4 and process
 		parser_filename = filename;
 		antlr4::ANTLRInputStream input(source);
+
 		DaricLexer lexer(&input);
 		antlr4::CommonTokenStream tokens(&lexer);
 		DaricParser parser(&tokens);

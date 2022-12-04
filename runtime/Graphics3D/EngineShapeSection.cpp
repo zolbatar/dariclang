@@ -76,6 +76,7 @@ void ShapeSection::CreateOpenGL3Vertex(PosColorVertex *v, bool solid, ImVec4 &tc
 	verticesCoord.push_back(std::move(ve1));
 
 	// Colours
+	solid = false;
 	auto vcc1 = solid ? tc : ColorConvertU32ToFloat4(v->colour);
 	glm::vec3 vc1(
 		vcc1.x,
@@ -106,6 +107,16 @@ ImVec4 ShapeSection::ColorConvertU32ToFloat4(ImU32 in) {
 size_t ShapeSection::BuildOpenGL() {
 	// Build OpenGL stuff
 	for (auto t = triangles.begin(); t != triangles.end(); ++t) {
+/*		if (t->vertex1 < 0 && t->vertex1 >= vertices.size()) {
+			std::cout << "Vertex 1 out of range" << std::endl;
+		}
+		if (t->vertex2 < 0 && t->vertex3 >= vertices.size()) {
+			std::cout << "Vertex 2 out of range" << std::endl;
+		}
+		if (t->vertex3 < 0 && t->vertex3 >= vertices.size()) {
+			std::cout << "Vertex 3 out of range" << std::endl;
+		}*/
+
 		auto v1 = &vertices[t->vertex1];
 		auto v2 = &vertices[t->vertex2];
 		auto v3 = &vertices[t->vertex3];

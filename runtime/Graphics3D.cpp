@@ -54,13 +54,22 @@ extern "C" void gfx3d_render() {
     world.Render();
 }
 
-extern "C" void gfx3d_vertex(T_F x, T_F y, T_F z, T_I colour) {
+extern "C" void gfx3d_vertex(T_F x, T_F y, T_F z) {
     PosColorVertex pcv;
     pcv.position.x = x;
     pcv.position.y = y;
     pcv.position.z = z;
-    pcv.colour = colour;
+    pcv.colour = 0;
     vertices.push_back(std::move(pcv));
+}
+
+extern "C" void gfx3d_vertexc(T_F x, T_F y, T_F z, T_I colour) {
+	PosColorVertex pcv;
+	pcv.position.x = x;
+	pcv.position.y = y;
+	pcv.position.z = z;
+	pcv.colour = colour;
+	vertices.push_back(std::move(pcv));
 }
 
 extern "C" void gfx3d_face(T_I v1, T_I v2, T_I v3) {
@@ -73,7 +82,7 @@ extern "C" void gfx3d_face(T_I v1, T_I v2, T_I v3) {
     faces.push_back(std::move(t));
 }
 
-extern "C" void gfx3d_facesolid(T_I v1, T_I v2, T_I v3, T_I colour) {
+extern "C" void gfx3d_facec(T_I v1, T_I v2, T_I v3, T_I colour) {
     MeshTriangle t;
     t.vertex1 = v1;
     t.vertex2 = v2;
@@ -84,7 +93,9 @@ extern "C" void gfx3d_facesolid(T_I v1, T_I v2, T_I v3, T_I colour) {
 }
 
 extern "C" T_I gfx3d_shape() {
-    return world.CreateShape();
+    auto index = world.CreateShape();
+    std::cout << "Shape index: " << index << std::endl;
+    return index;
 }
 
 extern "C" void gfx3d_shapedelete(T_I id) {
@@ -170,11 +181,11 @@ extern "C" T_I gfx3d_loadmesh(T_S file) {
     return index;
 }
 
-extern "C" void ambient(T_F r, T_F g, T_F b) {
+extern "C" void gfx3d_ambient(T_F r, T_F g, T_F b) {
     world.SetAmbient(r, g, b);
 }
 
-extern "C" void directional(T_F x, T_F y, T_F z, T_F r, T_F g, T_F b, T_F c, T_F l, T_F q) {
+extern "C" void gfx3d_directional(T_F x, T_F y, T_F z, T_F r, T_F g, T_F b, T_F c, T_F l, T_F q) {
     world.SetDirectional(x, y, z, r, g, b, c, l, q);
 }
 
@@ -185,7 +196,7 @@ glm::vec3 out;
 
 constexpr float toRad(float v) { return (v / 180.0 * M_PI); }
 
-extern "C" void setrotate(T_F x, T_F y, T_F z, T_F vx, T_F vy, T_F vz) {
+extern "C" void gfx3d_setrotate(T_F x, T_F y, T_F z, T_F vx, T_F vy, T_F vz) {
     glm::mat4 m(1.0f);
     m = glm::rotate(m, toRad(x), xx);
     m = glm::rotate(m, toRad(y), yy);
@@ -195,15 +206,15 @@ extern "C" void setrotate(T_F x, T_F y, T_F z, T_F vx, T_F vy, T_F vz) {
     out = v;
 }
 
-extern "C" T_F getrotatex() {
+extern "C" T_F gfx3d_getrotatex() {
     return out.x;
 }
 
-extern "C" T_F getrotatey() {
+extern "C" T_F gfx3d_getrotatey() {
     return out.y;
 }
 
-extern "C" T_F getrotatez() {
+extern "C" T_F gfx3d_getrotatez() {
     return out.z;
 }
 

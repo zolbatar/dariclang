@@ -71,9 +71,11 @@ private:
 	CompilerLLVM llvm;
 	llvm::Function *implicit = nullptr;
 	llvm::IRBuilder<> *implicit_ir;
+	llvm::IRBuilder<> *implicit_pre_ir;
 	llvm::Function *procedure = nullptr;
 	Primitive return_type;
 	llvm::IRBuilder<> *procedure_ir;
+	llvm::IRBuilder<> *procedure_pre_ir;
 	std::unordered_map<std::string, Func> procedures;
 	bool option_base = false;
 
@@ -89,6 +91,9 @@ private:
 	}
 	llvm::IRBuilder<> *GetIR() {
 		return procedure != nullptr ? procedure_ir : implicit_ir;
+	}
+	llvm::IRBuilder<> *GetPreIR() {
+		return procedure != nullptr ? procedure_pre_ir : implicit_pre_ir;
 	}
 	llvm::Function *GetFunctionImplicit() {
 		return implicit;

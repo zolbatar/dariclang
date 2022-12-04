@@ -59,7 +59,7 @@ importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
-parameter:      REF? ((IDENTIFIER (OF? type)?) | (IDENTIFIER RECORD OF? IDENTIFIER)) ;
+parameter:      REF? ((IDENTIFIER (OF? type)?) | ( RECORD IDENTIFIER OF? IDENTIFIER)) ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      DEF IDENTIFIER LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? (OF? type)? separator* statements ENDDEF ;
 repeat:         REPEAT statements UNTIL expression ;

@@ -40,7 +40,9 @@ void Compiler::TokenProcedure(ParserToken &t) {
 	auto f = &procedures.find(t.identifier)->second;
 	procedure = f->func;
 	return_type = t.data_type;
+	procedure_pre_ir = llvm.CreateBuilder(t.identifier + " Pre-Builder", procedure);
 	procedure_ir = llvm.CreateBuilder(t.identifier + " Builder", procedure);
+	procedure_pre_ir->CreateBr(procedure_ir->GetInsertBlock());
 
 	// Create local variables for parameters
 	auto i = 0;

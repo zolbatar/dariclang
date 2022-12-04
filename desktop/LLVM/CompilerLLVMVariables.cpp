@@ -14,6 +14,7 @@ void CompilerLLVM::CreateConstant(const std::string &name, Primitive type, llvm:
 
 void CompilerLLVM::CreateGlobal(const std::string &name, Primitive type, llvm::Constant *val) {
     assert(!globals.contains(name));
+//	std::cout << "Creating global:" << name << std::endl;
     globals[name] = new llvm::GlobalVariable(*Module,
                                              TypeConversion(type),
                                              false,

@@ -74,14 +74,21 @@ void Compiler::SetupLibrary() {
 	AddLibraryCall("ROTATE", "gfx3d_rotate", Primitive::NONE, "IFFF");
 	AddLibraryCall("SCALE", "gfx3d_scale", Primitive::NONE, "IF");
 	AddLibraryCall("OBJECTDELETE", "gfx3d_deleteobject", Primitive::NONE, "I");
-	AddLibraryCall("OBJDELALL", "gfx3d_deleteallobjects", Primitive::NONE, "I");
+	AddLibraryCall("OBJECTDELETEALL", "gfx3d_deleteallobjects", Primitive::NONE, "");
 	AddLibraryCall("SHADOWSON", "gfx3d_shadowson", Primitive::NONE, "");
 	AddLibraryCall("SHADOWSOFF", "gfx3d_shadowson", Primitive::NONE, "");
 	AddLibraryCall("RENDER", "gfx3d_render", Primitive::NONE, "");
-	AddLibraryCall("VERTEX", "gfx3d_vertex", Primitive::NONE, "FFFI");
-	AddLibraryCall("FACESHADED", "gfx3d_face", Primitive::NONE, "III");
-	AddLibraryCall("FACE", "gfx3d_facesolid", Primitive::NONE, "IIII");
+	AddLibraryCall("VERTEX", "gfx3d_vertex", Primitive::NONE, "FFF");
+	AddLibraryCall("FACEC", "gfx3d_facec", Primitive::NONE, "IIII");
+	AddLibraryCall("VERTEXC", "gfx3d_vertexc", Primitive::NONE, "FFFI");
+	AddLibraryCall("FACE", "gfx3d_face", Primitive::NONE, "III");
 	AddLibraryCall("LOADMESH", "gfx3d_loadmesh", Primitive::INT, "S");
+	AddLibraryCall("AMBIENT", "gfx3d_ambient", Primitive::NONE, "FFF");
+	AddLibraryCall("DIRECTIONAL", "gfx3d_directional", Primitive::NONE, "FFFFFFFFF");
+	AddLibraryCall("SETROTATE", "gfx3d_setrotate", Primitive::NONE, "FFFFFF");
+	AddLibraryCall("GETROTATEX", "gfx3d_getrotatex", Primitive::FLOAT, "");
+	AddLibraryCall("GETROTATEY", "gfx3d_getrotatey", Primitive::FLOAT, "");
+	AddLibraryCall("GETROTATEZ", "gfx3d_getrotatez", Primitive::FLOAT, "");
 
 	// Text
 	AddLibraryCall("LOADFONT", "text_loadfont", Primitive::INT, "S");

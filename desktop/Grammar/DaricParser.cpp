@@ -226,7 +226,7 @@ void daricParserInitialize() {
   	1,0,0,0,327,39,1,0,0,0,328,330,5,24,0,0,329,328,1,0,0,0,329,330,1,0,0,
   	0,330,344,1,0,0,0,331,336,5,115,0,0,332,334,5,19,0,0,333,332,1,0,0,0,
   	333,334,1,0,0,0,334,335,1,0,0,0,335,337,3,70,35,0,336,333,1,0,0,0,336,
-  	337,1,0,0,0,337,345,1,0,0,0,338,339,5,115,0,0,339,341,5,40,0,0,340,342,
+  	337,1,0,0,0,337,345,1,0,0,0,338,339,5,40,0,0,339,341,5,115,0,0,340,342,
   	5,19,0,0,341,340,1,0,0,0,341,342,1,0,0,0,342,343,1,0,0,0,343,345,5,115,
   	0,0,344,331,1,0,0,0,344,338,1,0,0,0,345,41,1,0,0,0,346,357,5,22,0,0,347,
   	352,3,68,34,0,348,350,5,36,0,0,349,348,1,0,0,0,349,350,1,0,0,0,350,351,
@@ -2621,54 +2621,54 @@ DaricParser::ParameterContext* DaricParser::parameter() {
     }
     setState(344);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 42, _ctx)) {
-    case 1: {
-      setState(331);
-      match(DaricParser::IDENTIFIER);
-      setState(336);
-      _errHandler->sync(this);
+    switch (_input->LA(1)) {
+      case DaricParser::IDENTIFIER: {
+        setState(331);
+        match(DaricParser::IDENTIFIER);
+        setState(336);
+        _errHandler->sync(this);
 
-      switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 40, _ctx)) {
-      case 1: {
-        setState(333);
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 40, _ctx)) {
+        case 1: {
+          setState(333);
+          _errHandler->sync(this);
+
+          _la = _input->LA(1);
+          if (_la == DaricParser::OF) {
+            setState(332);
+            match(DaricParser::OF);
+          }
+          setState(335);
+          type();
+          break;
+        }
+
+        default:
+          break;
+        }
+        break;
+      }
+
+      case DaricParser::RECORD: {
+        setState(338);
+        match(DaricParser::RECORD);
+        setState(339);
+        match(DaricParser::IDENTIFIER);
+        setState(341);
         _errHandler->sync(this);
 
         _la = _input->LA(1);
         if (_la == DaricParser::OF) {
-          setState(332);
+          setState(340);
           match(DaricParser::OF);
         }
-        setState(335);
-        type();
+        setState(343);
+        match(DaricParser::IDENTIFIER);
         break;
       }
-
-      default:
-        break;
-      }
-      break;
-    }
-
-    case 2: {
-      setState(338);
-      match(DaricParser::IDENTIFIER);
-      setState(339);
-      match(DaricParser::RECORD);
-      setState(341);
-      _errHandler->sync(this);
-
-      _la = _input->LA(1);
-      if (_la == DaricParser::OF) {
-        setState(340);
-        match(DaricParser::OF);
-      }
-      setState(343);
-      match(DaricParser::IDENTIFIER);
-      break;
-    }
 
     default:
-      break;
+      throw NoViableAltException(this);
     }
    
   }

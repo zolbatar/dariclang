@@ -30,7 +30,9 @@ bool Compiler::Compile() {
 		// Setup implicit
 		auto n = Primitive::NONE;
 		implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
+		implicit_pre_ir = llvm.CreateBuilder("Implicit Pre-Builder", implicit);
 		implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
+		implicit_pre_ir->CreateBr(implicit_ir->GetInsertBlock());
 
 		// Looahead (across all files)
 		for (auto &p : parsers) {

@@ -9,6 +9,7 @@ extern UISDL *ui;
 extern Input input;
 
 void SourceFile::MoveToTop(std::string file) {
+	std::cout << "Moving to top:" << file << std::endl;
 	for (auto ff = parsers.begin(); ff != parsers.end(); ++ff) {
 		if (ff->GetFilename() == file) {
 			auto ffe = *ff;
@@ -44,6 +45,8 @@ SourceFile::SourceFile(CompilerOptions &options) : options(options) {
 			if (!stream.is_open()) {
 				std::cout << "Can't open source file\n";
 				exit(1);
+			} else {
+				std::cout << "Parsing: " << file << std::endl;
 			}
 
 			// Mark as done

@@ -7,14 +7,14 @@ struct StructField {
 
 std::any Parser::visitStruct(DaricParser::StructContext *context) {
     if (this->current_procedure != nullptr) {
-        RaiseException("Structs can only be defined outside of a procedure", context);
+        RaiseException("Record can only be defined outside of a procedure", context);
     }
 
     ParserToken ps = CreateToken(context, ParserTokenType::STRUCT);
     ps.identifier = context->IDENTIFIER(0)->getText();
 
     if (state.StructExists(ps.identifier)) {
-        RaiseException("Struct '' already defined", context);
+        RaiseException("Record '" + ps.identifier + "' already defined", context);
     }
 
     // Build members
