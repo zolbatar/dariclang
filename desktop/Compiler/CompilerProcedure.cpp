@@ -135,7 +135,15 @@ void Compiler::TokenCall(ParserToken &token) {
 				VariableError(s, ref->GetName());
 			}
 			auto value = ref->GetPointer(option_base, ProcessIndices(ref, s), llvm, GetIR(), s);
-			vals.push_back(value);
+			if (!ref->GetInstance()->IsRef()) {
+				vals.push_back(value);
+			} else {
+				// Deref pointer
+				ref->SetStructName(ref->GetInstance()->GetStructName());
+				auto tt = ref->GetLLVMType(false, llvm);
+				auto v2 = GetIR()->CreateLoad(tt, value);
+				vals.push_back(v2);
+			}
 		}
 		i++;
 	}
