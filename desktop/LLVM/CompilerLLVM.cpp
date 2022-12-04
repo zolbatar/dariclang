@@ -220,7 +220,7 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sou
 
     // Chrono
     Module->getOrInsertFunction("_time", TypeInt);
-    Module->getOrInsertFunction("highprec", TypeInt);
+    Module->getOrInsertFunction("highprec", TypeFloat);
     Module->getOrInsertFunction("times", TypeString);
 
     // String

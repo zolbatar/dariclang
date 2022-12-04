@@ -1,8 +1,8 @@
 #include <string>
 #include <chrono>
+#include "Types.h"
 
 std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
-std::chrono::steady_clock::time_point t1_hp = std::chrono::steady_clock::now();
 
 int get_clock() {
 	auto t2 = std::chrono::steady_clock::now();
@@ -11,18 +11,13 @@ int get_clock() {
 	return static_cast<int>(d);
 }
 
-extern "C" int64_t _time() {
-	return get_clock();
-}
-
-extern "C" double highprec() {
+extern "C" T_F __time() {
 	auto t2 = std::chrono::steady_clock::now();
-	auto time_span = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1_hp);
-	t1_hp = t2;
+	auto time_span = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
 	return static_cast<double>(time_span.count()) / 1000000.0;
 }
 
-extern "C" char *times() {
+extern "C" T_S times() {
 	time_t rawtime;
 	struct tm *timeinfo;
 	char buffer[80];

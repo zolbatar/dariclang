@@ -18,19 +18,18 @@ public:
     OTHERWISE = 21, PRINT = 22, READ = 23, REF = 24, REM = 25, REPEAT = 26, 
     RESTORE = 27, RETURN = 28, THEN = 29, SIZE = 30, STEP = 31, SWAP = 32, 
     TO = 33, UNTIL = 34, WHEN = 35, WITH = 36, WHILE = 37, MAIN = 38, DEFRECORD = 39, 
-    RECORD = 40, ENDRECORD = 41, HPTIME = 42, TIME = 43, TIMES = 44, ABS = 45, 
-    ACS = 46, ASN = 47, ATN = 48, COS = 49, DEG = 50, EXP = 51, FLOOR = 52, 
-    LET = 53, LN = 54, LOG = 55, PI = 56, RAD = 57, ROUND = 58, SGN = 59, 
-    SIN = 60, SQR = 61, TAN = 62, FALSE = 63, TRUE = 64, ASC = 65, CHRS = 66, 
-    INSTR = 67, LEFTS = 68, MIDS = 69, RIGHTS = 70, LEN = 71, BYTE = 72, 
-    INT = 73, FLOAT = 74, STRING = 75, DOLLAR = 76, HASH = 77, COLON = 78, 
-    SEMICOLON = 79, DOT = 80, COMMA = 81, QUOTE = 82, NEWLINE = 83, PERCENT = 84, 
-    UNDERSCORE = 85, LPAREN = 86, RPAREN = 87, SOPEN = 88, SCLOSE = 89, 
-    EQ = 90, NE = 91, GT = 92, GE = 93, LT = 94, LE = 95, HAT = 96, PLUS = 97, 
-    MINUS = 98, MULTIPLY = 99, DIVIDE = 100, SHL = 101, SHR = 102, MOD = 103, 
-    DIV = 104, COMP = 105, NOT = 106, AND = 107, OR = 108, EOR = 109, STRINGLITERAL = 110, 
-    HEXNUMBER = 111, BINARYNUMBER = 112, FLOATLITERAL = 113, INTEGERLITERAL = 114, 
-    IDENTIFIER = 115, WS = 116
+    ENDRECORD = 40, ABS = 41, ACS = 42, ASN = 43, ATN = 44, COS = 45, DEG = 46, 
+    EXP = 47, FLOOR = 48, LET = 49, LN = 50, LOG = 51, PI = 52, RAD = 53, 
+    ROUND = 54, SGN = 55, SIN = 56, SQR = 57, TAN = 58, FALSE = 59, TRUE = 60, 
+    ASC = 61, CHRS = 62, INSTR = 63, LEFTS = 64, MIDS = 65, RIGHTS = 66, 
+    LEN = 67, BYTE = 68, INT = 69, FLOAT = 70, STRING = 71, DOLLAR = 72, 
+    HASH = 73, COLON = 74, SEMICOLON = 75, DOT = 76, COMMA = 77, QUOTE = 78, 
+    NEWLINE = 79, PERCENT = 80, UNDERSCORE = 81, LPAREN = 82, RPAREN = 83, 
+    SOPEN = 84, SCLOSE = 85, EQ = 86, NE = 87, GT = 88, GE = 89, LT = 90, 
+    LE = 91, HAT = 92, PLUS = 93, MINUS = 94, MULTIPLY = 95, DIVIDE = 96, 
+    SHL = 97, SHR = 98, MOD = 99, DIV = 100, COMP = 101, NOT = 102, AND = 103, 
+    OR = 104, EOR = 105, STRINGLITERAL = 106, HEXNUMBER = 107, BINARYNUMBER = 108, 
+    FLOATLITERAL = 109, INTEGERLITERAL = 110, IDENTIFIER = 111, WS = 112
   };
 
   enum {
@@ -486,11 +485,10 @@ public:
   public:
     ParameterContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *REF();
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    antlr4::tree::TerminalNode *RECORD();
     TypeContext *type();
+    antlr4::tree::TerminalNode *REF();
     antlr4::tree::TerminalNode *OF();
 
 
@@ -635,7 +633,6 @@ public:
     StructDimContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DIM();
-    antlr4::tree::TerminalNode *RECORD();
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
     antlr4::tree::TerminalNode *SOPEN();
@@ -657,15 +654,14 @@ public:
   public:
     StructInstanceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *DIM();
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> EQ();
-    antlr4::tree::TerminalNode* EQ(size_t i);
-    antlr4::tree::TerminalNode *RECORD();
-    antlr4::tree::TerminalNode *LET();
     antlr4::tree::TerminalNode *OF();
     antlr4::tree::TerminalNode *LPAREN();
     antlr4::tree::TerminalNode *RPAREN();
+    std::vector<antlr4::tree::TerminalNode *> EQ();
+    antlr4::tree::TerminalNode* EQ(size_t i);
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -773,9 +769,6 @@ public:
     antlr4::tree::TerminalNode *NOT();
     antlr4::tree::TerminalNode *TRUE();
     antlr4::tree::TerminalNode *FALSE();
-    antlr4::tree::TerminalNode *HPTIME();
-    antlr4::tree::TerminalNode *TIME();
-    antlr4::tree::TerminalNode *TIMES();
     antlr4::tree::TerminalNode *PI();
     antlr4::tree::TerminalNode *DEG();
     antlr4::tree::TerminalNode *RAD();

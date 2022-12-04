@@ -28,7 +28,7 @@ void Compiler::TokenStructInstance(ParserToken &t) {
         VariableAlreadyExists(t, ref->GetName());
     }
 
-    ref->CreateInstance(llvm, GetIR(), t.scope, false);
+    ref->CreateInstance(llvm, GetPreIR(), t.scope, false);
     auto instance = ref->GetInstance();
 
     // Initialise any fields?

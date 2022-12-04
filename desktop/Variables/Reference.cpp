@@ -71,17 +71,22 @@ bool Reference::FindInstance() {
 
 void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref) {
 	switch (instance_type) {
-	case InstanceType::PRIMITIVE:instance = InstancePrimitive::Build(name, data_type, scope, llvm, ir, is_ref);
+	case InstanceType::PRIMITIVE:
+		instance = InstancePrimitive::Build(name, data_type, scope, llvm, ir, is_ref);
 		break;
-	case InstanceType::ARRAY:instance = InstancePrimitiveArray::Build(name, data_type, scope, indices.size(), llvm, ir);
+	case InstanceType::ARRAY:
+		instance = InstancePrimitiveArray::Build(name, data_type, scope, indices.size(), llvm, ir);
 		break;
-	case InstanceType::RECORD:SetLLVMStructType(llvm.GetStruct(GetStructName()));
+	case InstanceType::RECORD:
+		SetLLVMStructType(llvm.GetStruct(GetStructName()));
 		instance = InstanceRecord::Build(name, struct_name, llvm_struct_type, scope, llvm, ir, is_ref);
 		break;
-	case InstanceType::RECORD_ARRAY:SetLLVMStructType(llvm.GetStruct(GetStructName()));
+	case InstanceType::RECORD_ARRAY:
+		SetLLVMStructType(llvm.GetStruct(GetStructName()));
 		instance = InstanceRecordArray::Build(name, struct_name, llvm_struct_type, scope, indices.size(), llvm, ir);
 		break;
-	default:assert(0);
+	default:
+		assert(0);
 	}
 }
 
@@ -91,7 +96,8 @@ void Reference::SetValue(bool option_base, ValueType vt,
 						 llvm::IRBuilder<> *ir,
 						 ParserToken &token) {
 	switch (instance_type) {
-	case InstanceType::PRIMITIVE:instance->Set(vt.value, nullptr, 0, llvm, ir);
+	case InstanceType::PRIMITIVE:
+		instance->Set(vt.value, nullptr, 0, llvm, ir);
 		break;
 	case InstanceType::ARRAY:
 		instance->Set(vt.value, instance->GetScope() == Scope::GLOBAL
@@ -112,7 +118,8 @@ void Reference::SetValue(bool option_base, ValueType vt,
 					  ss.index, llvm, ir);
 		break;
 	}
-	default:assert(0);
+	default:
+		assert(0);
 	}
 }
 
@@ -137,7 +144,8 @@ llvm::Value *Reference::GetPointer(bool option_base, const std::vector<ValueType
 			return LocalIndex(option_base, indices_val, llvm, ir);
 		}
 	}
-	default:assert(0);
+	default:
+		assert(0);
 	}
 }
 
@@ -147,7 +155,8 @@ ValueType Reference::GetValue(bool option_base, const std::vector<ValueType> &in
 							  ParserToken &token) {
 	ValueType vt;
 	switch (instance_type) {
-	case InstanceType::PRIMITIVE:instance->Get(vt, nullptr, 0, llvm, ir);
+	case InstanceType::PRIMITIVE:
+		instance->Get(vt, nullptr, 0, llvm, ir);
 		break;
 	case InstanceType::ARRAY:
 		instance->Get(vt, instance->GetScope() == Scope::GLOBAL
@@ -170,7 +179,8 @@ ValueType Reference::GetValue(bool option_base, const std::vector<ValueType> &in
 					  ss.index, llvm, ir);
 		break;
 	}
-	default:assert(0);
+	default:
+		assert(0);
 	}
 	return vt;
 }

@@ -29,6 +29,10 @@ void Compiler::SetupLibrary() {
 	// Core
 	AddLibraryCall("SLEEP", "__sleep", Primitive::NONE, "F");
 
+	// Chrono
+	AddLibraryCall("TIME", "__time", Primitive::FLOAT, "");
+	AddLibraryCall("TIME$", "times", Primitive::STRING, "");
+
 	// 2D Graphics
 	AddLibraryCall("MODE", "gfx2d_mode", Primitive::NONE, "III");
 	AddLibraryCall("BANKEDON", "gfx2d_bankedon", Primitive::NONE, "");

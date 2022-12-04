@@ -43,7 +43,7 @@ int main(int argc, char *argv[]) {
     options.file = argv[1];
 
     // What sort of compile?
-    options.output_ll_files = true;
+    options.output_ll_files = false;
     if (argc == 2) {
         options.target = CompileTarget::JIT;
         options.use_exit_as_end = false;

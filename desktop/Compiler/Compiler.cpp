@@ -32,7 +32,7 @@ bool Compiler::Compile() {
 		implicit = llvm.CreateFunc("Implicit", llvm.TypeConversion(n), {});
 		implicit_pre_ir = llvm.CreateBuilder("Implicit Pre-Builder", implicit);
 		implicit_ir = llvm.CreateBuilder("Implicit Builder", implicit);
-		implicit_pre_ir->CreateBr(implicit_ir->GetInsertBlock());
+		auto bb = implicit_ir->GetInsertBlock();
 
 		// Looahead (across all files)
 		for (auto &p : parsers) {
@@ -59,6 +59,7 @@ bool Compiler::Compile() {
 		}
 
 		// Finish up the implicit function
+		implicit_pre_ir->CreateBr(bb);
 		implicit_ir->CreateRetVoid();
 #ifdef CATCH_ERRORS
 	}

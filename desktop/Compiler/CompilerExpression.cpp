@@ -449,26 +449,6 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             vt.value = CreateCall("len", {vt.value});
             return vt;
         }
-        case ParserTokenType::TIME: {
-            ValueType vt;
-            vt.type = Primitive::INT;
-            vt.value = CreateCall("_time", {});
-            return vt;
-        }
-        case ParserTokenType::HPTIME: {
-            ValueType vt;
-            vt.type = Primitive::INT;
-            vt.value = CreateCall("highprec", {});
-            return vt;
-        }
-        case ParserTokenType::TIMES: {
-            ValueType vt;
-            vt.type = Primitive::STRING;
-            vt.value = CreateCall("times", {});
-            strip_strings = true;
-            llvm.AddTempString(vt.value, GetIR());
-            return vt;
-        }
         case ParserTokenType::SIZE: {
             ValueType vt;
             vt.type = Primitive::INT;

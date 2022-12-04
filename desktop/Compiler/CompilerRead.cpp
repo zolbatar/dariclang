@@ -8,7 +8,7 @@ void Compiler::TokenRead(ParserToken &t) {
 
         // Does it exist?
         if (!ref->InstanceExists()) {
-            ref->CreateInstance(llvm, GetIR(), t.scope, false);
+            ref->CreateInstance(llvm, GetPreIR(), t.scope, false);
         }
         ref->FindInstance();
 

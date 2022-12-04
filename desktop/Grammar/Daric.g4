@@ -59,7 +59,7 @@ importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
-parameter:      REF? ((IDENTIFIER (OF? type)?) | ( RECORD IDENTIFIER OF? IDENTIFIER)) ;
+parameter:      REF? IDENTIFIER OF? (type | IDENTIFIER) ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      DEF IDENTIFIER LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? (OF? type)? separator* statements ENDDEF ;
 repeat:         REPEAT statements UNTIL expression ;
@@ -67,8 +67,8 @@ read:           READ variable (COMMA variable)* ;
 restore:        RESTORE stringLiteral ;
 return:         RETURN expression? ;
 struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
-structDim:      DIM RECORD IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
-structInstance: LET? IDENTIFIER EQ RECORD OF? IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
+structDim:      DIM IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
+structInstance: DIM IDENTIFIER OF IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements ENDWHILE ;
@@ -105,11 +105,6 @@ expression
     // Booleans
     | TRUE
     | FALSE
-
-    // Chrono
-    | HPTIME
-    | TIME
-    | TIMES
 
     // Maths functions
     | PI
@@ -246,12 +241,7 @@ WHILE           : 'WHILE' | 'While' | 'while' ;
 MAIN            : '@MAIN' | '@Main' | '@main' ;
 
 DEFRECORD       : 'DEFRECORD' | 'DefRecord' | 'defrecord' ;
-RECORD          : 'RECORD' | 'Record' | 'record' ;
 ENDRECORD       : 'ENDRECORD' | 'EndRecord' | 'endrecord' ;
-
-HPTIME          : 'HPTIME' | 'HPTime' | 'hptime' ;
-TIME            : 'TIME' | 'Time' | 'time' ;
-TIMES           : 'TIME$' | 'Time$' | 'time$' ;
 
 ABS             : 'ABS' | 'Abs' | 'abs' ;
 ACS             : 'ACS' | 'Acs' | 'acs'  ;

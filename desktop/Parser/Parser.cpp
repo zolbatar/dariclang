@@ -3,7 +3,7 @@
 #include "../Grammar/DaricParser.h"
 #include "ParserErrorListener.h"
 
-//#define CATCH 1
+#define CATCH 1
 extern std::string parser_filename;
 
 std::vector<std::string> Parser::Parse(std::istream &source) {

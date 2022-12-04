@@ -153,17 +153,6 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 		return ps;
 	}
 
-	// Chrono
-	if (context->HPTIME() != NULL) {
-		return CreateToken(context, ParserTokenType::HPTIME);
-	}
-	if (context->TIME() != NULL) {
-		return CreateToken(context, ParserTokenType::TIME);
-	}
-	if (context->TIMES() != NULL) {
-		return CreateToken(context, ParserTokenType::TIMES);
-	}
-
 	// Conversion
 	if (context->INT() != NULL) {
 		return SingleExpression(context, ParserTokenType::INT);

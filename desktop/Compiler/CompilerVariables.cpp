@@ -13,7 +13,7 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
         // If it's a primitive type, we create the variable if we need to
         if (ref->GetInstanceType() == InstanceType::PRIMITIVE) {
             if (!ref->InstanceExists()) {
-                ref->CreateInstance(llvm, GetIR(), scope, false);
+                ref->CreateInstance(llvm, GetPreIR(), scope, false);
             }
         }
 

@@ -42,7 +42,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
 	return_type = t.data_type;
 	procedure_pre_ir = llvm.CreateBuilder(t.identifier + " Pre-Builder", procedure);
 	procedure_ir = llvm.CreateBuilder(t.identifier + " Builder", procedure);
-	procedure_pre_ir->CreateBr(procedure_ir->GetInsertBlock());
+	auto bb = procedure_ir->GetInsertBlock();
 
 	// Create local variables for parameters
 	auto i = 0;
@@ -55,7 +55,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
 						   t);
 		}
 
-		ref->CreateInstance(llvm, GetIR(), Scope::LOCAL, pp->IsRef());
+		ref->CreateInstance(llvm, GetPreIR(), Scope::LOCAL, pp->IsRef());
 		if (!pp->IsRef()) {
 			ref->GetInstance()->Set(&Arg, nullptr, 0, llvm, procedure_ir);
 		} else {
@@ -69,6 +69,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
 	if (!llvm.CheckReturn(GetIR())) {
 		DefaultReturn(return_type, t);
 	}
+	procedure_pre_ir->CreateBr(bb);
 	procedure = nullptr;
 	return_type = Primitive::NONE;
 	Instance::ClearLocals(llvm);
