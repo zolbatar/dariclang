@@ -172,19 +172,19 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 	if (context->ASC() != NULL) {
 		return SingleExpression(context, ParserTokenType::ASC);
 	}
-	if (context->CHRS() != NULL) {
+	if (context->CHR() != NULL) {
 		return SingleExpression(context, ParserTokenType::CHRS);
 	}
 	if (context->INSTR() != NULL) {
 		return TripleExpression(context, ParserTokenType::INSTR);
 	}
-	if (context->LEFTS() != NULL) {
+	if (context->LEFT() != NULL) {
 		return DoubleExpression(context, ParserTokenType::LEFTS);
 	}
-	if (context->MIDS() != NULL) {
+	if (context->MID() != NULL) {
 		return TripleExpression(context, ParserTokenType::MIDS);
 	}
-	if (context->RIGHTS() != NULL) {
+	if (context->RIGHT() != NULL) {
 		return DoubleExpression(context, ParserTokenType::RIGHTS);
 	}
 	if (context->LEN() != NULL) {

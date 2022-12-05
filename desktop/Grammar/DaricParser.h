@@ -13,23 +13,22 @@ class  DaricParser : public antlr4::Parser {
 public:
   enum {
     BlockComment = 1, LineComment = 2, CASE = 3, CONST = 4, DATA = 5, DATALABEL = 6, 
-    DEF = 7, DIM = 8, ELSE = 9, END = 10, ENDCASE = 11, ENDDEF = 12, ENDIF = 13, 
-    ENDWHILE = 14, FOR = 15, IF = 16, IMPORT = 17, NEXT = 18, OF = 19, OPTION = 20, 
-    OTHERWISE = 21, PRINT = 22, READ = 23, REF = 24, REM = 25, REPEAT = 26, 
-    RESTORE = 27, RETURN = 28, THEN = 29, SIZE = 30, STEP = 31, SWAP = 32, 
-    TO = 33, UNTIL = 34, WHEN = 35, WITH = 36, WHILE = 37, MAIN = 38, DEFRECORD = 39, 
-    ENDRECORD = 40, ABS = 41, ACS = 42, ASN = 43, ATN = 44, COS = 45, DEG = 46, 
-    EXP = 47, FLOOR = 48, LET = 49, LN = 50, LOG = 51, PI = 52, RAD = 53, 
-    ROUND = 54, SGN = 55, SIN = 56, SQR = 57, TAN = 58, FALSE = 59, TRUE = 60, 
-    ASC = 61, CHRS = 62, INSTR = 63, LEFTS = 64, MIDS = 65, RIGHTS = 66, 
-    LEN = 67, BYTE = 68, INT = 69, FLOAT = 70, STRING = 71, DOLLAR = 72, 
-    HASH = 73, COLON = 74, SEMICOLON = 75, DOT = 76, COMMA = 77, QUOTE = 78, 
-    NEWLINE = 79, PERCENT = 80, UNDERSCORE = 81, LPAREN = 82, RPAREN = 83, 
-    SOPEN = 84, SCLOSE = 85, EQ = 86, NE = 87, GT = 88, GE = 89, LT = 90, 
-    LE = 91, HAT = 92, PLUS = 93, MINUS = 94, MULTIPLY = 95, DIVIDE = 96, 
-    SHL = 97, SHR = 98, MOD = 99, DIV = 100, COMP = 101, NOT = 102, AND = 103, 
-    OR = 104, EOR = 105, STRINGLITERAL = 106, HEXNUMBER = 107, BINARYNUMBER = 108, 
-    FLOATLITERAL = 109, INTEGERLITERAL = 110, IDENTIFIER = 111, WS = 112
+    DEF = 7, DIM = 8, ELSE = 9, END = 10, FOR = 11, IF = 12, IMPORT = 13, 
+    NEXT = 14, OF = 15, OPTION = 16, OTHERWISE = 17, PRINT = 18, READ = 19, 
+    RECORD = 20, REF = 21, REM = 22, REPEAT = 23, RESTORE = 24, RETURN = 25, 
+    THEN = 26, SIZE = 27, STEP = 28, SWAP = 29, TO = 30, UNTIL = 31, WHEN = 32, 
+    WITH = 33, WHILE = 34, MAIN = 35, ABS = 36, ACS = 37, ASN = 38, ATN = 39, 
+    COS = 40, DEG = 41, EXP = 42, FLOOR = 43, LET = 44, LN = 45, LOG = 46, 
+    PI = 47, RAD = 48, ROUND = 49, SGN = 50, SIN = 51, SQR = 52, TAN = 53, 
+    FALSE = 54, TRUE = 55, ASC = 56, CHR = 57, INSTR = 58, LEFT = 59, MID = 60, 
+    RIGHT = 61, LEN = 62, BYTE = 63, INT = 64, FLOAT = 65, STRING = 66, 
+    DOLLAR = 67, HASH = 68, COLON = 69, SEMICOLON = 70, DOT = 71, COMMA = 72, 
+    QUOTE = 73, NEWLINE = 74, PERCENT = 75, UNDERSCORE = 76, LPAREN = 77, 
+    RPAREN = 78, SOPEN = 79, SCLOSE = 80, EQ = 81, NE = 82, GT = 83, GE = 84, 
+    LT = 85, LE = 86, HAT = 87, PLUS = 88, MINUS = 89, MULTIPLY = 90, DIVIDE = 91, 
+    SHL = 92, SHR = 93, MOD = 94, DIV = 95, COMP = 96, NOT = 97, AND = 98, 
+    OR = 99, EOR = 100, STRINGLITERAL = 101, HEXNUMBER = 102, BINARYNUMBER = 103, 
+    FLOATLITERAL = 104, INTEGERLITERAL = 105, IDENTIFIER = 106, WS = 107
   };
 
   enum {
@@ -264,10 +263,11 @@ public:
   public:
     CaseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *CASE();
+    std::vector<antlr4::tree::TerminalNode *> CASE();
+    antlr4::tree::TerminalNode* CASE(size_t i);
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *OF();
-    antlr4::tree::TerminalNode *ENDCASE();
+    antlr4::tree::TerminalNode *END();
     SeparatorContext *separator();
     std::vector<WhenContext *> when();
     WhenContext* when(size_t i);
@@ -448,13 +448,14 @@ public:
   public:
     IfmlContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *IF();
+    std::vector<antlr4::tree::TerminalNode *> IF();
+    antlr4::tree::TerminalNode* IF(size_t i);
     ExpressionContext *expression();
     std::vector<antlr4::tree::TerminalNode *> NEWLINE();
     antlr4::tree::TerminalNode* NEWLINE(size_t i);
     std::vector<StatementsContext *> statements();
     StatementsContext* statements(size_t i);
-    antlr4::tree::TerminalNode *ENDIF();
+    antlr4::tree::TerminalNode *END();
     antlr4::tree::TerminalNode *THEN();
     antlr4::tree::TerminalNode *ELSE();
 
@@ -521,10 +522,11 @@ public:
   public:
     ProcedureContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *DEF();
+    std::vector<antlr4::tree::TerminalNode *> DEF();
+    antlr4::tree::TerminalNode* DEF(size_t i);
     antlr4::tree::TerminalNode *IDENTIFIER();
     StatementsContext *statements();
-    antlr4::tree::TerminalNode *ENDDEF();
+    antlr4::tree::TerminalNode *END();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<antlr4::tree::TerminalNode *> NEWLINE();
     antlr4::tree::TerminalNode* NEWLINE(size_t i);
@@ -610,12 +612,13 @@ public:
   public:
     StructContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *DEFRECORD();
+    std::vector<antlr4::tree::TerminalNode *> RECORD();
+    antlr4::tree::TerminalNode* RECORD(size_t i);
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
     std::vector<TypeOrStructContext *> typeOrStruct();
     TypeOrStructContext* typeOrStruct(size_t i);
-    antlr4::tree::TerminalNode *ENDRECORD();
+    antlr4::tree::TerminalNode *END();
     std::vector<SeparatorContext *> separator();
     SeparatorContext* separator(size_t i);
     std::vector<antlr4::tree::TerminalNode *> OF();
@@ -712,10 +715,11 @@ public:
   public:
     WhileContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *WHILE();
+    std::vector<antlr4::tree::TerminalNode *> WHILE();
+    antlr4::tree::TerminalNode* WHILE(size_t i);
     ExpressionContext *expression();
     StatementsContext *statements();
-    antlr4::tree::TerminalNode *ENDWHILE();
+    antlr4::tree::TerminalNode *END();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -786,13 +790,13 @@ public:
     antlr4::tree::TerminalNode *SQR();
     antlr4::tree::TerminalNode *TAN();
     antlr4::tree::TerminalNode *ASC();
-    antlr4::tree::TerminalNode *CHRS();
+    antlr4::tree::TerminalNode *CHR();
     antlr4::tree::TerminalNode *INSTR();
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
-    antlr4::tree::TerminalNode *LEFTS();
-    antlr4::tree::TerminalNode *MIDS();
-    antlr4::tree::TerminalNode *RIGHTS();
+    antlr4::tree::TerminalNode *LEFT();
+    antlr4::tree::TerminalNode *MID();
+    antlr4::tree::TerminalNode *RIGHT();
     antlr4::tree::TerminalNode *LEN();
     antlr4::tree::TerminalNode *SIZE();
     antlr4::tree::TerminalNode *IDENTIFIER();

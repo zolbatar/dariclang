@@ -1,11 +1,15 @@
 #include "Compiler.h"
 
+llvm::Value *Compiler::IntToBitConditional(llvm::Value *value) {
+    return GetIR()->CreateICmpNE(value, llvm::ConstantInt::get(llvm.TypeInt, 0));
+}
+
 void Compiler::TokenIf(ParserToken &token) {
     auto bc = CreateAndInsertBB("IF Single Line", true, token);
     auto value_type = CompileExpression(token.children[0]);
     auto t = Primitive::INT;
     llvm.AutoConversion(GetIR(), value_type, t);
-    value_type.value = GetIR()->CreateIntCast(value_type.value, llvm.TypeBit, true);
+    value_type.value = IntToBitConditional(value_type.value);
 
     // Blocks
     auto trueBB = CreateBB("IF Cmp True", token);

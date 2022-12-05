@@ -89,15 +89,7 @@ void UISDL::Line(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(std::make_unique<ShapeLine>(p1, p2, fgColour, 1.0f));
-    shapes_lock.unlock();
-}
-
-void UISDL::LineWidth(float x1, float y1, float x2, float y2, float w) {
-    auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
-    auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
-    shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeLine(p1, p2, fgColour, w));
+    shapesBackBuffer.emplace_back(new ShapeLine(p1, p2, fgColour, line_width));
     shapes_lock.unlock();
 }
 
@@ -105,7 +97,7 @@ void UISDL::Rectangle(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeRectangle(p1, p2, fgColour, 1.0f));
+    shapesBackBuffer.emplace_back(new ShapeRectangle(p1, p2, fgColour, line_width));
     shapes_lock.unlock();
 }
 
@@ -120,14 +112,7 @@ void UISDL::FilledRectangle(float x1, float y1, float x2, float y2) {
 void UISDL::Circle(float xc, float yc, float r) {
     auto p = ImVec2(xc + origin_x, yc + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, 1.0f));
-    shapes_lock.unlock();
-}
-
-void UISDL::CircleWidth(float xc, float yc, float r, float w) {
-    auto p = ImVec2(xc + origin_x, yc + origin_y);
-    shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, w));
+    shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, line_width));
     shapes_lock.unlock();
 }
 
@@ -143,7 +128,7 @@ void UISDL::Triangle(float x1, float y1, float x2, float y2, float x3, float y3)
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     shapes_lock.lock();
-    shapesBackBuffer.emplace_back(new ShapeTriangle(p1, p2, p3, fgColour, 1.0f));
+    shapesBackBuffer.emplace_back(new ShapeTriangle(p1, p2, p3, fgColour, line_width));
     shapes_lock.unlock();
 }
 

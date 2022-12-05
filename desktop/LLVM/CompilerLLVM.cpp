@@ -289,14 +289,12 @@ void CompilerLLVM::CreateLLVMPasses() {
         }
     }
 
-    if (options.target == CompileTarget::EXE) {
-		std::error_code EC;
+    std::error_code EC;
     std::string filename_s(options.output_filename + ".o");
     llvm::raw_fd_ostream out_s(filename_s, EC, llvm::sys::fs::CreationDisposition::CD_CreateAlways);
-        if (Target->addPassesToEmitFile(passes, out_s, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
-            std::cout << "LLVM output of object files not supported\n";
-            exit(1);
-        }
+    if (Target->addPassesToEmitFile(passes, out_s, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
+        std::cout << "LLVM output of object files not supported\n";
+        exit(1);
     }
 
     fnPasses.doFinalization();

@@ -89,8 +89,11 @@ void Input::CheckForKeypress() {
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 	buffer.pop();
-	while (!key_events.empty())
-		key_events.pop();
+	while (!key_events.empty()) {
+        lock.lock();
+        key_events.pop();
+        lock.unlock();
+    }
 }
 
 int Input::CheckKey(int keycode) {
@@ -101,12 +104,12 @@ int Input::Waitkey(int timeout) {
 	int clock = get_clock();
 	do {
 		// Scan
-		lock.lock();
 		while (!key_events.empty()) { // Scan until we find a keydown
+            lock.lock();
 			auto s = key_events.front();
-			key_events.pop();
+            key_events.pop();
+            lock.unlock();
 			if (s.type == EventType::KeyDown) {
-				lock.unlock();
 				return s.ascii;
 			}
 		}

@@ -7,8 +7,8 @@ void Compiler::CreateConstant(const std::string &name, Primitive type, llvm::Con
 }
 
 void Compiler::Constants() {
-    CreateConstant("WINDOWED", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 1));
-    CreateConstant("BANKED", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 2));
+    CreateConstant("Windowed", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 1));
+    CreateConstant("Banked", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 2));
 
     CreateConstant("KEY_ESCAPE", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, SDL_SCANCODE_ESCAPE));
     CreateConstant("KEY_RETURN", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, SDL_SCANCODE_RETURN));

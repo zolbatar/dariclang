@@ -17,7 +17,7 @@ void Compiler::TokenRepeat(ParserToken &token) {
     auto value_type = CompileExpression(token.children[0]);
     auto t = Primitive::INT;
     llvm.AutoConversion(GetIR(), value_type, t);
-    value_type.value = GetIR()->CreateIntCast(value_type.value, llvm.TypeBit, true);
+    value_type.value = IntToBitConditional(value_type.value);
 
     // Check condition
     GetIR()->CreateCondBr(value_type.value, quitBB, bc);
@@ -34,7 +34,7 @@ void Compiler::TokenWhile(ParserToken &token) {
     auto value_type = CompileExpression(token.children[0]);
     auto t = Primitive::INT;
     llvm.AutoConversion(GetIR(), value_type, t);
-    value_type.value = GetIR()->CreateIntCast(value_type.value, llvm.TypeBit, true);
+    value_type.value = IntToBitConditional(value_type.value);
 
     // Check condition
     GetIR()->CreateCondBr(value_type.value, doBB, quitBB);
@@ -108,7 +108,6 @@ void Compiler::TokenFor(ParserToken &t) {
 
     // Blocks
     auto bodyEndBB = CreateBB("FOR body end", t);
-//    auto bodyFlagBB = CreateBB("FOR body flag", t);
     auto endBB = CreateBB("FOR body terminate", t);
 
     // Body block

@@ -47,7 +47,7 @@ separator
 assign:         LET? assignment (COMMA assignment)* (OF? type)? ;
 assignment:     variable EQ expression ;
 call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
-case:           CASE expression OF separator? when* (OTHERWISE statements)? ENDCASE ;
+case:           CASE expression OF separator? when* (OTHERWISE statements)? END CASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
@@ -57,21 +57,21 @@ end:            END ;
 for:            FOR IDENTIFIER (OF? type)? EQ expression TO expression (STEP expression)? statements NEXT ;
 importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
-ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE ENDIF ;
+ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE END IF ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
 parameter:      REF? IDENTIFIER OF? (type | IDENTIFIER) ;
 print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
-procedure:      DEF IDENTIFIER LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? (OF? type)? separator* statements ENDDEF ;
+procedure:      DEF IDENTIFIER LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? (OF? type)? separator* statements END DEF ;
 repeat:         REPEAT statements UNTIL expression ;
 read:           READ variable (COMMA variable)* ;
 restore:        RESTORE stringLiteral ;
 return:         RETURN expression? ;
-struct:         DEFRECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* ENDRECORD ;
+struct:         RECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* END RECORD ;
 structDim:      DIM IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
 structInstance: DIM IDENTIFIER OF IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 when:           WHEN expression (COMMA expression)* statements ;
-while:          WHILE expression statements ENDWHILE ;
+while:          WHILE expression statements END WHILE ;
 
 variable
     : IDENTIFIER
@@ -126,11 +126,11 @@ expression
 
     // String functions
     | ASC expression
-    | CHRS expression
+    | CHR expression
     | INSTR LPAREN? expression COMMA expression COMMA expression RPAREN?
-    | LEFTS LPAREN? expression COMMA expression RPAREN?
-    | MIDS LPAREN? expression COMMA expression COMMA expression RPAREN?
-    | RIGHTS LPAREN? expression COMMA expression RPAREN?
+    | LEFT LPAREN? expression COMMA expression RPAREN?
+    | MID LPAREN? expression COMMA expression COMMA expression RPAREN?
+    | RIGHT LPAREN? expression COMMA expression RPAREN?
     | LEN expression
 
     // Array functions
@@ -202,81 +202,75 @@ stringLiteral
 BlockComment:   '#{' .*? '}#' -> skip;
 LineComment:    (REM | HASH) ~ [\r\n]* -> skip;
 
-CASE            : 'CASE' | 'Case' | 'case' ;
-CONST           : 'CONST' | 'Const' | 'const' ;
-DATA            : 'DATA' | 'Data' | 'data' ;
-DATALABEL       : 'DATALABEL' | 'DataLabel' | 'datalabel' ;
-DEF             : 'DEF' | 'Def' | 'def' ;
-DIM             : 'DIM' | 'Dim' | 'dim' ;
-ELSE            : 'ELSE' | 'Else' | 'else' ;
-END             : 'END' | 'End' | 'end' ;
-ENDCASE         : 'ENDCASE' | 'EndCase' | 'endcase' ;
-ENDDEF          : 'ENDDEF' | 'EndDef' | 'enddef' ;
-ENDIF           : 'ENDIF' | 'EndIf' | 'endif' ;
-ENDWHILE        : 'ENDWHILE' | 'EndWhile' | 'endwhile' ;
-FOR             : 'FOR' | 'For' | 'for' ;
-IF              : 'IF' | 'If' | 'if' ;
-IMPORT          : 'IMPORT' | 'Import' | 'import' ;
-NEXT            : 'NEXT' | 'Next' | 'next' ;
-OF              : 'OF' | 'Of' | 'of' ;
-OPTION          : 'OPTION' | 'Option' | 'option' ;
-OTHERWISE       : 'OTHERWISE' | 'Otherwise' | 'otherwise' ;
-PRINT           : 'PRINT' | 'Print' | 'print' ;
-READ            : 'READ' | 'Read' | 'read' ;
-REF             : 'REF' | 'Ref' | 'ref' ;
-REM             : 'REM' | 'Rem' | 'rem' ;
-REPEAT          : 'REPEAT' | 'Repeat' | 'repeat' ;
-RESTORE         : 'RESTORE' | 'Restore' | 'restore' ;
-RETURN          : 'RETURN' | 'Return' | 'return' ;
-THEN            : 'THEN' | 'Then' | 'then' ;
-SIZE            : 'SIZE' | 'Size' | 'size' ;
-STEP            : 'STEP' | 'Step' | 'step' ;
-SWAP            : 'SWAP' | 'Swap ' | 'swap' ;
-TO              : 'TO' | 'To' | 'to' ;
-UNTIL           : 'UNTIL' | 'Until' | 'until' ;
-WHEN            : 'WHEN' | 'When' | 'when' ;
-WITH            : 'WITH' | 'With' | 'with' ;
-WHILE           : 'WHILE' | 'While' | 'while' ;
+CASE            : 'CASE' | 'Case' ;
+CONST           : 'CONST' | 'Const' ;
+DATA            : 'DATA' | 'Data' ;
+DATALABEL       : 'DATALABEL' | 'DataLabel' ;
+DEF             : 'DEF' | 'Def' ;
+DIM             : 'DIM' | 'Dim' ;
+ELSE            : 'ELSE' | 'Else' ;
+END             : 'END' | 'End' ;
+FOR             : 'FOR' | 'For' ;
+IF              : 'IF' | 'If' ;
+IMPORT          : 'IMPORT' | 'Import' ;
+NEXT            : 'NEXT' | 'Next' ;
+OF              : 'OF' | 'Of' ;
+OPTION          : 'OPTION' | 'Option' ;
+OTHERWISE       : 'OTHERWISE' | 'Otherwise' ;
+PRINT           : 'PRINT' | 'Print' ;
+READ            : 'READ' | 'Read' ;
+RECORD          : 'RECORD' | 'Record' ;
+REF             : 'BYREF' | 'ByRef' ;
+REM             : 'REM' | 'Rem' ;
+REPEAT          : 'REPEAT' | 'Repeat' ;
+RESTORE         : 'RESTORE' | 'Restore' ;
+RETURN          : 'RETURN' | 'Return' ;
+THEN            : 'THEN' | 'Then' ;
+SIZE            : 'SIZE' | 'Size' ;
+STEP            : 'STEP' | 'Step' ;
+SWAP            : 'SWAP' | 'Swap ' ;
+TO              : 'TO' | 'To' ;
+UNTIL           : 'UNTIL' | 'Until' ;
+WHEN            : 'WHEN' | 'When' ;
+WITH            : 'WITH' | 'With' ;
+WHILE           : 'WHILE' | 'While' ;
 
-MAIN            : '@MAIN' | '@Main' | '@main' ;
+MAIN            : '@MAIN' | '@Main' ;
 
-DEFRECORD       : 'DEFRECORD' | 'DefRecord' | 'defrecord' ;
-ENDRECORD       : 'ENDRECORD' | 'EndRecord' | 'endrecord' ;
+ABS             : 'ABS' | 'Abs' ;
+ACS             : 'ACS' | 'Acs' ;
+ASN             : 'ASN' | 'Asn' ;
+ATN             : 'ATN' | 'Atn' ;
+COS             : 'COS' | 'Cos' ;
+DEG             : 'DEG' | 'Deg' ;
+EXP             : 'EXP' | 'Exp' ;
+FLOOR           : 'FLOOR' | 'Floor' ;
+LET             : 'LET' | 'Let' ;
+LN              : 'LN' | 'Ln' ;
+LOG             : 'LOG' | 'Log' ;
+PI              : 'PI' | 'Pi' ;
+RAD             : 'RAD' | 'Rad' ;
+ROUND           : 'ROUND' | 'Round' ;
+SGN             : 'SGN' | 'Sgn' ;
+SIN             : 'SIN' | 'Sin' ;
+SQR             : 'SQR' | 'Sqr' ;
+TAN             : 'TAN' | 'Tan' ;
 
-ABS             : 'ABS' | 'Abs' | 'abs' ;
-ACS             : 'ACS' | 'Acs' | 'acs'  ;
-ASN             : 'ASN' | 'Asn' | 'asn'  ;
-ATN             : 'ATN' | 'Atn' | 'atn'  ;
-COS             : 'COS' | 'Cos' | 'cos'  ;
-DEG             : 'DEG' | 'Deg' | 'deg'  ;
-EXP             : 'EXP' | 'Exp' | 'exp'  ;
-FLOOR           : 'FLOOR' | 'Floor' | 'floor'  ;
-LET             : 'LET' | 'Let' | 'let'  ;
-LN              : 'LN' | 'Ln' | 'ln'  ;
-LOG             : 'LOG' | 'Log' | 'log'  ;
-PI              : 'PI' | 'Pi' | 'pi'  ;
-RAD             : 'RAD' | 'Rad' | 'rad'  ;
-ROUND           : 'ROUND' | 'Round' | 'round'  ;
-SGN             : 'SGN' | 'Sgn' | 'sgn'  ;
-SIN             : 'SIN' | 'Sin' | 'sin' ;
-SQR             : 'SQR' | 'Sqr' | 'sqr'  ;
-TAN             : 'TAN' | 'Tan' | 'tan'  ;
+FALSE           : 'FALSE' | 'False' ;
+TRUE            : 'TRUE' | 'True' ;
 
-FALSE           : 'FALSE' | 'False' | 'false' ;
-TRUE            : 'TRUE' | 'True' | 'true' ;
+ASC             : 'ASC' | 'Asc' ;
+CHR             : 'CHR' | 'Chr' ;
+INSTR           : 'INSTR' | 'Instr' ;
+LEFT            : 'LEFT' | 'Left' ;
+MID             : 'MID' | 'Mid' ;
+RIGHT           : 'RIGHT' | 'Right' ;
+LEN             : 'LEN' | 'Len' ;
 
-ASC             : 'ASC' | 'Asc' | 'asc' ;
-CHRS            : 'CHR$' | 'Chr$' | 'chr$' ;
-INSTR           : 'INSTR' | 'Instr' | 'instr' ;
-LEFTS           : 'LEFT$' | 'Left$' | 'left$' ;
-MIDS            : 'MID$' | 'Mid$' | 'mid$' ;
-RIGHTS          : 'RIGHT$' | 'Right$' | 'right$' ;
-LEN             : 'LEN' | 'Len' | 'len' ;
-
-BYTE            : 'BYTE' | 'Byte' | 'byte' ;
-INT             : 'INT' | 'Int' | 'int' ;
-FLOAT           : 'FLOAT' | 'Float' | 'float' ;
-STRING          : 'STRING' | 'String' | 'string' ;
+BYTE            : 'BYTE' | 'Byte' ;
+INT             : 'INT' | 'Int' ;
+FLOAT           : 'FLOAT' | 'Float' ;
+STRING          : 'STRING' | 'String' ;
 
 DOLLAR          : '$' ;
 HASH            : '#' ;
@@ -307,15 +301,15 @@ MULTIPLY        : '*' ;
 DIVIDE          : '/' ;
 SHL             : '<<' ;
 SHR             : '>>' ;
-MOD             : 'MOD' | 'Mod' | 'mod' ;
-DIV             : 'DIV' | 'Div' | 'div' | '//' ;
+MOD             : 'MOD' | 'Mod' ;
+DIV             : 'DIV' | 'Div' | '//' ;
 
 // Boolean
 COMP            : '~' ;
-NOT             : 'NOT' | 'Not' | 'not' ;
-AND             : 'AND' | 'And' | 'and' ;
-OR              : 'OR' | 'Or' | 'or' ;
-EOR             : 'EOR' | 'Eor' | 'eor' ;
+NOT             : 'NOT' | 'Not' ;
+AND             : 'AND' | 'And' ;
+OR              : 'OR' | 'Or' ;
+EOR             : 'EOR' | 'Eor' ;
 
 // Literals
 STRINGLITERAL   : '"' ~["\r\n]* '"' ;

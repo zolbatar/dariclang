@@ -23,7 +23,7 @@ extern "C" T_S times() {
 	char buffer[80];
 	time(&rawtime);
 	timeinfo = localtime(&rawtime);
-	strftime(buffer, 80, "%a,%e %b %Y.%T", timeinfo);
+	strftime(buffer, 80, "%T", timeinfo);
 
 	// Copy string and add to free stack
 	auto l = strlen(buffer) + 1;
@@ -31,4 +31,20 @@ extern "C" T_S times() {
 	strncpy(v, buffer, strlen(buffer));
 	v[l] = 0;
 	return v;
+}
+
+extern "C" T_S dates() {
+    time_t rawtime;
+    struct tm *timeinfo;
+    char buffer[80];
+    time(&rawtime);
+    timeinfo = localtime(&rawtime);
+    strftime(buffer, 80, "%a,%d %b %Y", timeinfo);
+
+    // Copy string and add to free stack
+    auto l = strlen(buffer) + 1;
+    auto v = (char *)malloc(l);
+    strncpy(v, buffer, strlen(buffer));
+    v[l] = 0;
+    return v;
 }

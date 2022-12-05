@@ -32,10 +32,10 @@ void CompilerLLVM::AutoConversion(llvm::IRBuilder<> *ir, ValueType &value_type, 
     if (value_type.type == type) {
         // Do nothing
     } else if (value_type.type == Primitive::BYTE && type == Primitive::INT) {
-        value_type.value = ir->CreateBitCast(value_type.value, TypeConversion(type));
+        value_type.value = ir->CreateIntCast(value_type.value, TypeConversion(type), true);
         value_type.type = type;
     } else if (value_type.type == Primitive::INT && type == Primitive::BYTE) {
-        value_type.value = ir->CreateBitCast(value_type.value, TypeConversion(type));
+        value_type.value = ir->CreateIntCast(value_type.value, TypeConversion(type), true);
         value_type.type = type;
     } else if (value_type.type == Primitive::INT && type == Primitive::FLOAT) {
         value_type.value = ir->CreateSIToFP(value_type.value, TypeConversion(type));
@@ -52,10 +52,10 @@ void CompilerLLVM::AutoConversion2Way(llvm::IRBuilder<> *ir, ValueType &value_ty
     if (value_type1.type == value_type2.type) {
         // Do nothing
     } else if (value_type1.type == Primitive::BYTE && value_type2.type == Primitive::INT) {
-        value_type1.value = ir->CreateBitCast(value_type1.value, TypeInt);
+        value_type1.value = ir->CreateIntCast(value_type1.value, TypeInt, true);
         value_type1.type = value_type2.type;
     } else if (value_type1.type == Primitive::INT && value_type2.type == Primitive::BYTE) {
-        value_type2.value = ir->CreateBitCast(value_type2.value, TypeInt);
+        value_type2.value = ir->CreateIntCast(value_type2.value, TypeInt, true);
         value_type2.type = value_type1.type;
     } else if (value_type1.type == Primitive::INT && value_type2.type == Primitive::FLOAT) {
         value_type1.value = ir->CreateSIToFP(value_type1.value, TypeConversion(value_type2.type));

@@ -42,14 +42,14 @@ public:
     void Render3D();
     void SetFGColour(ImU32 colour);
     void SetBGColour(ImU32 colour);
+    void SetAlpha(float _alpha) { this->alpha = _alpha; }
+    float GetAlpha() { return alpha; }
     void Cls();
     void Flip(bool userSpecified);
     void Line(float x1, float y1, float x2, float y2);
-    void LineWidth(float x1, float y1, float x2, float y2, float w);
     void Rectangle(float x1, float y1, float x2, float y2);
     void FilledRectangle(float x1, float y1, float x2, float y2);
     void Circle(float x, float y, float r);
-    void CircleWidth(float x, float y, float r, float w);
     void FilledCircle(float x, float y, float r);
     void Triangle(float x1, float y1, float x2, float y2, float x3, float y3);
     void FilledTriangle(float x1, float y1, float x2, float y2, float x3, float y3);
@@ -60,6 +60,7 @@ public:
     void Origin(float x, float y);
     void Clip(float x1, float y1, float x2, float y2);
     void ClipOff();
+    void SetLineWidth(float lw) { this->line_width = lw; }
     void Sprite(SpriteBank *sb, int sx, int sy, float rot, float scale, bool flipped);
     int64_t GetScreenWidth() { return desktop_screen_width; }
     int64_t GetScreenHeight() { return desktop_screen_height; }
@@ -70,7 +71,7 @@ public:
     }
     bool IsFontRequestActive() { return !new_font_requested.empty(); }
     ImU32 GetFGColour() { return fgColour; }
-    std::mutex* GetSpriteLock() { return &sprite_lock; }
+    std::mutex *GetSpriteLock() { return &sprite_lock; }
 
 private:
     void _CreateWindow(bool windowed);
@@ -87,8 +88,10 @@ private:
     const int console_y_size = 16;
     ImU32 fgColour;
     ImU32 bgColour;
-    float origin_x = 0.0;
-    float origin_y = 0.0;
+    float line_width = 1.0f;
+    float alpha = 1.0f;
+    float origin_x = 0.0f;
+    float origin_y = 0.0f;
     std::atomic_bool flip_requested = false;
     float dpi_ratio;
     int desktop_screen_width, desktop_screen_height;
