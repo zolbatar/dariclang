@@ -97,6 +97,10 @@ void Compiler::TokenFor(ParserToken &t) {
     // Set init loop variable value
     ref->SetValue(option_base, from, std::vector<ValueType>(), llvm, GetIR(), t);
 
+    // Work out direction
+    auto comp = llvm.ComparisonGT(GetIR(), from, to);
+    auto direction = GetIR()->CreateBitCast(comp.value, llvm.TypeBit);
+
     // Flag to indicate completion
     auto temp_name = GetScratchName(t.line);
     auto finished = GetIR()->CreateAlloca(llvm.TypeBit, nullptr, temp_name);
@@ -104,8 +108,7 @@ void Compiler::TokenFor(ParserToken &t) {
 
     // Blocks
     auto bodyEndBB = CreateBB("FOR body end", t);
-    auto bodyFlagBB = CreateBB("FOR body flag", t);
-    auto bodyFlag2BB = CreateBB("FOR body flag2", t);
+//    auto bodyFlagBB = CreateBB("FOR body flag", t);
     auto endBB = CreateBB("FOR body terminate", t);
 
     // Body block
@@ -120,21 +123,34 @@ void Compiler::TokenFor(ParserToken &t) {
     ref->SetValue(option_base, nv, std::vector<ValueType>(), llvm, GetIR(), t);
 
     // Have we completed?
-    auto cond = llvm.ComparisonEQ(GetIR(), nv, to);
-    cond.value = GetIR()->CreateTrunc(cond.value, llvm.TypeBit);
+    auto dirCheckBBLower = CreateBB("FOR direction check (lower)", t);
+    auto dirCheckBBHigher = CreateBB("FOR direction check (higher)", t);
+    auto dirCheckBBEnd = CreateBB("FOR direction end", t);
+    GetIR()->CreateCondBr(direction, dirCheckBBLower, dirCheckBBHigher);
 
-    GetIR()->CreateCondBr(GetIR()->CreateLoad(llvm.TypeBit, finished), endBB, bodyFlagBB);
-    AddBB(bodyFlagBB);
-    GetIR()->CreateCondBr(cond.value, bodyFlag2BB, bodyBB);
-    AddBB(bodyFlag2BB);
-    GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 1), finished);
-    GetIR()->CreateBr(bodyBB);
+    // Lower check
+    AddBB(dirCheckBBLower);
+    auto condL = llvm.ComparisonLT(GetIR(), nv, to);
+    GetIR()->CreateStore(GetIR()->CreateBitCast(condL.value, llvm.TypeBit), finished);
+    GetIR()->CreateBr(dirCheckBBEnd);
+
+    // Higher check
+    AddBB(dirCheckBBHigher);
+    auto condR = llvm.ComparisonGT(GetIR(), nv, to);
+    GetIR()->CreateStore(GetIR()->CreateBitCast(condR.value, llvm.TypeBit), finished);
+    GetIR()->CreateBr(dirCheckBBEnd);
+
+    // End of checks
+    AddBB(dirCheckBBEnd);
+
+    // Check if we hit the end previously
+    GetIR()->CreateCondBr(GetIR()->CreateLoad(llvm.TypeBit, finished), endBB, bodyBB);
 
     // Body Terminator
     AddBB(endBB);
 }
 
 std::string Compiler::GetScratchName(size_t line) {
-    return "Scratch: (" + std::to_string(line) + ")" + std::to_string(scratch_index++);
+    return "Scratch: (" + std::to_string(line) + "):Index" + std::to_string(scratch_index++);
 }
 

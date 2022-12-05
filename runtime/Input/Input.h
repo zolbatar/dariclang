@@ -29,8 +29,9 @@ public:
     char Get();
 	void Clear();
     std::string GetString();
-    int Inkey(int timeout_or_keycode);
-    std::string Inkeys(int timeout_or_keycode);
+	int CheckKey(int keycode);
+    int Waitkey(int timeout);
+    std::string Waitkeys(int timeout);
     std::string InputLine();
     void Mouse(int *x, int *y, int *state);
 

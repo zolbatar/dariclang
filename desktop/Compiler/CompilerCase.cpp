@@ -27,7 +27,7 @@ void Compiler::TokenCase(ParserToken &token) {
 
                 // Do a compare
                 auto comp = llvm.ComparisonEQ(GetIR(), when_expr, expr);
-                comp.value = GetIR()->CreateTrunc(comp.value, llvm.TypeBit);
+                comp.value = GetIR()->CreateBitCast(comp.value, llvm.TypeBit);
                 GetIR()->CreateCondBr(comp.value, whenBody, whenBodyEnd);
                 AddBB(whenBody);
                 CompileStatements(entry.children[0].children);

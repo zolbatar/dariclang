@@ -8,19 +8,19 @@ extern "C" void kbm_clear() {
 }
 
 extern "C" T_I kbm_waitkey(T_I timeout) {
-    auto v = input.Inkey(timeout);
+    auto v = input.Waitkey(timeout);
     return v;
 }
 
 extern "C" T_S kbm_waitkeys(T_I timeout) {
-    auto v = input.Inkeys(timeout);
+    auto v = input.Waitkeys(timeout);
     auto m = (char *) malloc(v.length() + 1);
     strcpy(m, v.c_str());
     return m;
 }
 
 extern "C" T_I kbm_keydown(T_I key) {
-    auto v = input.Inkey(-key - 1);
+    auto v = input.CheckKey(key);
     return v;
 }
 

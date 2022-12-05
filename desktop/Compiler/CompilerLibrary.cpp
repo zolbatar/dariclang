@@ -5,19 +5,24 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
 	std::vector<llvm::Type *> pars_t;
 	for (auto c : parameters) {
 		switch (c) {
-		case 'B':pars.push_back(LibraryFuncParameter(Primitive::BYTE, false));
+		case 'B':
+			pars.push_back(LibraryFuncParameter(Primitive::BYTE, false));
 			pars_t.push_back(llvm.TypeByte);
 			break;
-		case 'I':pars.push_back(LibraryFuncParameter(Primitive::INT, false));
+		case 'I':
+			pars.push_back(LibraryFuncParameter(Primitive::INT, false));
 			pars_t.push_back(llvm.TypeInt);
 			break;
-		case 'F':pars.push_back(LibraryFuncParameter(Primitive::FLOAT, false));
+		case 'F':
+			pars.push_back(LibraryFuncParameter(Primitive::FLOAT, false));
 			pars_t.push_back(llvm.TypeFloat);
 			break;
-		case 'S':pars.push_back(LibraryFuncParameter(Primitive::STRING, false));
+		case 'S':
+			pars.push_back(LibraryFuncParameter(Primitive::STRING, false));
 			pars_t.push_back(llvm.TypeString);
 			break;
-		default:assert(0);
+		default:
+			assert(0);
 		}
 	}
 	library.insert(std::make_pair(name, LibraryFunc{.func_name = func, .return_Type=ret, .parameters=pars}));
@@ -72,13 +77,13 @@ void Compiler::SetupLibrary() {
 	// 3D Graphics
 	AddLibraryCall("OBJECT", "gfx3d_object", Primitive::INT, "IFFFFFFFI");
 	AddLibraryCall("SHAPE", "gfx3d_shape", Primitive::INT, "");
-	AddLibraryCall("SHAPEDELETE", "gfx3d_shapedelete", Primitive::NONE, "I");
+	AddLibraryCall("DELETESHAPE", "gfx3d_shapedelete", Primitive::NONE, "I");
 	AddLibraryCall("CAMERA", "gfx3d_camera", Primitive::NONE, "FFFFFFFFF");
 	AddLibraryCall("TRANSLATE", "gfx3d_translate", Primitive::NONE, "IFFF");
 	AddLibraryCall("ROTATE", "gfx3d_rotate", Primitive::NONE, "IFFF");
 	AddLibraryCall("SCALE", "gfx3d_scale", Primitive::NONE, "IF");
-	AddLibraryCall("OBJECTDELETE", "gfx3d_deleteobject", Primitive::NONE, "I");
-	AddLibraryCall("OBJECTDELETEALL", "gfx3d_deleteallobjects", Primitive::NONE, "");
+	AddLibraryCall("DELETEOBJECT", "gfx3d_deleteobject", Primitive::NONE, "I");
+	AddLibraryCall("DELETEALLOBJECTS", "gfx3d_deleteallobjects", Primitive::NONE, "");
 	AddLibraryCall("SHADOWSON", "gfx3d_shadowson", Primitive::NONE, "");
 	AddLibraryCall("SHADOWSOFF", "gfx3d_shadowson", Primitive::NONE, "");
 	AddLibraryCall("RENDER", "gfx3d_render", Primitive::NONE, "");
