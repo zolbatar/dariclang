@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 if (APPLE)
     #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-    set(CMAKE_OSX_ARCHITECTURES "x86_64")
-    #set(CMAKE_OSX_ARCHITECTURES "arm64")
+    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
@@ -97,7 +97,6 @@ endif()
 
 add_executable(${PROJECT_NAME}
         main.cpp
-
         ${IMGUI_DIR}/imgui_demo.cpp
         ${IMGUI_DIR}/imgui_draw.cpp
         ${IMGUI_DIR}/imgui_tables.cpp
@@ -105,7 +104,6 @@ add_executable(${PROJECT_NAME}
         ${IMGUI_DIR}/imgui.cpp
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
-
         ../runtime/KeyboardMouse.cpp
         ../runtime/FontsText.cpp
         ../runtime/FileIO.cpp
@@ -150,10 +148,15 @@ add_executable(${PROJECT_NAME}
         ../runtime/Sound/middleware/WAVWriter.cpp
         ../runtime/Sound/utils/Envelope.cpp
         ../runtime/Sound/utils/Waveforms.cpp
-
+        IDE/TextEditor.cpp
+        IDE/TextEditor.h
+        IDE/Edit.cpp
+        IDE/Edit.h
+        IDE/ImGuiFileDialog/ImGuiFileDialogConfig.h
+        IDE/ImGuiFileDialog/ImGuiFileDialog.h
+        IDE/ImGuiFileDialog/ImGuiFileDialog.cpp
         Library/StringLib.h
         Library/StringLib.cpp
-
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/Compiler.h
@@ -169,7 +172,6 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerLibrary.cpp
         Compiler/CompilerConstants.cpp
         Compiler/CompilerRead.cpp
-
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
         LLVM/CompilerLLVMVariables.cpp
@@ -181,9 +183,7 @@ add_executable(${PROJECT_NAME}
         LLVM/CompilerLLVMBlocks.cpp
         LLVM/CompilerLLVMArrays.cpp
         LLVM/CompilerLLVMStructs.cpp
-
         JIT/JIT.cpp
-
         Parser/Parser.h
         Parser/Parser.cpp
         Parser/ParserCore.cpp
@@ -209,12 +209,13 @@ add_executable(${PROJECT_NAME}
         Parser/Tokens/ParserFOR.cpp
         Parser/Tokens/ParserCASE.cpp
         Parser/Tokens/ParserDATA.cpp
-
+        Shared/Shared.h
+        Shared/Shared.cpp
+        Shared/SourceFile.cpp
+        Shared/SourceFile.h
         Variables/PrimitiveTypes.h
         Variables/Reference.h
         Variables/Reference.cpp
-        Shared/Shared.h
-        Shared/Shared.cpp
         Variables/Instance.cpp
         Variables/Instance.h
         Variables/InstancePrimitive.cpp
@@ -227,11 +228,11 @@ add_executable(${PROJECT_NAME}
         Variables/InstanceRecord.h
         Variables/InstanceRecordArray.cpp
         Variables/InstanceRecordArray.h
-
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Shared/SourceFile.cpp Shared/SourceFile.h)
+        Grammar/DaricVisitor.cpp
+)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}

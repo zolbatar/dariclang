@@ -9,6 +9,7 @@
 #include "Shared/SourceFile.h"
 #include "../runtime/UI/UISDL.h"
 #include "../runtime/Sound/SoftSynth.h"
+#include "IDE/Edit.h"
 
 extern "C" void audio_init();
 extern std::shared_ptr<SoftSynth> soft_synth;
@@ -24,53 +25,72 @@ std::atomic_bool ui_started = false;
 std::filesystem::path exe_path;
 
 static void RunThread() {
-    Instance::ClearStatic();
-    Reference::ClearStatic();
-    SourceFile state(options);
-    state.ParseCompileAndRun();
-    done = true;
+	Instance::ClearStatic();
+	Reference::ClearStatic();
+	SourceFile state(options);
+	state.ParseCompileAndRun();
+	done = true;
 }
 
 void do_quit() {
-    delete ui;
-    exit(0);
+	delete ui;
+	exit(0);
 }
 
 int main(int argc, char *argv[]) {
-    exe_path = std::filesystem::path{argv[0]}.parent_path();
+	exe_path = std::filesystem::path{argv[0]}.parent_path();
 
-    std::cout << "Welcome to Daric!" << std::endl;
-    options.file = argv[1];
+	std::cout << "Welcome to Daric!" << std::endl;
 
-    // What sort of compile?
-    options.output_ll_files = false;
-    if (argc == 2) {
-        options.target = CompileTarget::JIT;
-        options.use_exit_as_end = false;
-    } else {
-        options.target = CompileTarget::EXE;
-        options.output_filename = std::string(argv[2]);
-        options.use_exit_as_end = true;
-    }
-    options.run = argc == 2;
-    if (options.target == CompileTarget::JIT)
-        soft_synth = std::make_shared<SoftSynth>();
-    audio_init();
-    auto t = std::thread(&RunThread);
-    t.detach();
-    while (!done) {
-        if (start_ui) {
-            ui = new UISDL();
-            ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
-            start_ui = false;
-            ui_started = true;
-        }
-        if (ui_started) {
-            if (ui->Render()) {
-                do_quit();
-            }
-        }
-    }
-    do_quit();
-    return 0;
+	if (argc == 1) {
+		// Fire up IDE
+		ui = new UISDL();
+//		ui->Start(ui->GetScreenWidth(), ui->GetScreenHeight(), false, false);
+		ui->Start(1280, 1024, true, false);
+		Edit edit;
+		edit.SetFont(ui->GetMonoFont());
+		edit.LoadFile("Tester.daric");
+		while (!done) {
+			if (ui->Render([&]() {
+			  const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
+			  edit.Render(main_viewport);
+			})) {
+				do_quit();
+			}
+		}
+	} else {
+		options.file = argv[1];
+
+		// What sort of compile?
+		options.output_ll_files = false;
+		if (argc == 2) {
+			options.target = CompileTarget::JIT;
+			options.use_exit_as_end = false;
+		} else {
+			options.target = CompileTarget::EXE;
+			options.output_filename = std::string(argv[2]);
+			options.use_exit_as_end = true;
+		}
+		options.run = argc == 2;
+		if (options.target == CompileTarget::JIT)
+			soft_synth = std::make_shared<SoftSynth>();
+		audio_init();
+		auto t = std::thread(&RunThread);
+		t.detach();
+		while (!done) {
+			if (start_ui) {
+				ui = new UISDL();
+				ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
+				start_ui = false;
+				ui_started = true;
+			}
+			if (ui_started) {
+				if (ui->Render([]() {})) {
+					do_quit();
+				}
+			}
+		}
+	}
+	do_quit();
+	return 0;
 }
