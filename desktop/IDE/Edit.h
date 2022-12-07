@@ -7,14 +7,13 @@
 class Edit {
 public:
 	Edit();
-	void SetFont(ImFont *_fontUIFixed);
 	void Render(const ImGuiViewport *main_viewport);
 	bool LoadFile(std::string filename);
 	void ChooseFile();
 	void SaveFile();
 
 	std::vector<std::string> GetTextLines() {
-		return editors[fileBeingEdited].GetTextLines();
+		return editors.find(fileBeingEdited)->second.GetTextLines();
 	}
 
 	std::string GetFilename() {
@@ -25,6 +24,7 @@ private:
 	bool open;
 
 	ImFont *fontUIFixed;
+	ImFont *fontUIFixedBold;
 	std::string fileBeingEdited = "";
 	std::list<std::string> files;
 	std::map<std::string, TextEditor> editors;

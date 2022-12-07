@@ -41,15 +41,18 @@ int main(int argc, char *argv[]) {
 	exe_path = std::filesystem::path{argv[0]}.parent_path();
 
 	std::cout << "Welcome to Daric!" << std::endl;
+	Compiler::SetupLibrary();
 
 	if (argc == 1) {
 		// Fire up IDE
 		ui = new UISDL();
 //		ui->Start(ui->GetScreenWidth(), ui->GetScreenHeight(), false, false);
-		ui->Start(1280, 1024, true, false);
+		ui->Start(1024, 768, true, false);
+
+		// Prefer the Berkeley Mono font
 		Edit edit;
-		edit.SetFont(ui->GetMonoFont());
 		edit.LoadFile("Tester.daric");
+		edit.LoadFile("BubbleUniverse.daric");
 		while (!done) {
 			if (ui->Render([&]() {
 			  const ImGuiViewport *main_viewport = ImGui::GetMainViewport();

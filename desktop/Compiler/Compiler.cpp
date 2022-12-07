@@ -24,7 +24,7 @@ bool Compiler::Compile() {
 		llvm.SetupProfile(options, "Daric", state);
 
 		// Library
-		SetupLibrary();
+		SetupLibraryLLVM();
 		Constants();
 
 		// Setup implicit

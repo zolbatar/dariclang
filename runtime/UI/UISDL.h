@@ -79,6 +79,7 @@ private:
 	void Create3DBuffer();
 	void SpriteActions();
 	bool LoadTextureFromFile(const char *filename, GLuint *outTexture, int *outWidth, int *outHeight);
+    void MyStyle();
 
 	std::mutex sprite_lock;
 	std::string fps_text = "0 FPS";

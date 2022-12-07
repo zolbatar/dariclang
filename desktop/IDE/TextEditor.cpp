@@ -4,6 +4,7 @@
 #include <regex>
 #include <cmath>
 #include "TextEditor.h"
+#include "../Compiler/Compiler.h"
 
 #define IMGUI_DEFINE_MATH_OPERATORS
 
@@ -20,7 +21,7 @@ bool equals(InputIt1 first1, InputIt1 last1,
 	return first1 == last1 && first2 == last2;
 }
 
-TextEditor::TextEditor()
+TextEditor::TextEditor(ImFont *font, ImFont *fontBold)
 	: mLineSpacing(1.0f), mUndoIndex(0), mTabSize(4), mOverwrite(false), mReadOnly(false), mWithinRender(false),
 	  mScrollToCursor(false), mScrollToTop(false),
 	  mTextChanged(false), mColorizerEnabled(true), mTextStart(20.0f), mLeftMargin(10), mCursorPositionChanged(false),
@@ -28,9 +29,10 @@ TextEditor::TextEditor()
 	  mSelectionMode(SelectionMode::Normal), mCheckComments(true), mLastClick(-1.0f), mHandleKeyboardInputs(true),
 	  mHandleMouseInputs(true),
 	  mIgnoreImGuiChild(false), mShowWhitespaces(true),
-	  mStartTime(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) {
-//	SetPalette(GetLightPalette());
-	SetPalette(GetDarkPalette());
+	  mStartTime(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()),
+	  font(font), fontBold(fontBold) {
+	SetPalette(GetLightPalette());
+//	SetPalette(GetDarkPalette());
 //	SetPalette(GetRetroBluePalette());
 	SetLanguageDefinition(LanguageDefinition::DARIC());
 	mLines.push_back(Line());
@@ -917,7 +919,22 @@ void TextEditor::Render() {
 
 				if ((color != prevColor || glyph.mChar == '\t' || glyph.mChar == ' ') && !mLineBuffer.empty()) {
 					const ImVec2 newOffset(textScreenPos.x + bufferOffset.x, textScreenPos.y + bufferOffset.y);
-					drawList->AddText(newOffset, prevColor, mLineBuffer.c_str());
+					printf("11::%s %X\n", mLineBuffer.c_str(), prevColor);
+					switch (prevColor) {
+					case 0xFFFF0C06: // Keywords
+					case 0xFF000000: // Punctuation
+					case 0xFF205020:  // Comments
+						drawList->AddText(fontBold, 20.0, newOffset, prevColor, mLineBuffer.c_str());
+						break;
+					case 0xFF008000: // Literal numbers
+					case 0xFF2020A0: // Literal strings
+					case 0xFF404040: // Identifiers
+						drawList->AddText(newOffset, prevColor, mLineBuffer.c_str());
+						break;
+					default:
+						printf("Unknown colour: %X\n",prevColor);
+						assert(0);
+					}
 					auto textSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(),
 																	FLT_MAX,
 																	-1.0f,
@@ -968,6 +985,7 @@ void TextEditor::Render() {
 			if (!mLineBuffer.empty()) {
 				const ImVec2 newOffset(textScreenPos.x + bufferOffset.x, textScreenPos.y + bufferOffset.y);
 				drawList->AddText(newOffset, prevColor, mLineBuffer.c_str());
+				printf("22::%s %x\n", mLineBuffer.c_str(), prevColor);
 				mLineBuffer.clear();
 			}
 
@@ -2242,9 +2260,7 @@ const TextEditor::LanguageDefinition &TextEditor::LanguageDefinition::DARIC() {
 		for (auto &k : keywords)
 			langDef.mKeywords.insert(k);
 
-		static const char *const identifiers[] = {
-			"ABS", "ACS", "ASN", "ATN", "COS", "DEG", "EXP", "LOG", "LN", "RAD", "SIN", "SGN", "SQR", "TAN"
-		};
+		auto identifiers = Compiler::GetAllLibraryCallNames();
 		for (auto &k : identifiers) {
 			Identifier id;
 			id.mDeclaration = "Built-in function";

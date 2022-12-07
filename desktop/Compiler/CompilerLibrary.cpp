@@ -1,32 +1,64 @@
 #include "Compiler.h"
 
+std::unordered_map<std::string, LibraryFunc> Compiler::library;
+
+void Compiler::SetupLibraryLLVM() {
+	std::vector<llvm::Type *> pars_t;
+	for (auto &l : library) {
+		for (auto &p : l.second.parameters) {
+			switch (p.GetType()) {
+			case Primitive::BYTE:
+				pars_t.push_back(llvm.TypeByte);
+				break;
+			case Primitive::INT:
+				pars_t.push_back(llvm.TypeInt);
+				break;
+			case Primitive::FLOAT:
+				pars_t.push_back(llvm.TypeFloat);
+				break;
+			case Primitive::STRING:
+				pars_t.push_back(llvm.TypeString);
+				break;
+			default:
+				assert(0);
+			}
+		}
+		llvm.Module->getOrInsertFunction(l.second.func_name,
+										 llvm::FunctionType::get(llvm.TypeConversion(l.second.return_Type),
+																 pars_t,
+																 false));
+	}
+}
+
 void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret, std::string parameters) {
 	std::vector<LibraryFuncParameter> pars;
-	std::vector<llvm::Type *> pars_t;
 	for (auto c : parameters) {
 		switch (c) {
 		case 'B':
 			pars.push_back(LibraryFuncParameter(Primitive::BYTE, false));
-			pars_t.push_back(llvm.TypeByte);
 			break;
 		case 'I':
 			pars.push_back(LibraryFuncParameter(Primitive::INT, false));
-			pars_t.push_back(llvm.TypeInt);
 			break;
 		case 'F':
 			pars.push_back(LibraryFuncParameter(Primitive::FLOAT, false));
-			pars_t.push_back(llvm.TypeFloat);
 			break;
 		case 'S':
 			pars.push_back(LibraryFuncParameter(Primitive::STRING, false));
-			pars_t.push_back(llvm.TypeString);
 			break;
 		default:
 			assert(0);
 		}
 	}
 	library.insert(std::make_pair(name, LibraryFunc{.func_name = func, .return_Type=ret, .parameters=pars}));
-	llvm.Module->getOrInsertFunction(func, llvm::FunctionType::get(llvm.TypeConversion(ret), pars_t, false));
+}
+
+std::vector<std::string> Compiler::GetAllLibraryCallNames() {
+	std::vector<std::string> names;
+	for (auto &l : library) {
+		names.push_back(l.second.func_name);
+	}
+	return names;
 }
 
 void Compiler::SetupLibrary() {
@@ -37,7 +69,7 @@ void Compiler::SetupLibrary() {
 	// Chrono
 	AddLibraryCall("Timer", "__time", Primitive::FLOAT, "");
 	AddLibraryCall("Time", "times", Primitive::STRING, "");
-    AddLibraryCall("Date", "dates", Primitive::STRING, "");
+	AddLibraryCall("Date", "dates", Primitive::STRING, "");
 
 	// 2D Graphics
 	AddLibraryCall("Mode", "gfx2d_mode", Primitive::NONE, "III");
@@ -50,7 +82,7 @@ void Compiler::SetupLibrary() {
 	AddLibraryCall("Cls", "gfx2d_cls", Primitive::NONE, "");
 	AddLibraryCall("Plot", "gfx2d_plot", Primitive::NONE, "FF");
 	AddLibraryCall("Rectangle", "gfx2d_rectangle", Primitive::NONE, "FFFF");
-    AddLibraryCall("SetLineWidth", "gfx2d_linewidth", Primitive::NONE, "F");
+	AddLibraryCall("SetLineWidth", "gfx2d_linewidth", Primitive::NONE, "F");
 	AddLibraryCall("RectangleFilled", "gfx2d_rectanglefill", Primitive::NONE, "FFFF");
 	AddLibraryCall("Triangle", "gfx2d_triangle", Primitive::NONE, "FFFFFF");
 	AddLibraryCall("TriangleFilled", "gfx2d_trianglefilled", Primitive::NONE, "FFFFFF");
@@ -87,7 +119,7 @@ void Compiler::SetupLibrary() {
 	AddLibraryCall("ShadowsOff", "gfx3d_shadowsoff", Primitive::NONE, "");
 	AddLibraryCall("Render", "gfx3d_render", Primitive::NONE, "");
 	AddLibraryCall("Vertex", "gfx3d_vertex", Primitive::NONE, "FFF");
-    AddLibraryCall("VertexColour", "gfx3d_vertexc", Primitive::NONE, "FFFI");
+	AddLibraryCall("VertexColour", "gfx3d_vertexc", Primitive::NONE, "FFFI");
 	AddLibraryCall("FaceColour", "gfx3d_facec", Primitive::NONE, "IIII");
 	AddLibraryCall("Face", "gfx3d_face", Primitive::NONE, "III");
 	AddLibraryCall("LoadMesh", "gfx3d_loadmesh", Primitive::INT, "S");

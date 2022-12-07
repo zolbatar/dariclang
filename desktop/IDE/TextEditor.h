@@ -180,7 +180,7 @@ public:
 		static const LanguageDefinition &Lua();
 	};
 
-	TextEditor();
+	TextEditor(ImFont *font, ImFont *fontBold);
 	~TextEditor();
 
 	void SetLanguageDefinition(const LanguageDefinition &aLanguageDef);
@@ -280,6 +280,8 @@ public:
 
 private:
 	typedef std::vector<std::pair<std::regex, PaletteIndex>> RegexList;
+	ImFont *font;
+	ImFont *fontBold;
 
 	struct EditorState {
 		Coordinates mSelectionStart;

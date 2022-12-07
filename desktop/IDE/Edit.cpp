@@ -6,15 +6,26 @@
 #include "Edit.h"
 //#include "../LogWindow/LogWindow.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
+#include "../../runtime/UI/UISDL.h"
 
 //std::list<DARICException> errors;
 //std::tuple<File*, uint32_t> findFileForLine(uint32_t line_number);
+extern std::filesystem::path exe_path;
+extern UISDL *ui;
 
 Edit::Edit() {
-}
-
-void Edit::SetFont(ImFont *_fontUIFixed) {
-	fontUIFixed = _fontUIFixed;
+	ImGuiIO &io = ImGui::GetIO();
+	if (std::filesystem::exists("BerkeleyMono-Regular.ttf")) {
+		fontUIFixed = io.Fonts->AddFontFromFileTTF((exe_path / "BerkeleyMono-Regular.ttf").generic_string().c_str(),
+												   20.0 * ui->GetDPIRatio());
+		fontUIFixedBold = io.Fonts->AddFontFromFileTTF((exe_path / "BerkeleyMono-Bold.ttf").generic_string().c_str(),
+													   20.0 * ui->GetDPIRatio());
+	} else {
+		fontUIFixed = io.Fonts->AddFontFromFileTTF((exe_path / "RobotoMono-Regular.ttf").generic_string().c_str(),
+												   20.0 * ui->GetDPIRatio());
+		fontUIFixedBold = io.Fonts->AddFontFromFileTTF((exe_path / "RobotoMono-Regular.ttf").generic_string().c_str(),
+													   20.0 * ui->GetDPIRatio());
+	}
 }
 
 void Edit::ChooseFile() {
@@ -37,7 +48,7 @@ bool Edit::LoadFile(std::string filename) {
 	std::ifstream t(filename);
 	if (t.good()) {
 		std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
-		TextEditor editor;
+		TextEditor editor(fontUIFixed, fontUIFixedBold);
 		editor.SetText(str);
 		editor.SetLanguageDefinition(TextEditor::LanguageDefinition::DARIC());
 		editors.insert(std::make_pair(filename, std::move(editor)));
@@ -53,7 +64,7 @@ bool Edit::LoadFile(std::string filename) {
 void Edit::SaveFile() {
 	std::ofstream t(fileBeingEdited);
 	if (t.good()) {
-		auto ss = editors[fileBeingEdited].GetText();
+		auto ss = editors.find(fileBeingEdited)->second.GetText();
 		t.write(ss.c_str(), ss.length());
 	}
 }
@@ -83,9 +94,11 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
 	//editor.SetBreakpoints(bpts);
 
 	std::string title = "Editor - " + fileBeingEdited;
-	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetFrameHeight()), ImGuiCond_Appearing);
-	ImGui::SetNextWindowSize(ImVec2(main_viewport->Size.x, main_viewport->Size.y - 150 - ImGui::GetFrameHeight()),
+	ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
+	ImGui::SetNextWindowSize(ImVec2(main_viewport->Size.x, main_viewport->Size.y),
 							 ImGuiCond_Appearing);
+//	fontUIFixed->Scale = 0.5f;
+	ImGui::PushFont(fontUIFixed);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 	ImGui::Begin(title.c_str(),
 				 &open,
@@ -96,7 +109,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
 	if (ImGui::BeginTabBar("EditorFiles", tab_bar_flags)) {
 		for (auto &s : files) {
 			if (ImGui::BeginTabItem(s.c_str())) {
-				auto editor = &editors[s];
+				auto editor = &editors.find(s)->second;
 				auto cpos = editor->GetCursorPosition();
 				ImGui::Text("%6d/%-6d %6d lines | %s | %s | %s",
 							cpos.mLine + 1,
@@ -105,14 +118,15 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
 							editor->IsOverwrite() ? "Ovr" : "Ins",
 							editor->CanUndo() ? "*" : " ",
 							editor->GetLanguageDefinition().mName.c_str());
-				ImGui::PushFont(fontUIFixed);
+//				ImGui::PushFont(fontUIFixed);
 				editor->Render(s.c_str());
-				ImGui::PopFont();
+//				ImGui::PopFont();
 				ImGui::EndTabItem();
 			}
 		}
 		ImGui::EndTabBar();
-		ImGui::End();
-		ImGui::PopStyleVar();
 	}
+	ImGui::End();
+	ImGui::PopStyleVar();
+	ImGui::PopFont();
 };
