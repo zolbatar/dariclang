@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.20)
 if (APPLE)
     #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
-    set(CMAKE_OSX_ARCHITECTURES "arm64")
+    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    #set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
@@ -232,7 +232,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
-)
+        Library/json.hpp IDE/EditButtons.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}

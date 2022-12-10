@@ -3,6 +3,7 @@
 #include <iostream>
 
 extern Input input;
+extern std::atomic_bool ui_started;
 
 extern "C" void gfx_uicheck();
 
@@ -32,7 +33,8 @@ extern "C" T_I kbm_keydown(T_I key) {
 }
 
 extern "C" T_I kbm_escape_pressed() {
-    gfx_uicheck();
+    if (!ui_started)
+        return false;
     return input.IsEscapePressed();
 }
 

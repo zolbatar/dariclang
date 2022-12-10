@@ -34,7 +34,10 @@ std::any Parser::visitParameter(DaricParser::ParameterContext *context) {
 		ps.type = ParserTokenType::PARAMETER_REF;
 	}
 	if (context->type()) {
-		r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
+        r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
+    } else if (!context->type() && context->IDENTIFIER().size() == 1) {
+        // Default type
+        r->SetDataType(Primitive::INT);
 	} else {
 		if (!context->REF())
 			RaiseException("Record parameters needs REF", context);

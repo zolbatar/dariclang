@@ -44,31 +44,31 @@ separator
     : (COLON | NEWLINE)+
     ;
 
-assign:         LET? assignment (COMMA assignment)* (OF? type)? ;
+assign:         LET? assignment (COMMA assignment)* (COLON type)? ;
 assignment:     variable EQ expression ;
 call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
 case:           CASE expression OF separator? when* (OTHERWISE statements)? END CASE ;
-const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (OF? type)? ;
+const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (COLON type)? ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
-dim:            DIM IDENTIFIER OF? type SOPEN expression? (COMMA expression)* SCLOSE ;
+dim:            DIM IDENTIFIER COLON type SOPEN expression? (COMMA expression)* SCLOSE ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            END ;
-for:            FOR IDENTIFIER (OF? type)? EQ expression TO expression (STEP expression)? statements NEXT ;
+for:            FOR IDENTIFIER (COLON type)? EQ expression TO expression (STEP expression)? statements NEXT ;
 importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE END IF ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
-parameter:      REF? IDENTIFIER OF? (type | IDENTIFIER) ;
-print:          PRINT (value=expression (WITH? format=expression)? SEMICOLON?)? ;
-procedure:      DEF IDENTIFIER LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? (OF? type)? separator* statements END DEF ;
+parameter:      REF? IDENTIFIER (COLON (type | IDENTIFIER))? ;
+print:          PRINT SYS? (value=expression (WITH? format=expression)? SEMICOLON?)? ;
+procedure:      DEF IDENTIFIER (COLON type)? LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? separator* statements END DEF ;
 repeat:         REPEAT statements UNTIL expression ;
 read:           READ variable (COMMA variable)* ;
 restore:        RESTORE stringLiteral ;
 return:         RETURN expression? ;
-struct:         RECORD IDENTIFIER separator* IDENTIFIER OF? typeOrStruct (separator+ IDENTIFIER OF? typeOrStruct)* separator* END RECORD ;
-structDim:      DIM IDENTIFIER OF? IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
-structInstance: DIM IDENTIFIER OF IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
+struct:         RECORD IDENTIFIER NEWLINE* IDENTIFIER COLON typeOrStruct (NEWLINE+ IDENTIFIER COLON typeOrStruct)* NEWLINE* END RECORD ;
+structDim:      DIM IDENTIFIER COLON IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
+structInstance: DIM IDENTIFIER COLON IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements END WHILE ;
@@ -200,7 +200,7 @@ stringLiteral
     ;
 
 BlockComment:   '#{' .*? '}#' -> skip;
-LineComment:    (REM | HASH) ~ [\r\n]* -> skip;
+LineComment:    (REM | '\'') ~ [\r\n]* -> skip;
 
 CASE            : 'CASE' | 'Case' ;
 CONST           : 'CONST' | 'Const' ;
@@ -229,6 +229,7 @@ RETURN          : 'RETURN' | 'Return' ;
 THEN            : 'THEN' | 'Then' ;
 SIZE            : 'SIZE' | 'Size' ;
 STEP            : 'STEP' | 'Step' ;
+SYS             : 'SYS' | 'Sys' ;
 SWAP            : 'SWAP' | 'Swap ' ;
 TO              : 'TO' | 'To' ;
 UNTIL           : 'UNTIL' | 'Until' ;
@@ -324,4 +325,4 @@ fragment NAME   : ALPHA (ALPHA|DIGIT|UNDERSCORE)* (PERCENT | DOLLAR | HASH)? ;
 fragment ALPHA  : [a-zA-Z] ;
 fragment DIGIT  : [0-9] ;
 
-WS: [ \r\t] + -> channel (HIDDEN);
+WS: [ \r\t]+ -> channel (HIDDEN);

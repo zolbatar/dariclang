@@ -121,6 +121,7 @@ private:
 	void TokenLocal(ParserToken &token);
 	void TokenProcedure(ParserToken &t);
 	void TokenPrint(ParserToken &t);
+    void TokenPrintSys(ParserToken &t);
 	void TokenReturn(ParserToken &t);
 	void TokenConst(ParserToken &t);
 	void TokenSwap(ParserToken &t);

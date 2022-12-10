@@ -79,13 +79,12 @@ private:
 	void Create3DBuffer();
 	void SpriteActions();
 	bool LoadTextureFromFile(const char *filename, GLuint *outTexture, int *outWidth, int *outHeight);
-    void MyStyle();
 
 	std::mutex sprite_lock;
 	std::string fps_text = "0 FPS";
 	uint32_t fps_offset = 0;
 	std::string new_font_requested;
-	const float font_size = 80.0f;
+	const float font_size = 20.0f;
 	const int console_x_size = 8;
 	const int console_y_size = 16;
 	ImU32 fgColour;

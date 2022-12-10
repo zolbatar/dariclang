@@ -14,21 +14,21 @@ public:
   enum {
     BlockComment = 1, LineComment = 2, CASE = 3, CONST = 4, DATA = 5, DATALABEL = 6, 
     DEF = 7, DIM = 8, ELSE = 9, END = 10, FOR = 11, IF = 12, IMPORT = 13, 
-    NEXT = 14, OF = 15, OPTION = 16, OTHERWISE = 17, PRINT = 18, READ = 19, 
-    RECORD = 20, REF = 21, REM = 22, REPEAT = 23, RESTORE = 24, RETURN = 25, 
-    THEN = 26, SIZE = 27, STEP = 28, SWAP = 29, TO = 30, UNTIL = 31, WHEN = 32, 
-    WITH = 33, WHILE = 34, MAIN = 35, ABS = 36, ACS = 37, ASN = 38, ATN = 39, 
-    COS = 40, DEG = 41, EXP = 42, FLOOR = 43, LET = 44, LN = 45, LOG = 46, 
-    PI = 47, RAD = 48, ROUND = 49, SGN = 50, SIN = 51, SQR = 52, TAN = 53, 
-    FALSE = 54, TRUE = 55, ASC = 56, CHR = 57, INSTR = 58, LEFT = 59, MID = 60, 
-    RIGHT = 61, LEN = 62, BYTE = 63, INT = 64, FLOAT = 65, STRING = 66, 
-    DOLLAR = 67, HASH = 68, COLON = 69, SEMICOLON = 70, DOT = 71, COMMA = 72, 
-    QUOTE = 73, NEWLINE = 74, PERCENT = 75, UNDERSCORE = 76, LPAREN = 77, 
-    RPAREN = 78, SOPEN = 79, SCLOSE = 80, EQ = 81, NE = 82, GT = 83, GE = 84, 
-    LT = 85, LE = 86, HAT = 87, PLUS = 88, MINUS = 89, MULTIPLY = 90, DIVIDE = 91, 
-    SHL = 92, SHR = 93, MOD = 94, DIV = 95, COMP = 96, NOT = 97, AND = 98, 
-    OR = 99, EOR = 100, STRINGLITERAL = 101, HEXNUMBER = 102, BINARYNUMBER = 103, 
-    FLOATLITERAL = 104, INTEGERLITERAL = 105, IDENTIFIER = 106, WS = 107
+    LET = 14, NEXT = 15, OF = 16, OPTION = 17, OTHERWISE = 18, PRINT = 19, 
+    READ = 20, RECORD = 21, REF = 22, REM = 23, REPEAT = 24, RESTORE = 25, 
+    RETURN = 26, THEN = 27, SIZE = 28, STEP = 29, SYS = 30, SWAP = 31, TO = 32, 
+    UNTIL = 33, WHEN = 34, WITH = 35, WHILE = 36, MAIN = 37, ABS = 38, ACS = 39, 
+    ASN = 40, ATN = 41, COS = 42, DEG = 43, EXP = 44, FLOOR = 45, LN = 46, 
+    LOG = 47, PI = 48, RAD = 49, ROUND = 50, SGN = 51, SIN = 52, SQR = 53, 
+    TAN = 54, FALSE = 55, TRUE = 56, ASC = 57, CHR = 58, INSTR = 59, LEFT = 60, 
+    MID = 61, RIGHT = 62, LEN = 63, BYTE = 64, INT = 65, FLOAT = 66, STRING = 67, 
+    DOLLAR = 68, HASH = 69, COLON = 70, SEMICOLON = 71, DOT = 72, COMMA = 73, 
+    QUOTE = 74, NEWLINE = 75, PERCENT = 76, UNDERSCORE = 77, LPAREN = 78, 
+    RPAREN = 79, SOPEN = 80, SCLOSE = 81, EQ = 82, NE = 83, GT = 84, GE = 85, 
+    LT = 86, LE = 87, HAT = 88, PLUS = 89, MINUS = 90, MULTIPLY = 91, DIVIDE = 92, 
+    SHL = 93, SHR = 94, MOD = 95, DIV = 96, COMP = 97, NOT = 98, AND = 99, 
+    OR = 100, EOR = 101, STRINGLITERAL = 102, HEXNUMBER = 103, BINARYNUMBER = 104, 
+    FLOATLITERAL = 105, INTEGERLITERAL = 106, IDENTIFIER = 107, WS = 108
   };
 
   enum {
@@ -214,8 +214,8 @@ public:
     antlr4::tree::TerminalNode *LET();
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
-    antlr4::tree::TerminalNode *OF();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -294,8 +294,8 @@ public:
     LiteralContext* literal(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
-    antlr4::tree::TerminalNode *OF();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -341,10 +341,10 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *DIM();
     antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
     antlr4::tree::TerminalNode *SOPEN();
     antlr4::tree::TerminalNode *SCLOSE();
-    antlr4::tree::TerminalNode *OF();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -401,9 +401,9 @@ public:
     antlr4::tree::TerminalNode *TO();
     StatementsContext *statements();
     antlr4::tree::TerminalNode *NEXT();
+    antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
     antlr4::tree::TerminalNode *STEP();
-    antlr4::tree::TerminalNode *OF();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -488,9 +488,9 @@ public:
     virtual size_t getRuleIndex() const override;
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    TypeContext *type();
     antlr4::tree::TerminalNode *REF();
-    antlr4::tree::TerminalNode *OF();
+    antlr4::tree::TerminalNode *COLON();
+    TypeContext *type();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -506,6 +506,7 @@ public:
     PrintContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *PRINT();
+    antlr4::tree::TerminalNode *SYS();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *SEMICOLON();
@@ -527,6 +528,8 @@ public:
     antlr4::tree::TerminalNode *IDENTIFIER();
     StatementsContext *statements();
     antlr4::tree::TerminalNode *END();
+    antlr4::tree::TerminalNode *COLON();
+    TypeContext *type();
     antlr4::tree::TerminalNode *LPAREN();
     std::vector<antlr4::tree::TerminalNode *> NEWLINE();
     antlr4::tree::TerminalNode* NEWLINE(size_t i);
@@ -535,10 +538,8 @@ public:
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
     antlr4::tree::TerminalNode *RPAREN();
-    TypeContext *type();
     std::vector<SeparatorContext *> separator();
     SeparatorContext* separator(size_t i);
-    antlr4::tree::TerminalNode *OF();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -616,13 +617,13 @@ public:
     antlr4::tree::TerminalNode* RECORD(size_t i);
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COLON();
+    antlr4::tree::TerminalNode* COLON(size_t i);
     std::vector<TypeOrStructContext *> typeOrStruct();
     TypeOrStructContext* typeOrStruct(size_t i);
     antlr4::tree::TerminalNode *END();
-    std::vector<SeparatorContext *> separator();
-    SeparatorContext* separator(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> OF();
-    antlr4::tree::TerminalNode* OF(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> NEWLINE();
+    antlr4::tree::TerminalNode* NEWLINE(size_t i);
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -638,9 +639,9 @@ public:
     antlr4::tree::TerminalNode *DIM();
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    antlr4::tree::TerminalNode *COLON();
     antlr4::tree::TerminalNode *SOPEN();
     antlr4::tree::TerminalNode *SCLOSE();
-    antlr4::tree::TerminalNode *OF();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -660,7 +661,7 @@ public:
     antlr4::tree::TerminalNode *DIM();
     std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    antlr4::tree::TerminalNode *OF();
+    antlr4::tree::TerminalNode *COLON();
     antlr4::tree::TerminalNode *LPAREN();
     antlr4::tree::TerminalNode *RPAREN();
     std::vector<antlr4::tree::TerminalNode *> EQ();

@@ -6,26 +6,32 @@
 
 class Edit {
 public:
-	Edit();
-	void Render(const ImGuiViewport *main_viewport);
-	bool LoadFile(std::string filename);
-	void ChooseFile();
-	void SaveFile();
+    Edit();
+    void Render(const ImGuiViewport *main_viewport);
+    bool LoadFile(std::string filename);
+    void ChooseFile(const ImGuiViewport *main_viewport);
+    void SaveFile();
 
-	std::vector<std::string> GetTextLines() {
-		return editors.find(fileBeingEdited)->second.GetTextLines();
-	}
+    std::vector<std::string> GetTextLines() {
+        return editors.find(fileBeingEdited)->second.GetTextLines();
+    }
 
-	std::string GetFilename() {
-		return fileBeingEdited;
-	}
+    std::string GetFilename() {
+        return fileBeingEdited;
+    }
 
 private:
-	bool open;
+    void EditButtons(const ImGuiViewport *main_viewport);
+    void OptionsWindow(const ImGuiViewport *main_viewport);
+    void SetButtonStyle(int i);
 
-	ImFont *fontUIFixed;
-	ImFont *fontUIFixedBold;
-	std::string fileBeingEdited = "";
-	std::list<std::string> files;
-	std::map<std::string, TextEditor> editors;
+    // Options
+    bool options_ll = false;
+
+    bool open;
+    ImFont *font;
+    TextEditor *editor = nullptr;
+    std::string fileBeingEdited = "";
+    std::list<std::string> files;
+    std::map<std::string, TextEditor> editors;
 };

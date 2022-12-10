@@ -1,5 +1,6 @@
 #include <thread>
 #include <chrono>
+#include <iostream>
 #include <filesystem>
 #include "UI/UISDL.h"
 #include "Input/Input.h"
@@ -45,11 +46,10 @@ int main(int argc, char *argv[]) {
             ui_started = true;
         }
         if (ui_started) {
-            if (ui->Render()) {
+            if (ui->Render([]() {})) {
                 do_quit();
             }
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
     do_quit();
     return 0;

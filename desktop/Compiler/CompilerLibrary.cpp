@@ -56,7 +56,7 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
 std::vector<std::string> Compiler::GetAllLibraryCallNames() {
 	std::vector<std::string> names;
 	for (auto &l : library) {
-		names.push_back(l.second.func_name);
+		names.push_back(l.first);
 	}
 	return names;
 }
