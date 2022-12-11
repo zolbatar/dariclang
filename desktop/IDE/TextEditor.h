@@ -279,7 +279,6 @@ public:
     static const Palette &GetDarkPalette();
     static const Palette &GetLightPalette();
     static const Palette &GetRetroBluePalette();
-
 private:
     typedef std::vector<std::pair<std::regex, PaletteIndex>> RegexList;
 

@@ -19,7 +19,6 @@ Edit::Edit() {
 }
 
 bool Edit::LoadFile(std::string filename) {
-    fileBeingEdited = filename;
     std::ifstream t(filename);
     if (t.good()) {
         std::string str((std::istreambuf_iterator<char>(t)), std::istreambuf_iterator<char>());
@@ -27,21 +26,21 @@ bool Edit::LoadFile(std::string filename) {
         editor.SetText(str);
         editor.SetLanguageDefinition(TextEditor::LanguageDefinition::DARIC());
         editors.insert(std::make_pair(filename, std::move(editor)));
-        files.push_back(filename);
+        editor_files.insert(std::make_pair(filename, EditorFile()));
         return true;
     }
 
     // File does not exist
-//	log_window.WriteString("\nFile doesn't exist\n");
-    return false;
+    std::cout << "File doesn't exist" << std::endl;
+    exit(1);
 }
 
 void Edit::SaveFile() {
-    std::ofstream t(fileBeingEdited);
+/*    std::ofstream t(fileBeingEdited);
     if (t.good()) {
         auto ss = editors.find(fileBeingEdited)->second.GetText();
         t.write(ss.c_str(), ss.length());
-    }
+    }*/
 }
 
 void Edit::Render(const ImGuiViewport *main_viewport) {
@@ -68,6 +67,20 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     //bpts.insert(47);
     //editor.SetBreakpoints(bpts);
 
+    // Any closed tabs?
+    for (auto &s: editor_files) {
+        if (!s.second.open) {
+            if (s.second.unsaved_changes) {
+                ImGui::OpenPopup("Delete?");
+                s.second.open = true;
+            } else {
+                editors.erase(s.first);
+                editor_files.erase(s.first);
+                break;
+            }
+        }
+    }
+
     std::string title = "Editor";
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
@@ -79,12 +92,13 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                  ImGuiWindowFlags_NoDecoration);
     EditButtons(main_viewport);
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs;
-    bool open = true;
     editor = nullptr;
+    editor_name = "";
     if (ImGui::BeginTabBar("EditorFiles", tab_bar_flags)) {
         for (auto &s: editors) {
-            if (ImGui::BeginTabItem(s.first.c_str(), &open)) {
+            if (ImGui::BeginTabItem(s.first.c_str(), &editor_files[s.first].open)) {
                 editor = &s.second;
+                editor_name = s.first;
                 auto cpos = editor->GetCursorPosition();
                 ImGui::BeginChild("Edit Panel", ImVec2(main_viewport->Size.x, main_viewport->Size.y - 105)); // Leave room for 1 line below us
                 ImGui::PushFont(font);
@@ -112,4 +126,31 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     }
     ImGui::End();
     ImGui::PopStyleVar();
+
+    // Any text changed?
+    for (auto &s: editors) {
+        if (s.second.IsTextChanged()) {
+            if (editor_files[s.first].first_render) {
+                editor_files[s.first].first_render = false;
+            } else {
+                editor_files[s.first].unsaved_changes = true;
+            }
+        }
+    }
+
+    if (ImGui::BeginPopupModal("Delete?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("This editor tab has unsaved changes.\n\nAre you sure you want to close it?\n\n");
+        ImGui::Separator();
+
+        if (ImGui::Button("Yes", ImVec2(120, 0))) {
+            editor_files.erase(editor_name);
+            editors.erase(editor_name);
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SetItemDefaultFocus();
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::EndPopup();
+    }
+
 };

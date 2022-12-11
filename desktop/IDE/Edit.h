@@ -4,6 +4,12 @@
 #include <string>
 #include "TextEditor.h"
 
+struct EditorFile {
+    bool open = true;
+    bool unsaved_changes = false;
+    bool first_render = true;
+};
+
 class Edit {
 public:
     Edit();
@@ -11,14 +17,6 @@ public:
     bool LoadFile(std::string filename);
     void ChooseFile(const ImGuiViewport *main_viewport);
     void SaveFile();
-
-    std::vector<std::string> GetTextLines() {
-        return editors.find(fileBeingEdited)->second.GetTextLines();
-    }
-
-    std::string GetFilename() {
-        return fileBeingEdited;
-    }
 
 private:
     void EditButtons(const ImGuiViewport *main_viewport);
@@ -31,7 +29,8 @@ private:
     bool open;
     ImFont *font;
     TextEditor *editor = nullptr;
-    std::string fileBeingEdited = "";
-    std::list<std::string> files;
+    std::string editor_name;
+    std::unordered_map<std::string, EditorFile> editor_files;
     std::map<std::string, TextEditor> editors;
 };
+

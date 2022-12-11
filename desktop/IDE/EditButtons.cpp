@@ -62,7 +62,7 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     ImGui::SameLine();
 
     // Save
-    bool dis = editor == nullptr || editor->IsTextChanged();
+    bool dis = editor == nullptr || editor_files[editor_name].unsaved_changes;
     if (dis) ImGui::BeginDisabled();
     ImGui::Button("Save");
     ImGui::SameLine();
