@@ -1,5 +1,11 @@
 #include "Edit.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
+#include "../Compiler/CompilerOptions.h"
+
+extern void RunThread();
+
+extern std::filesystem::path exe_path;
+extern CompilerOptions options;
 
 void Edit::SetButtonStyle(int i) {
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
@@ -12,11 +18,17 @@ void Edit::OptionsWindow(const ImGuiViewport *main_viewport) {
     ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
     if (ImGui::BeginPopupModal("Options", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-        if (ImGui::TreeNodeEx("Backend Flags", ImGuiTreeNodeFlags_DefaultOpen)) {
-//        if (ImGui::CollapsingHeader("Compiler Options"), ImGuiTreeNodeFlags_DefaultOpen) {
+        if (ImGui::TreeNodeEx("Compiler Flags", ImGuiTreeNodeFlags_DefaultOpen)) {
             ImGui::Checkbox("Output .ll files", &options_ll);
             ImGui::TreePop();
         }
+
+        if (ImGui::TreeNodeEx("Fonts & UI", ImGuiTreeNodeFlags_DefaultOpen)) {
+            ImGui::Checkbox("Font size", &options_ll);
+            ImGui::Checkbox("Font set", &options_ll);
+            ImGui::TreePop();
+        }
+
         ImGui::Separator();
         if (ImGui::Button("OK", ImVec2(80, 0))) { ImGui::CloseCurrentPopup(); }
         ImGui::EndPopup();
@@ -44,9 +56,8 @@ void Edit::ChooseFile(const ImGuiViewport *main_viewport) {
 
 void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(40, 40, 40, 255));
-    ImGui::PushStyleColor(ImGuiCol_Border, IM_COL32(40, 40, 40, 255));
-    ImGui::BeginChild("Buttons", ImVec2(main_viewport->Size.x, 42), true);
+    float height = ImGui::CalcTextSize("|").y + (ImGui::GetStyle().FramePadding.y * 2.0f) + 16;
+    ImGui::BeginChild("Buttons", ImVec2(main_viewport->Size.x, height), false, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_AlwaysUseWindowPadding);
 
     // Load
     if (ImGui::Button("Load")) {
@@ -62,28 +73,86 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     ImGui::SameLine();
 
     // Save
-    bool dis = editor == nullptr || editor_files[editor_name].unsaved_changes;
+    bool dis = editor == nullptr || !editor_files[editor_name].unsaved_changes;
     if (dis) ImGui::BeginDisabled();
     ImGui::Button("Save");
     ImGui::SameLine();
     if (dis) ImGui::EndDisabled();
 
     // Revert
-    dis = true;
+    dis = editor == nullptr || !editor_files[editor_name].unsaved_changes || !editor_files[editor_name].is_file_based;
     if (dis) ImGui::BeginDisabled();
     ImGui::Button("Revert");
     ImGui::SameLine();
     if (dis) ImGui::EndDisabled();
 
+    std::string path = "Demos/";//exe_path.parent_path().generic_string();
+    SetButtonStyle(3);
+    if (ImGui::Button("Load Demo"))
+        ImGui::OpenPopup("load_demo_popup");
+    ImGui::PopStyleColor(3);
+    ImGui::SameLine();
+    if (ImGui::BeginPopup("load_demo_popup")) {
+        if (ImGui::Selectable("Welcome Tape"))
+            LoadFile(path + "Welcome.daric");
+        ImGui::Separator();
+        if (ImGui::Selectable("Bubble Universe"))
+            LoadFile(path + "BubbleUniverse.daric");
+        if (ImGui::Selectable("Clock"))
+            LoadFile(path + "Clock.daric");
+        if (ImGui::Selectable("Daric"))
+            LoadFile(path + "Daric.daric");
+        if (ImGui::Selectable("Death Star"))
+            LoadFile(path + "DeathStar.daric");
+        if (ImGui::Selectable("Fake Windows"))
+            LoadFile(path + "FakeWindows.daric");
+        if (ImGui::Selectable("Fonts"))
+            LoadFile(path + "Fonts.daric");
+        if (ImGui::Selectable("Mandelbrot"))
+            LoadFile(path + "Mandelbrot.daric");
+        if (ImGui::Selectable("Raytracer"))
+            LoadFile(path + "Raytracer.daric");
+        if (ImGui::Selectable("Sierpinski"))
+            LoadFile(path + "Sierpinski.daric");
+        if (ImGui::Selectable("Sprites"))
+            LoadFile(path + "Sprites.daric");
+        if (ImGui::Selectable("WorldInLines"))
+            LoadFile(path + "WorldInLines.daric");
+        ImGui::Separator();
+        if (ImGui::Selectable("Cubes"))
+            LoadFile(path + "Cubes.daric");
+        if (ImGui::Selectable("Load 3D Models"))
+            LoadFile(path + "Load3D.daric");
+        if (ImGui::Selectable("Terrain"))
+            LoadFile(path + "Terrain.daric");
+        ImGui::Separator();
+        if (ImGui::Selectable("Audio Samples"))
+            LoadFile(path + "SDLAudio.daric");
+        if (ImGui::Selectable("Software Synthesizer"))
+            LoadFile(path + "Sound.daric");
+        ImGui::Separator();
+        if (ImGui::Selectable("Greedy Algorithm (Benchmark)"))
+            LoadFile(path + "Greedy.daric");
+        ImGui::Separator();
+        if (ImGui::Selectable("Tester"))
+            LoadFile(path + "Tester.daric");
+        if (ImGui::Selectable("Tester File I/O"))
+            LoadFile(path + "TesterFileIO.daric");
+        ImGui::EndPopup();
+    }
+
     // Run
-    dis = true;
+    dis = editor == nullptr;
     if (dis) ImGui::BeginDisabled();
     SetButtonStyle(0);
-    ImGui::Button("Run");
-    ImGui::SameLine();
-
-    // Run optimised
-    ImGui::Button("Run Optimised");
+    if (ImGui::Button("Run")) {
+        options.file = this->editor_name;
+        options.target = CompileTarget::INTERACTIVE;
+        options.use_exit_as_end = false;
+        options.run = true;
+        auto t = std::thread(&RunThread);
+        t.detach();
+    }
     ImGui::SameLine();
     ImGui::PopStyleColor(3);
     if (dis) ImGui::EndDisabled();
@@ -99,109 +168,10 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
 
     // Quit
     SetButtonStyle(6);
-    ImGui::Button("Quit");
+    if (ImGui::Button("Quit")) {
+        exit(0);
+    }
     ImGui::PopStyleColor(3);
     ImGui::EndChild();
-    ImGui::PopStyleColor(2);
     ImGui::PopStyleVar();
 }
-
-/*
-
-     if (ImGui::BeginMainMenuBar()) {
-        if (ImGui::BeginMenu("File")) {
-            if (ImGui::MenuItem("Load", "")) {
-                ImGuiFileDialog::Instance()->OpenDialog("ChooseFileDlgKey", "Choose File", ".daric", ".", 1, nullptr, ImGuiFileDialogFlags_Modal);
-            }
-            if (ImGui::MenuItem("Save", "")) {
-                //edit.SaveFile();
-            }
-            ImGui::EndMenu();
-        }
-        if (ImGui::BeginMenu("Edit")) {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {
-            }
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {
-            }  // Disabled item
-            ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {
-            }
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {
-            }
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {
-            }
-            ImGui::EndMenu();
-        }
-if (ImGui::MenuItem("Run", "CTRL+R")) {
-//            auto t = std::thread(&UISDL::RunnerThread, this);
-//            t.detach();
-}
-if (ImGui::MenuItem("Run Optimised", "CTRL+O")) {
-//            auto t = std::thread(&UISDL::RunnerOptimisedThread, this);
-//            t.detach();
-}
-ImGui::Separator();
-if (ImGui::BeginMenu("Welcome Tape")) {
-if (ImGui::MenuItem("Tester", "")) {
-LoadFile("Tester.daric");
-}
-if (ImGui::MenuItem("Greedy (benchmark)", "")) {
-LoadFile("Greedy.daric");
-}
-ImGui::Separator();
-if (ImGui::MenuItem("2D Graphics", "")) {
-LoadFile("Graphics2D.daric");
-}
-if (ImGui::MenuItem("Bubble Universe", "")) {
-LoadFile("BubbleUniverse.daric");
-}
-if (ImGui::MenuItem("Clock", "")) {
-LoadFile("Clock.daric");
-}
-if (ImGui::MenuItem("Fonts", "")) {
-LoadFile("Fonts.daric");
-}
-if (ImGui::MenuItem("Mandelbrot", "")) {
-LoadFile("Mandelbrot.daric");
-}
-if (ImGui::MenuItem("Ray tracer", "")) {
-LoadFile("Raytracer.daric");
-}
-if (ImGui::MenuItem("Sierpinski", "")) {
-LoadFile("Sierpinski.daric");
-}
-if (ImGui::MenuItem("Sprites", "")) {
-LoadFile("Sprites.daric");
-}
-if (ImGui::MenuItem("World in Lines", "")) {
-LoadFile("WorldInLines.daric");
-}
-ImGui::Separator();
-if (ImGui::MenuItem("Sound", "")) {
-LoadFile("Sound.daric");
-}
-ImGui::Separator();
-if (ImGui::MenuItem("3D Cubes", "")) {
-LoadFile("Cubes.daric");
-}
-if (ImGui::MenuItem("Load 3D Meshes", "")) {
-LoadFile("Load3D.daric");
-}
-if (ImGui::MenuItem("Terrain", "")) {
-LoadFile("Terrain.daric");
-}
-ImGui::EndMenu();
-}
-if (ImGui::BeginMenu("Games")) {
-if (ImGui::MenuItem("Darch", "")) {
-LoadFile("Darch/Darch.daric");
-}
-ImGui::EndMenu();
-}
-ImGui::EndMainMenuBar();
-}
-
-
-
-
-*/

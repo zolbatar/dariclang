@@ -6,16 +6,18 @@
 #include "Edit.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../../runtime/UI/UISDL.h"
+#include "../Config/Config.h"
 
 //std::list<DARICException> errors;
 //std::tuple<File*, uint32_t> findFileForLine(uint32_t line_number);
 extern std::filesystem::path exe_path;
 extern UISDL *ui;
+extern Config config;
 
 Edit::Edit() {
     ImGuiIO &io = ImGui::GetIO();
-    float size = 20.0f;
-    font = io.Fonts->AddFontFromFileTTF((exe_path / "RobotoMono-Regular.ttf").generic_string().c_str(), size * ui->GetDPIRatio());
+    font = io.Fonts->AddFontFromFileTTF((exe_path / config.MonoFont()).generic_string().c_str(),
+                                        config.MonoFontSize() * ui->GetDPIRatio());
 }
 
 bool Edit::LoadFile(std::string filename) {
@@ -26,7 +28,9 @@ bool Edit::LoadFile(std::string filename) {
         editor.SetText(str);
         editor.SetLanguageDefinition(TextEditor::LanguageDefinition::DARIC());
         editors.insert(std::make_pair(filename, std::move(editor)));
-        editor_files.insert(std::make_pair(filename, EditorFile()));
+        EditorFile ef;
+        ef.is_file_based = true;
+        editor_files.insert(std::make_pair(filename, std::move(ef)));
         return true;
     }
 
@@ -91,6 +95,8 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                  ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
                  ImGuiWindowFlags_NoDecoration);
     EditButtons(main_viewport);
+    ImGui::BeginChild("Edit Panel", ImVec2(main_viewport->Size.x, 0), false,
+                      ImGuiWindowFlags_AlwaysAutoResize);
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs;
     editor = nullptr;
     editor_name = "";
@@ -99,21 +105,27 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
             if (ImGui::BeginTabItem(s.first.c_str(), &editor_files[s.first].open)) {
                 editor = &s.second;
                 editor_name = s.first;
+                ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(20, 20, 20, 255));
+                float height = ImGui::GetFrameHeightWithSpacing() + 2;
+                ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
+                ImGui::BeginChild("Summary Panel", ImVec2(main_viewport->Size.x, height),false,ImGuiWindowFlags_AlwaysUseWindowPadding);
                 auto cpos = editor->GetCursorPosition();
-                ImGui::BeginChild("Edit Panel", ImVec2(main_viewport->Size.x, main_viewport->Size.y - 105)); // Leave room for 1 line below us
+                ImGui::PushFont(font);
+                ImGui::Text("Line %6d, Column %-6d %6d lines | %s",
+                            cpos.mLine + 1,
+                            cpos.mColumn + 1,
+                            editor->GetTotalLines(),
+                            editor->IsOverwrite() ? "Ovr" : "Ins");
+                ImGui::PopFont();
+                ImGui::EndChild();
+                ImGui::PopStyleVar();
+                ImGui::PopStyleColor();
+                ImGui::BeginChild("Edit Panel", ImVec2(main_viewport->Size.x, 0));
                 ImGui::PushFont(font);
                 editor->SetShowWhitespaces(false);
                 editor->Render(s.first.c_str());
                 ImGui::PopFont();
                 ImGui::EndChild();
-                ImGui::Text("%6d:%-6d %6d lines | %s | %s | %s",
-                            cpos.mLine + 1,
-                            cpos.mColumn + 1,
-                            editor->GetTotalLines(),
-                            editor->GetLanguageDefinition().mName.c_str(),
-                            editor->IsOverwrite() ? "Overwrite" : "Insert",
-                            editor->CanUndo() ? "*" : " "
-                );
                 ImGui::EndTabItem();
             }
         }
@@ -124,6 +136,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
         }
         ImGui::EndTabBar();
     }
+    ImGui::EndChild();
     ImGui::End();
     ImGui::PopStyleVar();
 

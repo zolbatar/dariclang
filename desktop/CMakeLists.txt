@@ -21,6 +21,15 @@ else()
     set(GITHUB C:/Users/d_dud/GitHub)
 endif()
 
+# Freetype
+set(FT_DIR ${GITHUB}/freetype)
+add_library(ft-lib STATIC IMPORTED)
+if (APPLE)
+    SET_PROPERTY(TARGET ft-lib PROPERTY IMPORTED_LOCATION ${FT_DIR}/build/libfreetype.a)
+    include_directories(${FT_DIR}/include)
+else()
+endif()
+
 # Antlr4
 set(ANTLR_DIR ${GITHUB}/antlr4/runtime/Cpp)
 add_library(antlr4-runtime STATIC IMPORTED)
@@ -102,6 +111,7 @@ add_executable(${PROJECT_NAME}
         ${IMGUI_DIR}/imgui_tables.cpp
         ${IMGUI_DIR}/imgui_widgets.cpp
         ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/misc/freetype/imgui_freetype.cpp
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
         ../runtime/KeyboardMouse.cpp
@@ -232,7 +242,9 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
-        Library/json.hpp IDE/EditButtons.cpp)
+        Library/json.hpp
+        IDE/EditButtons.cpp
+        Config/Config.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}
@@ -249,6 +261,7 @@ if (APPLE)
             "-framework AudioToolbox"
             "-framework CoreHaptics"
             zstd-lib
+            ft-lib
             -lxar -liconv
             sdl2-runtime
             assimp-runtime

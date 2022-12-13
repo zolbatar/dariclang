@@ -65,15 +65,12 @@ public:
 	int64_t GetScreenWidth() { return desktop_screen_width; }
 	int64_t GetScreenHeight() { return desktop_screen_height; }
 	float GetDPIRatio() { return dpi_ratio; }
-	float GetFontSize() { return font_size; }
 	void RequestFontLoad(std::string font) {
 		new_font_requested = font;
 	}
 	bool IsFontRequestActive() { return !new_font_requested.empty(); }
 	ImU32 GetFGColour() { return fgColour; }
 	std::mutex *GetSpriteLock() { return &sprite_lock; }
-	ImFont *GetMonoFont() { return fontMono; }
-
 private:
 	void _CreateWindow(bool windowed);
 	void Create3DBuffer();
@@ -81,12 +78,7 @@ private:
 	bool LoadTextureFromFile(const char *filename, GLuint *outTexture, int *outWidth, int *outHeight);
 
 	std::mutex sprite_lock;
-	std::string fps_text = "0 FPS";
-	uint32_t fps_offset = 0;
 	std::string new_font_requested;
-	const float font_size = 20.0f;
-	const int console_x_size = 8;
-	const int console_y_size = 16;
 	ImU32 fgColour;
 	ImU32 bgColour;
 	float line_width = 1.0f;
@@ -97,7 +89,6 @@ private:
 	float dpi_ratio;
 	int desktop_screen_width, desktop_screen_height;
 	SDL_Window *window;
-	ImFont *fontMono;
 	Mode mode = Mode::CLASSIC;
 
 	std::vector<std::unique_ptr<RenderShape>> shapes;

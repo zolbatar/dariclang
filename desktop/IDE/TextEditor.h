@@ -172,14 +172,7 @@ public:
                 : mPreprocChar('#'), mAutoIndentation(true), mTokenize(nullptr), mCaseSensitive(true) {
         }
 
-        static const LanguageDefinition &CPlusPlus();
-        static const LanguageDefinition &HLSL();
-        static const LanguageDefinition &GLSL();
-        static const LanguageDefinition &C();
-        static const LanguageDefinition &SQL();
-        static const LanguageDefinition &AngelScript();
-        static const LanguageDefinition &DARIC();
-        static const LanguageDefinition &Lua();
+          static const LanguageDefinition &DARIC();
     };
 
     TextEditor();
@@ -226,14 +219,6 @@ public:
     Coordinates GetCursorPosition() const { return GetActualCursorCoordinates(); }
 
     void SetCursorPosition(const Coordinates &aPosition);
-
-    inline void SetHandleMouseInputs(bool aValue) { mHandleMouseInputs = aValue; }
-
-    inline bool IsHandleMouseInputsEnabled() const { return mHandleKeyboardInputs; }
-
-    inline void SetHandleKeyboardInputs(bool aValue) { mHandleKeyboardInputs = aValue; }
-
-    inline bool IsHandleKeyboardInputsEnabled() const { return mHandleKeyboardInputs; }
 
     inline void SetImGuiChildIgnored(bool aValue) { mIgnoreImGuiChild = aValue; }
 

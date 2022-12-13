@@ -1,5 +1,4 @@
 #include <iostream>
-#include <atomic>
 #include <memory>
 #include <filesystem>
 #include <thread>
@@ -10,7 +9,7 @@
 
 #include "stb_image.h"
 #include "Lodepng.h"
-#include "imgui_internal.h"
+#include "../../desktop/Config/Config.h"
 
 size_t last_sprite_index = 0;
 extern Console console;
@@ -18,8 +17,8 @@ extern Sprites sprite;
 extern size_t sprite_index;
 extern Input input;
 extern World world;
-size_t frame_count = 0;
 extern std::filesystem::path exe_path;
+extern Config config;
 
 UISDL::UISDL() {
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -117,12 +116,8 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     (void) io;
     io.Fonts->Clear();
 
-    io.Fonts->AddFontFromFileTTF((exe_path / "Roboto-Regular.ttf").generic_string().c_str(), font_size * dpi_ratio);
-    fontMono = io.Fonts->AddFontFromFileTTF((exe_path / "RobotoMono-Regular.ttf").generic_string().c_str(),
-                                            font_size * dpi_ratio);
-    io.Fonts->AddFontFromFileTTF((exe_path / "RobotoSerif-Regular.ttf").generic_string().c_str(),
-                                 font_size * dpi_ratio);
-    io.FontGlobalScale /= dpi_ratio;
+    io.Fonts->AddFontFromFileTTF((exe_path / "Roboto-Regular.ttf").generic_string().c_str(), config.UIFontSize() * dpi_ratio);
+    io.FontGlobalScale /= dpi_ratio * 1.0f;
     io.Fonts->Build();
 
     // Setup Dear ImGui style
@@ -131,9 +126,10 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     //ImGui::StyleColorsLight();
 
     // Output window
+    auto size_x = desktop_screen_width / config.ConsoleColumns();
     console.Setup(desktop_screen_width, desktop_screen_height, dpi_ratio,
-                  desktop_screen_width / console_x_size,
-                  desktop_screen_height / console_y_size,
+                  desktop_screen_width / size_x,
+                  desktop_screen_height / (size_x * 2),
                   false);
 
     // 3D
@@ -166,7 +162,7 @@ bool UISDL::Render(std::function<void()> callback) {
     // This is so app thread can lock to load fonts etc before start of frame
     if (!new_font_requested.empty()) {
         ImGui_ImplOpenGL3_DestroyFontsTexture();
-        io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), font_size * dpi_ratio);
+        io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), config.UIFontSize() * dpi_ratio);
         io.Fonts->Build();
         ImGui_ImplOpenGL3_CreateFontsTexture();
         std::cout << "Loaded font: " << new_font_requested << std::endl;
@@ -228,7 +224,7 @@ bool UISDL::Render(std::function<void()> callback) {
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
         RenderShapes();
-        console.Update(fontMono);
+        console.Update();
         ImGui::End();
         ImGui::PopStyleVar();
         ImGui::PopStyleVar();

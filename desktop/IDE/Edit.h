@@ -6,6 +6,7 @@
 
 struct EditorFile {
     bool open = true;
+    bool is_file_based = false;
     bool unsaved_changes = false;
     bool first_render = true;
 };

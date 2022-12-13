@@ -1,6 +1,11 @@
 #include <iostream>
+#include <filesystem>
 #include <chrono>
 #include "Console.h"
+#include "../../../desktop/Config/Config.h"
+
+extern std::filesystem::path exe_path;
+extern Config config;
 
 Console console;
 
@@ -22,6 +27,10 @@ void Console::Setup(int w, int h, float dpiRatio, int sx, int sy, bool banked) {
     bgColours.clear();
     bgColours.resize(charsAcross * charsDown);
 
+    ImGuiIO &io = ImGui::GetIO();
+    font = io.Fonts->AddFontFromFileTTF((exe_path / config.MonoFont()).generic_string().c_str(),
+                                        size * dpiRatio);
+
     SetColour(ImGui::GetColorU32(IM_COL32(255, 255, 255, 255)));
     SetBGColour(ImGui::GetColorU32(IM_COL32(0x0, 0x0, 0x0, 255)));
     Cls();
@@ -37,7 +46,7 @@ void Console::Cls() {
     cursorY = 0;
 }
 
-void Console::Update(ImFont *font) {
+void Console::Update() {
     auto wl = ImGui::GetWindowDrawList();
     auto desc = font->Descent / font->FontSize * size;
     auto asc = font->Ascent / font->FontSize * size;

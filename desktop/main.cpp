@@ -10,11 +10,12 @@
 #include "../runtime/UI/UISDL.h"
 #include "../runtime/Sound/SoftSynth.h"
 #include "IDE/Edit.h"
+#include "Config/Config.h"
 
 extern "C" void audio_init();
 extern std::shared_ptr<SoftSynth> soft_synth;
 UISDL *ui;
-
+Config config;
 CompilerOptions options;
 std::atomic_bool done = false;
 std::atomic_bool start_ui = false;
@@ -22,14 +23,23 @@ size_t screen_width;
 size_t screen_height;
 size_t screen_flags;
 std::atomic_bool ui_started = false;
+std::atomic_bool running = false;
 std::filesystem::path exe_path;
+extern Input input;
 
-static void RunThread() {
+void RunThread() {
+    running = true;
+    if (ui_started)
+        ui->Cls();
+    input.Clear();
     Instance::ClearStatic();
     Reference::ClearStatic();
     SourceFile state(options);
     state.ParseCompileAndRun();
     done = true;
+    running = false;
+    if (ui_started)
+        ui->Cls();
 }
 
 void do_quit() {
@@ -41,6 +51,7 @@ int main(int argc, char *argv[]) {
     exe_path = std::filesystem::path{argv[0]}.parent_path();
 
     std::cout << "Welcome to Daric!" << std::endl;
+    config.Load();
     Compiler::SetupLibrary();
 
     if (argc == 1) {
@@ -49,14 +60,19 @@ int main(int argc, char *argv[]) {
 //		ui->Start(ui->GetScreenWidth(), ui->GetScreenHeight(), false, false);
         ui->Start(1280, 1024, true, false);
 
+        // Compiler stuff
+        ui_started = true;
+
         Edit edit;
 //		edit.LoadFile("Tester.daric");
 //		edit.LoadFile("BubbleUniverse.daric");
-        while (!done) {
+        while (true) {
             if (ui->Render([&]() {
                 const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
-                edit.Render(main_viewport);
-                edit.ChooseFile(main_viewport);
+                if (!running) {
+                    edit.Render(main_viewport);
+                    edit.ChooseFile(main_viewport);
+                }
             })) {
                 do_quit();
             }

@@ -15,7 +15,7 @@ class Console {
 public:
     void Setup(int w, int h, float dpiRatio, int sx, int sy, bool banked);
     void Cls();
-    void Update(ImFont *font);
+    void Update();
     void WriteCharacter(char c);
     void WriteString(std::string s);
     void SetColour(ImVec4 colour);
@@ -47,6 +47,7 @@ private:
     void Scroll();
     size_t CalcIndex();
 
+    ImFont *font;
     bool banked = false;
     ImU32 colour;
     ImU32 bgColour;
