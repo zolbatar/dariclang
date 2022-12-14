@@ -11,9 +11,11 @@
 #include "llvm/ADT/Triple.h"
 #include "llvm/CodeGen/CommandFlags.h"
 #include "llvm/Target/TargetOptions.h"
+#include "../Config/Config.h"
 
 extern std::filesystem::path exe_path;
 extern std::string getCPUArch();
+extern Config config;
 
 extern "C" void print(const char *format, ...) {
     char buffer[512];
@@ -113,7 +115,7 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
 
 void CompilerLLVM::Run() {
     // Debug
-    if (options.output_ll_files) {
+    if (config.OutputLL()) {
         auto p = "Out.ll";
         llvm::StringRef filename_post(p);
         std::error_code EC;
@@ -124,7 +126,7 @@ void CompilerLLVM::Run() {
 
     CreateLLVMPasses();
 
-    if (options.output_ll_files) {
+    if (config.OutputLL()) {
         auto p = "OutOptimised.ll";
         llvm::StringRef filename_post(p);
         std::error_code EC;
@@ -135,6 +137,8 @@ void CompilerLLVM::Run() {
 
     // Run!
     JIT jit(std::move(Module), std::move(Context), TheTriple);
+    Module = nullptr;
+    Context = nullptr;
     jit.run();
     Strings_Summary();
 }

@@ -17,15 +17,10 @@ public:
     void Render(const ImGuiViewport *main_viewport);
     bool LoadFile(std::string filename);
     void ChooseFile(const ImGuiViewport *main_viewport);
-    void SaveFile();
 
 private:
     void EditButtons(const ImGuiViewport *main_viewport);
-    void OptionsWindow(const ImGuiViewport *main_viewport);
     void SetButtonStyle(int i);
-
-    // Options
-    bool options_ll = false;
 
     bool open;
     ImFont *font;

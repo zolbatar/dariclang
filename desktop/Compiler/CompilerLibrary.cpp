@@ -132,7 +132,7 @@ void Compiler::SetupLibrary() {
 
 	// Text
 	AddLibraryCall("LoadFont", "text_loadfont", Primitive::INT, "S");
-	AddLibraryCall("SetFont", "text_setfont", Primitive::NONE, "IF");
+	AddLibraryCall("SetFont", "text_setfont", Primitive::NONE, "I");
 	AddLibraryCall("Text", "text_left", Primitive::NONE, "IIS");
 	AddLibraryCall("TextRight", "text_right", Primitive::NONE, "IIS");
 	AddLibraryCall("TextCentre", "text_centre", Primitive::NONE, "IIS");

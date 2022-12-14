@@ -160,6 +160,9 @@ public:
     llvm::Type *TypeFloat = nullptr;
     llvm::Type *TypeString = nullptr;
     llvm::Type *TypeByte = nullptr;
+
+    std::unique_ptr<llvm::LLVMContext> Context = nullptr;
+    std::unique_ptr<llvm::TargetMachine> Target = nullptr;
     std::unique_ptr<llvm::Module> Module = nullptr;
 
     std::unordered_map<std::string, std::string> global_structs;
@@ -175,8 +178,6 @@ private:
     CompilerOptions options;
     llvm::Triple TheTriple;
 
-    std::unique_ptr<llvm::LLVMContext> Context = nullptr;
-    std::unique_ptr<llvm::TargetMachine> Target = nullptr;
 
     std::unordered_map<std::string, llvm::StructType *> structs;
     std::map<std::string, unsigned> locals_array_num_dimensions;

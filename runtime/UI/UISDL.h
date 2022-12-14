@@ -65,8 +65,9 @@ public:
 	int64_t GetScreenWidth() { return desktop_screen_width; }
 	int64_t GetScreenHeight() { return desktop_screen_height; }
 	float GetDPIRatio() { return dpi_ratio; }
-	void RequestFontLoad(std::string font) {
+	void RequestFontLoad(std::string font, float size) {
 		new_font_requested = font;
+        new_font_size_requested = size;
 	}
 	bool IsFontRequestActive() { return !new_font_requested.empty(); }
 	ImU32 GetFGColour() { return fgColour; }
@@ -79,6 +80,7 @@ private:
 
 	std::mutex sprite_lock;
 	std::string new_font_requested;
+    float new_font_size_requested;
 	ImU32 fgColour;
 	ImU32 bgColour;
 	float line_width = 1.0f;

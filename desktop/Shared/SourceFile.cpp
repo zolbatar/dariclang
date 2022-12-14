@@ -27,7 +27,9 @@ void SourceFile::MoveToTop(std::string file) {
 }
 
 SourceFile::SourceFile(CompilerOptions &options) : options(options) {
-	std::list<std::string> files_to_process;
+    SourceFileData::Reset();
+
+    std::list<std::string> files_to_process;
 	files_to_process.push_back(options.file);
 
 	do {
@@ -53,7 +55,7 @@ SourceFile::SourceFile(CompilerOptions &options) : options(options) {
 			already_imported.insert(file);
 
 			// Parse
-			auto additional_files = parser->Parse(stream);
+			auto additional_files = parser->Parse(stream, options.target);
 			dependencies.insert(std::make_pair(file, additional_files));
 
 			// Add any new IMPORT files to be parsed
@@ -65,7 +67,7 @@ SourceFile::SourceFile(CompilerOptions &options) : options(options) {
 	} while (!files_to_process.empty());
 }
 
-void SourceFile::ParseCompileAndRun() {
+bool SourceFile::ParseCompileAndRun() {
 	Compiler compiler(this->data, parsers, options);
 	auto t1 = std::chrono::steady_clock::now();
 	if (compiler.Compile()) {
@@ -77,9 +79,11 @@ void SourceFile::ParseCompileAndRun() {
 			auto t2 = std::chrono::steady_clock::now();
 			auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 			std::cout << "Compile finished in " << time_span.count() << "ms. Press a key to quit.";
-			return;
+			return true;
 		}
-	}
+	} else {
+        return false;
+    }
 	if (ui_started) {
 		auto t2 = std::chrono::steady_clock::now();
 		auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
@@ -89,4 +93,5 @@ void SourceFile::ParseCompileAndRun() {
 		ui->Flip(true);
 		input.CheckForKeypress();
 	}
+    return true;
 }

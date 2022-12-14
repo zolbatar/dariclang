@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Shared.h"
 
 size_t SourceFileData::ref_index_ptr = 0;

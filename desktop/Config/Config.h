@@ -11,6 +11,7 @@ public:
     float UIFontSize() { return ui_font_size; }
     float MonoFontSize() { return mono_font_size; }
     int ConsoleColumns() { return console_columns; }
+    bool OutputLL() { return output_ll; }
 private:
     std::string ui_font;
     std::string serif_font;
@@ -18,4 +19,5 @@ private:
     float ui_font_size;
     float mono_font_size;
     int console_columns;
+    bool output_ll;
 };

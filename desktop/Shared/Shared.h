@@ -16,6 +16,9 @@ struct StructInfo {
 
 class SourceFileData {
 public:
+    static void Reset() {
+        ref_index_ptr = 0;
+    }
 	bool StructExists(std::string name) { return struct_indexes.contains(name); }
 	size_t GetStructIndex(std::string name);
 	StructInfo *GetStruct(size_t index) { return &structs[index]; }

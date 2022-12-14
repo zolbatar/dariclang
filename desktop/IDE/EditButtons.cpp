@@ -13,29 +13,6 @@ void Edit::SetButtonStyle(int i) {
     ImGui::PushStyleColor(ImGuiCol_ButtonActive, (ImVec4) ImColor::HSV(i / 7.0f, 0.8f, 0.8f));
 }
 
-void Edit::OptionsWindow(const ImGuiViewport *main_viewport) {
-    ImVec2 center = ImGui::GetMainViewport()->GetCenter();
-    ImGui::SetNextWindowPos(center, ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
-    if (ImGui::BeginPopupModal("Options", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
-        if (ImGui::TreeNodeEx("Compiler Flags", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Checkbox("Output .ll files", &options_ll);
-            ImGui::TreePop();
-        }
-
-        if (ImGui::TreeNodeEx("Fonts & UI", ImGuiTreeNodeFlags_DefaultOpen)) {
-            ImGui::Checkbox("Font size", &options_ll);
-            ImGui::Checkbox("Font set", &options_ll);
-            ImGui::TreePop();
-        }
-
-        ImGui::Separator();
-        if (ImGui::Button("OK", ImVec2(80, 0))) { ImGui::CloseCurrentPopup(); }
-        ImGui::EndPopup();
-    }
-    ImGui::PopStyleVar();
-}
-
 void Edit::ChooseFile(const ImGuiViewport *main_viewport) {
     ImGui::SetNextWindowPos(main_viewport->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
     if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKey",
@@ -75,7 +52,14 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     // Save
     bool dis = editor == nullptr || !editor_files[editor_name].unsaved_changes;
     if (dis) ImGui::BeginDisabled();
-    ImGui::Button("Save");
+    if (ImGui::Button("Save")) {
+        std::ofstream t(editor_name);
+        if (t.good()) {
+            auto ss = editors[editor_name].GetText();
+            t.write(ss.c_str(), ss.length());
+            editor_files[editor_name].unsaved_changes = false;
+        }
+    }
     ImGui::SameLine();
     if (dis) ImGui::EndDisabled();
 
@@ -149,6 +133,17 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         options.file = this->editor_name;
         options.target = CompileTarget::INTERACTIVE;
         options.use_exit_as_end = false;
+        options.optimise = false;
+        options.run = true;
+        auto t = std::thread(&RunThread);
+        t.detach();
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Run [Release]")) {
+        options.file = this->editor_name;
+        options.target = CompileTarget::INTERACTIVE;
+        options.use_exit_as_end = true;
+        options.optimise = true;
         options.run = true;
         auto t = std::thread(&RunThread);
         t.detach();
@@ -156,15 +151,6 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     ImGui::SameLine();
     ImGui::PopStyleColor(3);
     if (dis) ImGui::EndDisabled();
-
-    // Options
-    SetButtonStyle(1);
-    if (ImGui::Button("Options")) {
-        ImGui::OpenPopup("Options");
-    }
-    ImGui::PopStyleColor(3);
-    OptionsWindow(main_viewport);
-    ImGui::SameLine();
 
     // Quit
     SetButtonStyle(6);

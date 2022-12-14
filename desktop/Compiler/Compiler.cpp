@@ -4,6 +4,8 @@
 #include "Compiler.h"
 #include "llvm/Bitcode/BitcodeWriter.h"
 
+extern std::list<CaughtException> errors;
+
 #define CATCH_ERRORS 1
 //#define PERF 1
 
@@ -69,7 +71,16 @@ bool Compiler::Compile() {
 #ifdef CATCH_ERRORS
     }
     catch (CustomException &ex) {
-        ex.OutputToStdout();
+        if (this->options.target == CompileTarget::INTERACTIVE) {
+            errors.emplace_back(CaughtException{.type = ex.type,
+                    .filename = ex.filename,
+                    .line_number = ex.line_number,
+                    .char_position =ex.char_position,
+                    .error = ex.error
+            });
+        } else {
+            ex.OutputToStdout();
+        }
         return false;
     }
 #endif

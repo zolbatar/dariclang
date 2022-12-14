@@ -26,6 +26,7 @@ std::atomic_bool ui_started = false;
 std::atomic_bool running = false;
 std::filesystem::path exe_path;
 extern Input input;
+extern std::list<CaughtException> errors;
 
 void RunThread() {
     running = true;
@@ -34,8 +35,10 @@ void RunThread() {
     input.Clear();
     Instance::ClearStatic();
     Reference::ClearStatic();
+    errors.clear();
     SourceFile state(options);
-    state.ParseCompileAndRun();
+    if (errors.size() == 0)
+        state.ParseCompileAndRun();
     done = true;
     running = false;
     if (ui_started)
@@ -81,7 +84,6 @@ int main(int argc, char *argv[]) {
         options.file = argv[1];
 
         // What sort of compile?
-        options.output_ll_files = false;
         if (argc == 2) {
             options.target = CompileTarget::JIT;
             options.use_exit_as_end = false;

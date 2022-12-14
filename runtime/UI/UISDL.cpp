@@ -162,10 +162,10 @@ bool UISDL::Render(std::function<void()> callback) {
     // This is so app thread can lock to load fonts etc before start of frame
     if (!new_font_requested.empty()) {
         ImGui_ImplOpenGL3_DestroyFontsTexture();
-        io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), config.UIFontSize() * dpi_ratio);
+        io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), new_font_size_requested * dpi_ratio);
         io.Fonts->Build();
         ImGui_ImplOpenGL3_CreateFontsTexture();
-        std::cout << "Loaded font: " << new_font_requested << std::endl;
+        std::cout << "Loaded font: " << new_font_requested << " at " << new_font_size_requested << std::endl;
         new_font_requested.clear();
     }
 

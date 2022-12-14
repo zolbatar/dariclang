@@ -25,6 +25,8 @@ void Config::Load() {
             ui_font_size = it.value();
         } else if (it.key() == "console_columns") {
             console_columns = it.value();
+        } else if (it.key() == "output_ll") {
+            output_ll = it.value();
         } else {
             std::cout << "Error parsing Config.json" << std::endl;
             assert(0);

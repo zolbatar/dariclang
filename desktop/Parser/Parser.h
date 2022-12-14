@@ -29,7 +29,7 @@ private:
 class Parser : DaricVisitor {
 public:
 	Parser(SourceFileData &state) : state(state) {}
-	std::vector<std::string> Parse(std::istream &source);
+	std::vector<std::string> Parse(std::istream &source, CompileTarget target);
 	void setFilename(std::string name) { filename = name; }
 	std::string GetFilename() { return filename; }
 

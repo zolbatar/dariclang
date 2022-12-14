@@ -11,7 +11,7 @@
 class SourceFile {
 public:
 	SourceFile(CompilerOptions &options);
-	void ParseCompileAndRun();
+	bool ParseCompileAndRun();
 
 private:
 	void MoveToTop(std::string file);

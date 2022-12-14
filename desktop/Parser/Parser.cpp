@@ -5,8 +5,9 @@
 
 #define CATCH 1
 extern std::string parser_filename;
+extern std::list<CaughtException> errors;
 
-std::vector<std::string> Parser::Parse(std::istream &source) {
+std::vector<std::string> Parser::Parse(std::istream &source, CompileTarget target) {
 #ifdef CATCH
 	try {
 #endif
@@ -26,8 +27,17 @@ std::vector<std::string> Parser::Parse(std::istream &source) {
 		visitProgram(tree);
 #ifdef CATCH
 	} catch (CustomException &ex) {
-		ex.OutputToStdout();
-		exit(1);
+        if (target == CompileTarget::INTERACTIVE) {
+            errors.emplace_back(CaughtException{.type = ex.type,
+                    .filename = ex.filename,
+                    .line_number = ex.line_number,
+                    .char_position =ex.char_position,
+                    .error = ex.error
+            });
+        } else {
+            ex.OutputToStdout();
+            exit(1);
+        }
 	}
 	catch (std::exception &ex) {
 		std::cout << "Exception: " << ex.what() << std::endl;

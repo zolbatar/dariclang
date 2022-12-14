@@ -4,15 +4,15 @@
 #include <fstream>
 #include <map>
 #include "Edit.h"
-#include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../../runtime/UI/UISDL.h"
 #include "../Config/Config.h"
+#include "../Exception/Exception.h"
 
-//std::list<DARICException> errors;
-//std::tuple<File*, uint32_t> findFileForLine(uint32_t line_number);
 extern std::filesystem::path exe_path;
 extern UISDL *ui;
 extern Config config;
+
+std::list<CaughtException> errors;
 
 Edit::Edit() {
     ImGuiIO &io = ImGui::GetIO();
@@ -39,37 +39,20 @@ bool Edit::LoadFile(std::string filename) {
     exit(1);
 }
 
-void Edit::SaveFile() {
-/*    std::ofstream t(fileBeingEdited);
-    if (t.good()) {
-        auto ss = editors.find(fileBeingEdited)->second.GetText();
-        t.write(ss.c_str(), ss.length());
-    }*/
-}
-
 void Edit::Render(const ImGuiViewport *main_viewport) {
-    // error markers
-    //TextEditor::ErrorMarkers markers;
-    /*	for (auto it = errors.begin(); it != errors.end(); ++it)
-        {
-
-            // Find
-            auto r = findFileForLine(it->line_number);
-            auto f = std::get<0>(r);
-            auto ln = std::get<1>(r);
-
-            if (f->filename == fileBeingEdited || f->filename == temp_name)
-            {
-                markers.insert(std::make_pair(ln, it->error));
-            }
-        }*/
-    //editor.SetErrorMarkers(markers);
 
     // "breakpoint" markers
     //TextEditor::Breakpoints bpts;
     //bpts.insert(24);
     //bpts.insert(47);
     //editor.SetBreakpoints(bpts);
+
+    // If we have errors for files not open, OPEN THEM!
+    for (auto it = errors.begin(); it != errors.end(); ++it) {
+        if (!editor_files.contains(it->filename)) {
+            LoadFile(it->filename);
+        }
+    }
 
     // Any closed tabs?
     for (auto &s: editor_files) {
@@ -100,18 +83,45 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs;
     editor = nullptr;
     editor_name = "";
+    ImGui::Text("Hi");
     if (ImGui::BeginTabBar("EditorFiles", tab_bar_flags)) {
         for (auto &s: editors) {
+
+            // Any errors? If so colour code the tab
+            bool any_errors = false;
+            for (auto it = errors.begin(); it != errors.end(); ++it) {
+                if (it->filename == s.first) {
+                    any_errors = true;
+                }
+            }
+            if (any_errors) {
+                ImGui::PushStyleColor(ImGuiCol_Tab, ImVec4(1, 0, 0, 0.8));
+                ImGui::PushStyleColor(ImGuiCol_TabActive, ImVec4(1, 0, 0, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(1, 0, 0, 0.8));
+                ImGui::PushStyleColor(ImGuiCol_TabUnfocused, ImVec4(1, 0, 0, 0.8));
+                ImGui::PushStyleColor(ImGuiCol_TabUnfocusedActive, ImVec4(1, 0, 0, 0.4));
+            }
+
             if (ImGui::BeginTabItem(s.first.c_str(), &editor_files[s.first].open)) {
                 editor = &s.second;
                 editor_name = s.first;
+
+                // Error markers
+                TextEditor::ErrorMarkers markers;
+                for (auto it = errors.begin(); it != errors.end(); ++it) {
+                    if (it->filename == editor_name) {
+                        markers.insert(std::make_pair(it->line_number, it->error));
+                    }
+                }
+                editor->SetErrorMarkers(markers);
+
                 ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(20, 20, 20, 255));
                 float height = ImGui::GetFrameHeightWithSpacing() + 2;
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
-                ImGui::BeginChild("Summary Panel", ImVec2(main_viewport->Size.x, height),false,ImGuiWindowFlags_AlwaysUseWindowPadding);
+                ImGui::BeginChild("Summary Panel", ImVec2(main_viewport->Size.x, height), false, ImGuiWindowFlags_AlwaysUseWindowPadding);
                 auto cpos = editor->GetCursorPosition();
                 ImGui::PushFont(font);
-                ImGui::Text("Line %6d, Column %-6d %6d lines | %s",
+                ImGui::Text("Line %d : Column %d : %d lines : %s",
                             cpos.mLine + 1,
                             cpos.mColumn + 1,
                             editor->GetTotalLines(),
@@ -128,6 +138,8 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
+            if (any_errors)
+                ImGui::PopStyleColor(5);
         }
         if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip)) {
             TextEditor editor;
