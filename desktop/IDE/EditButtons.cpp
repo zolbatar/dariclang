@@ -92,6 +92,8 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
             LoadFile(path + "FakeWindows.daric");
         if (ImGui::Selectable("Fonts"))
             LoadFile(path + "Fonts.daric");
+        if (ImGui::Selectable("Hello"))
+            LoadFile(path + "Hello.daric");
         if (ImGui::Selectable("Mandelbrot"))
             LoadFile(path + "Mandelbrot.daric");
         if (ImGui::Selectable("Raytracer"))

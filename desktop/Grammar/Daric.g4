@@ -25,6 +25,7 @@ statement
     | for
     | if
     | ifml
+    | input
     | importlib
     | option
     | procedure
@@ -58,6 +59,7 @@ for:            FOR IDENTIFIER (COLON type)? EQ expression TO expression (STEP e
 importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE END IF ;
+input:          INPUT variable ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
 parameter:      REF? IDENTIFIER (COLON (type | IDENTIFIER))? ;
 print:          PRINT SYS? (value=expression (WITH? format=expression)? SEMICOLON?)? ;
@@ -213,6 +215,7 @@ END             : 'END' | 'End' ;
 FOR             : 'FOR' | 'For' ;
 IF              : 'IF' | 'If' ;
 IMPORT          : 'IMPORT' | 'Import' ;
+INPUT           : 'INPUT' | 'Input' ;
 LET             : 'LET' | 'Let' ;
 NEXT            : 'NEXT' | 'Next' ;
 OF              : 'OF' | 'Of' ;

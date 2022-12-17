@@ -99,7 +99,7 @@ void Compiler::TokenFor(ParserToken &t) {
 
     // Work out direction
     auto comp = llvm.ComparisonGT(GetIR(), from, to);
-    auto direction = GetIR()->CreateBitCast(comp.value, llvm.TypeBit);
+    auto direction = GetIR()->CreateTruncOrBitCast(comp.value, llvm.TypeBit);
 
     // Flag to indicate completion
     auto temp_name = GetScratchName(t.line);
@@ -130,13 +130,13 @@ void Compiler::TokenFor(ParserToken &t) {
     // Lower check
     AddBB(dirCheckBBLower);
     auto condL = llvm.ComparisonLT(GetIR(), nv, to);
-    GetIR()->CreateStore(GetIR()->CreateBitCast(condL.value, llvm.TypeBit), finished);
+    GetIR()->CreateStore(GetIR()->CreateTruncOrBitCast(condL.value, llvm.TypeBit), finished);
     GetIR()->CreateBr(dirCheckBBEnd);
 
     // Higher check
     AddBB(dirCheckBBHigher);
     auto condR = llvm.ComparisonGT(GetIR(), nv, to);
-    GetIR()->CreateStore(GetIR()->CreateBitCast(condR.value, llvm.TypeBit), finished);
+    GetIR()->CreateStore(GetIR()->CreateTruncOrBitCast(condR.value, llvm.TypeBit), finished);
     GetIR()->CreateBr(dirCheckBBEnd);
 
     // End of checks

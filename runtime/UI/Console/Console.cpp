@@ -72,8 +72,20 @@ void Console::Update() {
     }
 }
 
+void Console::DeleteCharacter() {
+    cursorX--;
+    if (cursorX < 0) {
+        cursorY--;
+        cursorX = charsAcross - 1;
+    }
+    auto i = CalcIndex();
+    screenText[i] = ' ';
+    screenColours[i] = 0x00000000;
+    bgColours[i] = 0x00000000;
+}
+
 void Console::WriteCharacter(char c) {
-    if (c == 10) {
+    if (c == 10 || c == 13) {
         MoveCursorToNextLine();
     } else {
         auto i = CalcIndex();

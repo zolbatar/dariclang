@@ -218,6 +218,8 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sou
     Module->getOrInsertFunction("PrintStringFormat_sys", TypeNone, TypeString, TypeString);
     Module->getOrInsertFunction("PrintNewline_sys", TypeNone);
 
+    Module->getOrInsertFunction("Input", TypeString);
+
     // Maths
     Module->getOrInsertFunction("pi", TypeFloat);
     Module->getOrInsertFunction("acos", TypeFloat, TypeFloat);

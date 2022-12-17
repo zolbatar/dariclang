@@ -33,6 +33,7 @@ enum class ParserTokenType
     FOR,
 	HAT,
 	INSTR,
+    INPUT,
 	FLOAT,
 	GLOBAL,
 	GE,

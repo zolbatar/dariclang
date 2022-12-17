@@ -93,5 +93,5 @@ add_library(DaricRuntime STATIC
         Chrono.cpp
         Random.cpp
         Types.h
-        Core.cpp Gfx2D.cpp)
+        Core.cpp Gfx2D.cpp InputLine.cpp)
 target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime assimp-runtime)

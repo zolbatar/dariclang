@@ -57,6 +57,8 @@ public:
 
     virtual std::any visitIfml(DaricParser::IfmlContext *context) = 0;
 
+    virtual std::any visitInput(DaricParser::InputContext *context) = 0;
+
     virtual std::any visitOption(DaricParser::OptionContext *context) = 0;
 
     virtual std::any visitParameter(DaricParser::ParameterContext *context) = 0;

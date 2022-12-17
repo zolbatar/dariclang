@@ -123,6 +123,7 @@ protected:
 	std::any visitRead(DaricParser::ReadContext *context);
 	std::any visitOption(DaricParser::OptionContext *context);
 	std::any visitImportlib(DaricParser::ImportlibContext *context);
+    std::any visitInput(DaricParser::InputContext *context);
 
 	ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
 	ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

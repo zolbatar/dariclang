@@ -131,7 +131,7 @@ void Compiler::SetupLibrary() {
 	AddLibraryCall("GetRotateZ", "gfx3d_getrotatez", Primitive::FLOAT, "");
 
 	// Text
-	AddLibraryCall("LoadFont", "text_loadfont", Primitive::INT, "S");
+	AddLibraryCall("LoadFont", "text_loadfont", Primitive::INT, "SF");
 	AddLibraryCall("SetFont", "text_setfont", Primitive::NONE, "I");
 	AddLibraryCall("Text", "text_left", Primitive::NONE, "IIS");
 	AddLibraryCall("TextRight", "text_right", Primitive::NONE, "IIS");

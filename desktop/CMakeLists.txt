@@ -121,6 +121,7 @@ add_executable(${PROJECT_NAME}
         ../runtime/String.cpp
         ../runtime/Maths.cpp
         ../runtime/Print.cpp
+        ../runtime/InputLine.cpp
         ../runtime/String.cpp
         ../runtime/Chrono.cpp
         ../runtime/Core.cpp
@@ -244,7 +245,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricVisitor.cpp
         Library/json.hpp
         IDE/EditButtons.cpp
-        Config/Config.cpp)
+        Config/Config.cpp Parser/Tokens/ParserINPUT.cpp Compiler/CompilerInput.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}

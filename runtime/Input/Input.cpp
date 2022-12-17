@@ -1,9 +1,12 @@
 #include <iostream>
 #include <thread>
 #include "Input.h"
+#include "../UI/UISDL.h"
 
 Input input;
 extern int get_clock();
+extern Console console;
+extern std::atomic_bool ui_started;
 
 char Input::Get() {
 	while (buffer.empty()) {
@@ -35,10 +38,18 @@ std::string Input::InputLine() {
 		}
 		auto t = buffer.front();
 		buffer.pop();
-		if (t == 13) {
-			return out;
-		}
-		out += std::string(t, 1);
+        if (t == 8) {
+            if (out.length() > 0) {
+                out = out.substr(0, out.length() - 1);
+                console.DeleteCharacter();
+            }
+        } else {
+            out += std::string(1, t);
+            console.WriteCharacter(t);
+            if (t == 13) {
+                return out;
+            }
+        }
 	}
 }
 
@@ -71,8 +82,7 @@ void Input::ProcessEvent(SDL_Event &event) {
 		key_events.push(std::move(e));
 		lock.unlock();
 		key_pressed[e.code] = false;
-
-		if (sym.sym >= 32 && sym.sym < 127) {
+		if (sym.sym >= 32 && sym.sym < 127 || sym.sym == 13 || sym.sym == 8) {
 			buffer.push(sym.sym);
 		}
 		break;

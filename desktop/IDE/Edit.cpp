@@ -83,7 +83,6 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_Reorderable | ImGuiTabBarFlags_AutoSelectNewTabs;
     editor = nullptr;
     editor_name = "";
-    ImGui::Text("Hi");
     if (ImGui::BeginTabBar("EditorFiles", tab_bar_flags)) {
         for (auto &s: editors) {
 

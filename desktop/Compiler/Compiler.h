@@ -76,7 +76,7 @@ private:
 	llvm::IRBuilder<> *implicit_ir;
 	llvm::IRBuilder<> *implicit_pre_ir;
 	llvm::Function *procedure = nullptr;
-	Primitive return_type;
+	Primitive return_type = Primitive::NONE;
 	llvm::IRBuilder<> *procedure_ir;
 	llvm::IRBuilder<> *procedure_pre_ir;
 	std::unordered_map<std::string, Func> procedures;
@@ -136,6 +136,7 @@ private:
 	void TokenRead(ParserToken &t);
 	void TokenRestore(ParserToken &t);
 	void TokenOptionBase(ParserToken &t);
+    void TokenInput(ParserToken &t);
 
 	std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 	llvm::BasicBlock *CreateBB(std::string block_name, ParserToken &token);

@@ -168,6 +168,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::OPTIONBASE:
                 TokenOptionBase(token);
                 break;
+            case ParserTokenType::INPUT:
+                TokenInput(token);
+                break;
             default:
                 assert(0);
         }
