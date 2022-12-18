@@ -55,16 +55,9 @@ else()
     SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
 endif()
 
-# SDL-Mixer-X
-set(SDLMIXERX_DIR ${GITHUB}/SDL-Mixer-X)
-add_library(sdlmixerx-runtime STATIC IMPORTED)
-if (APPLE)
-    include_directories(${SDLMIXERX_DIR}/include)
-    SET_PROPERTY(TARGET sdlmixerx-runtime PROPERTY IMPORTED_LOCATION ${SDLMIXERX_DIR}/lib/libSDL2_mixer_ext.a)
-else()
-    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
-    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
-endif()
+# SDL Mixer
+set(SDL2_MIXER_DIR ${GITHUB}/SDL_mixer)
+include_directories(${SDL2_MIXER_DIR}/include ${SDL2_MIXER_DIR}/src/codecs ${SDL2_MIXER_DIR}/src)
 
 # ASSIMP
 set(ASSIMP_DIR ${GITHUB}/assimp)
@@ -170,6 +163,42 @@ add_executable(${PROJECT_NAME}
         ../runtime/Sound/middleware/WAVWriter.cpp
         ../runtime/Sound/utils/Envelope.cpp
         ../runtime/Sound/utils/Waveforms.cpp
+
+        ${SDL2_MIXER_DIR}/src/mixer.c
+        ${SDL2_MIXER_DIR}/src/music.c
+        ${SDL2_MIXER_DIR}/src/utils.c
+        ${SDL2_MIXER_DIR}/src/effect_position.c
+        ${SDL2_MIXER_DIR}/src/effect_stereoreverse.c
+        ${SDL2_MIXER_DIR}/src/effects_internal.c
+        ${SDL2_MIXER_DIR}/src/codecs/load_aiff.c
+        ${SDL2_MIXER_DIR}/src/codecs/load_voc.c
+        ${SDL2_MIXER_DIR}/src/codecs/mp3utils.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_cmd.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_drflac.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_drmp3.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_flac.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_fluidsynth.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_modplug.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_mpg123.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_nativemidi.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_ogg.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_ogg_stb.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_opus.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_timidity.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_wav.c
+        ${SDL2_MIXER_DIR}/src/codecs/music_xmp.c
+        ${SDL2_MIXER_DIR}/src/codecs/native_midi/native_midi_common.c
+        ${SDL2_MIXER_DIR}/src/codecs/native_midi/native_midi_macosx.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/common.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/instrum.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/mix.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/output.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/playmidi.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/readmidi.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/resample.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/tables.c
+        ${SDL2_MIXER_DIR}/src/codecs/timidity/timidity.c
+
         IDE/TextEditor.cpp
         IDE/TextEditor.h
         IDE/Edit.cpp
@@ -277,7 +306,6 @@ if (APPLE)
             -lxar -liconv
             sdl2-runtime
             assimp-runtime
-            sdlmixerx-runtime
             ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE

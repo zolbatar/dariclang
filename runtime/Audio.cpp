@@ -11,12 +11,14 @@ struct Audio {
 };
 
 extern std::shared_ptr<SoftSynth> soft_synth;
-SDL_AudioDeviceID deviceId;
-SDL_AudioSpec wavSpec;
-std::vector<Audio> samples;
+std::vector<Mix_Chunk *> samples;
 
 extern "C" void audio_init() {
-    //deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+        SDL_Log("Couldn't initialize SDL: %s\n", SDL_GetError());
+        exit(1);
+    }
+
     int audio_rate = MIX_DEFAULT_FREQUENCY;
     Uint16 audio_format = MIX_DEFAULT_FORMAT;
     int audio_channels = MIX_DEFAULT_CHANNELS;
@@ -25,27 +27,26 @@ extern "C" void audio_init() {
         exit(1);
     } else {
         Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-        SDL_Log("Opened audio at %d Hz %d bit%s %s", audio_rate,
-                (audio_format & 0xFF),
-                (SDL_AUDIO_ISFLOAT(audio_format) ? " (float)" : ""),
-                (audio_channels > 2) ? "surround" :
-                (audio_channels > 1) ? "stereo" : "mono");
+        printf("Opened audio at %d Hz %d bit%s %s with %d channels\n", audio_rate,
+               (audio_format & 0xFF),
+               (SDL_AUDIO_ISFLOAT(audio_format) ? " (float)" : ""),
+               (audio_channels > 2) ? "surround" :
+               (audio_channels > 1) ? "stereo" : "mono", audio_channels);
     }
 }
 
 extern "C" T_I audio_loadwav(T_S filename) {
-    Audio audio;
-    SDL_LoadWAV(filename, &wavSpec, &audio.wavBuffer, &audio.wavLength);
-    samples.push_back(std::move(audio));
+    auto audio = Mix_LoadWAV(filename);
+    if (audio == nullptr) {
+        printf("Can't load audio file '%s'\n", filename);
+        exit(1);
+    }
+    samples.push_back(audio);
     return samples.size() - 1;
 }
 
-extern "C" void audio_play(T_I index) {
-    int success = SDL_QueueAudio(deviceId, samples[index].wavBuffer, samples[index].wavLength);
-    if (success) {
-        std::cout << "SDL audio playback failed. SDL Error: " << SDL_GetError() << std::endl;
-    }
-    SDL_PauseAudioDevice(deviceId, 0);
+extern "C" void audio_play(T_I channel, T_I index) {
+    Mix_PlayChannel(channel, samples[index], false);
 }
 
 extern "C" void audio_volume(T_I channel, T_F volume) {

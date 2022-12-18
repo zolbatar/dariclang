@@ -31,5 +31,6 @@ std::any Parser::visitOption(DaricParser::OptionContext *context) {
 	} else {
 		RaiseException("Unknown OPTION", context);
 	}
+    return nullptr;
 }
 

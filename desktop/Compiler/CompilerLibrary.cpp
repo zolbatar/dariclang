@@ -169,7 +169,7 @@ void Compiler::SetupLibrary() {
 
 	// Software synth
 	AddLibraryCall("LoadWAV", "audio_loadwav", Primitive::INT, "S");
-	AddLibraryCall("PlayWAV", "audio_play", Primitive::NONE, "I");
+	AddLibraryCall("PlayWAV", "audio_play", Primitive::NONE, "II");
 	AddLibraryCall("SetVolume", "audio_volume", Primitive::NONE, "IF");
 	AddLibraryCall("Sound", "audio_sound", Primitive::NONE, "IFF");
 	AddLibraryCall("Tone", "audio_tone", Primitive::INT, "S");
