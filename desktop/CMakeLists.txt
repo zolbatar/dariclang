@@ -55,6 +55,17 @@ else()
     SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
 endif()
 
+# SDL-Mixer-X
+set(SDLMIXERX_DIR ${GITHUB}/SDL-Mixer-X)
+add_library(sdlmixerx-runtime STATIC IMPORTED)
+if (APPLE)
+    include_directories(${SDLMIXERX_DIR}/include)
+    SET_PROPERTY(TARGET sdlmixerx-runtime PROPERTY IMPORTED_LOCATION ${SDLMIXERX_DIR}/lib/libSDL2_mixer_ext.a)
+else()
+    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
+    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
+endif()
+
 # ASSIMP
 set(ASSIMP_DIR ${GITHUB}/assimp)
 include_directories(${ASSIMP_DIR}/include)
@@ -266,6 +277,7 @@ if (APPLE)
             -lxar -liconv
             sdl2-runtime
             assimp-runtime
+            sdlmixerx-runtime
             ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE

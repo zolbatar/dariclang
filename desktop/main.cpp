@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
     std::cout << "Welcome to Daric!" << std::endl;
     config.Load();
     Compiler::SetupLibrary();
+    audio_init();
 
     if (argc == 1) {
         // Fire up IDE
@@ -95,7 +96,6 @@ int main(int argc, char *argv[]) {
         options.run = argc == 2;
         if (options.target == CompileTarget::JIT)
             soft_synth = std::make_shared<SoftSynth>();
-        audio_init();
         auto t = std::thread(&RunThread);
         t.detach();
         while (!done) {

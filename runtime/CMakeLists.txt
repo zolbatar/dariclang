@@ -16,6 +16,17 @@ else()
     set(GITHUB C:/Users/d_dud/GitHub)
 endif()
 
+# SDL-Mixer-X
+set(SDLMIXERX_DIR ${GITHUB}/SDL-Mixer-X)
+add_library(sdlmixerx-runtime STATIC IMPORTED)
+if (APPLE)
+    include_directories(${SDLMIXERX_DIR}/include)
+    SET_PROPERTY(TARGET sdlmixerx-runtime PROPERTY IMPORTED_LOCATION ${SDLMIXERX_DIR}/lib/libSDL2_mixer_ext.a)
+else()
+    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
+    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
+endif()
+
 # IMGUI
 set(IMGUI_DIR ${GITHUB}/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
@@ -94,4 +105,4 @@ add_library(DaricRuntime STATIC
         Random.cpp
         Types.h
         Core.cpp Gfx2D.cpp InputLine.cpp)
-target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime assimp-runtime)
+target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime sdlmixerx-runtime assimp-runtime)
