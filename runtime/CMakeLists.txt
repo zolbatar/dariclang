@@ -16,41 +16,24 @@ else()
     set(GITHUB C:/Users/d_dud/GitHub)
 endif()
 
-# SDL-Mixer-X
-set(SDLMIXERX_DIR ${GITHUB}/SDL-Mixer-X)
-add_library(sdlmixerx-runtime STATIC IMPORTED)
-if (APPLE)
-    include_directories(${SDLMIXERX_DIR}/include)
-    SET_PROPERTY(TARGET sdlmixerx-runtime PROPERTY IMPORTED_LOCATION ${SDLMIXERX_DIR}/lib/libSDL2_mixer_ext.a)
-else()
-    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
-    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
-endif()
+# Packages
+set(FREETYPE_DIR /usr/local)
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;*.dylib")
+link_directories(/usr/local/lib)
+find_package(zstd REQUIRED)
+find_package(Freetype REQUIRED)
+include_directories(${FREETYPE_INCLUDE_DIRS})
+find_package(SDL2 REQUIRED)
+set(FluidSynth_PATH ${GITHUB}/fluidsynth-sans-glib)
+set(FluidSynth_INCLUDE_PATH ${FluidSynth_PATH}/include)
+set(FluidSynth_LIBRARY /Users/daryl/GitHub/fluidsynth-sans-glib/src/libfluidsynth.a)
+include_directories(${FluidSynth_INCLUDE_PATH})
+find_package(SDL2_mixer REQUIRED)
+find_package(assimp REQUIRED)
 
 # IMGUI
 set(IMGUI_DIR ${GITHUB}/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
-
-# SDL
-set(SDL2_DIR ${GITHUB}/SDL_BUILD)
-add_library(sdl2-runtime STATIC IMPORTED)
-if (APPLE)
-    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
-    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
-else()
-    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
-    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
-endif()
-
-# ASSIMP
-set(ASSIMP_DIR ${GITHUB}/assimp)
-include_directories(${ASSIMP_DIR}/include)
-add_library(assimp-runtime STATIC IMPORTED)
-if (APPLE)
-    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
-else()
-    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/Release/assimp-vc143-mt.lib)
-endif()
 
 add_library(DaricRuntime STATIC
         main.cpp
@@ -90,5 +73,11 @@ add_library(DaricRuntime STATIC
         Chrono.cpp
         Random.cpp
         Types.h
-        Core.cpp Gfx2D.cpp InputLine.cpp Music.h)
-target_link_libraries(DaricRuntime PUBLIC ${CONAN_LIBS} sdl2-runtime sdlmixerx-runtime assimp-runtime)
+        Core.cpp Gfx2D.cpp
+        InputLine.cpp)
+target_link_libraries(DaricRuntime PUBLIC
+        ${FluidSynth_LIBRARY}
+        ${SDL2_LIBRARIES}
+        SDL2_mixer
+        freetype
+        ${ASSIMP_LIBRARIES})

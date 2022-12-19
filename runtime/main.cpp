@@ -4,10 +4,8 @@
 #include <filesystem>
 #include "UI/UISDL.h"
 #include "Input/Input.h"
-#include "Sound/SoftSynth.h"
 
 UISDL *ui = nullptr;
-extern std::shared_ptr<SoftSynth> soft_synth;
 extern "C" void audio_init();
 
 std::atomic_bool done = false;
@@ -34,7 +32,6 @@ void do_quit() {
 
 int main(int argc, char *argv[]) {
     exe_path = std::filesystem::path{argv[0]}.parent_path();
-    soft_synth = std::make_shared<SoftSynth>();
     audio_init();
     auto t = std::thread(&RunThread);
     t.detach();

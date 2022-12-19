@@ -41,7 +41,6 @@ find_package(zstd REQUIRED)
 find_package(Freetype REQUIRED)
 include_directories(${FREETYPE_INCLUDE_DIRS})
 find_package(SDL2 REQUIRED)
-
 set(FluidSynth_PATH ${GITHUB}/fluidsynth-sans-glib)
 set(FluidSynth_INCLUDE_PATH ${FluidSynth_PATH}/include)
 set(FluidSynth_LIBRARY /Users/daryl/GitHub/fluidsynth-sans-glib/src/libfluidsynth.a)
