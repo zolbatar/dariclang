@@ -1,17 +1,22 @@
 #include <memory>
+#include <thread>
 #include <iostream>
 #include <vector>
 #include "Types.h"
-#include "Sound/SoftSynth.h"
+#include "SDL.h"
 #include "SDL_mixer.h"
+#include "fluidsynth.h"
 
 struct Audio {
     Uint32 wavLength;
     Uint8 *wavBuffer;
 };
 
-extern std::shared_ptr<SoftSynth> soft_synth;
 std::vector<Mix_Chunk *> samples;
+std::vector<Mix_Music *> music;
+
+static fluid_settings_t *settings;
+static fluid_synth_t *synth;
 
 extern "C" void audio_init() {
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -33,6 +38,30 @@ extern "C" void audio_init() {
                (audio_channels > 2) ? "surround" :
                (audio_channels > 1) ? "stereo" : "mono", audio_channels);
     }
+    Mix_AllocateChannels(64);
+
+    // Fluidsynth
+    settings = new_fluid_settings();
+    synth = new_fluid_synth(settings);
+    fluid_synth_sfload(synth, "Soundfont/GeneralUser GS MuseScore v1.442.sf2", true);
+    fluid_settings_setstr(settings, "audio.driver", "sdl2");
+    fluid_audio_driver_t *adriver = new_fluid_audio_driver(settings, synth);
+
+    if (Mix_SetSoundFonts("Soundfont/GeneralUser GS MuseScore v1.442.sf2") == 0) {
+        printf("Can't open Soundfont file\n");
+        exit(1);
+    }
+    printf("Soundfonts: %s\n", Mix_GetSoundFonts());
+    Mix_Music *music = Mix_LoadMUS("MIDI/Titanic.mid");
+    if (music == NULL) {
+        printf("Can't open music file\n");
+        exit(1);
+    }
+}
+
+void audio_shutdown() {
+    delete_fluid_synth(synth);
+    delete_fluid_settings(settings);
 }
 
 extern "C" T_I audio_loadwav(T_S filename) {
@@ -45,24 +74,48 @@ extern "C" T_I audio_loadwav(T_S filename) {
     return samples.size() - 1;
 }
 
+extern "C" T_I audio_loadmus(T_S filename) {
+    auto audio = Mix_LoadMUS(filename);
+    if (audio == nullptr) {
+        printf("Can't load music file '%s'\n", filename);
+        exit(1);
+    }
+    music.push_back(audio);
+    return music.size() - 1;
+}
+
 extern "C" void audio_play(T_I channel, T_I index) {
     Mix_PlayChannel(channel, samples[index], false);
 }
 
+extern "C" void audio_playmusic(T_I index, T_I loops) {
+    if (Mix_PlayMusic(music[index], loops) != 0) {
+        printf("Can't play music file\n");
+        exit(1);
+    }
+}
+
+extern "C" void audio_stopmusic(T_I ms) {
+    Mix_FadeOutMusic(ms);
+}
+
+extern "C" void music_volume(T_F volume) {
+    Mix_VolumeMusic(volume * 128);
+}
+
 extern "C" void audio_volume(T_I channel, T_F volume) {
-    soft_synth->Volume(channel, volume);
+    Mix_Volume(channel, volume * 128);
 }
 
-extern "C" void audio_sound(T_I channel, T_F pitch, T_F duration) {
-    soft_synth->PlayNote(channel, pitch, duration);
+extern "C" void audio_bank(T_I channel, T_I bank, T_I preset) {
+    fluid_synth_bank_select(synth, channel, bank);
+    fluid_synth_program_change(synth,channel , preset);
 }
 
-extern "C" T_I audio_tone(T_S definition) {
-    return soft_synth->CreateTone(definition);
+extern "C" void audio_noteon(T_I channel, T_I pitch, T_I velocity) {
+    fluid_synth_noteon(synth, channel, 40, 127);
 }
 
-extern "C" T_I
-audio_envelope(T_I tone, T_F attack, T_F sustain, T_F attack_time, T_F decay_time, T_F release_time, T_I sustainable) {
-    return soft_synth->Envelope(tone, attack, sustain, attack_time, decay_time, release_time, sustainable);
+extern "C" void audio_noteoff(T_I channel, T_I pitch) {
+    fluid_synth_noteoff(synth, channel, 40);
 }
-

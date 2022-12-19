@@ -8,6 +8,8 @@ set(CMAKE_CXX_STANDARD 20)
 project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
+#add_compile_definitions(MUSIC_MID_FLUIDSYNTH=1)
+
 EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
 message(STATUS "Architecture: ${ARCHITECTURE}")
 message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
@@ -21,92 +23,49 @@ else()
     set(GITHUB C:/Users/d_dud/GitHub)
 endif()
 
-# Freetype
-set(FT_DIR ${GITHUB}/freetype)
-add_library(ft-lib STATIC IMPORTED)
-if (APPLE)
-    SET_PROPERTY(TARGET ft-lib PROPERTY IMPORTED_LOCATION ${FT_DIR}/build/libfreetype.a)
-    include_directories(${FT_DIR}/include)
-else()
-endif()
-
 # Antlr4
-set(ANTLR_DIR ${GITHUB}/antlr4/runtime/Cpp)
-add_library(antlr4-runtime STATIC IMPORTED)
-include_directories(${ANTLR_DIR}/runtime/src)
 if (APPLE)
-    SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/dist/libantlr4-runtime.a)
+    include_directories(/usr/local/include/antlr4-runtime)
 else()
-    SET_PROPERTY(TARGET antlr4-runtime PROPERTY IMPORTED_LOCATION ${ANTLR_DIR}/runtime/bin/vs-2019/x64/ReleaseStatic/antlr4-runtime.lib)
 endif()
 
 # IMGUI
 set(IMGUI_DIR ${GITHUB}/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
 
-# SDL
-set(SDL2_DIR ${GITHUB}/SDL_BUILD)
-add_library(sdl2-runtime STATIC IMPORTED)
-if (APPLE)
-    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-)
-    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/libSDL2.a)
-else()
-    include_directories(${SDL2_DIR}/include ${SDL2_DIR}/include-config-release)
-    SET_PROPERTY(TARGET sdl2-runtime PROPERTY IMPORTED_LOCATION ${SDL2_DIR}/Release/SDL2-static.lib)
-endif()
+# Packages
+set(FREETYPE_DIR /usr/local)
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;*.dylib")
+link_directories(/usr/local/lib)
+find_package(zstd REQUIRED)
+find_package(Freetype REQUIRED)
+include_directories(${FREETYPE_INCLUDE_DIRS})
+find_package(SDL2 REQUIRED)
 
-# SDL Mixer
-set(SDL2_MIXER_DIR ${GITHUB}/SDL_mixer)
-include_directories(${SDL2_MIXER_DIR}/include ${SDL2_MIXER_DIR}/src/codecs ${SDL2_MIXER_DIR}/src)
+set(FluidSynth_PATH ${GITHUB}/fluidsynth-sans-glib)
+set(FluidSynth_INCLUDE_PATH ${FluidSynth_PATH}/include)
+set(FluidSynth_LIBRARY /Users/daryl/GitHub/fluidsynth-sans-glib/src/libfluidsynth.a)
+include_directories(${FluidSynth_INCLUDE_PATH})
+find_package(SDL2_mixer REQUIRED)
+find_package(assimp REQUIRED)
+find_package(LLVM REQUIRED CONFIG)
+llvm_map_components_to_libnames(LLVM_LIBS support core)
+message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
+message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
+execute_process(COMMAND llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(LLD_LIBS -llldCommon -llldELF -llldMachO)
+message(STATUS ${LLVM_LIBS})
+message(STATUS ${LLVM_SYSTEM_LIBS})
+message(STATUS ${LLD_LIBS})
 
-# ASSIMP
-set(ASSIMP_DIR ${GITHUB}/assimp)
-include_directories(${ASSIMP_DIR}/include)
-add_library(assimp-runtime STATIC IMPORTED)
-if (APPLE)
-    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/libassimp.a)
-else()
-    SET_PROPERTY(TARGET assimp-runtime PROPERTY IMPORTED_LOCATION ${ASSIMP_DIR}/lib/Release/assimp-vc143-mt.lib)
-endif()
-
-# LLVM
-set(CORE_LLVM_DIR ${GITHUB}/llvm-project/)
-include_directories(
-        ${CORE_LLVM_DIR}llvm/include
-        ${CORE_LLVM_DIR}lld/include
-        ${CORE_LLVM_DIR}build/include)
-if (APPLE)
-    link_directories(${CORE_LLVM_DIR}build/lib)
-    file(GLOB LLD_LIBS
-            ${CORE_LLVM_DIR}build/lib/liblldCommon.a
-            ${CORE_LLVM_DIR}build/lib/liblldELF.a
-            ${CORE_LLVM_DIR}build/lib/liblldMachO.a)
-    execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-    execute_process(COMMAND ${CORE_LLVM_DIR}build/bin/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-else()
-    link_directories(${CORE_LLVM_DIR}build/Release/lib)
-    file(GLOB LLD_LIBS
-            ${CORE_LLVM_DIR}build/lib/Release/liblldCommon.a
-            ${CORE_LLVM_DIR}build/lib/liblldELF.a)
-    execute_process(COMMAND ${CORE_LLVM_DIR}build/Release/bin/llvm-config.exe --libs --libnames OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-    execute_process(COMMAND ${CORE_LLVM_DIR}build/Release/bin/llvm-config.exe --system-libs --libnames OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-    message(${LLVM_SYSTEM_LIBS})
-    set(LLVM_SYSTEM_LIBS "")
-endif()
+# Fluidsynth
+#set(FLUIDSYNTH_DIR ${GITHUB}/fluidsynth)
+#include_directories(${FLUIDSYNTH_DIR}/include)
 
 # IMGUI
 set(IMGUI_DIR ${GITHUB}/imgui)
 include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
-
-# Zstd
-add_library(zstd-lib STATIC IMPORTED)
-if (APPLE)
-    SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION ${GITHUB}/zstd/build/cmake/lib/libzstd.a)
-    string(REPLACE "-lzstd" "" LLVM_SYSTEM_LIBS ${LLVM_SYSTEM_LIBS})
-else()
-    SET_PROPERTY(TARGET zstd-lib PROPERTY IMPORTED_LOCATION ${GITHUB}/zstd/build/cmake/lib/Release/zstd_static.lib)
-endif()
-#message(${LLVM_SYSTEM_LIBS})
 
 add_executable(${PROJECT_NAME}
         main.cpp
@@ -149,56 +108,6 @@ add_executable(${PROJECT_NAME}
         ../runtime/Graphics3D/EngineShapeSection.cpp
         ../runtime/Graphics3D/EngineWorld.cpp
         ../runtime/Audio.cpp
-        ../runtime/Sound/SoftSynth.cpp
-        ../runtime/Sound/SoundGenerator.cpp
-        ../runtime/Sound/Synthesizer.cpp
-        ../runtime/Sound/generators/Instrument.cpp
-        ../runtime/Sound/generators/InstrumentCustom.cpp
-        ../runtime/Sound/generators/MonophonicInstrument.cpp
-        ../runtime/Sound/generators/PolyphonicInstrument.cpp
-        ../runtime/Sound/generators/PolyphonicInstrumentCustom.cpp
-        ../runtime/Sound/generators/Sequencer.cpp
-        ../runtime/Sound/generators/Tone.cpp
-        ../runtime/Sound/generators/ToneCustom.cpp
-        ../runtime/Sound/middleware/WAVWriter.cpp
-        ../runtime/Sound/utils/Envelope.cpp
-        ../runtime/Sound/utils/Waveforms.cpp
-
-        ${SDL2_MIXER_DIR}/src/mixer.c
-        ${SDL2_MIXER_DIR}/src/music.c
-        ${SDL2_MIXER_DIR}/src/utils.c
-        ${SDL2_MIXER_DIR}/src/effect_position.c
-        ${SDL2_MIXER_DIR}/src/effect_stereoreverse.c
-        ${SDL2_MIXER_DIR}/src/effects_internal.c
-        ${SDL2_MIXER_DIR}/src/codecs/load_aiff.c
-        ${SDL2_MIXER_DIR}/src/codecs/load_voc.c
-        ${SDL2_MIXER_DIR}/src/codecs/mp3utils.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_cmd.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_drflac.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_drmp3.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_flac.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_fluidsynth.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_modplug.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_mpg123.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_nativemidi.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_ogg.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_ogg_stb.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_opus.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_timidity.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_wav.c
-        ${SDL2_MIXER_DIR}/src/codecs/music_xmp.c
-        ${SDL2_MIXER_DIR}/src/codecs/native_midi/native_midi_common.c
-        ${SDL2_MIXER_DIR}/src/codecs/native_midi/native_midi_macosx.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/common.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/instrum.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/mix.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/output.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/playmidi.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/readmidi.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/resample.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/tables.c
-        ${SDL2_MIXER_DIR}/src/codecs/timidity/timidity.c
-
         IDE/TextEditor.cpp
         IDE/TextEditor.h
         IDE/Edit.cpp
@@ -289,24 +198,29 @@ add_executable(${PROJECT_NAME}
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}
-            antlr4-runtime
             "-framework OpenGL"
             "-framework Cocoa"
             "-framework Carbon"
             "-framework CoreAudio"
             "-framework CoreVideo"
+            "-framework CoreMIDI"
             "-framework ForceFeedback"
             "-framework Metal"
             "-framework IOKit"
             "-framework GameKit"
             "-framework AudioToolbox"
             "-framework CoreHaptics"
-            zstd-lib
-            ft-lib
-            -lxar -liconv
-            sdl2-runtime
-            assimp-runtime
-            ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
+            antlr4-runtime.a
+            xar
+            iconv
+            ${FluidSynth_LIBRARY}
+            ${SDL2_LIBRARIES}
+            SDL2_mixer
+            freetype
+            ${ASSIMP_LIBRARIES}
+            ${LLD_LIBS}
+            ${LLVM_LIBS}
+            ${LLVM_SYSTEM_LIBS})
 else()
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}
@@ -319,7 +233,7 @@ else()
 endif()
 if (APPLE)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${SDL2_DIR}/libSDL2.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
 endif()
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

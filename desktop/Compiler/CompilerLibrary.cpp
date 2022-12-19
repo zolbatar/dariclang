@@ -168,10 +168,14 @@ void Compiler::SetupLibrary() {
 	AddLibraryCall("MouseState", "kbm_mousestate", Primitive::INT, "");
 
 	// Software synth
-	AddLibraryCall("LoadWAV", "audio_loadwav", Primitive::INT, "S");
-	AddLibraryCall("PlayWAV", "audio_play", Primitive::NONE, "II");
+	AddLibraryCall("LoadSample", "audio_loadwav", Primitive::INT, "S");
+	AddLibraryCall("PlaySample", "audio_play", Primitive::NONE, "II");
+    AddLibraryCall("LoadMusic", "audio_loadmus", Primitive::INT, "S");
+    AddLibraryCall("PlayMusic", "audio_playmusic", Primitive::NONE, "II");
+    AddLibraryCall("StopMusic", "audio_stopmusic", Primitive::NONE, "I");
 	AddLibraryCall("SetVolume", "audio_volume", Primitive::NONE, "IF");
-	AddLibraryCall("Sound", "audio_sound", Primitive::NONE, "IFF");
-	AddLibraryCall("Tone", "audio_tone", Primitive::INT, "S");
-	AddLibraryCall("Envelope", "audio_envelope", Primitive::INT, "IFFFFFI");
+    AddLibraryCall("SetMusicVolume", "music_volume", Primitive::NONE, "F");
+	AddLibraryCall("NoteOn", "audio_noteon", Primitive::NONE, "III");
+    AddLibraryCall("NoteOff", "audio_noteoff", Primitive::NONE, "II");
+    AddLibraryCall("SetBankPreset", "audio_bank", Primitive::NONE, "III");
 }

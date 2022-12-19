@@ -8,12 +8,10 @@
 #include "Compiler/Compiler.h"
 #include "Shared/SourceFile.h"
 #include "../runtime/UI/UISDL.h"
-#include "../runtime/Sound/SoftSynth.h"
 #include "IDE/Edit.h"
 #include "Config/Config.h"
 
 extern "C" void audio_init();
-extern std::shared_ptr<SoftSynth> soft_synth;
 UISDL *ui;
 Config config;
 CompilerOptions options;
@@ -94,8 +92,6 @@ int main(int argc, char *argv[]) {
             options.use_exit_as_end = true;
         }
         options.run = argc == 2;
-        if (options.target == CompileTarget::JIT)
-            soft_synth = std::make_shared<SoftSynth>();
         auto t = std::thread(&RunThread);
         t.detach();
         while (!done) {

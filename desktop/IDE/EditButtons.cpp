@@ -112,10 +112,8 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         if (ImGui::Selectable("Terrain"))
             LoadFile(path + "Terrain.daric");
         ImGui::Separator();
-        if (ImGui::Selectable("Audio Samples"))
+        if (ImGui::Selectable("Music, Audio Samples & Synth"))
             LoadFile(path + "SDLAudio.daric");
-        if (ImGui::Selectable("Software Synthesizer"))
-            LoadFile(path + "Sound.daric");
         ImGui::Separator();
         if (ImGui::Selectable("Greedy Algorithm (Benchmark)"))
             LoadFile(path + "Greedy.daric");
