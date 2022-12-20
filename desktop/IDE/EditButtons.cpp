@@ -1,3 +1,5 @@
+#include <filesystem>
+#include <iostream>
 #include "Edit.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../Compiler/CompilerOptions.h"
@@ -6,6 +8,7 @@ extern void RunThread();
 
 extern std::filesystem::path exe_path;
 extern CompilerOptions options;
+std::string message;
 
 void Edit::SetButtonStyle(int i) {
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
@@ -135,7 +138,7 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         options.file = this->editor_name;
         options.target = CompileTarget::INTERACTIVE;
         options.use_exit_as_end = false;
-        options.optimise = false;
+        options.optimise = true;
         options.run = true;
         auto t = std::thread(&RunThread);
         t.detach();
@@ -151,6 +154,17 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         t.detach();
     }
     ImGui::SameLine();
+    if (ImGui::Button("Create Executable")) {
+        options.file = this->editor_name;
+        options.output_filename = std::filesystem::path(this->editor_name).replace_extension("").generic_string();
+        options.target = CompileTarget::EXE;
+        options.use_exit_as_end = true;
+        options.optimise = true;
+        options.run = false;
+        auto t = std::thread(&RunThread);
+        t.detach();
+    }
+    ImGui::SameLine();
     ImGui::PopStyleColor(3);
     if (dis) ImGui::EndDisabled();
 
@@ -161,5 +175,23 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     }
     ImGui::PopStyleColor(3);
     ImGui::EndChild();
+    ImGui::PopStyleVar();
+
+    if (!message.empty())
+        ImGui::OpenPopup("Message");
+
+    // Messages?
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(8, 8));
+    if (ImGui::BeginPopupModal("Message", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+        ImGui::Text("%s", message.c_str());
+        ImGui::Text("\n\n");
+
+        if (ImGui::Button("Ok", ImVec2(120, 0))) {
+            message = "";
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::SetItemDefaultFocus();
+        ImGui::EndPopup();
+    }
     ImGui::PopStyleVar();
 }

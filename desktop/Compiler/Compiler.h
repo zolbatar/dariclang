@@ -63,7 +63,7 @@ public:
 	static std::vector<std::string> GetAllLibraryCallNames();
 	bool Compile();
 	void Run();
-	void CreateExecutable();
+    std::string CreateExecutable();
 
 private:
 	CompilerOptions options;

@@ -196,7 +196,7 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sou
     globals["~DATAPtr"] = new llvm::GlobalVariable(*Module, TypeInt, false, llvm::GlobalValue::InternalLinkage, llvm::ConstantInt::get(TypeInt, 0), "DATAPtr");
 
     Module->getOrInsertFunction("daric_end", TypeNone);
-    Module->getOrInsertFunction("kbm_escape_pressed", TypeInt);
+    Module->getOrInsertFunction("kbm_escape_pressed", TypeBit);
 
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);
@@ -257,9 +257,9 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sou
     Module->getOrInsertFunction("float_to_string_with", TypeString, TypeFloat, TypeString);
 
     if (!options.use_exit_as_end) {
-        globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeInt, false,
+        globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeBit, false,
                                                              GetLinkage(),
-                                                             llvm::ConstantInt::get(TypeInt, 0),
+                                                             llvm::ConstantInt::get(TypeBit, 0),
                                                              "QuitRequested");
     }
 }

@@ -152,7 +152,7 @@ public:
     ValueType BooleanCOMPLEMENT(llvm::IRBuilder<> *ir, ValueType &t1);
 
     void Run();
-    void CreateExecutable(std::string output_filename);
+    std::string CreateExecutable(std::string output_filename);
 
     llvm::Type *TypeNone = nullptr;
     llvm::Type *TypeBit = nullptr;

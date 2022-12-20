@@ -183,8 +183,8 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
     }
 }
 
-void Compiler::CreateExecutable() {
-    llvm.CreateExecutable(options.output_filename);
+std::string Compiler::CreateExecutable() {
+    return llvm.CreateExecutable(options.output_filename);
 }
 
 void Compiler::Run() {
@@ -210,7 +210,7 @@ void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {
 
 void Compiler::TokenEnd(ParserToken &token) {
     if (!options.use_exit_as_end) {
-        llvm.StoreGlobal("~QuitRequested", GetIR(), llvm.CreateConstantInt(Primitive::INT, 1));
+        llvm.StoreGlobal("~QuitRequested", GetIR(), llvm::ConstantInt::get(llvm.TypeBit, 1));
         DefaultReturn(return_type, token);
 //		CreateAndInsertBB("Post set quit requested", false, token);
     } else {

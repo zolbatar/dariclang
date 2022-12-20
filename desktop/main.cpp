@@ -25,10 +25,12 @@ std::atomic_bool running = false;
 std::filesystem::path exe_path;
 extern Input input;
 extern std::list<CaughtException> errors;
+extern std::atomic_bool escape_pressed;
 
 void RunThread() {
-    running = true;
-    if (ui_started)
+    running.store(true);
+    escape_pressed.store(false);
+    if (ui_started.load())
         ui->Cls();
     input.Clear();
     Instance::ClearStatic();
@@ -38,8 +40,8 @@ void RunThread() {
     if (errors.size() == 0)
         state.ParseCompileAndRun();
     done = true;
-    running = false;
-    if (ui_started)
+    running.store(false);
+    if (ui_started.load())
         ui->Cls();
 }
 
@@ -59,15 +61,15 @@ int main(int argc, char *argv[]) {
     if (argc == 1) {
         // Fire up IDE
         ui = new UISDL();
-//		ui->Start(ui->GetScreenWidth(), ui->GetScreenHeight(), false, false);
-        ui->Start(1280, 1024, true, false);
-
-        // Compiler stuff
-        ui_started = true;
+        if (config.Windowed()) {
+            ui->Start(config.WindowWidth(), config.WindowHeight(), true, false);
+        } else {
+            ui->Start(ui->GetScreenWidth(), ui->GetScreenHeight(), false, false);
+        }
+        std::cout << "UI Started" << std::endl;
+        ui_started.store(true);
 
         Edit edit;
-//		edit.LoadFile("Tester.daric");
-//		edit.LoadFile("BubbleUniverse.daric");
         while (true) {
             if (ui->Render([&]() {
                 const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
@@ -99,9 +101,9 @@ int main(int argc, char *argv[]) {
                 ui = new UISDL();
                 ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
                 start_ui = false;
-                ui_started = true;
+                ui_started.store(true);
             }
-            if (ui_started) {
+            if (ui_started.load()) {
                 if (ui->Render([]() {})) {
                     do_quit();
                 }

@@ -6,7 +6,7 @@
 #include <functional>
 #include <optional>
 #include "SDL.h"
-
+extern std::atomic_bool escape_pressed;
 enum class EventType
 {
     KeyDown,
@@ -35,13 +35,11 @@ public:
     std::string InputLine();
     void Mouse(int *x, int *y, int *state);
 
-    void ClearEscapePressed() { escape_pressed = false; }
-    bool IsEscapePressed() { return escape_pressed; }
-
+    void ClearEscapePressed() { escape_pressed.store(false); }
+    bool IsEscapePressed() { return escape_pressed.load(); }
 private:
     std::queue<char> buffer;
     std::mutex lock;
     std::array<bool, 256> key_pressed;
     std::queue<Event> key_events;
-    bool escape_pressed = false;
 };

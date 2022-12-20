@@ -21,6 +21,7 @@ extern std::filesystem::path exe_path;
 extern Config config;
 
 UISDL::UISDL() {
+    std::cout << "Starting UI initialisation" << std::endl;
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
         std::cout << "SDL initialization failed. SDL Error: " << SDL_GetError() << std::endl;
     }
@@ -121,6 +122,7 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     (void) io;
     io.Fonts->Clear();
 
+    std::cout << "Loading font" << std::endl;
     io.Fonts->AddFontFromFileTTF((exe_path / "Roboto-Regular.ttf").generic_string().c_str(), config.UIFontSize() * dpi_ratio);
     io.FontGlobalScale /= dpi_ratio * 1.0f;
     io.Fonts->Build();
@@ -145,6 +147,7 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
     std::cout << "Setting up Dear ImGui backend" << std::endl;
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
+    std::cout << "Dear ImGui init complete" << std::endl;
 }
 
 bool UISDL::Render(std::function<void()> callback) {

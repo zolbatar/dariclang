@@ -14,7 +14,7 @@ extern size_t screen_height;
 extern size_t screen_flags;
 
 extern "C" void gfx_uicheck() {
-    if (ui_started)
+    if (ui_started.load())
         return;
     std::cout << "This operation requires graphics mode" << std::endl;
     exit(1);
@@ -36,6 +36,7 @@ extern "C" void gfx2d_linewidth(T_F width) {
 }
 
 extern "C" void gfx2d_mode(T_I w, T_I h, T_I flags) {
+    std::cout << "Mode called with " << w << "," << h << "," << flags << std::endl;
     screen_width = w;
     screen_height = h;
     screen_flags = flags;
@@ -48,7 +49,7 @@ extern "C" void gfx2d_mode(T_I w, T_I h, T_I flags) {
     }
 
     // Wait for UI to be initialised
-    while (!ui_started) {
+    while (!ui_started.load()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }

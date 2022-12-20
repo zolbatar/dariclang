@@ -17,6 +17,7 @@ std::vector<Mix_Music *> music;
 
 static fluid_settings_t *settings;
 static fluid_synth_t *synth;
+static fluid_audio_driver_t *adriver;
 
 extern "C" void audio_init() {
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
@@ -24,6 +25,7 @@ extern "C" void audio_init() {
         exit(1);
     }
 
+    std::cout << "Initialising SDL_Mixer" << std::endl;
     int audio_rate = MIX_DEFAULT_FREQUENCY;
     Uint16 audio_format = MIX_DEFAULT_FORMAT;
     int audio_channels = MIX_DEFAULT_CHANNELS;
@@ -41,22 +43,21 @@ extern "C" void audio_init() {
     Mix_AllocateChannels(64);
 
     // Fluidsynth
+    std::cout << "Initialising FluidSynth" << std::endl;
     settings = new_fluid_settings();
     synth = new_fluid_synth(settings);
-    fluid_synth_sfload(synth, "Soundfont/GeneralUser GS MuseScore v1.442.sf2", true);
     fluid_settings_setstr(settings, "audio.driver", "sdl2");
-    fluid_audio_driver_t *adriver = new_fluid_audio_driver(settings, synth);
+    adriver = new_fluid_audio_driver(settings, synth);
+    std::cout << "Audio initialisation complete" << std::endl;
+}
 
-    if (Mix_SetSoundFonts("Soundfont/GeneralUser GS MuseScore v1.442.sf2") == 0) {
+extern "C" void audio_loadsoundfont(T_S font) {
+    fluid_synth_sfload(synth, font, true);
+    if (Mix_SetSoundFonts(font) == 0) {
         printf("Can't open Soundfont file\n");
         exit(1);
     }
-    printf("Soundfonts: %s\n", Mix_GetSoundFonts());
-    Mix_Music *music = Mix_LoadMUS("MIDI/Titanic.mid");
-    if (music == NULL) {
-        printf("Can't open music file\n");
-        exit(1);
-    }
+    printf("Soundfont: %s\n", Mix_GetSoundFonts());
 }
 
 void audio_shutdown() {

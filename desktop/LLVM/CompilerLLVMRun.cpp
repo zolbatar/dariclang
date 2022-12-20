@@ -1,5 +1,6 @@
 #include <thread>
 #include <cstdarg>
+#include <sstream>
 #include <filesystem>
 #include "../Compiler/Compiler.h"
 #include "../JIT/JIT.h"
@@ -29,8 +30,27 @@ extern "C" void print(const char *format, ...) {
     printf("%s", buffer);
 }
 
-void CompilerLLVM::CreateExecutable(std::string output_filename) {
+std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
+    // Debug
+    if (config.OutputLL()) {
+        auto p = "Out.ll";
+        llvm::StringRef filename_post(p);
+        std::error_code EC;
+        llvm::raw_fd_ostream out_post(filename_post, EC);
+        Module.get()->print(out_post, nullptr);
+        out_post.close();
+    }
+
     CreateLLVMPasses();
+
+    if (config.OutputLL()) {
+        auto p = "OutOptimised.ll";
+        llvm::StringRef filename_post(p);
+        std::error_code EC;
+        llvm::raw_fd_ostream out_post(filename_post, EC);
+        Module.get()->print(out_post, nullptr);
+        out_post.close();
+    }
 
     std::string p(output_filename + ".o");
     while (!std::filesystem::exists(p)) {
@@ -117,8 +137,10 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
                      false);
     system(("rm " + p).c_str());
     b = std::filesystem::file_size(output_filename);
-    std::cout << "Executable file '" << output_filename << "' is " << b / 1024 << "KB" << std::endl;
-    exit(0);
+    std::stringstream ss;
+    ss << "Executable file '" << output_filename << "' is " << b / 1024 << "KB";
+    std::cout << ss.str() << std::endl;
+    return ss.str();
 }
 
 void CompilerLLVM::Run() {

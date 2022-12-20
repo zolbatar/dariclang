@@ -12,38 +12,35 @@ llvm::Value *CompilerLLVM::CreateCall(std::string &name,
         return nullptr;
 
     // Check for escape as the end of EVERY call
-    auto v = ir->CreateCall(func, vals);
     if (!options.use_exit_as_end) {
         // We need to check for END at the end of every DEF call
         if (user_function) {
-            auto quit = ir->CreateLoad(TypeInt, globals["~QuitRequested"]);
-            auto test = ir->CreateICmpEQ(quit, llvm::ConstantInt::get(TypeInt, 1));
+            auto quit = ir->CreateLoad(TypeBit, globals["~QuitRequested"]);
             auto block = ir->GetInsertBlock();
             auto block_quit = llvm::BasicBlock::Create(Module->getContext(), "END Quit", this_func);
             auto block_cont = llvm::BasicBlock::Create(Module->getContext(), "END Continue", this_func);
             ir->SetInsertPoint(block);
-            ir->CreateCondBr(test, block_quit, block_cont);
+            ir->CreateCondBr(quit, block_quit, block_cont);
             ir->SetInsertPoint(block_quit);
             DefaultReturn(default_return_type, ir);
             ir->SetInsertPoint(block_cont);
-            return v;
+            return ir->CreateCall(func, vals);
         } else {
             auto key = ir->CreateCall(Module->getFunction("kbm_escape_pressed"));
-            auto quit1 = ir->CreateLoad(TypeInt, globals["~QuitRequested"]);
+            auto quit1 = ir->CreateLoad(TypeBit, globals["~QuitRequested"]);
             auto quit = ir->CreateOr(quit1, key);
-            auto test = ir->CreateICmpEQ(quit, llvm::ConstantInt::get(TypeInt, 1));
             auto block = ir->GetInsertBlock();
             auto block_quit = llvm::BasicBlock::Create(Module->getContext(), "END Quit", this_func);
             auto block_cont = llvm::BasicBlock::Create(Module->getContext(), "END Continue", this_func);
             ir->SetInsertPoint(block);
-            ir->CreateCondBr(test, block_quit, block_cont);
+            ir->CreateCondBr(quit, block_quit, block_cont);
             ir->SetInsertPoint(block_quit);
             DefaultReturn(default_return_type, ir);
             ir->SetInsertPoint(block_cont);
-            return v;
+            return ir->CreateCall(func, vals);
         }
     } else {
-        return v;
+        return ir->CreateCall(func, vals);
     }
 }
 

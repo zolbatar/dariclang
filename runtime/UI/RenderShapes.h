@@ -10,43 +10,20 @@
 void AddTriangleFilledMultiColor(ImDrawList *draw_list, const ImVec2 &a, const ImVec2 &b, const ImVec2 &c, ImU32 col_a,
                                  ImU32 col_b, ImU32 col_c);
 
-enum class RenderShapeType {
-    NONE,
-    CLIPON,
-    CLIPOFF,
-    PIXEL,
-    LINE,
-    RECTANGLE,
-    RECTANGLEFILLED,
-    TRIANGLE,
-    TRIANGLEFILLED,
-    TRIANGLESHADED,
-    CIRCLE,
-    CIRCLEFILLED,
-    TEXT,
-    SPRITE,
-    RENDER
-};
-
 class RenderShape {
 public:
     virtual void AddToList(ImDrawList *draw_list) = 0;
 
-    virtual ~RenderShape() {
-//		std::cout << "Delete:" << (int)type << std::endl;
-    };
-
-protected:
-    RenderShapeType type = RenderShapeType::NONE;
-    bool off_screen = false;
+    virtual ~RenderShape() = default;
 };
 
 class ShapeClipOn : public RenderShape {
 public:
     ShapeClipOn(ImVec2 min, ImVec2 max)
             : min(min), max(max) {
-        type = RenderShapeType::CLIPON;
     };
+
+    ~ShapeClipOn() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->PushClipRect(min, max);
@@ -58,9 +35,9 @@ private:
 
 class ShapeClipOff : public RenderShape {
 public:
-    ShapeClipOff() {
-        type = RenderShapeType::CLIPOFF;
-    };
+    ShapeClipOff() {};
+
+    ~ShapeClipOff() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->PopClipRect();
@@ -71,8 +48,9 @@ class ShapeRender : public RenderShape {
 public:
     ShapeRender(GLuint fb, int w, int h, float dpi_ratio)
             : fb(fb), w(w), h(h), dpi_ratio(dpi_ratio) {
-        type = RenderShapeType::RENDER;
     };
+
+    ~ShapeRender() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddImage((void *) (intptr_t) fb, ImVec2(0.0, 0.0), ImVec2(w, h), ImVec2(0, 1), ImVec2(1, 0));
@@ -88,8 +66,9 @@ class ShapePixel : public RenderShape {
 public:
     ShapePixel(ImVec2 p1, ImVec2 p2, ImU32 col)
             : p1(p1), p2(p2), col(col) {
-        type = RenderShapeType::PIXEL;
     };
+
+    ~ShapePixel() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddRectFilled(p1, p2, col);
@@ -104,8 +83,9 @@ class ShapeLine : public RenderShape {
 public:
     ShapeLine(ImVec2 p1, ImVec2 p2, ImU32 col, float thickness)
             : p1(p1), p2(p2), col(col), thickness(thickness) {
-        type = RenderShapeType::LINE;
     };
+
+    ~ShapeLine() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddLine(p1, p2, col, thickness);
@@ -121,8 +101,9 @@ class ShapeRectangle : public RenderShape {
 public:
     ShapeRectangle(ImVec2 p1, ImVec2 p2, ImU32 col, float thickness)
             : p1(p1), p2(p2), col(col), thickness(thickness) {
-        type = RenderShapeType::RECTANGLE;
     };
+
+    ~ShapeRectangle() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddRect(p1, p2, col, 0.0f, ImDrawFlags_Closed, thickness);
@@ -138,8 +119,9 @@ class ShapeRectangleFilled : public RenderShape {
 public:
     ShapeRectangleFilled(ImVec2 p1, ImVec2 p2, ImU32 col)
             : p1(p1), p2(p2), col(col) {
-        type = RenderShapeType::RECTANGLEFILLED;
     };
+
+    ~ShapeRectangleFilled() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddRectFilled(p1, p2, col, 0.0f, ImDrawFlags_Closed);
@@ -155,8 +137,9 @@ public:
     ShapeTriangle(ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col, float thickness)
             : p1(p1), p2(p2), p3(p3), col(col),
               thickness(thickness) {
-        type = RenderShapeType::TRIANGLE;
     };
+
+    ~ShapeTriangle() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddTriangle(p1, p2, p3, col, thickness);
@@ -172,8 +155,9 @@ class ShapeTriangleFilled : public RenderShape {
 public:
     ShapeTriangleFilled(ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col)
             : p1(p1), p2(p2), p3(p3), col(col) {
-        type = RenderShapeType::TRIANGLEFILLED;
     };
+
+    ~ShapeTriangleFilled() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddTriangleFilled(p1, p2, p3, col);
@@ -188,8 +172,9 @@ class ShapeTriangleShaded : public RenderShape {
 public:
     ShapeTriangleShaded(ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col1, ImU32 col2, ImU32 col3)
             : p1(p1), p2(p2), p3(p3), col1(col1), col2(col2), col3(col3) {
-        type = RenderShapeType::TRIANGLESHADED;
     };
+
+    ~ShapeTriangleShaded() {}
 
     void AddToList(ImDrawList *draw_list) override {
         AddTriangleFilledMultiColor(draw_list, p1, p2, p3, col1, col2, col3);
@@ -204,8 +189,9 @@ class ShapeCircle : public RenderShape {
 public:
     ShapeCircle(ImVec2 p, float radius, ImU32 col, float thickness)
             : p(p), radius(radius), col(col), thickness(thickness) {
-        type = RenderShapeType::CIRCLE;
     };
+
+    ~ShapeCircle() {}
 
     void AddToList(ImDrawList *draw_list) override {
         int sections = radius / 3.0f;
@@ -224,8 +210,9 @@ class ShapeCircleFilled : public RenderShape {
 public:
     ShapeCircleFilled(ImVec2 p, float radius, ImU32 col)
             : p(p), radius(radius), col(col) {
-        type = RenderShapeType::CIRCLEFILLED;
     };
+
+    ~ShapeCircleFilled() {}
 
     void AddToList(ImDrawList *draw_list) override {
         int sections = radius / 3.0f;
@@ -244,22 +231,12 @@ public:
     ShapeText(ImFont *font, float size, ImVec2 p1, ImVec2 p2, ImU32 col, std::string text)
             : font(font), size(size), p1(p1), p2(p2), text(text), col(col) {
         assert(text.length() > 0);
-        type = RenderShapeType::TEXT;
     };
+
+    ~ShapeText() {}
 
     void AddToList(ImDrawList *draw_list) override {
         draw_list->AddText(font, size, p1, col, text.c_str());
-    }
-
-    void scroll(float scroll_height) {
-        p1.y -= scroll_height;
-        p2.y -= scroll_height;
-        off_screen = p2.y < 0.0;
-    }
-
-    std::string get_char() {
-        assert(text.length() > 0);
-        return text.substr(0, 1);
     }
 
 private:
@@ -277,7 +254,6 @@ public:
                 ImVec2 uvs[4],
                 float scale, float angle)
             : bank(bank), scale(scale), angle(angle) {
-        type = RenderShapeType::SPRITE;
         this->pos[0] = pos[0];
         this->pos[1] = pos[1];
         this->pos[2] = pos[2];
@@ -287,6 +263,8 @@ public:
         this->uvs[2] = uvs[2];
         this->uvs[3] = uvs[3];
     };
+
+    ~ShapeSprite() {}
 
     void AddToList(ImDrawList *draw_list) override {
         auto l = (void *) (intptr_t) bank->id;

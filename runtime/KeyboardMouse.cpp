@@ -32,10 +32,8 @@ extern "C" T_I kbm_keydown(T_I key) {
     return v;
 }
 
-extern "C" T_I kbm_escape_pressed() {
-    if (!ui_started)
-        return false;
-    return input.IsEscapePressed();
+extern "C" bool kbm_escape_pressed() {
+    return escape_pressed.load();
 }
 
 extern "C" T_I kbm_get() {

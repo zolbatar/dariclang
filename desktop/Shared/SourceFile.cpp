@@ -7,6 +7,7 @@ extern std::atomic_bool ui_started;
 extern Console console;
 extern UISDL *ui;
 extern Input input;
+extern std::string message;
 
 void SourceFile::MoveToTop(std::string file) {
 //	std::cout << "Moving to top:" << file << std::endl;
@@ -75,16 +76,16 @@ bool SourceFile::ParseCompileAndRun() {
 			t1 = std::chrono::steady_clock::now();
 			compiler.Run();
 		} else {
-			compiler.CreateExecutable();
-			auto t2 = std::chrono::steady_clock::now();
+            message = compiler.CreateExecutable();
+            auto t2 = std::chrono::steady_clock::now();
 			auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
-			std::cout << "Compile finished in " << time_span.count() << "ms. Press a key to quit.";
+//			std::cout << "Compile finished in " << time_span.count() << "ms. Press a key to quit.\n";
 			return true;
 		}
 	} else {
         return false;
     }
-	if (ui_started) {
+	if (ui_started.load()) {
 		auto t2 = std::chrono::steady_clock::now();
 		auto time_span = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 		console.SetColour(0xFFFFFFFF);

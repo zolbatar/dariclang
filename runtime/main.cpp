@@ -24,7 +24,7 @@ extern "C" void Implicit();
 
 static void RunThread() {
     Implicit();
-    done = true;
+    done.store(true);
 }
 
 void do_quit() {
@@ -34,18 +34,19 @@ void do_quit() {
 
 int main(int argc, char *argv[]) {
     exe_path = std::filesystem::path{argv[0]}.parent_path();
-    config.Load();
+    //config.Load();
     audio_init();
     auto t = std::thread(&RunThread);
     t.detach();
-    while (!done) {
-        if (start_ui) {
+    while (!done.load()) {
+        if (start_ui.load()) {
             ui = new UISDL();
             ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
-            start_ui = false;
-            ui_started = true;
+            start_ui.store(false);
+            ui_started.store(true);
         }
-        if (ui_started) {
+        if (ui_started.load()) {
+            std::cout << "2" << std::endl;
             if (ui->Render([]() {})) {
                 do_quit();
             }

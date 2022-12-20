@@ -97,7 +97,7 @@ private:
 	std::vector<std::unique_ptr<RenderShape>> shapesBackBuffer;
 
 	// 3D
-	const bool msaa = false;
+	const bool msaa = true;
 	const int msaa_levels = 4;
 	GLuint fbo3D;
 	GLuint fbo3D_msaa;

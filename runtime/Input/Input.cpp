@@ -7,6 +7,7 @@ Input input;
 extern int get_clock();
 extern Console console;
 extern std::atomic_bool ui_started;
+std::atomic_bool escape_pressed = false;
 
 char Input::Get() {
 	while (buffer.empty()) {
@@ -67,7 +68,7 @@ void Input::ProcessEvent(SDL_Event &event) {
 		lock.unlock();
 		key_pressed[e.code] = true;
 		if (e.code == SDL_SCANCODE_ESCAPE) {
-			escape_pressed = true;
+			escape_pressed.store(true);
 		}
 		break;
 	}

@@ -30,6 +30,10 @@ void Console::Setup(int w, int h, float dpiRatio, int sx, int sy, bool banked) {
     ImGuiIO &io = ImGui::GetIO();
     font = io.Fonts->AddFontFromFileTTF((exe_path / config.MonoFont()).generic_string().c_str(),
                                         size * dpiRatio);
+    if (font == NULL) {
+        std::cout << "Console font '" + (exe_path / config.MonoFont()).generic_string() + "' can't be found" << std::endl;
+        exit(1);
+    }
 
     SetColour(ImGui::GetColorU32(IM_COL32(255, 255, 255, 255)));
     SetBGColour(ImGui::GetColorU32(IM_COL32(0x0, 0x0, 0x0, 255)));
