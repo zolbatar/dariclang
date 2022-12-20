@@ -44,25 +44,22 @@ add_library(DaricRuntime STATIC
         UI/Console/Console.cpp
         UI/Sprite.cpp
         UI/Text.cpp
-
         Audio.cpp
-
+        Config/Config.cpp
         Graphics3D.cpp
         Graphics3D/EngineWorld.cpp
         Graphics3D/EngineShapeSection.cpp
         Graphics3D/EngineShape.cpp
         Graphics3D/EngineOpenGL3SendObject.cpp
         Graphics3D/EngineOpenGL3.cpp
-
         ${IMGUI_DIR}/imgui_draw.cpp
         ${IMGUI_DIR}/imgui_tables.cpp
         ${IMGUI_DIR}/imgui_widgets.cpp
         ${IMGUI_DIR}/imgui.cpp
+        ${IMGUI_DIR}/misc/freetype/imgui_freetype.cpp
         ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
-
         Input/Input.cpp
-
         KeyboardMouse.cpp
         FontsText.cpp
         Sprites.cpp

@@ -4,9 +4,11 @@
 #include <filesystem>
 #include "UI/UISDL.h"
 #include "Input/Input.h"
+#include "Config/Config.h"
 
 UISDL *ui = nullptr;
 extern "C" void audio_init();
+Config config;
 
 std::atomic_bool done = false;
 std::atomic_bool start_ui = false;
@@ -32,6 +34,7 @@ void do_quit() {
 
 int main(int argc, char *argv[]) {
     exe_path = std::filesystem::path{argv[0]}.parent_path();
+    config.Load();
     audio_init();
     auto t = std::thread(&RunThread);
     t.detach();

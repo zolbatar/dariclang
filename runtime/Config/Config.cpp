@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include "Config.h"
-#include "../Library/json.hpp"
+#include "json.hpp"
 
 using json = nlohmann::json;
 

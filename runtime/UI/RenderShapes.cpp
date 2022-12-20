@@ -41,7 +41,7 @@ void UISDL::RenderShapes() {
     shapes_lock.lock();
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
     if (mode == Mode::CLASSIC) {
-        // std::cout << "Rendering " << shapesBackBuffer.size() << " shapes" << std::endl;
+        //std::cout << "Rendering " << shapesBackBuffer.size() << " shapes" << std::endl;
         for (auto it = shapesBackBuffer.begin(); it != shapesBackBuffer.end(); ++it) {
             it->get()->AddToList(draw_list);
         }

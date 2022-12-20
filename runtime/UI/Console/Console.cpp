@@ -2,7 +2,7 @@
 #include <filesystem>
 #include <chrono>
 #include "Console.h"
-#include "../../../desktop/Config/Config.h"
+#include "../../Config/Config.h"
 
 extern std::filesystem::path exe_path;
 extern Config config;

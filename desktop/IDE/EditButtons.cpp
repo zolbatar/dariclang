@@ -80,6 +80,8 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         if (ImGui::Selectable("Welcome Tape"))
             LoadFile(path + "Welcome.daric");
         ImGui::Separator();
+        if (ImGui::Selectable("2D Primitives"))
+            LoadFile(path + "Graphics2d.daric");
         if (ImGui::Selectable("Bubble Universe"))
             LoadFile(path + "BubbleUniverse.daric");
         if (ImGui::Selectable("Clock"))

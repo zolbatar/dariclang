@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 if (APPLE)
-    #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
     #set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
 set(CMAKE_CXX_STANDARD 20)
@@ -107,6 +107,7 @@ add_executable(${PROJECT_NAME}
         ../runtime/Graphics3D/EngineShapeSection.cpp
         ../runtime/Graphics3D/EngineWorld.cpp
         ../runtime/Audio.cpp
+        ../runtime/Config/Config.cpp
         IDE/TextEditor.cpp
         IDE/TextEditor.h
         IDE/Edit.cpp
@@ -168,6 +169,7 @@ add_executable(${PROJECT_NAME}
         Parser/Tokens/ParserFOR.cpp
         Parser/Tokens/ParserCASE.cpp
         Parser/Tokens/ParserDATA.cpp
+        Parser/Tokens/ParserINPUT.cpp
         Shared/Shared.h
         Shared/Shared.cpp
         Shared/SourceFile.cpp
@@ -193,7 +195,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricVisitor.cpp
         Library/json.hpp
         IDE/EditButtons.cpp
-        Config/Config.cpp Parser/Tokens/ParserINPUT.cpp Compiler/CompilerInput.cpp)
+        Compiler/CompilerInput.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             ${CONAN_LIBS}
@@ -233,6 +235,9 @@ endif()
 if (APPLE)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2_mixer.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libfreetype.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${FluidSynth_LIBRARY} /Users/daryl/Shared/Daric/mac/)
 endif()
 
 get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)

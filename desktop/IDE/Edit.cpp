@@ -5,7 +5,7 @@
 #include <map>
 #include "Edit.h"
 #include "../../runtime/UI/UISDL.h"
-#include "../Config/Config.h"
+#include "../../runtime/Config/Config.h"
 #include "../Exception/Exception.h"
 
 extern std::filesystem::path exe_path;

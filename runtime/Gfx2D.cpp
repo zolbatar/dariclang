@@ -41,6 +41,12 @@ extern "C" void gfx2d_mode(T_I w, T_I h, T_I flags) {
     screen_flags = flags;
     start_ui = true;
 
+    if (flags & 2) {
+        ui->BankedOn();
+    } else {
+        ui->BankedOff();
+    }
+
     // Wait for UI to be initialised
     while (!ui_started) {
         std::this_thread::sleep_for(std::chrono::milliseconds(100));

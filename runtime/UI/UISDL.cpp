@@ -9,7 +9,7 @@
 
 #include "stb_image.h"
 #include "Lodepng.h"
-#include "../../desktop/Config/Config.h"
+#include "../Config/Config.h"
 
 size_t last_sprite_index = 0;
 extern Console console;
@@ -68,6 +68,11 @@ void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
         desktop_screen_height = h;
     }
     mode = banked ? Mode::BANKED : Mode::CLASSIC;
+    if (mode == Mode::CLASSIC) {
+        std::cout << "Classic rendering mode" << std::endl;
+    } else {
+        std::cout << "Banked rendering mode" << std::endl;
+    }
 
     // Decide GL+GLSL versions
     std::cout << "Setting up OpenGL version" << std::endl;

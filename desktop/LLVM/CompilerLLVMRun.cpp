@@ -11,11 +11,13 @@
 #include "llvm/ADT/Triple.h"
 #include "llvm/CodeGen/CommandFlags.h"
 #include "llvm/Target/TargetOptions.h"
-#include "../Config/Config.h"
+#include "../../runtime/Config/Config.h"
+#include "../../runtime/UI/UISDL.h"
 
 extern std::filesystem::path exe_path;
 extern std::string getCPUArch();
 extern Config config;
+extern UISDL *ui;
 
 extern "C" void print(const char *format, ...) {
     char buffer[512];
@@ -64,8 +66,12 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-lSystem");
     args.push_back("-lDaricRuntime");
     args.push_back("-lSDL2");
+    args.push_back("-lSDL2_mixer");
+    args.push_back("-lfluidsynth");
     args.push_back("-lassimp");
-    args.push_back("-lzlibstatic");
+    args.push_back("-lfreetype");
+    args.push_back("-lz");
+    //args.push_back("-lzlibstatic");
     args.push_back("-liconv");
 
     // Frameworks (on Mac)
@@ -79,6 +85,8 @@ void CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("CoreAudio");
     args.push_back("-framework");
     args.push_back("CoreVideo");
+    args.push_back("-framework");
+    args.push_back("CoreMidi");
     args.push_back("-framework");
     args.push_back("ForceFeedback");
     args.push_back("-framework");
@@ -140,5 +148,7 @@ void CompilerLLVM::Run() {
     Module = nullptr;
     Context = nullptr;
     jit.run();
+    ui->BankedOff();
+    ui->Cls();
     Strings_Summary();
 }

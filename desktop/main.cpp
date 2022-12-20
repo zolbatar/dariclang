@@ -9,7 +9,7 @@
 #include "Shared/SourceFile.h"
 #include "../runtime/UI/UISDL.h"
 #include "IDE/Edit.h"
-#include "Config/Config.h"
+#include "../runtime/Config/Config.h"
 
 extern "C" void audio_init();
 UISDL *ui;
