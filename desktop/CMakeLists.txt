@@ -165,7 +165,7 @@ add_executable(${PROJECT_NAME}
             iconv
             glib-2.0
             fluidsynth
-            antlr4_static
+            antlr4-runtime
             Freetype::Freetype
             SDL2::SDL2main
             SDL2::SDL2-static
