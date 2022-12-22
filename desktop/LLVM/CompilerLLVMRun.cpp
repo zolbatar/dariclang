@@ -123,7 +123,7 @@ std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
     // Mac platform stuff
     args.push_back("-platform_version");
     args.push_back("macos");
-    args.push_back("12.0.0");
+    args.push_back("11.0");
     args.push_back("0.0.0");
 
     // Arch

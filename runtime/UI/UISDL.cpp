@@ -22,11 +22,13 @@ extern Config config;
 
 UISDL::UISDL() {
     std::cout << "Starting UI initialisation" << std::endl;
-    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "SDL initialization failed. SDL Error: " << SDL_GetError() << std::endl;
+        exit(1);
     }
 
     float ddpi, hdpi, vdpi;
+    std::cout << "Getting display DPI" << std::endl;
     if (SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi) != 0) {
         std::cout << "ERROR: Failed to obtain DPI information for display 0: \n" << SDL_GetError() << std::endl;
         exit(1);
@@ -63,7 +65,7 @@ void UISDL::BankedOff() {
     Flip(true);
 }
 
-void UISDL::Start(size_t w, size_t h, bool windowed, bool banked) {
+void UISDL::Start(int w, int h, bool windowed, bool banked) {
     if (w != -1 && h != -1) {
         desktop_screen_width = w;
         desktop_screen_height = h;
@@ -372,6 +374,7 @@ void UISDL::SpriteActions() {
                 case SpriteState::_DELETE: {
                     glDeleteTextures(1, &it->id);
                     it->state = SpriteState::DEAD;
+                    break;
                 }
                 case SpriteState::GRAB: {
                     GLuint image_texture;

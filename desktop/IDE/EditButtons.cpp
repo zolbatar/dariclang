@@ -154,7 +154,7 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         t.detach();
     }
     ImGui::SameLine();
-    if (ImGui::Button("Create Executable")) {
+/*    if (ImGui::Button("Create Executable")) {
         options.file = this->editor_name;
         options.output_filename = std::filesystem::path(this->editor_name).replace_extension("").generic_string();
         options.target = CompileTarget::EXE;
@@ -164,7 +164,7 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         auto t = std::thread(&RunThread);
         t.detach();
     }
-    ImGui::SameLine();
+    ImGui::SameLine();*/
     ImGui::PopStyleColor(3);
     if (dis) ImGui::EndDisabled();
 

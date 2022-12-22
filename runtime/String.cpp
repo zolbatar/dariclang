@@ -103,7 +103,7 @@ extern "C" T_S chrs(T_I v) {
 extern "C" T_I instr(T_S string, T_S substring, T_I start) {
     auto s1 = std::string(string);
     auto s2 = std::string(substring);
-    if (start >= s1.length())
+    if (static_cast<size_t>(start) >= s1.length())
         return 0;
     int v = 0;
     auto r = s1.find(s2, start);

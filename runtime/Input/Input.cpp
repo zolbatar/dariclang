@@ -83,7 +83,7 @@ void Input::ProcessEvent(SDL_Event &event) {
 		key_events.push(std::move(e));
 		lock.unlock();
 		key_pressed[e.code] = false;
-		if (sym.sym >= 32 && sym.sym < 127 || sym.sym == 13 || sym.sym == 8) {
+		if ((sym.sym >= 32 && sym.sym < 127) || sym.sym == 13 || sym.sym == 8) {
 			buffer.push(sym.sym);
 		}
 		break;

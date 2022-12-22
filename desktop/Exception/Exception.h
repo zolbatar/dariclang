@@ -29,7 +29,7 @@ public:
             std::runtime_error(error), type(type), error(error), filename(filename), line_number(line_number),
             char_position(char_position) {};
 
-    const char *what() const throw() {
+    const char *what() const throw() override {
         return error.c_str();
     }
 

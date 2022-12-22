@@ -46,7 +46,6 @@ int main(int argc, char *argv[]) {
             ui_started.store(true);
         }
         if (ui_started.load()) {
-            std::cout << "2" << std::endl;
             if (ui->Render([]() {})) {
                 do_quit();
             }

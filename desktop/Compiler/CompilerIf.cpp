@@ -5,7 +5,7 @@ llvm::Value *Compiler::IntToBitConditional(llvm::Value *value) {
 }
 
 void Compiler::TokenIf(ParserToken &token) {
-    auto bc = CreateAndInsertBB("IF Single Line", true, token);
+    CreateAndInsertBB("IF Single Line", true, token);
     auto value_type = CompileExpression(token.children[0]);
     auto t = Primitive::INT;
     llvm.AutoConversion(GetIR(), value_type, t);

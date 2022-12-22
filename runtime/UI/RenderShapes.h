@@ -47,7 +47,7 @@ public:
 class ShapeRender : public RenderShape {
 public:
     ShapeRender(GLuint fb, int w, int h, float dpi_ratio)
-            : fb(fb), w(w), h(h), dpi_ratio(dpi_ratio) {
+            : fb(fb), w(w), h(h) {
     };
 
     ~ShapeRender() {}
@@ -59,13 +59,12 @@ public:
 private:
     GLuint fb;
     int w, h;
-    float dpi_ratio;
 };
 
 class ShapePixel : public RenderShape {
 public:
     ShapePixel(ImVec2 p1, ImVec2 p2, ImU32 col)
-            : p1(p1), p2(p2), col(col) {
+            : col(col), p1(p1), p2(p2) {
     };
 
     ~ShapePixel() {}
@@ -82,7 +81,7 @@ private:
 class ShapeLine : public RenderShape {
 public:
     ShapeLine(ImVec2 p1, ImVec2 p2, ImU32 col, float thickness)
-            : p1(p1), p2(p2), col(col), thickness(thickness) {
+            : col(col), p1(p1), p2(p2), thickness(thickness) {
     };
 
     ~ShapeLine() {}
@@ -100,7 +99,7 @@ private:
 class ShapeRectangle : public RenderShape {
 public:
     ShapeRectangle(ImVec2 p1, ImVec2 p2, ImU32 col, float thickness)
-            : p1(p1), p2(p2), col(col), thickness(thickness) {
+            : col(col), p1(p1), p2(p2), thickness(thickness) {
     };
 
     ~ShapeRectangle() {}
@@ -118,7 +117,7 @@ private:
 class ShapeRectangleFilled : public RenderShape {
 public:
     ShapeRectangleFilled(ImVec2 p1, ImVec2 p2, ImU32 col)
-            : p1(p1), p2(p2), col(col) {
+            : col(col), p1(p1), p2(p2) {
     };
 
     ~ShapeRectangleFilled() {}
@@ -135,8 +134,7 @@ private:
 class ShapeTriangle : public RenderShape {
 public:
     ShapeTriangle(ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col, float thickness)
-            : p1(p1), p2(p2), p3(p3), col(col),
-              thickness(thickness) {
+            : col(col), p1(p1), p2(p2), p3(p3), thickness(thickness) {
     };
 
     ~ShapeTriangle() {}
@@ -154,7 +152,7 @@ private:
 class ShapeTriangleFilled : public RenderShape {
 public:
     ShapeTriangleFilled(ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col)
-            : p1(p1), p2(p2), p3(p3), col(col) {
+            : col(col), p1(p1), p2(p2), p3(p3) {
     };
 
     ~ShapeTriangleFilled() {}
@@ -171,7 +169,7 @@ private:
 class ShapeTriangleShaded : public RenderShape {
 public:
     ShapeTriangleShaded(ImVec2 p1, ImVec2 p2, ImVec2 p3, ImU32 col1, ImU32 col2, ImU32 col3)
-            : p1(p1), p2(p2), p3(p3), col1(col1), col2(col2), col3(col3) {
+            : col1(col1), col2(col2), col3(col3), p1(p1), p2(p2), p3(p3) {
     };
 
     ~ShapeTriangleShaded() {}
@@ -188,7 +186,7 @@ private:
 class ShapeCircle : public RenderShape {
 public:
     ShapeCircle(ImVec2 p, float radius, ImU32 col, float thickness)
-            : p(p), radius(radius), col(col), thickness(thickness) {
+            : col(col), p(p), radius(radius), thickness(thickness) {
     };
 
     ~ShapeCircle() {}
@@ -209,7 +207,7 @@ private:
 class ShapeCircleFilled : public RenderShape {
 public:
     ShapeCircleFilled(ImVec2 p, float radius, ImU32 col)
-            : p(p), radius(radius), col(col) {
+            : col(col), p(p), radius(radius) {
     };
 
     ~ShapeCircleFilled() {}
@@ -229,7 +227,7 @@ private:
 class ShapeText : public RenderShape {
 public:
     ShapeText(ImFont *font, float size, ImVec2 p1, ImVec2 p2, ImU32 col, std::string text)
-            : font(font), size(size), p1(p1), p2(p2), text(text), col(col) {
+            : font(font), text(text), col(col), p1(p1), p2(p2), size(size) {
         assert(text.length() > 0);
     };
 
@@ -251,9 +249,8 @@ class ShapeSprite : public RenderShape {
 public:
     ShapeSprite(SpriteBank *bank,
                 ImVec2 pos[4],
-                ImVec2 uvs[4],
-                float scale, float angle)
-            : bank(bank), scale(scale), angle(angle) {
+                ImVec2 uvs[4])
+            : bank(bank) {
         this->pos[0] = pos[0];
         this->pos[1] = pos[1];
         this->pos[2] = pos[2];
@@ -274,5 +271,4 @@ public:
 private:
     SpriteBank *bank;
     ImVec2 pos[4], uvs[4];
-    float scale, angle;
 };

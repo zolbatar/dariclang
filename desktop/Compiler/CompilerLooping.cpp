@@ -90,7 +90,7 @@ void Compiler::TokenFor(ParserToken &t) {
     llvm.AutoConversion(GetIR(), to, ref->GetDataType());
     llvm.AutoConversion(GetIR(), from, ref->GetDataType());
     llvm.AutoConversion(GetIR(), step, ref->GetDataType());
-    if (ref->GetDataType() != to.type && ref->GetDataType() != from.type || ref->GetDataType() != step.type) {
+    if (ref->GetDataType() != to.type || ref->GetDataType() != from.type || ref->GetDataType() != step.type) {
         RaiseException("In a FOR loop, all values must the same type", t);
     }
 

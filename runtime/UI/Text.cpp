@@ -14,9 +14,6 @@ void Text::PrintCharacter(ImFont *font, float size, char c, float *cursor_x, flo
 
     // Size
     auto siz = font->CalcTextSizeA(size, FLT_MAX, 0.0f, s.c_str());
-    if (siz.x == 0 && c != '\n') {
-        auto siz2 = font->CalcTextSizeA(size, FLT_MAX, 0.0f, s.c_str());
-    }
 
     // Draw
     switch (c) {

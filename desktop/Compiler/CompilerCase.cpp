@@ -1,8 +1,7 @@
 #include "Compiler.h"
 
 void Compiler::TokenCase(ParserToken &token) {
-
-    auto bc = CreateAndInsertBB("CASE", true, token);
+    CreateAndInsertBB("CASE", true, token);
     auto endBB = CreateBB("CASE terminate", token);
 
     // Expression to match against
@@ -10,12 +9,12 @@ void Compiler::TokenCase(ParserToken &token) {
 
     // A case is a sequence of IF statements basically with an else clause
     bool otherwise = false;
-    for (auto i = 1; i < token.children.size(); i++) {
+    for (size_t i = 1; i < token.children.size(); i++) {
         auto entry = token.children[i];
         if (entry.type == ParserTokenType::WHEN) {
 
             // Loop through each WHEN in turn
-            for (auto j = 1; j < entry.children.size(); j++) {
+            for (size_t j = 1; j < entry.children.size(); j++) {
                 auto whenComp = CreateAndInsertBB("WHEN comparison", true, token);
                 auto whenBody = CreateBB("WHEN body", token);
                 auto whenBodyEnd = CreateBB("WHEN body not true", token);

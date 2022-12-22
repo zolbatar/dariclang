@@ -177,7 +177,7 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("StopMusic", "audio_stopmusic", Primitive::NONE, "I");
     AddLibraryCall("SetVolume", "audio_volume", Primitive::NONE, "IF");
     AddLibraryCall("SetMusicVolume", "music_volume", Primitive::NONE, "F");
-    AddLibraryCall("NoteOn", "audio_noteon", Primitive::NONE, "III");
-    AddLibraryCall("NoteOff", "audio_noteoff", Primitive::NONE, "II");
-    AddLibraryCall("SetBankPreset", "audio_bank", Primitive::NONE, "III");
+//    AddLibraryCall("NoteOn", "audio_noteon", Primitive::NONE, "III");
+//    AddLibraryCall("NoteOff", "audio_noteoff", Primitive::NONE, "II");
+//    AddLibraryCall("SetBankPreset", "audio_bank", Primitive::NONE, "III");
 }

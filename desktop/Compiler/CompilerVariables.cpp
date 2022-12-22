@@ -64,8 +64,6 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
 
 void Compiler::TokenGlobal(ParserToken &token) {
     if (token.scope != Scope::GLOBAL) return;
-    if (token.line == 20)
-        int a = 1;
     GenericVariable(token, Scope::GLOBAL);
 }
 

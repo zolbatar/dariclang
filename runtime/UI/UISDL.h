@@ -34,7 +34,7 @@ public:
 	UISDL();
 	~UISDL();
 
-	void Start(size_t w, size_t h, bool windowed, bool banked);
+	void Start(int w, int h, bool windowed, bool banked);
 	void BankedOn();
 	void BankedOff();
 	bool Render(std::function<void()> callback);

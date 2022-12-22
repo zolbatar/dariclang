@@ -56,7 +56,7 @@ struct LibraryFunc {
 class Compiler {
 public:
 	Compiler(SourceFileData &state, std::list<Parser> &parsers, CompilerOptions options)
-		: state(state), options(options), parsers(parsers) {
+		: options(options), state(state), parsers(parsers) {
 	}
 
 	static void SetupLibrary();

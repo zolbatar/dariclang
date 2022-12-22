@@ -21,7 +21,7 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 		if (start < 0)
 			start = 0;
 		int64_t end = (int64_t)offendingSymbol->getStopIndex() + line_length_scan;
-		if (end > stream->size())
+		if (static_cast<size_t>(end) > stream->size())
 			end = stream->size() - 1;
 		antlr4::misc::Interval interval(static_cast<size_t>(start), static_cast<size_t>(end));
 		auto ee = stream->getText(interval);
@@ -38,7 +38,7 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 		}
 
 		// Now scan for end of line
-		for (auto i = 0; i < ee.size(); i++) {
+		for (size_t i = 0; i < ee.size(); i++) {
 			if (ee[i] == '\n') {
 				ee = ee.substr(0, i);
 				break;

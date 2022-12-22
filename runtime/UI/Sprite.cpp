@@ -56,7 +56,7 @@ int Sprites::GrabSprite(int x, int y, int w, int h) {
 void Sprites::DeleteSprite(int handle) {
     ui->GetSpriteLock()->lock();
     auto sprite = sprites.find(handle);
-    for (auto i = 0; i < sprite->second.banks.size(); i++) {
+    for (size_t i = 0; i < sprite->second.banks.size(); i++) {
         sprite->second.banks[i].state = SpriteState::_DELETE;
     }
     ui->GetSpriteLock()->unlock();
@@ -74,7 +74,7 @@ bool Sprites::DrawSprite(int handle, int bank, double sx, double sy, double rot,
     auto s = &sprite->second;
 
     // Does bank exist?
-    if (bank >= s->banks.size()) {
+    if (static_cast<size_t>(bank) >= s->banks.size()) {
         ui->GetSpriteLock()->unlock();
         return false;
     }

@@ -118,7 +118,7 @@ extern "C" T_I gfx3d_loadmesh(T_S file) {
     // Create one of our own objects to store all this in
     Shape shape;
 
-    for (auto i = 0; i < scene->mNumMeshes; i++) {
+    for (unsigned i = 0; i < scene->mNumMeshes; i++) {
         auto m = scene->mMeshes[i];
 
         // Material
@@ -139,7 +139,7 @@ extern "C" T_I gfx3d_loadmesh(T_S file) {
         auto ss = shape.CreateShapeSection();
 
         // Add vertices
-        for (auto j = 0; j < m->mNumVertices; j++) {
+        for (unsigned j = 0; j < m->mNumVertices; j++) {
             auto v = m->mVertices[j];
             PosColorVertex pcv;
             pcv.position.x = v.x;
@@ -153,7 +153,7 @@ extern "C" T_I gfx3d_loadmesh(T_S file) {
         }
 
         // Add Faces
-        for (auto j = 0; j < m->mNumFaces; j++) {
+        for (unsigned j = 0; j < m->mNumFaces; j++) {
             auto f = m->mFaces[j];
             if (f.mNumIndices == 2) {
                 // Don't want

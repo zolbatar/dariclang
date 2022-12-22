@@ -19,7 +19,7 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
 
     // Build members
     std::vector<StructField> fields;
-    for (int i = 1; i < context->IDENTIFIER().size(); i++) {
+    for (size_t i = 1; i < context->IDENTIFIER().size(); i++) {
         StructField sf{
                 .name = context->IDENTIFIER(i)->getText(),
                 .type =std::any_cast<TypeOrStruct>(visit(context->typeOrStruct(i - 1)))
@@ -67,7 +67,7 @@ std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {
     r->SetStructName(context->IDENTIFIER(1)->getText());
 
     // Dimensions
-    for (auto i = 0; i < context->expression().size(); i++) {
+    for (size_t i = 0; i < context->expression().size(); i++) {
         auto pse = std::any_cast<ParserToken>(visit(context->expression(i)));
         r->GetIndices().push_back(std::move(pse));
     }
@@ -82,7 +82,7 @@ std::any Parser::visitStructInstance(DaricParser::StructInstanceContext *context
     r->SetStructName(context->IDENTIFIER(1)->getText());
 
     // Parameters
-    for (auto i = 0; i < context->expression().size(); i++) {
+    for (size_t i = 0; i < context->expression().size(); i++) {
         auto psp = std::any_cast<ParserToken>(visit(context->expression(i)));
         psp.identifier =  context->IDENTIFIER(i+2)->getText();
         ps.children.push_back(std::move(psp));

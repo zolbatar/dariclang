@@ -43,12 +43,12 @@ extern "C" void audio_init() {
     Mix_AllocateChannels(64);
 
     // Fluidsynth
-    std::cout << "Initialising FluidSynth" << std::endl;
+/*    std::cout << "Initialising FluidSynth" << std::endl;
     settings = new_fluid_settings();
     synth = new_fluid_synth(settings);
     fluid_settings_setstr(settings, "audio.driver", "sdl2");
     adriver = new_fluid_audio_driver(settings, synth);
-    std::cout << "Audio initialisation complete" << std::endl;
+    std::cout << "Audio initialisation complete" << std::endl;*/
 }
 
 extern "C" void audio_loadsoundfont(T_S font) {
@@ -69,6 +69,7 @@ extern "C" T_I audio_loadwav(T_S filename) {
     auto audio = Mix_LoadWAV(filename);
     if (audio == nullptr) {
         printf("Can't load audio file '%s'\n", filename);
+        printf("Reason: [%s].\n", Mix_GetError());
         exit(1);
     }
     samples.push_back(audio);
@@ -79,6 +80,7 @@ extern "C" T_I audio_loadmus(T_S filename) {
     auto audio = Mix_LoadMUS(filename);
     if (audio == nullptr) {
         printf("Can't load music file '%s'\n", filename);
+        printf("Reason: [%s].\n", Mix_GetError());
         exit(1);
     }
     music.push_back(audio);

@@ -15,7 +15,7 @@ void JIT::run() {
 	auto jit = llvm::orc::LLLazyJITBuilder()
 		.setJITTargetMachineBuilder(TheTriple)
 //            .setNumCompileThreads(4)
-		.setLazyCompileFailureAddr(llvm::orc::ExecutorAddr((uint64_t)&handleLazyCompileFailure))
+		.setLazyCompileFailureAddr(llvm::JITTargetAddress(&handleLazyCompileFailure))
 		.create();
 //    auto jit = llvm::orc::LLJITBuilder().setNumCompileThreads(4).create();
 	if (!jit) {
@@ -40,7 +40,7 @@ void JIT::run() {
 	// Try and find the Implicit function, if fails then compilation likely failed
 	try {
 		auto proc_start = JIT->lookup("Implicit");
-		auto entry = llvm::jitTargetAddressToFunction<void (*)()>(proc_start->getValue());
+		auto entry = llvm::jitTargetAddressToFunction<void (*)()>(proc_start->getAddress());
 		entry();
 	}
 	catch (const std::exception &ex) {

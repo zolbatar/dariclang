@@ -14,6 +14,7 @@ enum class InstanceType {
 
 class Instance {
 public:
+    virtual ~Instance() = default;
 	static void ClearLocals(CompilerLLVM &llvm);
 	static bool Exists(std::string name);
 	static std::shared_ptr<Instance> FindInstance(std::string name);

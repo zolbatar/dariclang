@@ -34,7 +34,7 @@ extern "C" T_I text_loadfont(T_S filename, T_F size) {
     } while (ui->IsFontRequestActive());
     auto index = io.Fonts->Fonts.size() - 1;
     loaded_fonts.insert(std::make_pair(altered_filename, index));
-    if (loaded_fonts_size.size() < index + 1) {
+    if (loaded_fonts_size.size() < static_cast<size_t>(index) + 1) {
         loaded_fonts_size.resize(index + 1);
     }
     loaded_fonts_size[index] = size;

@@ -116,7 +116,7 @@ extern "C" T_I fileio_list_files(T_S folder) {
 }
 
 extern "C" T_S fileio_get_filename(T_I idx) {
-    if (idx < 0 || idx >= files.size()) {
+    if (idx < 0 || static_cast<size_t>(idx) >= files.size()) {
         return 0;
     }
     auto m = (char *) malloc(files[idx].length() + 1);

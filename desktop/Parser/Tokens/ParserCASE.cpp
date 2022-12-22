@@ -8,7 +8,7 @@ std::any Parser::visitCase(DaricParser::CaseContext *context) {
     ps.children.push_back(from);
 
     // Now do all WHENs
-    for (auto i = 0; i < context->when().size(); i++) {
+    for (size_t i = 0; i < context->when().size(); i++) {
         auto when = std::any_cast<ParserToken>(visit(context->when(i)));
         ps.children.push_back(when);
     }

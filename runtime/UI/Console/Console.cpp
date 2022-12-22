@@ -41,7 +41,7 @@ void Console::Setup(int w, int h, float dpiRatio, int sx, int sy, bool banked) {
 }
 
 void Console::Cls() {
-    for (size_t i = 0; i < charsAcross * charsDown; i++) {
+    for (auto i = 0; i < charsAcross * charsDown; i++) {
         screenText[i] = ' ';
         screenColours[i] = colour;
         bgColours[i] = bgColour;
@@ -123,14 +123,14 @@ void Console::MoveCursorToNextLine() {
 void Console::Scroll() {
     cursorY--;
 
-    for (size_t i = 0; i < charsAcross * (charsDown - 1); i++) {
+    for (auto i = 0; i < charsAcross * (charsDown - 1); i++) {
         screenText[i] = screenText[i + charsAcross];
         screenColours[i] = screenColours[i + charsAcross];
         bgColours[i] = bgColours[i + charsAcross];
     }
 
     auto e = charsAcross * charsDown;
-    for (size_t i = 0; i < charsAcross; i++) {
+    for (auto i = 0; i < charsAcross; i++) {
         screenText[e - i - 1] = ' ';
         bgColours[e - i - 1] = bgColour;
     }

@@ -35,7 +35,7 @@ void Compiler::TokenStructInstance(ParserToken &t) {
     for (auto &init: t.children) {
         // Is this a valid field?
         bool found = false;
-        for (auto i = 0; i < si->fields.size(); i++) {
+        for (size_t i = 0; i < si->fields.size(); i++) {
             if (si->fields[i].name == init.identifier) {
                 auto value = CompileExpression(init);
                 llvm.AutoConversion(GetIR(), value, si->fields[i].type);

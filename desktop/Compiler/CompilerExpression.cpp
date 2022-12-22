@@ -180,6 +180,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 default:
                     assert(0);
             }
+            break;
         }
         case ParserTokenType::NOT:
         case ParserTokenType::COMPLEMENT:
@@ -240,6 +241,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 default:
                     assert(0);
             }
+            break;
         }
         case ParserTokenType::TRUE: {
             ValueType vt;

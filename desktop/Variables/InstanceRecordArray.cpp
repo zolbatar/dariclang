@@ -27,9 +27,9 @@ InstanceRecordArray::InstanceRecordArray(const std::string &name,
                                          Scope scope,
                                          size_t no_indices,
                                          CompilerLLVM &llvm,
-                                         llvm::IRBuilder<> *ir) : struct_name(struct_name),
-                                                                  struct_type(struct_type),
-                                                                  no_indices(no_indices) {
+                                         llvm::IRBuilder<> *ir) : no_indices(no_indices),
+                                                                  struct_name(struct_name),
+                                                                  struct_type(struct_type) {
     this->name = name;
     this->scope = scope;
 }

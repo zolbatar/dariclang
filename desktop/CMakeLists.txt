@@ -1,81 +1,43 @@
 cmake_minimum_required(VERSION 3.20)
 if (APPLE)
     #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-    set(CMAKE_OSX_ARCHITECTURES "x86_64")
+    #set(CMAKE_OSX_ARCHITECTURES "x86_64")
     #set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
 set(CMAKE_CXX_STANDARD 20)
 project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
-
-#add_compile_definitions(MUSIC_MID_FLUIDSYNTH=1)
-
 EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
 message(STATUS "Architecture: ${ARCHITECTURE}")
 message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
-
-include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
-conan_basic_setup()
-
-if (APPLE)
-    set(GITHUB /Users/daryl/Github)
-else()
-    set(GITHUB C:/Users/d_dud/GitHub)
-endif()
-
-# Antlr4
-if (APPLE)
-    include_directories(/usr/local/include/antlr4-runtime)
-else()
-endif()
-
-# IMGUI
-set(IMGUI_DIR ${GITHUB}/imgui)
-include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
-
-# Packages
-set(FREETYPE_DIR /usr/local)
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;*.dylib")
-link_directories(/usr/local/lib)
-find_package(zstd REQUIRED)
+message(STATUS "Library path: ${CMAKE_LIBRARY_PATH}")
+message(STATUS "Prefix path: ${CMAKE_PREFIX_PATH}")
+include_directories(${VCPKG_INSTALLED_DIR}/daric/include)
+link_directories(${VCPKG_INSTALLED_DIR}/daric/lib)
+find_package(antlr4-runtime CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
-include_directories(${FREETYPE_INCLUDE_DIRS})
-find_package(SDL2 REQUIRED)
-set(FluidSynth_PATH ${GITHUB}/fluidsynth-sans-glib)
-set(FluidSynth_INCLUDE_PATH ${FluidSynth_PATH}/include)
-set(FluidSynth_LIBRARY /Users/daryl/GitHub/fluidsynth-sans-glib/src/libfluidsynth.a)
-include_directories(${FluidSynth_INCLUDE_PATH})
-find_package(SDL2_mixer REQUIRED)
-find_package(assimp REQUIRED)
-find_package(LLVM REQUIRED CONFIG)
-llvm_map_components_to_libnames(LLVM_LIBS support core)
-message(STATUS "Found LLVM ${LLVM_PACKAGE_VERSION}")
-message(STATUS "Using LLVMConfig.cmake in: ${LLVM_DIR}")
-execute_process(COMMAND llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-execute_process(COMMAND llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-set(LLD_LIBS -llldCommon -llldELF -llldMachO)
-message(STATUS ${LLVM_LIBS})
-message(STATUS ${LLVM_SYSTEM_LIBS})
-message(STATUS ${LLD_LIBS})
-
-# Fluidsynth
-#set(FLUIDSYNTH_DIR ${GITHUB}/fluidsynth)
-#include_directories(${FLUIDSYNTH_DIR}/include)
-
-# IMGUI
-set(IMGUI_DIR ${GITHUB}/imgui)
-include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+find_package(SDL2 CONFIG REQUIRED)
+find_package(SDL2_mixer CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
+include_directories(${VCPKG_INSTALLED_DIR}/daric/include/antlr4-runtime)
+list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
+message(status ${LLVM_CMAKE_DIR})
+find_package(LLVM CONFIG REQUIRED)
+include(HandleLLVMOptions)
+add_definitions(${LLVM_DEFINITIONS})
+# Find the libraries that correspond to the LLVM components that we wish to use
+#llvm_map_components_to_libnames(LLVM_LIBS Support Core IRReader OrcJIT AArch64 X86 LTO)
+execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/daric/tools/llvm/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/daric/tools/llvm/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+set(LLD_LIBS lldCommon lldELF lldMachO)
+message(STATUS "LLVM Libs: ${LLVM_LIBS}")
+message(STATUS "LLVM System Libs: ${LLVM_SYSTEM_LIBS}")
+message(STATUS "LLD Libs: ${LLD_LIBS}")
 
 add_executable(${PROJECT_NAME}
         main.cpp
-        ${IMGUI_DIR}/imgui_demo.cpp
-        ${IMGUI_DIR}/imgui_draw.cpp
-        ${IMGUI_DIR}/imgui_tables.cpp
-        ${IMGUI_DIR}/imgui_widgets.cpp
-        ${IMGUI_DIR}/imgui.cpp
-        ${IMGUI_DIR}/misc/freetype/imgui_freetype.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
         ../runtime/KeyboardMouse.cpp
         ../runtime/FontsText.cpp
         ../runtime/FileIO.cpp
@@ -196,58 +158,33 @@ add_executable(${PROJECT_NAME}
         Library/json.hpp
         IDE/EditButtons.cpp
         Compiler/CompilerInput.cpp)
-if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${CONAN_LIBS}
             "-framework OpenGL"
-            "-framework Cocoa"
-            "-framework Carbon"
-            "-framework CoreAudio"
-            "-framework CoreVideo"
-            "-framework CoreMIDI"
-            "-framework ForceFeedback"
-            "-framework Metal"
-            "-framework IOKit"
-            "-framework GameKit"
-            "-framework AudioToolbox"
-            "-framework CoreHaptics"
-            antlr4-runtime.a
             xar
+            intl
             iconv
-            ${FluidSynth_LIBRARY}
-            ${SDL2_LIBRARIES}
-            SDL2_mixer
-            freetype
-            ${ASSIMP_LIBRARIES}
+            glib-2.0
+            fluidsynth
+            antlr4_static
+            Freetype::Freetype
+            SDL2::SDL2main
+            SDL2::SDL2-static
+            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
+            modplug
+            imgui::imgui
+            assimp::assimp
+            glm::glm
             ${LLD_LIBS}
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
-else()
-    target_link_libraries(${PROJECT_NAME} PRIVATE
-            ${CONAN_LIBS}
-            antlr4-runtime
-            psapi.lib shell32.lib ole32.lib uuid.lib advapi32.lib
-            zstd-lib
-            sdl2-runtime
-            assimp-runtime
-            ${LLD_LIBS} ${LLVM_LIBS} ${LLVM_SYSTEM_LIBS})
-endif()
 if (APPLE)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2_mixer.a /Users/daryl/Shared/Daric/mac/)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libfreetype.a /Users/daryl/Shared/Daric/mac/)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${FluidSynth_LIBRARY} /Users/daryl/Shared/Daric/mac/)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libassimp.a /Users/daryl/Shared/Daric/mac/)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2_mixer.a /Users/daryl/Shared/Daric/mac/)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libfreetype.a /Users/daryl/Shared/Daric/mac/)
+#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${FluidSynth_LIBRARY} /Users/daryl/Shared/Daric/mac/)
 endif()
-
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach (dir ${dirs})
-    message(STATUS "include='${dir}'")
-endforeach ()
-get_property(dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY LINK_DIRECTORIES)
-foreach (dir ${dirs})
-    message(STATUS "lib='${dir}'")
-endforeach ()
 
 install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION mac

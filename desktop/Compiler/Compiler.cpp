@@ -10,7 +10,9 @@ extern std::list<CaughtException> errors;
 //#define PERF 1
 
 bool Compiler::Compile() {
+#ifdef PERF
     auto t1 = std::chrono::steady_clock::now();
+#endif
     switch (options.target) {
         case CompileTarget::EXE:
             std::cout << "Target: Standalone executable (via object file)" << std::endl;
@@ -59,7 +61,7 @@ bool Compiler::Compile() {
         // Do actual compile
         auto idx = 0;
         for (auto &p: parsers) {
-            compiling_main_file = idx == parsers.size() - 1;
+            compiling_main_file = static_cast<size_t>(idx) == parsers.size() - 1;
             this->option_base = false;
             CompileStatements(p.GetStatements());
             idx++;

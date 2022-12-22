@@ -28,7 +28,7 @@ void UISDL::Flip(bool userSpecified) {
         shapes.clear();
         shapes.swap(shapesBackBuffer);
         //std::cout << "s1: " << shapes.size() << " : " << shapesBackBuffer.size() << std::endl;
-     }
+    }
 
     flip_requested = true;
 
@@ -204,5 +204,5 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
             };
 
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeSprite(sb, pos, uvs, rot, scale));
+    shapesBackBuffer.emplace_back(new ShapeSprite(sb, pos, uvs));
 }
