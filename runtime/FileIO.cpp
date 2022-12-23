@@ -108,7 +108,6 @@ extern "C" DLLEXTERN T_I fileio_list_files(T_S folder) {
     try {
         for (auto const &dir_entry: std::filesystem::directory_iterator{sandbox}) {
             files.push_back(dir_entry.path().generic_string());
-            std::cout << dir_entry.path().generic_string() << std::endl;
         }
     } catch (std::exception &ex) {
         std::cout << "Directory '" << folder << "' does not exist.\n";

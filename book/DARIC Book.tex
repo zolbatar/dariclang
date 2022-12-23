@@ -30,8 +30,8 @@
 %\usepackage{tgpagella}
 \usepackage{charter}
 
-\title{DARIC}
-\author{Daryl Dudey}
+\title{Daric}
+\author{Daryl (@thezolbatar)}
 \date{February 2022}
 
 \fancyhf{} % clear all header and footers
@@ -65,7 +65,7 @@
 
 \newcommand{\example}[1]{\par{\fcolorbox{white}{vlightgray}{\texttt{\parbox{11.5cm}{#1}}}}\vskip0.1cm}
 \newcommand{\out}[1] {\par{\fcolorbox{black}{vvlightgray}{\texttt{\parbox{11.5cm}{#1}}}}\vskip0.1cm}
-\newcommand{\DARIC}{DARIC}
+\newcommand{\Daric}{Daric}
 \newcommand{\oldti}{\textsuperscript{\tiny{\textit{int}}}}
 \newcommand{\oldtr}{\textsuperscript{\tiny{\textit{real}}}}
 \newcommand{\ti}{\%}
@@ -196,11 +196,11 @@
 	\includegraphics[width=8cm]{_Logo.png}\\
     \vskip1cm
 	\setlength{\fboxrule}{1pt}
-	\fbox{\includegraphics[height=11cm]{DARICFrontCover.jpeg}}
+	\fbox{\includegraphics[height=11cm]{DaricFrontCover.jpeg}}
     \vskip1cm
-    \huge{Daryl Dudey}
+    \huge{Daryl (@thezolbatar)}
     \vskip0.25cm
-    \normalsize{\emph{The creator of \DARIC{} and OS/D}}
+    \normalsize{\emph{The creator of Daric}}
 \end{titlepage}
 \begin{acknowledgements}
 \par{My wife for not murdering me while writing the book. I'd disappear into my shed writing until late at night and she only occasionally complained.}
@@ -208,13 +208,13 @@
 \begin{center}
 \emph{\url{https://unltddream.co}}
 \end{center}
-\par{I want to thank x, y z for testing \DARIC{}.}
+\par{I want to thank x, y z for testing \Daric{}.}
 \end{acknowledgements}
 
 \tableofcontents
 
 \chapter{Introduction}
-\section{What is \DARIC?}
+\section{What is \Daric?}
 
 \subsection{The microcomputer revolution}
 \par{I'm old. Well, not really, but my kids certainly think so. I grew up in the 1980s during the microcomputer revolution. It started in the US, with Altair the 8800, but it wasn't until the trio of the Commodore PET 2001, Apple II and TRS-80 Model 1 that it really started to become mainstream.}
@@ -226,7 +226,7 @@
 \end{center}
 \par{In school playgrounds, arguments ensued about whether the Sinclar ZX Spectrum was king because of the vast games library, or whether the Commodore 64 with it's superior graphics and sound was better. I owned a \emph{Speccie} so clearly it was the better machine! There were many other manufacturers: Amstrad, Acorn, Atari, Mattel, Oric etc.}
 \par{This meant that there was an explosion of \emph{computer} games rather than \emph{video} games. There is some debate over the size of the ZX Spectrum games catalogue, but 23,000 seems an appropriate figure. Some were amazing, some were utterly awful.}
-\subsection{Why is this relevant to \DARIC?}
+\subsection{Why is this relevant to \Daric?}
 \par{These early machines didn't boot from floppy disk drives, or hard drives. Floppy disk(ette) drives were expensive and relatively slow. As a result these machines booted from ROM. Unlike MS-DOS or CP/M, almost every machine booted to a BASIC prompt.}
 \par{For many, this prompt was simply a way to \textbf{LOAD} or \textbf{CHAIN} their favourite game from cassette or (for the more \emph{middle class} kids) floppy disk.}
 \par{However, for the more curious this flashing prompt held exciting potential. It wasn't uncommon for microcomputers to have a substantial manual in the box, which included a section on programming. After all, many parents were persuaded to buy these computers on the promise of helping their children learn - or conned in many cases!}
@@ -241,7 +241,7 @@
 \includegraphics[height=3cm]{Photo 08-02-2022, 11 46 37.jpg}\\
 \scriptsize{\emph{A photo of my own reference manuals.}}
 \end{center}
-\par{This is where the \DARIC{} story really begins. The \emph{Beeb} as it's affectionally known, is a very capable machine for programming. The BASIC supported structured programming, with procedures, local variables and inline macro assembler. It supported plugin ROMs, similar to cartridges. These ROMs enabled additional applications and programming languages to be available immediately from power-on, such as LISP, FORTH etc.}
+\par{This is where the \Daric{} story really begins. The \emph{Beeb} as it's affectionally known, is a very capable machine for programming. The BASIC supported structured programming, with procedures, local variables and inline macro assembler. It supported plugin ROMs, similar to cartridges. These ROMs enabled additional applications and programming languages to be available immediately from power-on, such as LISP, FORTH etc.}
 \par{Inspired by these languages and INPUT magazine (of which I owned every issue), I started to write my own programming language. I named it ASPL - Advanced Structured Programming Language. Arguably the first two words were not appropriate, but I had visions of grandeur.}
 
 \subsection{Compilation, interpreting and machine code}
@@ -259,9 +259,9 @@
 \par{The original version was written in C, using the open-source Flex \& Bison for parsing source. By the third major rewrite it was running on my Linux machine for faster development, by the 5th iteration it was using Antlr for source parsing, and it was written in C++.}
 \par{Around this time the name change occurred, and I started to use LLVM - a compiler library for outputting native machine code. There were a few iterations before settling on V14, the version it is now. A command line compiler that outputs an executable file.}
 
-\section{\DARIC}
-\par{\DARIC{} is cross-platform, runs on Windows, macOS and Linux.}
-\par{\DARIC{} is built on the following technology:}
+\section{\Daric}
+\par{\Daric{} is cross-platform, runs on Windows, macOS and Linux.}
+\par{\Daric{} is built on the following technology:}
 \begin{itemize}
 \item Written in modern \CC - safe, performant and cross-platform.
 \item LLVM - outputs X64 or ARM64 machine code. 
@@ -271,24 +271,24 @@
 \item Dear ImGui - UI library.
 \item Assimp - 3D asset loading.
 \end{itemize}
-\par{All of this technology is hidden behind a simple BASIC syntax, the \DARIC{} compiler does all the hard work making it all happen.}
+\par{All of this technology is hidden behind a simple BASIC syntax, the \Daric{} compiler does all the hard work making it all happen.}
 
 \section{Who is the sloth?}
 A very capable designer friend of mine created the logo, the sloth is chilled, happy and in no rush.
 \begin{center}
-\includegraphics[height=3cm]{2021-DARIC-SECONDARYLOGO-CIRCULARICON-BLACK.png}\\
-\scriptsize{\emph{The \DARIC{} mascot!}}
+\includegraphics[height=3cm]{2021-Daric-SECONDARYLOGO-CIRCULARICON-BLACK.png}\\
+\scriptsize{\emph{The \Daric{} mascot!}}
 \end{center}
-\chapter{Getting and running \DARIC}
+\chapter{Getting and running \Daric}
 
-\section{Downloading \DARIC}
+\section{Downloading \Daric}
 
 \section{The \emph{Welcome Tape}}
 
-\chapter{Learning \DARIC}
+\chapter{Learning \Daric}
 
 \section{Conventions}
-\par{There are a some conventions from here on. A block of \DARIC{} code looks like this:}
+\par{There are a some conventions from here on. A block of \Daric{} code looks like this:}
 \example{
 	PRINT 1543.45+SQR(4.6)-12.42
 }
@@ -298,7 +298,7 @@ A very capable designer friend of mine created the logo, the sloth is chilled, h
 }
 
 \section{The PRINT statement}
-\par{Let's learn some \DARIC{}! There is something called 'Hello, World!' which is a simple program to introduce a programming language. Type the following into a text file using an editor of your choice:}
+\par{Let's learn some \Daric{}! There is something called 'Hello, World!' which is a simple program to introduce a programming language. Type the following into a text file using an editor of your choice:}
 \example{
 	PRINT "Hello, world!"
 }
@@ -324,13 +324,13 @@ A very capable designer friend of mine created the logo, the sloth is chilled, h
 \par{Secondly, we are printing three different literal values. This is covered in the next section.}
 
 \section{Integers, floats and strings}
-\par{A literal is a constant, exact value, like the number 100 or the text "string". \DARIC{} supports three different types:}
+\par{A literal is a constant, exact value, like the number 100 or the text "string". \Daric{} supports three different types:}
 \begin{itemize}
-\item Integers - these are whole numbers, no decimal/fractional part. In \DARIC{}, they are represented by 64bit integers.
-\item Floats - these are real numbers, and can represent numbers with a decimal part. in \DARIC{}, these are represented by double precision 64bit floats. 
+\item Integers - these are whole numbers, no decimal/fractional part. In \Daric{}, they are represented by 64bit integers.
+\item Floats - these are real numbers, and can represent numbers with a decimal part. in \Daric{}, these are represented by double precision 64bit floats. 
 \item Strings - defined as a \emph{string} of zero or more ASCII characters.
 \end{itemize}
-\par{Some programming languages support many more, but \DARIC{} keeps it simple.}
+\par{Some programming languages support many more, but \Daric{} keeps it simple.}
 \par{It's possible to do lots of things with literals without ever storing the result, such as calculations:}
 \example{
 	PRINT 1543.45+SQR(4.6)-12.42
@@ -563,7 +563,7 @@ Each vertex (corner) can be a different colour and the fill pixel colours are bl
 {FACE}{Face}{face}
 {Statement creating a triangle face.}
 {\opo{}vertex1\ti,vertex2\ti,vertex3\ti\oti{colour}\opc{}}
-{This statement creates a 3D face and adds to the list of faces to create a shape with. The first three parameters \emph{vertex1,vertex2,vertex3} specify each index of the three vertices (corners) - remember that in \DARIC, indices always start from 1 and not 0. The optional \emph{colour} parameter gives the face an RGB colour typically created with the \emph{COL} function. If no colour is assigned, then a gouraud shaded face will be created, i.e. a face which is smooth shaded between the colours at the three vertices.}
+{This statement creates a 3D face and adds to the list of faces to create a shape with. The first three parameters \emph{vertex1,vertex2,vertex3} specify each index of the three vertices (corners) - remember that in \Daric, indices always start from 1 and not 0. The optional \emph{colour} parameter gives the face an RGB colour typically created with the \emph{COL} function. If no colour is assigned, then a gouraud shaded face will be created, i.e. a face which is smooth shaded between the colours at the three vertices.}
 {FACE 4, 2, 1}
 {}
 
