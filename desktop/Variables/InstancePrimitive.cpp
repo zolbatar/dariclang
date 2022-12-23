@@ -31,7 +31,7 @@ InstancePrimitive::InstancePrimitive(const std::string &name,
     this->is_ref = is_ref;
 }
 
-void InstancePrimitive::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+bool InstancePrimitive::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     switch (scope) {
         case Scope::GLOBAL:
             llvm.StoreGlobal(name, ir, v);
@@ -42,6 +42,7 @@ void InstancePrimitive::Set(llvm::Value *v, llvm::Value *idx, size_t field_index
         default:
             assert(0);
     }
+    return true;
 }
 
 void InstancePrimitive::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {

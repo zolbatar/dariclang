@@ -29,8 +29,9 @@ InstancePrimitiveArray::InstancePrimitiveArray(const std::string &name,
     this->scope = scope;
 }
 
-void InstancePrimitiveArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+bool InstancePrimitiveArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     ir->CreateStore(v, idx);
+    return true;
 }
 
 void InstancePrimitiveArray::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {

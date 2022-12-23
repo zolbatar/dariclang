@@ -34,7 +34,7 @@ InstanceRecordArray::InstanceRecordArray(const std::string &name,
     this->scope = scope;
 }
 
-void InstanceRecordArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+bool InstanceRecordArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     llvm::Value *gep;
     if (scope == Scope::LOCAL) {
         gep = ir->CreateStructGEP(struct_type, idx, field_index);
@@ -42,6 +42,7 @@ void InstanceRecordArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_ind
         gep = ir->CreateStructGEP(struct_type, idx, field_index);
     }
     ir->CreateStore(v, gep);
+    return true;
 }
 
 void InstanceRecordArray::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {

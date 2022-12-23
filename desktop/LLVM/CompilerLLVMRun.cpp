@@ -170,7 +170,5 @@ void CompilerLLVM::Run() {
     Module = nullptr;
     Context = nullptr;
     jit.run();
-    ui->BankedOff();
-    ui->Cls();
     Strings_Summary();
 }
