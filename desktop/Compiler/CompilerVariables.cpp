@@ -132,12 +132,12 @@ void Compiler::CreateLocalDimensions(Reference *var, Primitive type1, llvm::Type
     }
 
     // Store dimensions (list of dimensions)
-    auto la = llvm.CreateLocalArrayStage1(var->GetName(), GetIR(), var->IndicesCount(), type1);
+    auto la = llvm.CreateLocalArrayStage1(var->GetName(), GetIR(), var->IndicesCount(), Primitive::INT);
     llvm::Value *size = llvm::ConstantInt::get(llvm.TypeInt, 1);
     size_t i = 0;
     for (auto &iv: indices) {
         size = GetIR()->CreateMul(size, iv);
-        auto ptr = GetIR()->CreateGEP(type2, la, {llvm::ConstantInt::get(llvm.TypeInt, i)});
+        auto ptr = GetIR()->CreateGEP(llvm.TypeInt, la, {llvm::ConstantInt::get(llvm.TypeInt, i)});
         GetIR()->CreateStore(size, ptr);
         i++;
     }
