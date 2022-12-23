@@ -83,6 +83,9 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
         if (ImGui::Selectable("Welcome Tape"))
             LoadFile(path + "Welcome.daric");
         ImGui::Separator();
+        if (ImGui::Selectable("Darch (Zarch style graphics)"))
+            LoadFile("Darch/Darch.daric");
+        ImGui::Separator();
         if (ImGui::Selectable("2D Primitives"))
             LoadFile(path + "Graphics2d.daric");
         if (ImGui::Selectable("Bubble Universe"))
