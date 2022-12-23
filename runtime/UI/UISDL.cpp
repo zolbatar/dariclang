@@ -27,6 +27,14 @@ UISDL::UISDL() {
         exit(1);
     }
 
+    if (config.MSAALevels() == 0) {
+        msaa = false;
+        msaa_levels = 1;
+    } else {
+        msaa = true;
+        msaa_levels = config.MSAALevels();
+    }
+
     float ddpi, hdpi, vdpi;
     std::cout << "Getting display DPI" << std::endl;
     if (SDL_GetDisplayDPI(0, &ddpi, &hdpi, &vdpi) != 0) {

@@ -17,6 +17,7 @@ public:
     void Render(const ImGuiViewport *main_viewport);
     bool LoadFile(std::string filename);
     void ChooseFile(const ImGuiViewport *main_viewport);
+    void ChooseFileToSave(const ImGuiViewport *main_viewport);
 
 private:
     void EditButtons(const ImGuiViewport *main_viewport);

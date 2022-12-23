@@ -36,6 +36,8 @@ void Config::Load() {
             window_w = it.value();
         } else if (it.key() == "window_h") {
             window_h = it.value();
+        } else if (it.key() == "msaa_levels") {
+            msaa_levels = it.value();
         } else {
             std::cout << "Error parsing Config.json" << std::endl;
             exit(1);

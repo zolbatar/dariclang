@@ -74,6 +74,7 @@ int main(int argc, char *argv[]) {
                 if (!running) {
                     edit.Render(main_viewport);
                     edit.ChooseFile(main_viewport);
+                    edit.ChooseFileToSave(main_viewport);
                 }
             })) {
                 do_quit();

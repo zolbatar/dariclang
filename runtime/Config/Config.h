@@ -26,6 +26,8 @@ public:
 
     int WindowHeight() { return window_h; }
 
+    int MSAALevels() { return msaa_levels; }
+
 private:
     std::string ui_font = "Roboto-Regular.ttf";
     std::string serif_font = "RobotoSerif-Regular.ttf";
@@ -37,4 +39,5 @@ private:
     bool windowed = false;
     int window_w = 1280;
     int window_h = 1024;
+    int msaa_levels = 0;
 };

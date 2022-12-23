@@ -25,8 +25,46 @@ void Edit::ChooseFile(const ImGuiViewport *main_viewport) {
         // action if OK
         if (ImGuiFileDialog::Instance()->IsOk()) {
             std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-            std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+            //std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
             Edit::LoadFile(filePathName);
+        }
+
+        // close
+        ImGuiFileDialog::Instance()->Close();
+    }
+}
+
+void Edit::ChooseFileToSave(const ImGuiViewport *main_viewport) {
+    ImGui::SetNextWindowPos(main_viewport->GetCenter(), ImGuiCond_Appearing, ImVec2(0.5f, 0.5f));
+    if (ImGuiFileDialog::Instance()->Display("ChooseFileDlgKeySave",
+                                             ImGuiWindowFlags_None,
+                                             ImVec2(main_viewport->Size.x * 0.8, main_viewport->Size.y * 0.8))) {
+
+        // action if OK
+        if (ImGuiFileDialog::Instance()->IsOk()) {
+            std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+            std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+
+            // Update to new saved name
+            {
+                auto nn = editor_files.extract(editor_name);
+                nn.key() = filePathName;
+                editor_files.insert(std::move(nn));
+            }
+            {
+                auto nn = editors.extract(editor_name);
+                nn.key() = filePathName;
+                editors.insert(std::move(nn));
+            }
+
+            // And do actual save
+            std::ofstream t(filePathName);
+            if (t.good()) {
+                auto ss = editors[filePathName].GetText();
+                t.write(ss.c_str(), ss.length());
+                editor_files[filePathName].unsaved_changes = false;
+                editor_files[filePathName].is_file_based = true;
+            }
         }
 
         // close
@@ -53,14 +91,26 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     ImGui::SameLine();
 
     // Save
-    bool dis = editor == nullptr || !editor_files[editor_name].unsaved_changes;
+    bool new_file = !editor_name.empty() && !editor_files[editor_name].is_file_based;
+    bool dis = !new_file && (editor == nullptr || !editor_files[editor_name].unsaved_changes); // Any changes?
     if (dis) ImGui::BeginDisabled();
     if (ImGui::Button("Save")) {
-        std::ofstream t(editor_name);
-        if (t.good()) {
-            auto ss = editors[editor_name].GetText();
-            t.write(ss.c_str(), ss.length());
-            editor_files[editor_name].unsaved_changes = false;
+        if (new_file) {
+            ImGuiFileDialog::Instance()->OpenDialog(
+                    "ChooseFileDlgKeySave",
+                    "Choose File",
+                    ".daric",
+                    ".",
+                    1,
+                    nullptr,
+                    ImGuiFileDialogFlags_Modal);
+        } else {
+            std::ofstream t(editor_name);
+            if (t.good()) {
+                auto ss = editors[editor_name].GetText();
+                t.write(ss.c_str(), ss.length());
+                editor_files[editor_name].unsaved_changes = false;
+            }
         }
     }
     ImGui::SameLine();
