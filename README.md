@@ -11,12 +11,13 @@ Daric is in active development, the Mac version is the main dev version. There w
 There is a modern HTML5 online version compiling to WebAssembly and using WebGL (at www.dariclang.com). This however uses an older grammar so it's not exactly cross compatible right now.
 
 * A modern BASIC dialect.
-* Can be run either in a JIT, compiled to an executable and in future with a kind-of REPL prompt.
+* Can be run either in a JIT or compiled to an executable. There is a simple editor which will be expanded out to have more IDE functionality in the future.
 * Standard library:
   * 2D - line drawing, circle, etc. Either renders immediately, or using back buffer flipping.
   * 3D - hardware accelerated engine, using OpenGL3 and shaders to render.
   * Sound, a soft synthesizer based on https://github.com/airloaf/VSSynth. VERY EXPERIMENTAL
   * Simple TIME$ function and a low and high precision timer.
+  * And more (fill this in later)
 
 The following examples are in the repo:
 
