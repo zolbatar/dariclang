@@ -42,16 +42,16 @@ Running
 
 There are currently two ways to run code:
 
-1. Using the JIT, this is the preferred way to get code running.
+1. Using the JIT, this is the preferred way to get code running. Either through the VERY simple editor, or from the command line. 
 2. Create a standalone executable - this is more intended for distribution. There are no additional runtime files needed, just the 
-executable.
+executable. THIS CURRENTLY IS A WORK IN PROGRESS AND MAY NOT WORK AT ALL.
 
 Mac
 ---
 
-To run the standard test file, extract the ZIP and run something like this:
+You MUST run this from the command line/terminal for now. You must ALSO run from the root of the extacted directory, this will be fixed in a later release.
 
-mac/Daric Tester.daric\
-mac/Daric Tester.daric Tester && ./Tester
+To run the demo files, extract the ZIP and run something like this (depending on OS):
 
-The second option will create an executable. Replace Tester.daric with any of the other source files.
+mac/Daric Demos/Tester.daric (where Tester is the source file)
+win\Daric.exe Demos/BubbleUniverse
