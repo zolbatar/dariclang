@@ -59,4 +59,4 @@ In future there will be either a universal binary, or separate ones for x64 and 
 
 Windows
 -------
-win\Daric.exe Demos/BubbleUniverse
+win\Daric.exe Demos/BubbleUniverse.daric
