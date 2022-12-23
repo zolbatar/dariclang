@@ -47,12 +47,16 @@ There are currently two ways to run code:
 2. Create a standalone executable - this is more intended for distribution. There are no additional runtime files needed, just the 
 executable. THIS CURRENTLY IS A WORK IN PROGRESS AND MAY NOT WORK AT ALL.
 
-Mac
----
-
 You MUST run this from the command line/terminal for now. You must ALSO run from the root of the extacted directory, this will be fixed in a later release.
 
 To run the demo files, extract the ZIP and run something like this (depending on OS):
 
+Mac
+---
 mac/Daric Demos/Tester.daric (where Tester is the source file)
+
+In future there will be either a universal binary, or separate ones for x64 and Apple Silicon. 
+
+Windows
+-------
 win\Daric.exe Demos/BubbleUniverse
