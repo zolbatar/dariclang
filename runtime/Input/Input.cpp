@@ -115,12 +115,12 @@ int Input::Waitkey(int timeout) {
 	int clock = get_clock();
 	do {
 		// Scan
+        lock.lock();
 		while (!key_events.empty()) { // Scan until we find a keydown
-            lock.lock();
 			auto s = key_events.front();
             key_events.pop();
-            lock.unlock();
 			if (s.type == EventType::KeyDown) {
+                lock.unlock();
 				return s.ascii;
 			}
 		}

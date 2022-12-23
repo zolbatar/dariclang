@@ -41,8 +41,6 @@ void RunThread() {
         state.ParseCompileAndRun();
     done = true;
     running.store(false);
-    if (ui_started.load())
-        ui->Cls();
 }
 
 void do_quit() {

@@ -97,7 +97,9 @@ void Reference::SetValue(bool option_base, ValueType vt,
 						 ParserToken &token) {
 	switch (instance_type) {
 	case InstanceType::PRIMITIVE:
-		instance->Set(vt.value, nullptr, 0, llvm, ir);
+		if (!instance->Set(vt.value, nullptr, 0, llvm, ir)) {
+            RaiseException("Variable error with '" + name + "'", token);
+        }
 		break;
 	case InstanceType::ARRAY:
 		instance->Set(vt.value, instance->GetScope() == Scope::GLOBAL

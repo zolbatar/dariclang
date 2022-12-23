@@ -72,6 +72,7 @@ public:
         new_font_size_requested = size;
 	}
 	bool IsFontRequestActive() { return !new_font_requested.empty(); }
+    Mode GetMode() { return mode; }
 	ImU32 GetFGColour() { return fgColour; }
 	std::mutex *GetSpriteLock() { return &sprite_lock; }
 private:

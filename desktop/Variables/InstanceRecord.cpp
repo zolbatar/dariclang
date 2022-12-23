@@ -52,7 +52,7 @@ InstanceRecord::InstanceRecord(const std::string &name,
     this->is_ref = is_ref;
 }
 
-void InstanceRecord::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
+bool InstanceRecord::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
     switch (scope) {
         case Scope::GLOBAL: {
             assert(globals.contains(name));
@@ -76,6 +76,7 @@ void InstanceRecord::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, C
         default:
             assert(0);
     }
+    return true;
 }
 
 void InstanceRecord::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
