@@ -115,7 +115,7 @@ int Input::Waitkey(int timeout) {
 	int clock = get_clock();
 	do {
 		// Scan
-		while (!key_events.empty()) { // Scan until we find a keydown
+        while (!key_events.empty()) { // Scan until we find a keydown
             lock.lock();
 			auto s = key_events.front();
             key_events.pop();
@@ -124,7 +124,6 @@ int Input::Waitkey(int timeout) {
 				return s.ascii;
 			}
 		}
-		lock.unlock();
 	} while (get_clock() - clock < timeout);
 	return 0;
 }
@@ -132,6 +131,8 @@ int Input::Waitkey(int timeout) {
 void Input::Clear() {
 	while (!key_events.empty())
 		key_events.pop();
+    while (!buffer.empty())
+        buffer.pop();
 }
 
 std::string Input::Waitkeys(int timeout) {
