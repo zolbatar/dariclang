@@ -15,8 +15,8 @@ There is a modern HTML5 online version compiling to WebAssembly and using WebGL 
 * Standard library:
   * 2D - line drawing, circle, etc. Either renders immediately, or using back buffer flipping.
   * 3D - hardware accelerated engine, using OpenGL3 and shaders to render.
-  * Sound, a soft synthesizer based on https://github.com/airloaf/VSSynth. VERY EXPERIMENTAL
-  * Simple TIME$ function and a low and high precision timer.
+  * Sound, sample playback with 64 channels, playing MIDI files using FluidSynth and SoundFont files and a ModTracker player.
+  * Simple Time function to get the current time and a high precision timer.
   * And more (fill this in later)
 
 The following examples are in the repo:
