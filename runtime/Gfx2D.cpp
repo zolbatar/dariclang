@@ -11,7 +11,7 @@ extern std::atomic_bool ui_started;
 extern std::atomic_bool start_ui;
 extern int screen_width;
 extern int screen_height;
-extern size_t screen_flags;
+extern int screen_flags;
 
 extern "C" DLLEXTERN void gfx_uicheck() {
     if (ui_started.load())

@@ -64,7 +64,8 @@ extern "C" DLLEXTERN void fileio_bput(T_I channel, T_B byte) {
 
 extern "C" DLLEXTERN T_I fileio_eof(T_I channel) {
     auto g = channels.find(channel);
-    return feof(g->second);
+    auto ff = feof(g->second);
+    return ff;
 }
 
 extern "C" DLLEXTERN void fileio_close(T_I channel) {
@@ -85,8 +86,8 @@ extern "C" DLLEXTERN T_S fileio_getsh(T_I channel) {
     }
 
     // Copy string and add to free stack
-    auto m = (char *) malloc(strlen(buffer));
-    buffer[strlen(buffer)-1]=0;
+    auto m = (char *) malloc(strlen(buffer)+1);
+    buffer[strlen(buffer)]=0;
     strcpy(m, buffer);
     return m;
 }
@@ -107,6 +108,7 @@ extern "C" DLLEXTERN T_I fileio_list_files(T_S folder) {
     try {
         for (auto const &dir_entry: std::filesystem::directory_iterator{sandbox}) {
             files.push_back(dir_entry.path().generic_string());
+            std::cout << dir_entry.path().generic_string() << std::endl;
         }
     } catch (std::exception &ex) {
         std::cout << "Directory '" << folder << "' does not exist.\n";

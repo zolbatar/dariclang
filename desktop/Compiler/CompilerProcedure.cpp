@@ -136,10 +136,20 @@ void Compiler::TokenCall(ParserToken &token) {
 			}
 			auto value = ref->GetPointer(option_base, ProcessIndices(ref, s), llvm, GetIR(), s);
 			if (!ref->GetInstance()->IsRef()) {
+                // Primitive?
+                // Is it already a passed parameter?
 				vals.push_back(value);
 			} else {
+                // Arrays
 				// Deref pointer
-				ref->SetStructName(ref->GetInstance()->GetStructName());
+                switch (ref->GetInstanceType()) {
+                    case InstanceType::RECORD:
+                    case InstanceType::RECORD_ARRAY:
+                        ref->SetStructName(ref->GetInstance()->GetStructName());
+                        break;
+                    default:
+                        break;
+                }
 				auto tt = ref->GetLLVMType(false, llvm);
 				auto v2 = GetIR()->CreateLoad(tt, value);
 				vals.push_back(v2);
