@@ -69,6 +69,9 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     if (w != -1 && h != -1) {
         desktop_screen_width = w;
         desktop_screen_height = h;
+    } else {
+        std::cout << desktop_screen_width << std::endl;
+        std::cout << desktop_screen_height << std::endl;
     }
     mode = banked ? Mode::BANKED : Mode::CLASSIC;
     if (mode == Mode::CLASSIC) {

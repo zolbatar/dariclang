@@ -14,7 +14,7 @@ std::any Parser::visitProcedure(DaricParser::ProcedureContext *context) {
 
 	// Parameters
     ParserToken ps_pars = CreateToken(context, ParserTokenType::NONE);
-    for (auto i = 0; i < context->parameter().size(); i++) {
+    for (size_t i = 0; i < context->parameter().size(); i++) {
 		auto psp = std::any_cast<ParserToken>(visit(context->parameter(i)));
         ps_pars.children.push_back(std::move(psp));
 	}
@@ -58,7 +58,7 @@ std::any Parser::visitCall(DaricParser::CallContext *context) {
 	ps.type = ParserTokenType::CALL;
 
 	// Parameters
-	for (auto i = 0; i < context->expression().size(); i++) {
+	for (size_t i = 0; i < context->expression().size(); i++) {
 		auto psp = std::any_cast<ParserToken>(visit(context->expression(i)));
 		ps.children.push_back(std::move(psp));
 	}

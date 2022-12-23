@@ -11,14 +11,14 @@ std::any Parser::visitAssign(DaricParser::AssignContext *context) {
 
     if (!current_procedure) {
         ParserToken ps = CreateToken(context, ParserTokenType::GLOBAL);
-        for (int i = 0; i < context->assignment().size(); i++) {
+        for (size_t i = 0; i < context->assignment().size(); i++) {
             auto assign = std::any_cast<ParserToken>(visit(context->assignment(i)));
             ps.children.push_back(std::move(assign));
         }
         return ps;
     } else {
         ParserToken ps = CreateToken(context, ParserTokenType::LOCAL);
-        for (int i = 0; i < context->assignment().size(); i++) {
+        for (size_t i = 0; i < context->assignment().size(); i++) {
             auto assign = std::any_cast<ParserToken>(visit(context->assignment(i)));
             ps.children.push_back(std::move(assign));
         }

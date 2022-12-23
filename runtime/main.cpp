@@ -7,20 +7,20 @@
 #include "Config/Config.h"
 
 UISDL *ui = nullptr;
-extern "C" DLLEXTERN void audio_init();
+extern "C" void audio_init();
 Config config;
 
 std::atomic_bool done = false;
 std::atomic_bool start_ui = false;
-size_t screen_width;
-size_t screen_height;
-size_t screen_flags;
+int screen_width;
+int screen_height;
+int screen_flags;
 std::atomic_bool ui_started = false;
 extern Console console;
 extern Input input;
 std::filesystem::path exe_path;
 
-extern "C" DLLEXTERN void Implicit();
+extern "C" void Implicit();
 
 static void RunThread() {
     Implicit();
@@ -38,9 +38,9 @@ int main(int argc, char *argv[]) {
     audio_init();
     auto t = std::thread(&RunThread);
     t.detach();
+    ui = new UISDL();
     while (!done.load()) {
         if (start_ui.load()) {
-            ui = new UISDL();
             ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
             start_ui.store(false);
             ui_started.store(true);

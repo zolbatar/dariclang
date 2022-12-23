@@ -2119,7 +2119,7 @@ float TextEditor::TextDistanceToLineStart(const Coordinates &aFrom) const {
     float distance = 0.0f;
     float spaceSize = ImGui::GetFont()->CalcTextSizeA(ImGui::GetFontSize(), FLT_MAX, -1.0f, " ", nullptr, nullptr).x;
     int colIndex = GetCharacterIndex(aFrom);
-    for (size_t it = 0u; it < line.size() && it < colIndex;) {
+    for (size_t it = 0u; it < line.size() && it < static_cast<size_t>(colIndex);) {
         if (line[it].mChar == '\t') {
             distance =
                     (1.0f + std::floor((1.0f + distance) / (float(mTabSize) * spaceSize))) * (float(mTabSize) * spaceSize);
@@ -2128,7 +2128,7 @@ float TextEditor::TextDistanceToLineStart(const Coordinates &aFrom) const {
             auto d = UTF8CharLength(line[it].mChar);
             char tempCString[7];
             int i = 0;
-            for (; i < 6 && d-- > 0 && it < (int) line.size(); i++, it++)
+            for (; i < 6 && d-- > 0 && it < line.size(); i++, it++)
                 tempCString[i] = line[it].mChar;
 
             tempCString[i] = '\0';

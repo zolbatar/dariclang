@@ -91,8 +91,12 @@ std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-lassimp");
     args.push_back("-lfreetype");
     args.push_back("-lz");
+    args.push_back("-lminizip");
+    args.push_back("-lmodplug");
+    args.push_back("-lglib-2.0");
     //args.push_back("-lzlibstatic");
     args.push_back("-liconv");
+    args.push_back("-lpugixml");
 
     // Frameworks (on Mac)
     args.push_back("-framework");
@@ -123,7 +127,7 @@ std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
     // Mac platform stuff
     args.push_back("-platform_version");
     args.push_back("macos");
-    args.push_back("11.0");
+    args.push_back("13.0.0");
     args.push_back("0.0.0");
 
     // Arch

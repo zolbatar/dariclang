@@ -11,6 +11,7 @@ message(STATUS "Architecture: ${ARCHITECTURE}")
 message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
 message(STATUS "Library path: ${CMAKE_LIBRARY_PATH}")
 message(STATUS "Prefix path: ${CMAKE_PREFIX_PATH}")
+message(STATUS "Vcpkg path: ${VCPKG_INSTALLED_DIR}")
 if (APPLE)
     set(triplet daric)
     link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
@@ -230,15 +231,6 @@ elseif(WIN32)
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
 endif()
-    if (APPLE)
-#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
-#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
-#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libassimp.a /Users/daryl/Shared/Daric/mac/)
-#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2_mixer.a /Users/daryl/Shared/Daric/mac/)
-#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libfreetype.a /Users/daryl/Shared/Daric/mac/)
-#    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${FluidSynth_LIBRARY} /Users/daryl/Shared/Daric/mac/)
-endif()
-
 install(TARGETS ${PROJECT_NAME}
         RUNTIME DESTINATION .
         LIBRARY DESTINATION .

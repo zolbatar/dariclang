@@ -8,7 +8,7 @@ llvm::StructType *CompilerLLVM::CreateStruct(std::string name, std::vector<Struc
 
     // Build LLVM struct
     std::vector<llvm::Type *> members;
-    for (int i = 0; i < types.size(); i++) {
+    for (size_t i = 0; i < types.size(); i++) {
         switch (types[i].type) {
             case Primitive::INT:
                 members.push_back(TypeInt);

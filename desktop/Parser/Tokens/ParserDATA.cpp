@@ -1,7 +1,7 @@
 #include "../Parser.h"
 
 std::any Parser::visitData(DaricParser::DataContext *context) {
-    for (auto i = 0; i < context->integerLiteral().size(); i++) {
+    for (size_t i = 0; i < context->integerLiteral().size(); i++) {
         auto value = std::any_cast<ParserToken>(visit(context->integerLiteral(i)));
         state.AddDataValue(value.iv);
     }
@@ -23,7 +23,7 @@ std::any Parser::visitRestore(DaricParser::RestoreContext *context) {
 
 std::any Parser::visitRead(DaricParser::ReadContext *context) {
     auto ps = CreateToken(context, ParserTokenType::READ);
-    for (auto i = 0; i < context->variable().size(); i++) {
+    for (size_t i = 0; i < context->variable().size(); i++) {
         auto psc = CreateToken(context, ParserTokenType::READ);
         auto r = std::any_cast<Reference *>(visit(context->variable(i)));
         r->SetDataType(Primitive::INT);

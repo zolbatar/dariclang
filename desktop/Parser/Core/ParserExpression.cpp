@@ -245,7 +245,7 @@ std::any Parser::visitExprcall(DaricParser::ExprcallContext *context) {
 	ps.type = ParserTokenType::CALL;
 
 	// Parameters
-	for (auto i = 0; i < context->expression().size(); i++) {
+	for (size_t i = 0; i < context->expression().size(); i++) {
 		auto psp = std::any_cast<ParserToken>(visit(context->expression(i)));
 		ps.children.push_back(std::move(psp));
 	}

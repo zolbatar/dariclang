@@ -1,43 +1,52 @@
 cmake_minimum_required(VERSION 3.20)
 set(CMAKE_CXX_STANDARD 20)
 if (APPLE)
-    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
+#    set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
     #set(CMAKE_OSX_ARCHITECTURES arm64)
     #set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
-project(DaricRuntime)
-
-include(${CMAKE_SOURCE_DIR}/cmake-build-${CMAKE_BUILD_TYPE}/conanbuildinfo.cmake)
-conan_basic_setup()
-
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
+message(STATUS "Architecture: ${ARCHITECTURE}")
+message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
+message(STATUS "Library path: ${CMAKE_LIBRARY_PATH}")
+message(STATUS "Prefix path: ${CMAKE_PREFIX_PATH}")
 if (APPLE)
-    set(GITHUB /Users/daryl/Github)
-else()
-    set(GITHUB C:/Users/d_dud/GitHub)
+    set(triplet daric)
+    link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
+elseif(WIN32)
+    set(triplet x64-windows-static)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    message(STATUS ${CMAKE_CXX_FLAGS})
+    message(STATUS ${CMAKE_CXX_FLAGS_DEBUG})
+    message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
+    SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /EHsc")
+    SET(CMAKE_CXX_FLAGS_DEBUG "/Zi /Ob0 /Od /RTC1 /EHsc")
+    SET(CMAKE_CXX_FLAGS_RELEASE  "/EHsc /MT")
+    if (CMAKE_BUILD_TYPE STREQUAL "Release")
+        link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
+    else()
+        link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/debug/lib)
+    endif()
 endif()
-
-# Packages
-set(FREETYPE_DIR /usr/local)
-set(CMAKE_FIND_LIBRARY_SUFFIXES ".a;*.dylib")
-link_directories(/usr/local/lib)
-find_package(zstd REQUIRED)
+include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include)
+project(DaricRuntime)
 find_package(Freetype REQUIRED)
-include_directories(${FREETYPE_INCLUDE_DIRS})
-find_package(SDL2 REQUIRED)
-set(FluidSynth_PATH ${GITHUB}/fluidsynth-sans-glib)
-set(FluidSynth_INCLUDE_PATH ${FluidSynth_PATH}/include)
-set(FluidSynth_LIBRARY /Users/daryl/GitHub/fluidsynth-sans-glib/src/libfluidsynth.a)
-include_directories(${FluidSynth_INCLUDE_PATH})
-find_package(SDL2_mixer REQUIRED)
-find_package(assimp REQUIRED)
-
-# IMGUI
-set(IMGUI_DIR ${GITHUB}/imgui)
-include_directories(${IMGUI_DIR} ${IMGUI_DIR}/backends)
+find_package(SDL2 CONFIG REQUIRED)
+if (APPLE)
+    include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include/antlr4-runtime)
+elseif(WIN32)
+    set(FluidSynth_LIBRARY ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libfluidsynth.lib)
+    include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include/antlr4-runtime)
+    find_package(GLEW CONFIG REQUIRED)
+endif()
+find_package(SDL2_mixer CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(assimp CONFIG REQUIRED)
+find_package(glm CONFIG REQUIRED)
 
 add_library(DaricRuntime STATIC
         main.cpp
-
         UI/UISDL.cpp
         UI/RenderShapes.cpp
         UI/Lodepng.cpp
@@ -52,13 +61,6 @@ add_library(DaricRuntime STATIC
         Graphics3D/EngineShape.cpp
         Graphics3D/EngineOpenGL3SendObject.cpp
         Graphics3D/EngineOpenGL3.cpp
-        ${IMGUI_DIR}/imgui_draw.cpp
-        ${IMGUI_DIR}/imgui_tables.cpp
-        ${IMGUI_DIR}/imgui_widgets.cpp
-        ${IMGUI_DIR}/imgui.cpp
-        ${IMGUI_DIR}/misc/freetype/imgui_freetype.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_sdl.cpp
-        ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
         Input/Input.cpp
         KeyboardMouse.cpp
         FontsText.cpp
@@ -72,9 +74,55 @@ add_library(DaricRuntime STATIC
         Types.h
         Core.cpp Gfx2D.cpp
         InputLine.cpp)
-target_link_libraries(DaricRuntime PUBLIC
-        ${FluidSynth_LIBRARY}
-        ${SDL2_LIBRARIES}
-        SDL2_mixer
-        freetype
-        ${ASSIMP_LIBRARIES})
+if (APPLE)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            "-framework OpenGL"
+            xar
+            intl
+            iconv
+            glib-2.0
+            fluidsynth
+            Freetype::Freetype
+            SDL2::SDL2main
+            SDL2::SDL2-static
+            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
+            modplug
+            imgui::imgui
+            assimp::assimp
+            glm::glm)
+elseif(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            OpenGL32
+            GlU32
+            GLEW::GLEW
+            intl
+            iconv
+            glib-2.0
+            dsound
+            ws2_32
+            wldap32
+            crypt32
+            ksuser
+            libfluidsynth
+            Freetype::Freetype
+            SDL2::SDL2main
+            SDL2::SDL2-static
+            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
+            modplug
+            imgui::imgui
+            assimp::assimp
+            glm::glm)
+endif()
+if (APPLE)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libmodplug.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libglib-2.0.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libz.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libminizip.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libassimp.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libSDL2_mixer.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libfreetype.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libpugixml.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${FluidSynth_LIBRARY} /Users/daryl/Shared/Daric/mac/)
+endif()

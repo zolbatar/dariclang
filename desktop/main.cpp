@@ -17,9 +17,9 @@ Config config;
 CompilerOptions options;
 std::atomic_bool done = false;
 std::atomic_bool start_ui = false;
-size_t screen_width;
-size_t screen_height;
-size_t screen_flags;
+int screen_width;
+int screen_height;
+int screen_flags;
 std::atomic_bool ui_started = false;
 std::atomic_bool running = false;
 std::filesystem::path exe_path;
@@ -55,10 +55,10 @@ int main(int argc, char *argv[]) {
     config.Load();
     Compiler::SetupLibrary();
     audio_init();
+    ui = new UISDL();
 
     if (argc == 1) {
         // Fire up IDE
-        ui = new UISDL();
         if (config.Windowed()) {
             ui->Start(config.WindowWidth(), config.WindowHeight(), true, false);
         } else {
@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
         t.detach();
         while (!done) {
             if (start_ui) {
-                ui = new UISDL();
+                std::cout << "UISDL object created" << std::endl;
                 ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
                 start_ui = false;
                 ui_started.store(true);

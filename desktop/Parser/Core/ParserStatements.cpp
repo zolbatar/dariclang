@@ -2,7 +2,7 @@
 
 std::any Parser::visitStatements(DaricParser::StatementsContext *context) {
 	auto this_statements = std::vector<ParserToken>();
-	for (int i = 0; i < context->statement().size(); i++) {
+	for (size_t i = 0; i < context->statement().size(); i++) {
 		auto ps = std::any_cast<ParserToken>(visit(context->statement(i)));
 		this_statements.push_back(std::move(ps));
 	}
@@ -11,7 +11,7 @@ std::any Parser::visitStatements(DaricParser::StatementsContext *context) {
 
 std::any Parser::visitStatementsl(DaricParser::StatementslContext *context) {
 	auto this_statements = std::vector<ParserToken>();
-	for (int i = 0; i < context->statement().size(); i++) {
+	for (size_t i = 0; i < context->statement().size(); i++) {
 		auto ps = std::any_cast<ParserToken>(visit(context->statement(i)));
 		this_statements.push_back(std::move(ps));
 	}

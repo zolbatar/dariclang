@@ -198,7 +198,7 @@ StructSearch Reference::FindFieldInStruct(ParserToken &token, CompilerLLVM &llvm
 	auto si = state.GetStruct(idx);
 
 	// Is this a valid field?
-	for (auto i = 0; i < si->fields.size(); i++) {
+	for (size_t i = 0; i < si->fields.size(); i++) {
 		if (si->fields[i].name == GetFields()) {
 			ss.index = i;
 			ss.member = &si->fields[i];
@@ -216,7 +216,7 @@ llvm::Value *Reference::LocalIndex(bool option_base,
 	auto index = indices_val[0].value;
 	auto glob_v = llvm.GetLocal(name);
 	auto glob = llvm.GetLocalArrayDimensions(name);
-	for (auto i = 0; i < indices_val.size() - 1; i++) {
+	for (size_t i = 0; i < indices_val.size() - 1; i++) {
 		// Get array entry from dimensions
 		auto ptr = ir->CreateGEP(llvm.TypeInt,
 								 glob,
@@ -241,7 +241,7 @@ llvm::Value *Reference::GlobalIndexPtr(bool option_base,
 									   llvm::IRBuilder<> *ir) {
 	auto index = indices_val[0].value;
 	auto glob = llvm.GetGlobalArrayDimensions(name);
-	for (auto i = 0; i < indices_val.size() - 1; i++) {
+	for (size_t i = 0; i < indices_val.size() - 1; i++) {
 
 		// Get array entry from dimensions
 		auto ptr = ir->CreateGEP(llvm.TypeInt, glob, {llvm::ConstantInt::get(llvm.TypeInt, i)});
