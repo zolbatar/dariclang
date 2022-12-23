@@ -9,7 +9,7 @@ void Compiler::CreateLookaheadProc(ParserToken &t) {
 	Func f;
 
 	// Build parameters
-	for (auto &token : t.children) {
+	for (auto &token : t.children[0].children) {
 		auto ref = Reference::Get(token.reference);
 		if (token.type == ParserTokenType::PARAMETER) {
 			FuncParameter fp(ref, false);
@@ -65,7 +65,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
 		i++;
 	}
 
-	CompileStatements(t.children);
+	CompileStatements(t.children[1].children);
 	if (!llvm.CheckReturn(GetIR())) {
 		DefaultReturn(return_type, t);
 	}

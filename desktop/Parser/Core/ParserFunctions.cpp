@@ -13,14 +13,17 @@ std::any Parser::visitProcedure(DaricParser::ProcedureContext *context) {
 	}
 
 	// Parameters
-	for (auto i = 0; i < context->parameter().size(); i++) {
+    ParserToken ps_pars = CreateToken(context, ParserTokenType::NONE);
+    for (auto i = 0; i < context->parameter().size(); i++) {
 		auto psp = std::any_cast<ParserToken>(visit(context->parameter(i)));
-		ps.children.push_back(std::move(psp));
+        ps_pars.children.push_back(std::move(psp));
 	}
+    ps.children.push_back(std::move(ps_pars));
 
 	// Code
-	auto this_statements = std::any_cast<std::vector<ParserToken>>(visit(context->statements()));
-	std::move(this_statements.begin(), this_statements.end(), std::back_inserter(ps.children));
+    ParserToken ps_code = CreateToken(context, ParserTokenType::NONE);
+	ps_code.children = std::any_cast<std::vector<ParserToken>>(visit(context->statements()));
+    ps.children.push_back(std::move(ps_code));
 	current_procedure = nullptr;
 	return ps;
 }
