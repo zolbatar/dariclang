@@ -7,7 +7,7 @@
 #include "Config/Config.h"
 
 UISDL *ui = nullptr;
-extern "C" void audio_init();
+extern "C" DLLEXTERN void audio_init();
 Config config;
 
 std::atomic_bool done = false;
@@ -20,7 +20,7 @@ extern Console console;
 extern Input input;
 std::filesystem::path exe_path;
 
-extern "C" void Implicit();
+extern "C" DLLEXTERN void Implicit();
 
 static void RunThread() {
     Implicit();

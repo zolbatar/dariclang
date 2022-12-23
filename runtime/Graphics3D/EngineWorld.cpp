@@ -2,6 +2,7 @@
 #include <string>
 #include <random>
 #include <chrono>
+#include "imgui.h"
 #include "Engine.h"
 
 constexpr float toRad(float v) { return (v / 180.0 * M_PI); }
@@ -10,6 +11,10 @@ extern UISDL *ui;
 World world(0, 0);
 extern std::vector<PosColorVertex> vertices;
 extern std::vector<MeshTriangle> faces;
+
+World::World(int screen_width, int screen_height) {
+    SetScreenSize(screen_width, screen_height);
+}
 
 void World::Clear() {
     shapes.clear();

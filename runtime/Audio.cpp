@@ -19,7 +19,7 @@ static fluid_settings_t *settings;
 static fluid_synth_t *synth;
 static fluid_audio_driver_t *adriver;
 
-extern "C" void audio_init() {
+extern "C" DLLEXTERN void audio_init() {
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         SDL_Log("Couldn't initialize SDL: %s\n", SDL_GetError());
         exit(1);
@@ -51,7 +51,7 @@ extern "C" void audio_init() {
     std::cout << "Audio initialisation complete" << std::endl;*/
 }
 
-extern "C" void audio_loadsoundfont(T_S font) {
+extern "C" DLLEXTERN void audio_loadsoundfont(T_S font) {
     fluid_synth_sfload(synth, font, true);
     if (Mix_SetSoundFonts(font) == 0) {
         printf("Can't open Soundfont file\n");
@@ -65,7 +65,7 @@ void audio_shutdown() {
     delete_fluid_settings(settings);
 }
 
-extern "C" T_I audio_loadwav(T_S filename) {
+extern "C" DLLEXTERN T_I audio_loadwav(T_S filename) {
     auto audio = Mix_LoadWAV(filename);
     if (audio == nullptr) {
         printf("Can't load audio file '%s'\n", filename);
@@ -76,7 +76,7 @@ extern "C" T_I audio_loadwav(T_S filename) {
     return samples.size() - 1;
 }
 
-extern "C" T_I audio_loadmus(T_S filename) {
+extern "C" DLLEXTERN T_I audio_loadmus(T_S filename) {
     auto audio = Mix_LoadMUS(filename);
     if (audio == nullptr) {
         printf("Can't load music file '%s'\n", filename);
@@ -87,38 +87,38 @@ extern "C" T_I audio_loadmus(T_S filename) {
     return music.size() - 1;
 }
 
-extern "C" void audio_play(T_I channel, T_I index) {
+extern "C" DLLEXTERN void audio_play(T_I channel, T_I index) {
     Mix_PlayChannel(channel, samples[index], false);
 }
 
-extern "C" void audio_playmusic(T_I index, T_I loops) {
+extern "C" DLLEXTERN void audio_playmusic(T_I index, T_I loops) {
     if (Mix_PlayMusic(music[index], loops) != 0) {
         printf("Can't play music file\n");
         exit(1);
     }
 }
 
-extern "C" void audio_stopmusic(T_I ms) {
+extern "C" DLLEXTERN void audio_stopmusic(T_I ms) {
     Mix_FadeOutMusic(ms);
 }
 
-extern "C" void music_volume(T_F volume) {
+extern "C" DLLEXTERN void music_volume(T_F volume) {
     Mix_VolumeMusic(volume * 128);
 }
 
-extern "C" void audio_volume(T_I channel, T_F volume) {
+extern "C" DLLEXTERN void audio_volume(T_I channel, T_F volume) {
     Mix_Volume(channel, volume * 128);
 }
 
-extern "C" void audio_bank(T_I channel, T_I bank, T_I preset) {
+extern "C" DLLEXTERN void audio_bank(T_I channel, T_I bank, T_I preset) {
     fluid_synth_bank_select(synth, channel, bank);
     fluid_synth_program_change(synth,channel , preset);
 }
 
-extern "C" void audio_noteon(T_I channel, T_I pitch, T_I velocity) {
+extern "C" DLLEXTERN void audio_noteon(T_I channel, T_I pitch, T_I velocity) {
     fluid_synth_noteon(synth, channel, 40, 127);
 }
 
-extern "C" void audio_noteoff(T_I channel, T_I pitch) {
+extern "C" DLLEXTERN void audio_noteoff(T_I channel, T_I pitch) {
     fluid_synth_noteoff(synth, channel, 40);
 }

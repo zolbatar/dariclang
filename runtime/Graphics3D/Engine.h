@@ -99,9 +99,7 @@ public:
 
 class World {
 public:
-    World(int screen_width, int screen_height) {
-        SetScreenSize(screen_width, screen_height);
-    }
+    World(int screen_width, int screen_height);
 
     void Clear();
 

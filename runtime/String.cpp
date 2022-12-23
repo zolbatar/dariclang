@@ -8,7 +8,7 @@
 std::unordered_set<const char *> temp_strings;
 std::unordered_set<const char *> perm_strings;
 
-extern "C" void Strings_Clear() {
+extern "C" DLLEXTERN void Strings_Clear() {
 #ifdef DEBUG
     std::cout << "Clearing strings" << std::endl;
 #endif
@@ -22,7 +22,7 @@ extern "C" void Strings_Clear() {
     perm_strings.clear();
 }
 
-extern "C" void Strings_Summary() {
+extern "C" DLLEXTERN void Strings_Summary() {
 #ifdef DEBUG
     std::cout << "\nGC summary\n";
     std::cout << "----------\n";
@@ -31,7 +31,7 @@ extern "C" void Strings_Summary() {
 #endif
 }
 
-extern "C" T_S add_string(T_S v1, T_S v2) {
+extern "C" DLLEXTERN T_S add_string(T_S v1, T_S v2) {
     std::string v1s(v1);
     std::string v2s(v2);
     auto v3s = v1s + v2s;
@@ -40,18 +40,18 @@ extern "C" T_S add_string(T_S v1, T_S v2) {
     return m;
 }
 
-extern "C" T_I String_Compare(T_S s1, T_S s2) {
+extern "C" DLLEXTERN T_I String_Compare(T_S s1, T_S s2) {
     return strcmp(s1, s2);
 }
 
-extern "C" void Add_Temp_String(const char *v) {
+extern "C" DLLEXTERN void Add_Temp_String(const char *v) {
 #ifdef DEBUG
     std::cout << "Add Temp String: " << (size_t)v << " is '" << v << "'" << std::endl;
 #endif
     temp_strings.insert(v);
 }
 
-extern "C" void Clear_Perm_String(T_S v) {
+extern "C" DLLEXTERN void Clear_Perm_String(T_S v) {
     auto f = perm_strings.find(v);
     if (f != perm_strings.end()) {
 #ifdef DEBUG
@@ -62,7 +62,7 @@ extern "C" void Clear_Perm_String(T_S v) {
     }
 }
 
-extern "C" void Make_Perm_String(T_S v) {
+extern "C" DLLEXTERN void Make_Perm_String(T_S v) {
     auto f = temp_strings.find(v);
     if (f != temp_strings.end()) {
 #ifdef DEBUG
@@ -73,7 +73,7 @@ extern "C" void Make_Perm_String(T_S v) {
     }
 }
 
-extern "C" void Clear_Temp_Strings() {
+extern "C" DLLEXTERN void Clear_Temp_Strings() {
 #ifdef DEBUG
     std::cout << "Clear Temp Strings" << std::endl;
 #endif
@@ -83,7 +83,7 @@ extern "C" void Clear_Temp_Strings() {
     temp_strings.clear();
 }
 
-extern "C" T_I asc(T_S v) {
+extern "C" DLLEXTERN T_I asc(T_S v) {
     std::string vs(v);
     int64_t c = -1;
     if (vs.length() != 0) {
@@ -92,7 +92,7 @@ extern "C" T_I asc(T_S v) {
     return c;
 }
 
-extern "C" T_S chrs(T_I v) {
+extern "C" DLLEXTERN T_S chrs(T_I v) {
     v &= 0xFF;
     auto vs = (char *) malloc(2);
     vs[0] = v;
@@ -100,7 +100,7 @@ extern "C" T_S chrs(T_I v) {
     return vs;
 }
 
-extern "C" T_I instr(T_S string, T_S substring, T_I start) {
+extern "C" DLLEXTERN T_I instr(T_S string, T_S substring, T_I start) {
     auto s1 = std::string(string);
     auto s2 = std::string(substring);
     if (static_cast<size_t>(start) >= s1.length())
@@ -113,7 +113,7 @@ extern "C" T_I instr(T_S string, T_S substring, T_I start) {
     return v;
 }
 
-extern "C" T_S lefts(T_S v2, T_I v1) {
+extern "C" DLLEXTERN T_S lefts(T_S v2, T_I v1) {
     auto ss = std::string(v2);
     try {
         ss = ss.substr(0, v1).c_str();
@@ -127,7 +127,7 @@ extern "C" T_S lefts(T_S v2, T_I v1) {
     return NULL;
 }
 
-extern "C" T_S mids(T_S v3, T_I v1, T_I v2) {
+extern "C" DLLEXTERN T_S mids(T_S v3, T_I v1, T_I v2) {
     auto ss = std::string(v3);
     try {
         ss = ss.substr(v1 - 1, v2).c_str();
@@ -141,7 +141,7 @@ extern "C" T_S mids(T_S v3, T_I v1, T_I v2) {
     return NULL;
 }
 
-extern "C" T_S rights(T_S v2, T_I v1) {
+extern "C" DLLEXTERN T_S rights(T_S v2, T_I v1) {
     auto ss = std::string(v2);
     try {
         auto l = ss.length();
@@ -156,11 +156,11 @@ extern "C" T_S rights(T_S v2, T_I v1) {
     return NULL;
 }
 
-extern "C" T_I len(T_S v) {
+extern "C" DLLEXTERN T_I len(T_S v) {
     return strlen(v);
 }
 
-extern "C" T_I string_to_int(T_S v) {
+extern "C" DLLEXTERN T_I string_to_int(T_S v) {
     auto ss = std::string(v);
     try {
         return std::stoi(ss);
@@ -170,7 +170,7 @@ extern "C" T_I string_to_int(T_S v) {
     }
 }
 
-extern "C" T_F string_to_float(T_S v) {
+extern "C" DLLEXTERN T_F string_to_float(T_S v) {
     auto ss = std::string(v);
     try {
         return std::stod(ss);
@@ -180,7 +180,7 @@ extern "C" T_F string_to_float(T_S v) {
     }
 }
 
-extern "C" T_S float_to_string(T_F vi) {
+extern "C" DLLEXTERN T_S float_to_string(T_F vi) {
     char buffer[512];
     snprintf(buffer, 512, "%f", vi);
     auto m = (char *) malloc(strlen(buffer) + 1);
@@ -188,7 +188,7 @@ extern "C" T_S float_to_string(T_F vi) {
     return m;
 }
 
-extern "C" T_S int_to_string(T_I vi) {
+extern "C" DLLEXTERN T_S int_to_string(T_I vi) {
     char buffer[512];
     snprintf(buffer, 512, "%lld", vi);
     auto m = (char *) malloc(strlen(buffer) + 1);
@@ -196,7 +196,7 @@ extern "C" T_S int_to_string(T_I vi) {
     return m;
 }
 
-extern "C" T_S float_to_string_with(T_F vi, T_S f) {
+extern "C" DLLEXTERN T_S float_to_string_with(T_F vi, T_S f) {
     char buffer[512];
     snprintf(buffer, 512, f, vi);
     auto m = (char *) malloc(strlen(buffer) + 1);
@@ -204,7 +204,7 @@ extern "C" T_S float_to_string_with(T_F vi, T_S f) {
     return m;
 }
 
-extern "C" T_S int_to_string_with(T_I vi, T_S f) {
+extern "C" DLLEXTERN T_S int_to_string_with(T_I vi, T_S f) {
     char buffer[512];
     snprintf(buffer, 512, f, vi);
     auto m = (char *) malloc(strlen(buffer) + 1);

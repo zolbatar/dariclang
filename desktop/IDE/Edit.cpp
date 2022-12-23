@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <map>
 #include "Edit.h"
 #include "../../runtime/UI/UISDL.h"
@@ -16,7 +17,8 @@ std::list<CaughtException> errors;
 
 Edit::Edit() {
     ImGuiIO &io = ImGui::GetIO();
-    font = io.Fonts->AddFontFromFileTTF((exe_path / config.MonoFont()).generic_string().c_str(),
+    auto p = std::filesystem::path(config.MonoFont());
+    font = io.Fonts->AddFontFromFileTTF((exe_path / p).generic_string().c_str(),
                                         config.MonoFontSize() * ui->GetDPIRatio());
 }
 
@@ -109,7 +111,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 TextEditor::ErrorMarkers markers;
                 for (auto it = errors.begin(); it != errors.end(); ++it) {
                     if (it->filename == editor_name) {
-                        markers.insert(std::make_pair(it->line_number, it->error));
+                        markers.insert(std::make_pair(static_cast<int>(it->line_number), it->error));
                     }
                 }
                 editor->SetErrorMarkers(markers);

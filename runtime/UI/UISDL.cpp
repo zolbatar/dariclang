@@ -113,6 +113,17 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
 
     // Create context in window
     SDL_GLContext gl_context = SDL_GL_CreateContext(window);
+
+    // Setup GLEW
+#if _WIN64
+    glewExperimental = GL_TRUE;
+    GLenum glewError = glewInit();
+    if( glewError != GLEW_OK )
+    {
+        printf( "Error initializing GLEW! %s\n", glewGetErrorString( glewError ) );
+    }
+#endif
+
     SDL_GL_MakeCurrent(window, gl_context);
     SDL_GL_SetSwapInterval(1); // Enable vsync
 

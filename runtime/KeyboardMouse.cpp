@@ -7,18 +7,18 @@ extern std::atomic_bool ui_started;
 
 extern "C" void gfx_uicheck();
 
-extern "C" void kbm_clear() {
+extern "C" DLLEXTERN void kbm_clear() {
     gfx_uicheck();
     input.Clear();
 }
 
-extern "C" T_I kbm_waitkey(T_I timeout) {
+extern "C" DLLEXTERN T_I kbm_waitkey(T_I timeout) {
     gfx_uicheck();
     auto v = input.Waitkey(timeout);
     return v;
 }
 
-extern "C" T_S kbm_waitkeys(T_I timeout) {
+extern "C" DLLEXTERN T_S kbm_waitkeys(T_I timeout) {
     gfx_uicheck();
     auto v = input.Waitkeys(timeout);
     auto m = (char *) malloc(v.length() + 1);
@@ -26,23 +26,23 @@ extern "C" T_S kbm_waitkeys(T_I timeout) {
     return m;
 }
 
-extern "C" T_I kbm_keydown(T_I key) {
+extern "C" DLLEXTERN T_I kbm_keydown(T_I key) {
     gfx_uicheck();
     auto v = input.CheckKey(key);
     return v;
 }
 
-extern "C" bool kbm_escape_pressed() {
+extern "C" DLLEXTERN bool kbm_escape_pressed() {
     return escape_pressed.load();
 }
 
-extern "C" T_I kbm_get() {
+extern "C" DLLEXTERN T_I kbm_get() {
     gfx_uicheck();
     auto v = input.Get();
     return v;
 }
 
-extern "C" T_S kbm_gets() {
+extern "C" DLLEXTERN T_S kbm_gets() {
     gfx_uicheck();
     std::string v = input.GetString();
     auto m = (char *) malloc(v.length() + 1);
@@ -50,21 +50,21 @@ extern "C" T_S kbm_gets() {
     return m;
 }
 
-extern "C" T_I kbm_mousex() {
+extern "C" DLLEXTERN T_I kbm_mousex() {
     gfx_uicheck();
     int x, y, state;
     input.Mouse(&x, &y, &state);
     return x;
 }
 
-extern "C" T_I kbm_mousey() {
+extern "C" DLLEXTERN T_I kbm_mousey() {
     gfx_uicheck();
     int x, y, state;
     input.Mouse(&x, &y, &state);
     return y;
 }
 
-extern "C" T_I kbm_mousestate() {
+extern "C" DLLEXTERN T_I kbm_mousestate() {
     gfx_uicheck();
     int x, y, state;
     input.Mouse(&x, &y, &state);

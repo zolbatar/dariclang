@@ -9,3 +9,7 @@
 ./vcpkg install --triplet=daric 'llvm[core,target-aarch64,target-x86,lld]'
 ./vcpkg install --triplet=daric 'glm'
 ./vcpkg install --triplet=daric 'glib'
+./vcpkg install --triplet=daric 'opengl' // not needed?
+./vcpkg install --triplet=daric 'glew' // windows
+
+// 'imgui[freetype,sdl2-binding,osx-binding,opengl3-binding,win32-binding,glfw-binding]'

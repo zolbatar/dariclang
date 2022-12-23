@@ -5,32 +5,44 @@ if (APPLE)
     #set(CMAKE_OSX_ARCHITECTURES "arm64")
 endif()
 set(CMAKE_CXX_STANDARD 20)
-project(Daric)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
 message(STATUS "Architecture: ${ARCHITECTURE}")
 message(STATUS "Architectures: ${CMAKE_OSX_ARCHITECTURES}")
 message(STATUS "Library path: ${CMAKE_LIBRARY_PATH}")
 message(STATUS "Prefix path: ${CMAKE_PREFIX_PATH}")
-include_directories(${VCPKG_INSTALLED_DIR}/daric/include)
-link_directories(${VCPKG_INSTALLED_DIR}/daric/lib)
+if (APPLE)
+    set(triplet daric)
+elseif(WIN32)
+    set(triplet x64-windows-static)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+    SET(CMAKE_CXX_FLAGS "/EHsc")
+    SET(CMAKE_CXX_FLAGS_RELEASE  "/EHsc")
+endif()
+include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include)
+link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
+project(Daric)
 find_package(antlr4-runtime CONFIG REQUIRED)
 find_package(Freetype REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
+if (APPLE)
+    include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include/antlr4-runtime)
+elseif(WIN32)
+    set(FluidSynth_LIBRARY ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libfluidsynth.lib)
+    include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include/antlr4-runtime)
+    find_package(GLEW CONFIG REQUIRED)
+endif()
 find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-include_directories(${VCPKG_INSTALLED_DIR}/daric/include/antlr4-runtime)
 list(APPEND CMAKE_MODULE_PATH "${LLVM_CMAKE_DIR}")
 message(status ${LLVM_CMAKE_DIR})
 find_package(LLVM CONFIG REQUIRED)
 include(HandleLLVMOptions)
 add_definitions(${LLVM_DEFINITIONS})
-# Find the libraries that correspond to the LLVM components that we wish to use
-#llvm_map_components_to_libnames(LLVM_LIBS Support Core IRReader OrcJIT AArch64 X86 LTO)
-execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/daric/tools/llvm/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/daric/tools/llvm/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/${triplet}/tools/llvm/llvm-config --libnames OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/${triplet}/tools/llvm/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(LLD_LIBS lldCommon lldELF lldMachO)
 message(STATUS "LLVM Libs: ${LLVM_LIBS}")
 message(STATUS "LLVM System Libs: ${LLVM_SYSTEM_LIBS}")
@@ -158,6 +170,7 @@ add_executable(${PROJECT_NAME}
         Library/json.hpp
         IDE/EditButtons.cpp
         Compiler/CompilerInput.cpp)
+if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
             xar
@@ -177,7 +190,34 @@ add_executable(${PROJECT_NAME}
             ${LLD_LIBS}
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
-if (APPLE)
+elseif(WIN32)
+    target_link_libraries(${PROJECT_NAME} PRIVATE
+            OpenGL32
+            GlU32
+            GLEW::GLEW
+            intl
+            iconv
+            glib-2.0
+            dsound
+            ws2_32
+            wldap32
+            crypt32
+            ksuser
+            libfluidsynth
+            antlr4_static
+            Freetype::Freetype
+            SDL2::SDL2main
+            SDL2::SDL2-static
+            $<IF:$<TARGET_EXISTS:SDL2_mixer::SDL2_mixer>,SDL2_mixer::SDL2_mixer,SDL2_mixer::SDL2_mixer-static>
+            modplug
+            imgui::imgui
+            assimp::assimp
+            glm::glm
+            ${LLD_LIBS}
+            ${LLVM_LIBS}
+            ${LLVM_SYSTEM_LIBS})
+endif()
+    if (APPLE)
 #    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/../../runtime/cmake-build-release/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
 #    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libSDL2.a /Users/daryl/Shared/Daric/mac/)
 #    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp /usr/local/lib/libassimp.a /Users/daryl/Shared/Daric/mac/)
@@ -187,6 +227,6 @@ if (APPLE)
 endif()
 
 install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION mac
-        LIBRARY DESTINATION mac
-        ARCHIVE DESTINATION mac)
+        RUNTIME DESTINATION .
+        LIBRARY DESTINATION .
+        ARCHIVE DESTINATION .)

@@ -2161,9 +2161,9 @@ JSON_HEDLEY_DIAGNOSTIC_POP
 #undef JSON_HEDLEY_C_DECL
 #endif
 #if defined(__cplusplus)
-#define JSON_HEDLEY_BEGIN_C_DECLS extern "C" {
+#define JSON_HEDLEY_BEGIN_C_DECLS extern "C" DLLEXTERN {
 #define JSON_HEDLEY_END_C_DECLS }
-#define JSON_HEDLEY_C_DECL extern "C"
+#define JSON_HEDLEY_C_DECL extern "C" DLLEXTERN
 #else
 #define JSON_HEDLEY_BEGIN_C_DECLS
 #define JSON_HEDLEY_END_C_DECLS

@@ -11,13 +11,13 @@ int get_clock() {
 	return static_cast<int>(d);
 }
 
-extern "C" T_F __time() {
+extern "C" DLLEXTERN T_F __time() {
 	auto t2 = std::chrono::steady_clock::now();
 	auto time_span = std::chrono::duration_cast<std::chrono::microseconds>(t2 - t1);
 	return static_cast<double>(time_span.count()) / 1000000.0;
 }
 
-extern "C" T_S times() {
+extern "C" DLLEXTERN T_S times() {
 	time_t rawtime;
 	struct tm *timeinfo;
 	char buffer[80];
@@ -33,7 +33,7 @@ extern "C" T_S times() {
 	return v;
 }
 
-extern "C" T_S dates() {
+extern "C" DLLEXTERN T_S dates() {
     time_t rawtime;
     struct tm *timeinfo;
     char buffer[80];

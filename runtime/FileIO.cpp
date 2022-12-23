@@ -21,7 +21,7 @@ void CloseAllFiles() {
     }
 }
 
-extern "C" T_I fileio_openin(T_S filename) {
+extern "C" DLLEXTERN T_I fileio_openin(T_S filename) {
     FILE *file = fopen(filename, "rb");
     if (file == NULL) {
         return -1;
@@ -31,7 +31,7 @@ extern "C" T_I fileio_openin(T_S filename) {
     return r;
 }
 
-extern "C" T_I fileio_openout(T_S filename) {
+extern "C" DLLEXTERN T_I fileio_openout(T_S filename) {
     FILE *file = fopen(filename, "wb");
     if (file == NULL) {
         return -1;
@@ -41,7 +41,7 @@ extern "C" T_I fileio_openout(T_S filename) {
     return r;
 }
 
-extern "C" T_I fileio_openup(T_S filename) {
+extern "C" DLLEXTERN T_I fileio_openup(T_S filename) {
     FILE *file = fopen(filename, "ab");
     if (file == NULL) {
         return -1;
@@ -51,29 +51,29 @@ extern "C" T_I fileio_openup(T_S filename) {
     return r;
 }
 
-extern "C" T_B fileio_bget(T_I channel) {
+extern "C" DLLEXTERN T_B fileio_bget(T_I channel) {
     auto g = channels.find(channel);
     char b = fgetc(g->second);
     return b;
 }
 
-extern "C" void fileio_bput(T_I channel, T_B byte) {
+extern "C" DLLEXTERN void fileio_bput(T_I channel, T_B byte) {
     auto g = channels.find(channel);
     fputc(byte, g->second);
 }
 
-extern "C" T_I fileio_eof(T_I channel) {
+extern "C" DLLEXTERN T_I fileio_eof(T_I channel) {
     auto g = channels.find(channel);
     return feof(g->second);
 }
 
-extern "C" void fileio_close(T_I channel) {
+extern "C" DLLEXTERN void fileio_close(T_I channel) {
     auto g = channels.find(channel);
     fclose(g->second);
     channels.erase(channel);
 }
 
-extern "C" T_S fileio_getsh(T_I channel) {
+extern "C" DLLEXTERN T_S fileio_getsh(T_I channel) {
     auto g = channels.find(channel);
     auto ch = g->second;
 
@@ -91,17 +91,17 @@ extern "C" T_S fileio_getsh(T_I channel) {
     return m;
 }
 
-extern "C" T_I fileio_ptr(T_I channel) {
+extern "C" DLLEXTERN T_I fileio_ptr(T_I channel) {
     auto g = channels.find(channel);
     return ftell(g->second);
 }
 
-extern "C" void fileio_sptr(T_I channel, T_I position) {
+extern "C" DLLEXTERN void fileio_sptr(T_I channel, T_I position) {
     auto g = channels.find(channel);
     fseek(g->second, position, SEEK_SET);
 }
 
-extern "C" T_I fileio_list_files(T_S folder) {
+extern "C" DLLEXTERN T_I fileio_list_files(T_S folder) {
     const std::filesystem::path sandbox{folder};
     files.clear();
     try {
@@ -115,7 +115,7 @@ extern "C" T_I fileio_list_files(T_S folder) {
     return files.size();
 }
 
-extern "C" T_S fileio_get_filename(T_I idx) {
+extern "C" DLLEXTERN T_S fileio_get_filename(T_I idx) {
     if (idx < 0 || static_cast<size_t>(idx) >= files.size()) {
         return 0;
     }
@@ -124,7 +124,7 @@ extern "C" T_S fileio_get_filename(T_I idx) {
     return m;
 }
 
-extern "C" void fileio_delete(T_S filename) {
+extern "C" DLLEXTERN void fileio_delete(T_S filename) {
     std::remove(filename);
 }
 

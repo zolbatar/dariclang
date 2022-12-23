@@ -205,7 +205,7 @@ void World::SetupOpenGL3() {
     // Lines
     GLint range[2];
     glGetIntegerv(GL_ALIASED_LINE_WIDTH_RANGE, range);
-    glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, range);
+    //glGetIntegerv(GL_SMOOTH_LINE_WIDTH_RANGE, range);
     glEnable(GL_LINE_WIDTH);
     glLineWidth(1.0f);
 }
