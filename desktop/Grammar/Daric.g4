@@ -45,8 +45,7 @@ separator
     : (COLON | NEWLINE)+
     ;
 
-assign:         LET? assignment (COMMA assignment)* (COLON type)? ;
-assignment:     variable EQ expression ;
+assign:         LET? variable (COLON type)? EQ expression ;
 call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
 case:           CASE expression OF separator? when* (OTHERWISE statements)? END CASE ;
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (COLON type)? ;

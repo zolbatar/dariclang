@@ -85,7 +85,7 @@ std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-lc++");
     args.push_back("-lSystem");
     args.push_back("-lDaricRuntime");
-    args.push_back("-lSDL2");
+/*    args.push_back("-lSDL2");
     args.push_back("-lSDL2_mixer");
     args.push_back("-lfluidsynth");
     args.push_back("-lassimp");
@@ -94,12 +94,18 @@ std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-lminizip");
     args.push_back("-lmodplug");
     args.push_back("-lglib-2.0");
-    //args.push_back("-lzlibstatic");
     args.push_back("-liconv");
+    args.push_back("-lpng");
+    args.push_back("-lbz2");
+    args.push_back("-lintl");
+    args.push_back("-lpoly2tri");
+    args.push_back("-lbrotlidec-static");
+    args.push_back("-lbrotlicommon-static");
     args.push_back("-lpugixml");
+    args.push_back("-limgui");*/
 
     // Frameworks (on Mac)
-    args.push_back("-framework");
+/*    args.push_back("-framework");
     args.push_back("OpenGL");
     args.push_back("-framework");
     args.push_back("Cocoa");
@@ -122,12 +128,12 @@ std::string CompilerLLVM::CreateExecutable(std::string output_filename) {
     args.push_back("-framework");
     args.push_back("AudioToolbox");
     args.push_back("-framework");
-    args.push_back("CoreHaptics");
+    args.push_back("CoreHaptics");*/
 
     // Mac platform stuff
     args.push_back("-platform_version");
     args.push_back("macos");
-    args.push_back("13.0.0");
+    args.push_back("11.15.0");
     args.push_back("0.0.0");
 
     // Arch

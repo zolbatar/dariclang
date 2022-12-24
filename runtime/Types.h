@@ -9,5 +9,5 @@ typedef uint8_t T_B;
 #ifdef _WIN64
 #define DLLEXTERN __declspec(dllexport)
 #else
-#define DLLEXTERN
+#define DLLEXTERN __attribute__((visibility("default")))
 #endif

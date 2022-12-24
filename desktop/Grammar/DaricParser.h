@@ -34,15 +34,15 @@ public:
 
   enum {
     RuleProgram = 0, RuleStatements = 1, RuleStatementsl = 2, RuleStatement = 3, 
-    RuleSeparator = 4, RuleAssign = 5, RuleAssignment = 6, RuleCall = 7, 
-    RuleCase = 8, RuleConst = 9, RuleData = 10, RuleDataLabel = 11, RuleDim = 12, 
-    RuleExprcall = 13, RuleEnd = 14, RuleFor = 15, RuleImportlib = 16, RuleIf = 17, 
-    RuleIfml = 18, RuleInput = 19, RuleOption = 20, RuleParameter = 21, 
-    RulePrint = 22, RuleProcedure = 23, RuleRepeat = 24, RuleRead = 25, 
-    RuleRestore = 26, RuleReturn = 27, RuleStruct = 28, RuleStructDim = 29, 
-    RuleStructInstance = 30, RuleSwap = 31, RuleWhen = 32, RuleWhile = 33, 
-    RuleVariable = 34, RuleExpression = 35, RuleType = 36, RuleTypeOrStruct = 37, 
-    RuleLiteral = 38, RuleFloatLiteral = 39, RuleIntegerLiteral = 40, RuleStringLiteral = 41
+    RuleSeparator = 4, RuleAssign = 5, RuleCall = 6, RuleCase = 7, RuleConst = 8, 
+    RuleData = 9, RuleDataLabel = 10, RuleDim = 11, RuleExprcall = 12, RuleEnd = 13, 
+    RuleFor = 14, RuleImportlib = 15, RuleIf = 16, RuleIfml = 17, RuleInput = 18, 
+    RuleOption = 19, RuleParameter = 20, RulePrint = 21, RuleProcedure = 22, 
+    RuleRepeat = 23, RuleRead = 24, RuleRestore = 25, RuleReturn = 26, RuleStruct = 27, 
+    RuleStructDim = 28, RuleStructInstance = 29, RuleSwap = 30, RuleWhen = 31, 
+    RuleWhile = 32, RuleVariable = 33, RuleExpression = 34, RuleType = 35, 
+    RuleTypeOrStruct = 36, RuleLiteral = 37, RuleFloatLiteral = 38, RuleIntegerLiteral = 39, 
+    RuleStringLiteral = 40
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -68,7 +68,6 @@ public:
   class StatementContext;
   class SeparatorContext;
   class AssignContext;
-  class AssignmentContext;
   class CallContext;
   class CaseContext;
   class ConstContext;
@@ -212,11 +211,10 @@ public:
   public:
     AssignContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<AssignmentContext *> assignment();
-    AssignmentContext* assignment(size_t i);
+    VariableContext *variable();
+    antlr4::tree::TerminalNode *EQ();
+    ExpressionContext *expression();
     antlr4::tree::TerminalNode *LET();
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
     antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
 
@@ -226,21 +224,6 @@ public:
   };
 
   AssignContext* assign();
-
-  class  AssignmentContext : public antlr4::ParserRuleContext {
-  public:
-    AssignmentContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    VariableContext *variable();
-    antlr4::tree::TerminalNode *EQ();
-    ExpressionContext *expression();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  AssignmentContext* assignment();
 
   class  CallContext : public antlr4::ParserRuleContext {
   public:

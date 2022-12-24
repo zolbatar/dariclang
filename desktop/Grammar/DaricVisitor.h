@@ -31,8 +31,6 @@ public:
 
     virtual std::any visitAssign(DaricParser::AssignContext *context) = 0;
 
-    virtual std::any visitAssignment(DaricParser::AssignmentContext *context) = 0;
-
     virtual std::any visitCall(DaricParser::CallContext *context) = 0;
 
     virtual std::any visitCase(DaricParser::CaseContext *context) = 0;

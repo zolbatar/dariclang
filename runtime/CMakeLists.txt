@@ -44,36 +44,35 @@ find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
-
-add_library(DaricRuntime STATIC
+add_library(${PROJECT_NAME} STATIC
         main.cpp
-        UI/UISDL.cpp
-        UI/RenderShapes.cpp
-        UI/Lodepng.cpp
-        UI/Console/Console.cpp
-        UI/Sprite.cpp
-        UI/Text.cpp
-        Audio.cpp
         Config/Config.cpp
-        Graphics3D.cpp
         Graphics3D/EngineWorld.cpp
         Graphics3D/EngineShapeSection.cpp
         Graphics3D/EngineShape.cpp
         Graphics3D/EngineOpenGL3SendObject.cpp
         Graphics3D/EngineOpenGL3.cpp
         Input/Input.cpp
-        KeyboardMouse.cpp
-        FontsText.cpp
-        Sprites.cpp
+        UI/Console/Console.cpp
+        UI/Lodepng.cpp
+        UI/RenderShapes.cpp
+        UI/Sprite.cpp
+        UI/Text.cpp
+        UI/UISDL.cpp
+        Audio.cpp
+        Chrono.cpp
+        Core.cpp
         FileIO.cpp
+        FontsText.cpp
+        Gfx2D.cpp
+        Graphics3D.cpp
+        InputLine.cpp
+        KeyboardMouse.cpp
         Maths.cpp
         Print.cpp
-        String.cpp
-        Chrono.cpp
         Random.cpp
-        Types.h
-        Core.cpp Gfx2D.cpp
-        InputLine.cpp)
+        Sprites.cpp
+        String.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
@@ -114,7 +113,7 @@ elseif(WIN32)
             glm::glm)
 endif()
 if (APPLE)
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/lib/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${PROJECT_BINARY_DIR}/libDaricRuntime.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libmodplug.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libglib-2.0.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libz.a /Users/daryl/Shared/Daric/mac/)
@@ -124,5 +123,12 @@ if (APPLE)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libSDL2_mixer.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libfreetype.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libpugixml.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libpng.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libbz2.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libpoly2tri.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libintl.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libbrotlidec-static.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libbrotlidec-static.a /Users/daryl/Shared/Daric/mac/)
+    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libimgui.a /Users/daryl/Shared/Daric/mac/)
     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD COMMAND cp ${FluidSynth_LIBRARY} /Users/daryl/Shared/Daric/mac/)
 endif()
