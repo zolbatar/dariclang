@@ -25,7 +25,7 @@ llvm::Constant *CompilerLLVM::CreateConstantFloat(Primitive type, T_F v) {
 
 llvm::Constant *CompilerLLVM::CreateConstantString(llvm::IRBuilder<> *ir, llvm::Function *func,
                                                    Primitive type, T_S v, std::string identifier) {
-    return ir->CreateGlobalString(v, identifier.size() > 0 ? identifier + " ## Initial" : "");
+    return ir->CreateGlobalStringPtr(v, identifier.size() > 0 ? identifier + " ## Initial" : "");
 }
 
 void CompilerLLVM::AutoConversion(llvm::IRBuilder<> *ir, ValueType &value_type, Primitive type) {
