@@ -41,13 +41,15 @@ const bool verbose = false;
 #endif
 
 CompilerLLVM::CompilerLLVM() {
+#ifdef __i386__
     LLVMInitializeX86Target();
     LLVMInitializeX86TargetInfo();
     LLVMInitializeX86TargetMC();
     LLVMInitializeX86AsmPrinter();
     LLVMInitializeX86AsmParser();
+#endif
 
-#ifdef __APPLE__
+#ifdef __aarch64__
     LLVMInitializeAArch64Target();
     LLVMInitializeAArch64TargetInfo();
     LLVMInitializeAArch64TargetMC();
