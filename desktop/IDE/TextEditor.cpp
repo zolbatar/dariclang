@@ -29,7 +29,7 @@ TextEditor::TextEditor()
           mScrollToCursor(false), mScrollToTop(false),
           mTextChanged(false), mColorizerEnabled(true), mTextStart(20.0f), mLeftMargin(10), mCursorPositionChanged(false),
           mColorRangeMin(0), mColorRangeMax(0),
-          mSelectionMode(SelectionMode::Normal), mCheckComments(true), mLastClick(-1.0f), mHandleKeyboardInputs(true),
+          mSelectionMode(SelectionMode::Normal), mCheckComments(true), mHandleKeyboardInputs(true), mLastClick(-1.0f),
           mHandleMouseInputs(true),
           mIgnoreImGuiChild(false), mShowWhitespaces(true),
           mStartTime(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count()) {
@@ -60,10 +60,10 @@ void TextEditor::SetPalette(const Palette &aValue) {
 std::string TextEditor::GetText(const Coordinates &aStart, const Coordinates &aEnd) const {
     std::string result;
 
-    auto lstart = aStart.mLine;
-    auto lend = aEnd.mLine;
-    auto istart = GetCharacterIndex(aStart);
-    auto iend = GetCharacterIndex(aEnd);
+    size_t lstart = aStart.mLine;
+    size_t lend = aEnd.mLine;
+    size_t istart = GetCharacterIndex(aStart);
+    size_t iend = GetCharacterIndex(aEnd);
     size_t s = 0;
 
     for (size_t i = lstart; i < lend; i++)
@@ -72,11 +72,11 @@ std::string TextEditor::GetText(const Coordinates &aStart, const Coordinates &aE
     result.reserve(s + s / 8);
 
     while (istart < iend || lstart < lend) {
-        if (lstart >= (int) mLines.size())
+        if (lstart >= mLines.size())
             break;
 
         auto &line = mLines[lstart];
-        if (istart < (int) line.size()) {
+        if (istart < line.size()) {
             result += line[istart].mChar;
             istart++;
         } else {

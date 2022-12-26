@@ -491,6 +491,8 @@ public:
     antlr4::tree::TerminalNode *REF();
     antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
+    antlr4::tree::TerminalNode *SOPEN();
+    antlr4::tree::TerminalNode *SCLOSE();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

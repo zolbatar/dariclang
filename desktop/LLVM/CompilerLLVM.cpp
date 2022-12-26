@@ -41,7 +41,7 @@ const bool verbose = false;
 #endif
 
 CompilerLLVM::CompilerLLVM() {
-#ifdef __i386__
+#ifdef __x86_64__ || __386__
     LLVMInitializeX86Target();
     LLVMInitializeX86TargetInfo();
     LLVMInitializeX86TargetMC();
@@ -49,7 +49,7 @@ CompilerLLVM::CompilerLLVM() {
     LLVMInitializeX86AsmParser();
 #endif
 
-#ifdef __aarch64__
+#ifdef _aarch64__
     LLVMInitializeAArch64Target();
     LLVMInitializeAArch64TargetInfo();
     LLVMInitializeAArch64TargetMC();

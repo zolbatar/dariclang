@@ -60,7 +60,7 @@ if:             IF expression THEN? statementsl (ELSE statementsl)? ;
 ifml:           IF expression THEN? NEWLINE statements (ELSE NEWLINE statements)? NEWLINE END IF ;
 input:          INPUT variable ;
 option:         OPTION IDENTIFIER (IDENTIFIER | integerLiteral) ;
-parameter:      REF? IDENTIFIER (COLON (type | IDENTIFIER))? ;
+parameter:      REF? IDENTIFIER (COLON (type | IDENTIFIER) (SOPEN SCLOSE)?)? ;
 print:          PRINT SYS? (value=expression (WITH? format=expression)? SEMICOLON?)? ;
 procedure:      DEF IDENTIFIER (COLON type)? LPAREN? NEWLINE* parameter? (COMMA NEWLINE* parameter)* RPAREN? separator* statements END DEF ;
 repeat:         REPEAT statements UNTIL expression ;
