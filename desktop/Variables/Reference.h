@@ -59,25 +59,46 @@ public:
     void CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref);
 
     // Func parameters mostly
-    llvm::Type *GetLLVMType(bool is_ref, CompilerLLVM &llvm) {
+    bool GetLLVMType(bool is_ref, bool is_array, std::vector<llvm::Type *> &types, CompilerLLVM &llvm) {
         switch (GetInstanceType()) {
             case InstanceType::PRIMITIVE:
-            case InstanceType::ARRAY:
-                if (!is_ref) {
-                    return llvm.TypeConversion(GetDataType());
+                if (is_array) {
+                    return false;
                 } else {
-                    return llvm::PointerType::get(llvm.TypeConversion(GetDataType()), 0);
+                    if (!is_ref) {
+                        types.push_back(llvm.TypeConversion(GetDataType()));
+                    } else {
+                        types.push_back(llvm::PointerType::get(llvm.TypeConversion(GetDataType()), 0));
+                    }
                 }
-            case InstanceType::RECORD:
-            case InstanceType::RECORD_ARRAY: {
-                auto ss = llvm.GetStruct(struct_name);
-                if (ss == nullptr)
-                    return nullptr;
-                return llvm::PointerType::get(ss, 0);
+                return true;
+            case InstanceType::ARRAY:
+                types.push_back(llvm::PointerType::get(llvm.TypeConversion(GetDataType()), 0));
+                types.push_back(llvm.TypeInt); // Number of dimensions
+                types.push_back(llvm::PointerType::get(llvm.TypeInt, 0)); // Dimensions
+                return true;
+            case InstanceType::RECORD: {
+                if (is_array) {
+                    return false;
+                } else {
+                    auto ss = llvm.GetStruct(struct_name);
+                    if (ss == nullptr)
+                        return false;
+                    types.push_back(llvm::PointerType::get(ss, 0));
+                    return true;
+                }
             }
-            default:
-                assert(0);
-                return nullptr;
+            case InstanceType::RECORD_ARRAY: {
+                if (is_array) {
+                    return false;
+                } else {
+                    auto ss = llvm.GetStruct(struct_name);
+                    if (ss == nullptr)
+                        return false;
+                    types.push_back(llvm::PointerType::get(ss, 0));
+                    return true;
+                }
+            }
         }
     }
 
@@ -100,7 +121,7 @@ public:
     }
 
 private:
-	SourceFileData &state;
+    SourceFileData &state;
     llvm::Value *LocalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndexPtr(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);

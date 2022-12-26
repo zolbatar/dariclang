@@ -137,6 +137,7 @@ llvm::Value *Reference::GetPointer(bool option_base, const std::vector<ValueType
 		} else if (instance->GetScope() == Scope::LOCAL) {
 			return llvm.locals[name];
 		}
+        break;
 	}
 	case InstanceType::ARRAY:
 	case InstanceType::RECORD_ARRAY: {
@@ -145,6 +146,7 @@ llvm::Value *Reference::GetPointer(bool option_base, const std::vector<ValueType
 		} else if (instance->GetScope() == Scope::LOCAL) {
 			return LocalIndex(option_base, indices_val, llvm, ir);
 		}
+        break;
 	}
 	default:
 		assert(0);
@@ -181,8 +183,8 @@ ValueType Reference::GetValue(bool option_base, const std::vector<ValueType> &in
 					  ss.index, llvm, ir);
 		break;
 	}
-	default:
-		assert(0);
+        default:
+            assert(0);
 	}
 	return vt;
 }
