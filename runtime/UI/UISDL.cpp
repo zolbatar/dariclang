@@ -2,6 +2,7 @@
 #include <memory>
 #include <filesystem>
 #include <thread>
+#include <chrono>
 #include "UISDL.h"
 #include "../Graphics3D/Engine.h"
 
@@ -113,8 +114,8 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
+    SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 0);
 
     // Initialise SDL now and create window
     _CreateWindow(windowed);
@@ -161,8 +162,10 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
                   false);
 
     // 3D
-    Create3DBuffer();
-    world.SetupOpenGL3();
+    if (!config.Is3DDisabled()) {
+        Create3DBuffer();
+        world.SetupOpenGL3();
+    }
 
     // Setup Platform/Renderer backends
     std::cout << "Setting up Dear ImGui backend" << std::endl;
@@ -211,6 +214,18 @@ bool UISDL::Render(std::function<void()> callback) {
         gen = true;
     }
     if (gen) {
+        if (config.Logging()) {
+            std::time_t tt;
+            auto today = std::chrono::system_clock::system_clock::now();
+            auto ms = duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
+            tt = std::chrono::system_clock::to_time_t(today);
+            if (mode == Mode::BANKED) {
+                std::cout << "Frame draw (banked) at " << ctime(&tt);
+            } else {
+                std::cout << "Frame draw (classic) at " << ctime(&tt);
+            }
+            std::cout << ms.count() << "ms" << std::endl;        }
+
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplSDL2_NewFrame(window);
@@ -231,26 +246,28 @@ bool UISDL::Render(std::function<void()> callback) {
 
 
         // Render shadows
-        if (world.shadows) {
-            glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
-            world.RenderOpenGL3Shadow();
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        }
+        if (!config.Is3DDisabled()) {
+            if (world.shadows) {
+                glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
+                world.RenderOpenGL3Shadow();
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
 
-        // Render 3D
-        world.Cleanup();
-        if (!msaa)
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
-        else
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D_msaa);
-        world.RenderOpenGL3(depthTexture);
-        if (msaa) {
-            glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo3D_msaa);
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
-            glBlitFramebuffer(0, 0, desktop_screen_width, desktop_screen_height, 0, 0, desktop_screen_width,
-                              desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            // Render 3D
+            world.Cleanup();
+            if (!msaa)
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
+            else
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D_msaa);
+            world.RenderOpenGL3(depthTexture);
+            if (msaa) {
+                glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo3D_msaa);
+                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
+                glBlitFramebuffer(0, 0, desktop_screen_width, desktop_screen_height, 0, 0, desktop_screen_width,
+                                  desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+            }
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
         }
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
         RenderShapes();
         console.Update();

@@ -41,7 +41,7 @@ const bool verbose = false;
 #endif
 
 CompilerLLVM::CompilerLLVM() {
-#ifdef __i386__
+#if defined(__i386__) || defined(__x86_64__)
     LLVMInitializeX86Target();
     LLVMInitializeX86TargetInfo();
     LLVMInitializeX86TargetMC();

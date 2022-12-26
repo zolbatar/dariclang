@@ -17,7 +17,7 @@ std::vector<Mix_Music *> music;
 
 static fluid_settings_t *settings;
 static fluid_synth_t *synth;
-static fluid_audio_driver_t *adriver;
+//static fluid_audio_driver_t *adriver;
 
 extern "C" DLLEXTERN void audio_init() {
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
