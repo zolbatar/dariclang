@@ -11,6 +11,7 @@ std::any Parser::visitConst(DaricParser::ConstContext *context) {
         RaiseException("CONST not allowed inside procedures", context);
     }
     ParserToken ps = CreateToken(context, ParserTokenType::CONSTANT);
+    ps.data_type = assignment_type;
     for (size_t i = 0; i < context->IDENTIFIER().size(); i++) {
         auto assign = std::any_cast<ParserToken>(visit(context->literal(i)));
         assign.identifier = context->IDENTIFIER(i)->getText();

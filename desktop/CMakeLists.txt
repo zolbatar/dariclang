@@ -15,6 +15,7 @@ message(STATUS "Vcpkg path: ${VCPKG_INSTALLED_DIR}")
 if (APPLE)
     set(triplet daric)
     link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
+    add_compile_options(-Wno-reorder-ctor -Wno-unknown-pragmas -Wno-covered-switch-default -Wno-missing-field-initializers -Wno-implicit-fallthrough)
 elseif(WIN32)
     set(triplet x64-windows-static)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
@@ -96,15 +97,8 @@ add_executable(${PROJECT_NAME}
         ../runtime/Graphics3D/EngineWorld.cpp
         ../runtime/Audio.cpp
         ../runtime/Config/Config.cpp
-        IDE/TextEditor.cpp
-        IDE/TextEditor.h
-        IDE/Edit.cpp
-        IDE/Edit.h
-        IDE/ImGuiFileDialog/ImGuiFileDialogConfig.h
-        IDE/ImGuiFileDialog/ImGuiFileDialog.h
-        IDE/ImGuiFileDialog/ImGuiFileDialog.cpp
-        Library/StringLib.h
-        Library/StringLib.cpp
+        ../runtime/Library/StringLib.h
+        ../runtime/Library/StringLib.cpp
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/Compiler.h
@@ -181,8 +175,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
-        Library/json.hpp
-        IDE/EditButtons.cpp
+        ../runtime/Library/json.hpp
         Compiler/CompilerInput.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE

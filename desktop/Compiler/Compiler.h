@@ -60,7 +60,6 @@ public:
 	}
 
 	static void SetupLibrary();
-	static std::vector<std::string> GetAllLibraryCallNames();
 	bool Compile();
 	void Run();
     std::string CreateExecutable();

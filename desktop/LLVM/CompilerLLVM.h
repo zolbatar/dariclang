@@ -17,22 +17,20 @@ struct ValueType {
     Primitive type;
 };
 
-struct FuncBuilder {
-    llvm::Function *func;
-    llvm::IRBuilder<> *builder;
-};
-
 class CompilerLLVM {
 public:
     CompilerLLVM();
-    void SetupProfile(CompilerOptions options, std::string module, SourceFileData &state);
+    void SetupProfile(const CompilerOptions& options, std::string
+    module,
+    SourceFileData &state
+    );
     llvm::Function *CreateFunc(std::string name, llvm::Type *ret, llvm::ArrayRef<llvm::Type *> parameters);
     llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
     void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);
     void MakePermString(llvm::Value *v, llvm::IRBuilder<> *ir);
     void ClearPermString(llvm::Value *v, llvm::IRBuilder<> *ir);
     void ClearTempStrings(llvm::IRBuilder<> *ir);
-    llvm::GlobalVariable::LinkageTypes GetLinkage() { return llvm::GlobalVariable::InternalLinkage; }
+    static llvm::GlobalVariable::LinkageTypes GetLinkage() { return llvm::GlobalVariable::InternalLinkage; }
 
     // Blocks
     llvm::BasicBlock *CreateBB(std::string block_name, size_t line_number);
@@ -173,11 +171,11 @@ public:
     std::unordered_map<std::string, Primitive> globals_type;
     std::unordered_map<std::string, Primitive> locals_type;
 private:
+    void SetupLibrary();
     void AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses);
     void CreateLLVMPasses();
     CompilerOptions options;
     llvm::Triple TheTriple;
-
 
     std::unordered_map<std::string, llvm::StructType *> structs;
     std::map<std::string, unsigned> locals_array_num_dimensions;

@@ -5,15 +5,14 @@
 #include <filesystem>
 #include <map>
 #include "Edit.h"
-#include "../../runtime/UI/UISDL.h"
+#include "../UI/UISDL.h"
 #include "../../runtime/Config/Config.h"
 #include "../Exception/Exception.h"
 
 extern std::filesystem::path exe_path;
 extern UISDL *ui;
 extern Config config;
-
-std::list<CaughtException> errors;
+extern std::list<CaughtException> errors;
 
 Edit::Edit() {
     ImGuiIO &io = ImGui::GetIO();
@@ -77,7 +76,8 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::Begin(title.c_str(),
                  &open,
-                 ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
+                 ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                 ImGuiWindowFlags_NoMove |
                  ImGuiWindowFlags_NoDecoration);
     EditButtons(main_viewport);
     ImGui::BeginChild("Edit Panel", ImVec2(main_viewport->Size.x, 0), false,
@@ -119,7 +119,8 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(20, 20, 20, 255));
                 float height = ImGui::GetFrameHeightWithSpacing() + 2;
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
-                ImGui::BeginChild("Summary Panel", ImVec2(main_viewport->Size.x, height), false, ImGuiWindowFlags_AlwaysUseWindowPadding);
+                ImGui::BeginChild("Summary Panel", ImVec2(main_viewport->Size.x, height), false,
+                                  ImGuiWindowFlags_AlwaysUseWindowPadding);
                 auto cpos = editor->GetCursorPosition();
                 ImGui::PushFont(font);
                 ImGui::Text("Line %d : Column %d : %d lines : %s",

@@ -54,14 +54,6 @@ void Compiler::AddLibraryCall(std::string name, std::string func, Primitive ret,
     library.insert(std::make_pair(name, LibraryFunc{.func_name = func, .return_Type=ret, .parameters=pars}));
 }
 
-std::vector<std::string> Compiler::GetAllLibraryCallNames() {
-    std::vector<std::string> names;
-    for (auto &l: library) {
-        names.push_back(l.first);
-    }
-    return names;
-}
-
 void Compiler::SetupLibrary() {
 
     // Core
@@ -181,3 +173,4 @@ void Compiler::SetupLibrary() {
 //    AddLibraryCall("NoteOff", "audio_noteoff", Primitive::NONE, "II");
 //    AddLibraryCall("SetBankPreset", "audio_bank", Primitive::NONE, "III");
 }
+

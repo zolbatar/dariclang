@@ -25,7 +25,6 @@ extern "C" DLLEXTERN void audio_init() {
         exit(1);
     }
 
-    std::cout << "Initialising SDL_Mixer" << std::endl;
     int audio_rate = MIX_DEFAULT_FREQUENCY;
     Uint16 audio_format = MIX_DEFAULT_FORMAT;
     int audio_channels = MIX_DEFAULT_CHANNELS;
@@ -34,11 +33,11 @@ extern "C" DLLEXTERN void audio_init() {
         exit(1);
     } else {
         Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-        printf("Opened audio at %d Hz %d bit%s %s with %d channels\n", audio_rate,
+/*        printf("Opened audio at %d Hz %d bit%s %s with %d channels\n", audio_rate,
                (audio_format & 0xFF),
                (SDL_AUDIO_ISFLOAT(audio_format) ? " (float)" : ""),
                (audio_channels > 2) ? "surround" :
-               (audio_channels > 1) ? "stereo" : "mono", audio_channels);
+               (audio_channels > 1) ? "stereo" : "mono", audio_channels);*/
     }
     Mix_AllocateChannels(64);
 
