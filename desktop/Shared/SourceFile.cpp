@@ -8,6 +8,7 @@ extern Console console;
 extern UISDL *ui;
 extern Input input;
 extern std::string message;
+extern std::list<CaughtException> errors;
 
 void SourceFile::MoveToTop(std::string file) {
 //	std::cout << "Moving to top:" << file << std::endl;
@@ -45,18 +46,14 @@ SourceFile::SourceFile(CompilerOptions &options) : options(options) {
             // Get file and check it exists
             parser->setFilename(file);
             std::ifstream stream(file);
-            if (!stream.is_open()) {
-                std::cout << "Can't open source file\n";
-                exit(1);
-            } else {
-//				std::cout << "Parsing: " << file << std::endl;
-            }
 
             // Mark as done
             already_imported.insert(file);
 
             // Parse
             auto additional_files = parser->Parse(stream, options.target);
+            if (!errors.empty())
+                return;
             dependencies.insert(std::make_pair(file, additional_files));
 
             // Add any new IMPORT files to be parsed

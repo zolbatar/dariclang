@@ -97,8 +97,8 @@ add_executable(${PROJECT_NAME}
         ../runtime/Graphics3D/EngineWorld.cpp
         ../runtime/Audio.cpp
         ../runtime/Config/Config.cpp
-        Library/StringLib.h
-        Library/StringLib.cpp
+        ../runtime/Library/StringLib.h
+        ../runtime/Library/StringLib.cpp
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/Compiler.h
@@ -175,7 +175,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
-        Library/json.hpp
+        ../runtime/Library/json.hpp
         Compiler/CompilerInput.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE

@@ -9,7 +9,9 @@
 #include "Shared/SourceFile.h"
 #include "../runtime/UI/UISDL.h"
 #include "../runtime/Config/Config.h"
+#include "../runtime/Config/json.hpp"
 
+using json = nlohmann::json;
 extern "C" void audio_init();
 UISDL *ui = nullptr;
 Config config;
@@ -38,8 +40,33 @@ void RunThread() {
     if (errors.size() == 0)
         state.ParseCompileAndRun();
     std::cout << "Message: " << message << std::endl;
-    std::cout << "Errors: "  << errors.size() << std::endl;
-    need to write out errors as json to be picked up by ide
+    std::cout << "Errors (throwing back): " << errors.size() << std::endl;
+
+    // Convert errors into suitable format
+    json j = json::array();
+    for (auto &error: errors) {
+        json je;
+        switch (error.type) {
+            case ExceptionType::PARSER:
+                je["type"] = "Parser";
+                break;
+            case ExceptionType::COMPILER:
+                je["type"] = "Compiler";
+                break;
+            case ExceptionType::RUNTIME:
+                je["type"] = "Runtime";
+                break;
+        }
+        je["filename"] = error.filename;
+        je["line_number"] = error.line_number;
+        je["char_position"] = error.char_position;
+        je["error"] = error.error;
+        j.push_back(je);
+    }
+
+    // Now write out
+    std::ofstream out(exe_path / "Throwback.json");
+    out << j.dump(4) << std::endl;
     done = true;
 }
 
