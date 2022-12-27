@@ -2,13 +2,11 @@
 #include <iostream>
 #include "Edit.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
-#include "../Compiler/CompilerOptions.h"
-
-extern void RunThread();
+#include "../UI/UISDL.h"
 
 extern std::filesystem::path exe_path;
-extern CompilerOptions options;
 std::string message;
+extern UISDL* ui;
 
 void Edit::SetButtonStyle(int i) {
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor::HSV(i / 7.0f, 0.6f, 0.6f));
@@ -188,23 +186,23 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     if (dis) ImGui::BeginDisabled();
     SetButtonStyle(0);
     if (ImGui::Button("Run")) {
-        options.file = this->editor_name;
+/*        options.file = this->editor_name;
         options.target = CompileTarget::INTERACTIVE;
         options.use_exit_as_end = false;
         options.optimise = true;
         options.run = true;
         auto t = std::thread(&RunThread);
-        t.detach();
+        t.detach();*/
     }
     ImGui::SameLine();
     if (ImGui::Button("Run [Release]")) {
-        options.file = this->editor_name;
+/*        options.file = this->editor_name;
         options.target = CompileTarget::INTERACTIVE;
         options.use_exit_as_end = true;
         options.optimise = true;
         options.run = true;
         auto t = std::thread(&RunThread);
-        t.detach();
+        t.detach();*/
     }
     ImGui::SameLine();
 /*    if (ImGui::Button("Create Executable")) {
@@ -224,6 +222,7 @@ void Edit::EditButtons(const ImGuiViewport *main_viewport) {
     // Quit
     SetButtonStyle(6);
     if (ImGui::Button("Quit")) {
+		delete ui;
         exit(0);
     }
     ImGui::PopStyleColor(3);

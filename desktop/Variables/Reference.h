@@ -59,27 +59,7 @@ public:
     void CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref);
 
     // Func parameters mostly
-    llvm::Type *GetLLVMType(bool is_ref, CompilerLLVM &llvm) {
-        switch (GetInstanceType()) {
-            case InstanceType::PRIMITIVE:
-            case InstanceType::ARRAY:
-                if (!is_ref) {
-                    return llvm.TypeConversion(GetDataType());
-                } else {
-                    return llvm::PointerType::get(llvm.TypeConversion(GetDataType()), 0);
-                }
-            case InstanceType::RECORD:
-            case InstanceType::RECORD_ARRAY: {
-                auto ss = llvm.GetStruct(struct_name);
-                if (ss == nullptr)
-                    return nullptr;
-                return llvm::PointerType::get(ss, 0);
-            }
-            default:
-                assert(0);
-                return nullptr;
-        }
-    }
+    llvm::Type *GetLLVMType(bool is_ref, CompilerLLVM &llvm);
 
     // Array
     void SetAsArray();
@@ -100,7 +80,7 @@ public:
     }
 
 private:
-	SourceFileData &state;
+    SourceFileData &state;
     llvm::Value *LocalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndexPtr(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);
     llvm::Value *GlobalIndex(bool option_base, std::vector<ValueType> indices_val, CompilerLLVM &llvm, llvm::IRBuilder<> *ir);

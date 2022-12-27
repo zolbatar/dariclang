@@ -1,4 +1,3 @@
-#include <iostream>
 #include "llvm/Bitcode/BitcodeWriter.h"
 #include "llvm/ADT/STLExtras.h"
 #include "llvm/ADT/Triple.h"
@@ -18,7 +17,7 @@
 #include "llvm/Support/FileSystem.h"
 #include "llvm/Support/Host.h"
 #include "llvm/Support/ManagedStatic.h"
-#include "llvm/Support/SourceMgr.h"
+//#include "llvm/Support/SourceMgr.h"
 #include "llvm/Support/TargetSelect.h"
 #include "llvm/Target/TargetLoweringObjectFile.h"
 #include "llvm/Transforms/Utils/Cloning.h"
@@ -27,21 +26,21 @@
 #include "lld/Common/Driver.h"
 #include "CompilerLLVM.h"
 #include "llvm/CodeGen/CommandFlags.h"
+#include <iostream>
 
 const bool verbose = false;
 
 #ifdef __APPLE__
-
 #include <sys/sysctl.h>
-
 #endif
+
 #ifdef WINDOWS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
 CompilerLLVM::CompilerLLVM() {
-#if defined(__i386__) || defined(__x86_64__)
+#if defined(__i386__) || defined(__x86_64__) || defined(_WIN64)
     LLVMInitializeX86Target();
     LLVMInitializeX86TargetInfo();
     LLVMInitializeX86TargetMC();
@@ -66,7 +65,7 @@ std::string getCPUArch() {
 #ifdef __APPLE__
     uint32_t cputype = 0;
     size_t size = sizeof(cputype);
-    int res = sysctlbyname("hw.cputype", &cputype, &size, NULL, 0);
+    int res = sysctlbyname("hw.cputype", &cputype, &size, nullptr, 0);
     if (res) {
         std::cout << "Get CPU type error: " << res << std::endl;
         exit(1);
@@ -113,7 +112,7 @@ static std::string getFeaturesStr() {
     return Features.getString();
 }
 
-void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, SourceFileData &state) {
+void CompilerLLVM::SetupProfile(const CompilerOptions& options, std::string module, SourceFileData &state) {
     llvm::CodeGenOpt::Level OLvl = llvm::CodeGenOpt::Default;
     this->options = options;
     if (options.optimise) {
@@ -196,7 +195,16 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sou
                                                 data,
                                                 "DATA");
     globals["~DATAPtr"] = new llvm::GlobalVariable(*Module, TypeInt, false, llvm::GlobalValue::InternalLinkage, llvm::ConstantInt::get(TypeInt, 0), "DATAPtr");
+    if (!options.use_exit_as_end) {
+        globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeBit, false,
+                                                             GetLinkage(),
+                                                             llvm::ConstantInt::get(TypeBit, 0),
+                                                             "QuitRequested");
+    }
+    SetupLibrary();
+}
 
+void CompilerLLVM::SetupLibrary() {
     Module->getOrInsertFunction("daric_end", TypeNone);
     Module->getOrInsertFunction("kbm_escape_pressed", TypeBit);
 
@@ -257,13 +265,6 @@ void CompilerLLVM::SetupProfile(CompilerOptions options, std::string module, Sou
     Module->getOrInsertFunction("float_to_string", TypeString, TypeFloat);
     Module->getOrInsertFunction("int_to_string_with", TypeString, TypeInt, TypeString);
     Module->getOrInsertFunction("float_to_string_with", TypeString, TypeFloat, TypeString);
-
-    if (!options.use_exit_as_end) {
-        globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeBit, false,
-                                                             GetLinkage(),
-                                                             llvm::ConstantInt::get(TypeBit, 0),
-                                                             "QuitRequested");
-    }
 }
 
 void CompilerLLVM::AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses) {

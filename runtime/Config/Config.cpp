@@ -50,6 +50,6 @@ void Config::Load() {
             std::cout << "Error parsing Config.json" << std::endl;
             exit(1);
         }
-        std::cout << it.key() << " : " << it.value() << "\n";
+//        std::cout << it.key() << " : " << it.value() << "\n";
     }
 }

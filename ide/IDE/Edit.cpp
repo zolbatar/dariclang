@@ -5,15 +5,12 @@
 #include <filesystem>
 #include <map>
 #include "Edit.h"
-#include "../../runtime/UI/UISDL.h"
+#include "../UI/UISDL.h"
 #include "../../runtime/Config/Config.h"
-#include "../Exception/Exception.h"
 
 extern std::filesystem::path exe_path;
 extern UISDL *ui;
 extern Config config;
-
-std::list<CaughtException> errors;
 
 Edit::Edit() {
     ImGuiIO &io = ImGui::GetIO();
@@ -50,11 +47,11 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     //editor.SetBreakpoints(bpts);
 
     // If we have errors for files not open, OPEN THEM!
-    for (auto it = errors.begin(); it != errors.end(); ++it) {
+/*    for (auto it = errors.begin(); it != errors.end(); ++it) {
         if (!editor_files.contains(it->filename)) {
             LoadFile(it->filename);
         }
-    }
+    }*/
 
     // Any closed tabs?
     for (auto &s: editor_files) {
@@ -90,7 +87,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
 
             // Any errors? If so colour code the tab
             bool any_errors = false;
-            for (auto it = errors.begin(); it != errors.end(); ++it) {
+/*            for (auto it = errors.begin(); it != errors.end(); ++it) {
                 if (it->filename == s.first) {
                     any_errors = true;
                 }
@@ -101,20 +98,20 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(1, 0, 0, 0.8));
                 ImGui::PushStyleColor(ImGuiCol_TabUnfocused, ImVec4(1, 0, 0, 0.8));
                 ImGui::PushStyleColor(ImGuiCol_TabUnfocusedActive, ImVec4(1, 0, 0, 0.4));
-            }
+            }*/
 
             if (ImGui::BeginTabItem(s.first.c_str(), &editor_files[s.first].open)) {
                 editor = &s.second;
                 editor_name = s.first;
 
                 // Error markers
-                TextEditor::ErrorMarkers markers;
+/*                TextEditor::ErrorMarkers markers;
                 for (auto it = errors.begin(); it != errors.end(); ++it) {
                     if (it->filename == editor_name) {
                         markers.insert(std::make_pair(static_cast<int>(it->line_number), it->error));
                     }
                 }
-                editor->SetErrorMarkers(markers);
+                editor->SetErrorMarkers(markers);*/
 
                 ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(20, 20, 20, 255));
                 float height = ImGui::GetFrameHeightWithSpacing() + 2;
