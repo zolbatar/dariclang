@@ -40,7 +40,7 @@ SourceFile::SourceFile(CompilerOptions &options) : options(options) {
 
         // Already imported?
         if (!already_imported.contains(file)) {
-            parsers.emplace_front(Parser(this->data));
+            parsers.emplace_front(Parser(this->data, options));
             auto parser = &parsers.front();
 
             // Get file and check it exists

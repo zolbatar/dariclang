@@ -36,7 +36,7 @@ extern "C" DLLEXTERN void gfx2d_linewidth(T_F width) {
 }
 
 extern "C" DLLEXTERN void gfx2d_mode(T_I w, T_I h, T_I flags) {
-    std::cout << "Mode called with " << w << "," << h << "," << flags << std::endl;
+    //std::cout << "Mode called with " << w << "," << h << "," << flags << std::endl;
     screen_width = w;
     screen_height = h;
     screen_flags = flags;

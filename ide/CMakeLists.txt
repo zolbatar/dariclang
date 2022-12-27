@@ -50,7 +50,7 @@ add_executable(${PROJECT_NAME}
         IDE/EditButtons.cpp
         IDE/TextEditor.cpp
         IDE/ImGuiFileDialog/ImGuiFileDialog.cpp
-        main.cpp)
+        main.cpp Exception/Exception.h)
 
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE

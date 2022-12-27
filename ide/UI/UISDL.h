@@ -31,6 +31,8 @@ class UISDL
 
 	void Start(int w, int h, bool windowed, bool banked);
 	bool Render(std::function<void()> callback);
+	void Minimise();
+	void Restore();
 	float GetDPIRatio()
 	{
 		return dpi_ratio;

@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
         options.file = options.file.substr(1);
         is_run_from_ide = true;
     }
+    std::cout << "Filename: " << options.file << std::endl;
 
     // What sort of compile?
     if (argc == 2) {
@@ -105,13 +106,13 @@ int main(int argc, char *argv[]) {
         options.use_exit_as_end = true;
     }
     options.run = argc == 2;
+    ui = new UISDL();
     auto t = std::thread(&RunThread);
     t.detach();
     while (!done) {
         if (start_ui) {
-            ui = new UISDL();
             ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
-            start_ui = false;
+            start_ui.store(false);
             ui_started.store(true);
         }
         if (ui_started.load()) {

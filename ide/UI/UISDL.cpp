@@ -194,7 +194,8 @@ void UISDL::_CreateWindow(bool windowed)
 	if (!windowed)
 	{
 		window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
-		window = SDL_CreateWindow("Daric",
+		//window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
+		window = SDL_CreateWindow("Daric IDE",
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
 			desktop_screen_width,
@@ -204,7 +205,7 @@ void UISDL::_CreateWindow(bool windowed)
 	else
 	{
 		window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_ALLOW_HIGHDPI);
-		window = SDL_CreateWindow("Daric",
+		window = SDL_CreateWindow("Daric IDE",
 			SDL_WINDOWPOS_CENTERED,
 			SDL_WINDOWPOS_CENTERED,
 			desktop_screen_width,
@@ -255,4 +256,19 @@ bool UISDL::LoadTextureFromFile(const char* filename, GLuint* outTexture, int* o
 	*outHeight = image_height;
 
 	return true;
+}
+
+void UISDL::Minimise()
+{
+	if (SDL_SetWindowFullscreen(window, 0)) {
+		std::cout << "Can't leave fullscreen mode" << std::endl;
+	}
+}
+
+void UISDL::Restore()
+{
+	SDL_Delay(1000);
+	if (SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP)) {
+		std::cout << "Can't re-enter fullscreen mode" << std::endl;
+	}
 }
