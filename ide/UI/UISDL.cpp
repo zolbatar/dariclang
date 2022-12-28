@@ -52,6 +52,7 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
         desktop_screen_width = w;
         desktop_screen_height = h;
     }
+    std::cout << "UI resolution: " << desktop_screen_width << "x" << desktop_screen_height << std::endl;
 
     // Decide GL+GLSL versions
     std::cout << "Setting up OpenGL version" << std::endl;
