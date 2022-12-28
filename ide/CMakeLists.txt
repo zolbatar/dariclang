@@ -56,7 +56,6 @@ if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
             xar
-            intl
             iconv
             glib-2.0
             fluidsynth

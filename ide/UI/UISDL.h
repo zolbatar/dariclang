@@ -49,6 +49,7 @@ class UISDL
 	void _CreateWindow(bool windowed);
 	bool LoadTextureFromFile(const char* filename, GLuint* outTexture, int* outWidth, int* outHeight);
 
+    bool windowed;
 	float dpi_ratio;
 	int desktop_screen_width, desktop_screen_height;
 	SDL_Window* window;
