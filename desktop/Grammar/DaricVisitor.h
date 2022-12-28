@@ -91,6 +91,8 @@ public:
 
     virtual std::any visitType(DaricParser::TypeContext *context) = 0;
 
+    virtual std::any visitCollection(DaricParser::CollectionContext *context) = 0;
+
     virtual std::any visitTypeOrStruct(DaricParser::TypeOrStructContext *context) = 0;
 
     virtual std::any visitLiteral(DaricParser::LiteralContext *context) = 0;

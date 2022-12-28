@@ -291,6 +291,8 @@ llvm::Type *Reference::GetLLVMType(bool is_ref, CompilerLLVM &llvm) {
                 return nullptr;
             return llvm::PointerType::get(ss, 0);
         }
+        default:
+            assert(0);
     }
 }
 

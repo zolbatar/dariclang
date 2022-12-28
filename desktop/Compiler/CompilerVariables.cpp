@@ -35,6 +35,8 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
                 type = ss.member->type;
                 break;
             }
+            default:
+                assert(0);
         }
 
         // Do conversion

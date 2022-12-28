@@ -6,7 +6,6 @@ typedef const char *T_S;
 typedef uint8_t T_B;
 
 enum class Scope {
-    UNKNOWN,
     LOCAL,
     GLOBAL,
 };
