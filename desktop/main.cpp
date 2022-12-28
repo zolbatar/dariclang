@@ -93,13 +93,14 @@ int main(int argc, char *argv[]) {
     if (options.file[0] == '@') {
         options.file = options.file.substr(1);
         is_run_from_ide = true;
+		std::cout << "Running from IDE" << std::endl;
     }
     std::cout << "Filename: " << options.file << std::endl;
 
     // What sort of compile?
     if (argc == 2) {
         options.target = is_run_from_ide ? CompileTarget::INTERACTIVE : CompileTarget::JIT;
-        options.use_exit_as_end = false;
+        options.use_exit_as_end = !is_run_from_ide;
     } else {
         options.target = CompileTarget::EXE;
         options.output_filename = std::string(argv[2]);
