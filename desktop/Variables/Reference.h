@@ -11,6 +11,7 @@
 #include "InstancePrimitiveArray.h"
 #include "InstanceRecord.h"
 #include "InstanceRecordArray.h"
+#include "InstanceList.h"
 
 struct StructSearch {
     StructMember *member;
@@ -56,7 +57,7 @@ public:
     bool FindInstanceUnknownInstanceType();
 
     // Create
-    void CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref);
+    void CreateInstance(CompilerLLVM &llvm, llvm::Function *func, Primitive default_return_type, llvm::IRBuilder<> *ir, Scope scope, bool is_ref);
 
     // Func parameters mostly
     llvm::Type *GetLLVMType(bool is_ref, CompilerLLVM &llvm);
@@ -69,7 +70,7 @@ public:
     void SetAsQueue();
     void SetAsStack();
 
-        // Array
+    // Array
     void SetAsArray();
     void AddIndexRef(ParserToken &&token);
     [[nodiscard]] size_t IndicesCount() const;

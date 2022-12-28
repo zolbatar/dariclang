@@ -101,6 +101,7 @@ add_executable(${PROJECT_NAME}
         ../runtime/Library/StringLib.cpp
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
+        Compiler/CompilerInput.cpp
         Compiler/Compiler.h
         Compiler/CompilerOption.cpp
         Compiler/CompilerPrint.cpp
@@ -133,6 +134,7 @@ add_executable(${PROJECT_NAME}
         Parser/ParserToken.h
         Parser/ParserTokenType.h
         Parser/ParserLiteral.cpp
+        Parser/Core/ParserCollection.cpp
         Parser/Core/ParserAssignment.cpp
         Parser/Core/ParserExpression.cpp
         Parser/Core/ParserFunctions.cpp
@@ -171,12 +173,21 @@ add_executable(${PROJECT_NAME}
         Variables/InstanceRecord.h
         Variables/InstanceRecordArray.cpp
         Variables/InstanceRecordArray.h
+        Variables/InstanceList.cpp
+        Variables/InstanceList.h
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
         ../runtime/Library/json.hpp
-        Compiler/CompilerInput.cpp Parser/Core/ParserCollection.cpp)
+        Containers/src/list.c
+        Containers/src/vector.c
+        Containers/src/deque.c
+        Containers/src/queue.c
+        Containers/src/stack.c
+        Containers/src/unordered_map.c
+        Containers/src/unordered_set.c
+        )
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

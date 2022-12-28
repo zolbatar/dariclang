@@ -3,7 +3,7 @@
 void Compiler::GenericVariable(ParserToken &token, Scope scope) {
     for (auto &s: token.children) {
         auto ref = Reference::Get(s.reference);
-         auto value_type = CompileExpression(s.children[0]);
+        auto value_type = CompileExpression(s.children[0]);
 
         // If no type, try and auto-guess it from the expression
         if (ref->GetDataType() == Primitive::NONE) {
@@ -13,7 +13,7 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
         // If it's a primitive type, we create the variable if we need to
         if (ref->GetInstanceType() == InstanceType::PRIMITIVE) {
             if (!ref->InstanceExists()) {
-                ref->CreateInstance(llvm, GetPreIR(), scope, false);
+                ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), scope, false);
             }
         }
 
@@ -172,17 +172,29 @@ void Compiler::CreateGlobalDimensions(Reference *var, Primitive type1, llvm::Typ
     llvm.CreateGlobalArray(var->GetName(), typ, init, indices.size(), size_v, type1);
 }
 
+void Compiler::TokenContainer(ParserToken &t) {
+    auto var = Reference::Get(t.reference);
+
+    if (procedure == nullptr) {
+        if (t.scope != Scope::GLOBAL) return;
+        var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::GLOBAL, false);
+    } else {
+        if (t.scope != Scope::LOCAL) return;
+        var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::LOCAL, false);
+    }
+}
+
 void Compiler::TokenDim(ParserToken &t) {
     auto var = Reference::Get(t.reference);
 
     if (procedure == nullptr) {
         if (t.scope != Scope::GLOBAL) return;
         CreateGlobalDimensions(var, var->GetDataType(), llvm.TypeConversion(var->GetDataType()));
-        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL, false);
+        var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::GLOBAL, false);
     } else {
         if (t.scope != Scope::LOCAL) return;
         CreateLocalDimensions(var, var->GetDataType(), llvm.TypeConversion(var->GetDataType()));
-        var->CreateInstance(llvm, GetIR(), Scope::LOCAL, false);
+        var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::LOCAL, false);
     }
 }
 

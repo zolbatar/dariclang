@@ -19,6 +19,7 @@ enum class ParserTokenType
 	CHRS,
 	COMPLEMENT,
 	CONSTANT,
+    CONTAINER,
 	COS,
 	DEG,
 	DIM,

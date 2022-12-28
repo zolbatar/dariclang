@@ -63,7 +63,7 @@ void Compiler::TokenFor(ParserToken &t) {
         if (ref->GetDataType() == Primitive::NONE) {
             ref->SetDataType(from.type);
         }
-        ref->CreateInstance(llvm, GetPreIR(), t.scope, false);
+        ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), t.scope, false);
     }
     if (!ref->FindInstance())
         VariableError(t, ref->GetName());

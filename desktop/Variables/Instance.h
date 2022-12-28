@@ -70,7 +70,4 @@ protected:
 
     static std::unordered_map<std::string, std::shared_ptr<Instance>> locals;
     static std::unordered_map<std::string, std::shared_ptr<Instance>> globals;
-
-private:
-    llvm::StructType *struct_type;
 };

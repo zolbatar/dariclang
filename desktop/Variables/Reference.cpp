@@ -93,7 +93,7 @@ bool Reference::FindInstance() {
     return true;
 }
 
-void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref) {
+void Reference::CreateInstance(CompilerLLVM &llvm, llvm::Function *func, Primitive default_return_type, llvm::IRBuilder<> *ir, Scope scope, bool is_ref) {
     switch (instance_type) {
         case InstanceType::PRIMITIVE:
             instance = InstancePrimitive::Build(name, data_type, scope, llvm, ir, is_ref);
@@ -108,6 +108,9 @@ void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope 
         case InstanceType::RECORD_ARRAY:
             SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance = InstanceRecordArray::Build(name, struct_name, llvm_struct_type, scope, indices.size(), llvm, ir);
+            break;
+        case InstanceType::LIST:
+            instance = InstanceList::Build(name, data_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         default:
             assert(0);

@@ -169,8 +169,8 @@ void CompilerLLVM::SetupProfile(const CompilerOptions& options, std::string modu
         std::cout << "Creating module and context" << std::endl;
     Context = std::make_unique<llvm::LLVMContext>();
     Module = std::make_unique<llvm::Module>(module, *Context);
-    auto dl = Target->createDataLayout();
-    Module.get()->setDataLayout(dl);
+    dl = std::make_unique<llvm::DataLayout>(Target->createDataLayout());
+    Module.get()->setDataLayout(*dl);
 
     // Types
     TypeNone = llvm::Type::getVoidTy(Module->getContext());
@@ -179,6 +179,7 @@ void CompilerLLVM::SetupProfile(const CompilerOptions& options, std::string modu
     TypeByte = llvm::Type::getInt8Ty(Module->getContext());
     TypeInt = llvm::Type::getInt64Ty(Module->getContext());
     TypeString = llvm::Type::getInt8PtrTy(Module->getContext());
+    TypeVoid = llvm::Type::getInt8PtrTy(Module->getContext());
 
     // Build DATA
     auto stackInt = state.GetData().size();
@@ -207,6 +208,9 @@ void CompilerLLVM::SetupProfile(const CompilerOptions& options, std::string modu
 void CompilerLLVM::SetupLibrary() {
     Module->getOrInsertFunction("daric_end", TypeNone);
     Module->getOrInsertFunction("kbm_escape_pressed", TypeBit);
+
+    // Containers
+    Module->getOrInsertFunction("list_init", TypeVoid, TypeInt);
 
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);

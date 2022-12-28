@@ -12,24 +12,25 @@ std::any Parser::visitDim(DaricParser::DimContext *context) {
             r->GetIndices().push_back(std::move(pse));
         }
     } else if (context->LIST()) {
+        ps.type = ParserTokenType::CONTAINER;
         auto t = std::any_cast<TypeOrStruct>(visit(context->typeOrStruct()));
         r->SetAsList();
         if (!t.is_struct)
             r->SetDataType(t.type);
         else {
-            r->SetAsStruct();
             r->SetStructName(t.name);
         }
     } else if (context->VECTOR()) {
+        ps.type = ParserTokenType::CONTAINER;
         auto t = std::any_cast<TypeOrStruct>(visit(context->typeOrStruct()));
         r->SetAsVector();
         if (!t.is_struct)
             r->SetDataType(t.type);
         else {
-            r->SetAsStruct();
             r->SetStructName(t.name);
         }
     } else if (context->SET()) {
+        ps.type = ParserTokenType::CONTAINER;
         r->SetAsSet();
         if (context->BYTE())
             r->SetDataType(Primitive::BYTE);
@@ -40,6 +41,7 @@ std::any Parser::visitDim(DaricParser::DimContext *context) {
         else if (context->FLOAT())
             r->SetDataType(Primitive::FLOAT);
     } else if (context->MAP()) {
+        ps.type = ParserTokenType::CONTAINER;
         r->SetAsMap();
         if (context->BYTE())
             r->SetDataType(Primitive::BYTE);
@@ -60,21 +62,21 @@ std::any Parser::visitDim(DaricParser::DimContext *context) {
         pss.identifier = context->IDENTIFIER()->getText();
         ps.children.push_back(pss);
     } else if (context->QUEUE()) {
+        ps.type = ParserTokenType::CONTAINER;
         auto t = std::any_cast<TypeOrStruct>(visit(context->typeOrStruct()));
         r->SetAsQueue();
         if (!t.is_struct)
             r->SetDataType(t.type);
         else {
-            r->SetAsStruct();
             r->SetStructName(t.name);
         }
     } else if (context->STACK()) {
+        ps.type = ParserTokenType::CONTAINER;
         auto t = std::any_cast<TypeOrStruct>(visit(context->typeOrStruct()));
         r->SetAsStack();
         if (!t.is_struct)
             r->SetDataType(t.type);
         else {
-            r->SetAsStruct();
             r->SetStructName(t.name);
         }
     }

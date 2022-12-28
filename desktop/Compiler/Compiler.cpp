@@ -114,6 +114,9 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::DIM:
                 TokenDim(token);
                 break;
+            case ParserTokenType::CONTAINER:
+                TokenContainer(token);
+                break;
             case ParserTokenType::CALL:
                 TokenCall(token);
                 break;
