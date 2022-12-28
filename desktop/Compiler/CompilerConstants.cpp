@@ -54,7 +54,7 @@ void Compiler::Constants() {
     CreateConstant("KEY_N", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, SDL_SCANCODE_N));
     CreateConstant("KEY_M", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, SDL_SCANCODE_M));
 
-    CreateConstant("NOTE_A0", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 21));
+/*    CreateConstant("NOTE_A0", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 21));
     CreateConstant("NOTE_As0", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 22));
     CreateConstant("NOTE_Bb0", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 22));
     CreateConstant("NOTE_B0", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 23));
@@ -193,5 +193,5 @@ void Compiler::Constants() {
     CreateConstant("NOTE_A8", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 117));
     CreateConstant("NOTE_As8", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 118));
     CreateConstant("NOTE_Bb8", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 118));
-    CreateConstant("NOTE_B8", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 119));
+    CreateConstant("NOTE_B8", Primitive::INT, llvm.CreateConstantInt(Primitive::INT, 119));*/
 }

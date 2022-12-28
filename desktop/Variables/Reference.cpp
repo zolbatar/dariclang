@@ -214,6 +214,8 @@ llvm::Value *Reference::LocalIndex(bool option_base,
                                    CompilerLLVM &llvm,
                                    llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
+    if (option_base)
+        index = ir->CreateSub(index, llvm::ConstantInt::get(llvm.TypeInt, 1));
     auto glob_v = llvm.GetLocal(name);
     auto glob = llvm.GetLocalArrayDimensions(name);
     for (size_t i = 0; i < indices_val.size() - 1; i++) {
@@ -240,6 +242,8 @@ llvm::Value *Reference::GlobalIndexPtr(bool option_base,
                                        CompilerLLVM &llvm,
                                        llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
+    if (option_base)
+        index = ir->CreateSub(index, llvm::ConstantInt::get(llvm.TypeInt, 1));
     auto glob = llvm.GetGlobalArrayDimensions(name);
     for (size_t i = 0; i < indices_val.size() - 1; i++) {
 

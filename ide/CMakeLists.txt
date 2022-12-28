@@ -23,6 +23,7 @@ elseif (WIN32)
     message(STATUS ${CMAKE_CXX_FLAGS_DEBUG})
     message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
     SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /EHsc")
+    SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /EHsc")
     SET(CMAKE_CXX_FLAGS_DEBUG "/Zi /Ob0 /Od /RTC1 /EHsc")
     SET(CMAKE_CXX_FLAGS_RELEASE "/EHsc /MT")
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
@@ -83,7 +84,14 @@ elseif (WIN32)
             SDL2::SDL2-static
             imgui::imgui)
 endif ()
-install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION .
-        LIBRARY DESTINATION .
-        ARCHIVE DESTINATION .)
+if(APPLE)
+    install(TARGETS ${PROJECT_NAME}
+            RUNTIME DESTINATION mac
+            LIBRARY DESTINATION mac
+            ARCHIVE DESTINATION mac)
+else()
+    install(TARGETS ${PROJECT_NAME}
+            RUNTIME DESTINATION win
+            LIBRARY DESTINATION win
+            ARCHIVE DESTINATION win)
+endif()

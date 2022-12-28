@@ -224,7 +224,14 @@ elseif(WIN32)
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
 endif()
-install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION mac
-        LIBRARY DESTINATION mac
-        ARCHIVE DESTINATION mac)
+if(APPLE)
+    install(TARGETS ${PROJECT_NAME}
+            RUNTIME DESTINATION mac
+            LIBRARY DESTINATION mac
+            ARCHIVE DESTINATION mac)
+else()
+    install(TARGETS ${PROJECT_NAME}
+            RUNTIME DESTINATION win
+            LIBRARY DESTINATION win
+            ARCHIVE DESTINATION win)
+endif()
