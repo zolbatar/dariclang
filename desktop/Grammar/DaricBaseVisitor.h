@@ -159,10 +159,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCollection(DaricParser::CollectionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitTypeOrStruct(DaricParser::TypeOrStructContext *ctx) override {
     return visitChildren(ctx);
   }

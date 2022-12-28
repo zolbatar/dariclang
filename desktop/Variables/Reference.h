@@ -61,7 +61,15 @@ public:
     // Func parameters mostly
     llvm::Type *GetLLVMType(bool is_ref, CompilerLLVM &llvm);
 
-    // Array
+    // Collections
+    void SetAsList();
+    void SetAsVector();
+    void SetAsSet();
+    void SetAsMap();
+    void SetAsQueue();
+    void SetAsStack();
+
+        // Array
     void SetAsArray();
     void AddIndexRef(ParserToken &&token);
     [[nodiscard]] size_t IndicesCount() const;

@@ -20,16 +20,17 @@ public:
     SWAP = 33, TO = 34, UNTIL = 35, WHEN = 36, WITH = 37, WHILE = 38, MAIN = 39, 
     ABS = 40, ACS = 41, ASN = 42, ATN = 43, COS = 44, DEG = 45, EXP = 46, 
     FLOOR = 47, LN = 48, LOG = 49, PI = 50, RAD = 51, ROUND = 52, SGN = 53, 
-    SIN = 54, SQR = 55, TAN = 56, VECTOR = 57, MAP = 58, STACK = 59, QUEUE = 60, 
-    SET = 61, FALSE = 62, TRUE = 63, ASC = 64, CHR = 65, INSTR = 66, LEFT = 67, 
-    MID = 68, RIGHT = 69, LEN = 70, BYTE = 71, INT = 72, FLOAT = 73, STRING = 74, 
-    DOLLAR = 75, HASH = 76, COLON = 77, SEMICOLON = 78, DOT = 79, COMMA = 80, 
-    QUOTE = 81, NEWLINE = 82, PERCENT = 83, UNDERSCORE = 84, LPAREN = 85, 
-    RPAREN = 86, SOPEN = 87, SCLOSE = 88, EQ = 89, NE = 90, GT = 91, GE = 92, 
-    LT = 93, LE = 94, HAT = 95, PLUS = 96, MINUS = 97, MULTIPLY = 98, DIVIDE = 99, 
-    SHL = 100, SHR = 101, MOD = 102, DIV = 103, COMP = 104, NOT = 105, AND = 106, 
-    OR = 107, EOR = 108, STRINGLITERAL = 109, HEXNUMBER = 110, BINARYNUMBER = 111, 
-    FLOATLITERAL = 112, INTEGERLITERAL = 113, IDENTIFIER = 114, WS = 115
+    SIN = 54, SQR = 55, TAN = 56, VECTOR = 57, LIST = 58, MAP = 59, STACK = 60, 
+    QUEUE = 61, SET = 62, FALSE = 63, TRUE = 64, ASC = 65, CHR = 66, INSTR = 67, 
+    LEFT = 68, MID = 69, RIGHT = 70, LEN = 71, BYTE = 72, INT = 73, FLOAT = 74, 
+    STRING = 75, DOLLAR = 76, HASH = 77, COLON = 78, SEMICOLON = 79, DOT = 80, 
+    COMMA = 81, QUOTE = 82, NEWLINE = 83, PERCENT = 84, UNDERSCORE = 85, 
+    LPAREN = 86, RPAREN = 87, SOPEN = 88, SCLOSE = 89, EQ = 90, NE = 91, 
+    GT = 92, GE = 93, LT = 94, LE = 95, HAT = 96, PLUS = 97, MINUS = 98, 
+    MULTIPLY = 99, DIVIDE = 100, SHL = 101, SHR = 102, MOD = 103, DIV = 104, 
+    COMP = 105, NOT = 106, AND = 107, OR = 108, EOR = 109, STRINGLITERAL = 110, 
+    HEXNUMBER = 111, BINARYNUMBER = 112, FLOATLITERAL = 113, INTEGERLITERAL = 114, 
+    IDENTIFIER = 115, WS = 116
   };
 
   enum {
@@ -41,8 +42,8 @@ public:
     RuleRepeat = 23, RuleRead = 24, RuleRestore = 25, RuleReturn = 26, RuleStruct = 27, 
     RuleStructDim = 28, RuleStructInstance = 29, RuleSwap = 30, RuleWhen = 31, 
     RuleWhile = 32, RuleVariable = 33, RuleExpression = 34, RuleType = 35, 
-    RuleCollection = 36, RuleTypeOrStruct = 37, RuleLiteral = 38, RuleFloatLiteral = 39, 
-    RuleIntegerLiteral = 40, RuleStringLiteral = 41
+    RuleTypeOrStruct = 36, RuleLiteral = 37, RuleFloatLiteral = 38, RuleIntegerLiteral = 39, 
+    RuleStringLiteral = 40
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -98,7 +99,6 @@ public:
   class VariableContext;
   class ExpressionContext;
   class TypeContext;
-  class CollectionContext;
   class TypeOrStructContext;
   class LiteralContext;
   class FloatLiteralContext;
@@ -332,13 +332,21 @@ public:
     TypeContext *type();
     antlr4::tree::TerminalNode *SOPEN();
     antlr4::tree::TerminalNode *SCLOSE();
-    CollectionContext *collection();
-    std::vector<TypeOrStructContext *> typeOrStruct();
-    TypeOrStructContext* typeOrStruct(size_t i);
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
+    antlr4::tree::TerminalNode *VECTOR();
+    TypeOrStructContext *typeOrStruct();
+    antlr4::tree::TerminalNode *LIST();
+    antlr4::tree::TerminalNode *SET();
+    antlr4::tree::TerminalNode *MAP();
     std::vector<antlr4::tree::TerminalNode *> COMMA();
     antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *STACK();
+    antlr4::tree::TerminalNode *QUEUE();
+    antlr4::tree::TerminalNode *BYTE();
+    antlr4::tree::TerminalNode *INT();
+    antlr4::tree::TerminalNode *FLOAT();
+    antlr4::tree::TerminalNode *STRING();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -844,23 +852,6 @@ public:
   };
 
   TypeContext* type();
-
-  class  CollectionContext : public antlr4::ParserRuleContext {
-  public:
-    CollectionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *VECTOR();
-    antlr4::tree::TerminalNode *MAP();
-    antlr4::tree::TerminalNode *SET();
-    antlr4::tree::TerminalNode *QUEUE();
-    antlr4::tree::TerminalNode *STACK();
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  CollectionContext* collection();
 
   class  TypeOrStructContext : public antlr4::ParserRuleContext {
   public:

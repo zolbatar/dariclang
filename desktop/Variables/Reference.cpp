@@ -20,6 +20,30 @@ Reference *Reference::Get(size_t index) {
     return &references.find(index)->second;
 }
 
+void Reference::SetAsList() {
+    instance_type = InstanceType::LIST;
+}
+
+void Reference::SetAsVector() {
+    instance_type = InstanceType::VECTOR;
+}
+
+void Reference::SetAsSet() {
+    instance_type = InstanceType::SET;
+}
+
+void Reference::SetAsMap() {
+    instance_type = InstanceType::MAP;
+}
+
+void Reference::SetAsQueue() {
+    instance_type = InstanceType::QUEUE;
+}
+
+void Reference::SetAsStack() {
+    instance_type = InstanceType::STACK;
+}
+
 void Reference::SetAsArray() {
     instance_type = InstanceType::ARRAY;
 }

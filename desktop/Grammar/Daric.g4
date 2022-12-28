@@ -51,7 +51,15 @@ case:           CASE expression OF separator? when* (OTHERWISE statements)? END 
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (COLON type)? ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
-dim:            DIM IDENTIFIER COLON ((type SOPEN expression? (COMMA expression)* SCLOSE) |(collection SOPEN typeOrStruct (COMMA typeOrStruct)* SCLOSE)) ;
+dim:            DIM IDENTIFIER COLON (
+                    (type SOPEN expression? (COMMA expression)* SCLOSE) |
+                    (VECTOR SOPEN typeOrStruct SCLOSE) |
+                    (LIST SOPEN typeOrStruct SCLOSE) |
+                    (SET SOPEN (BYTE | INT | FLOAT | STRING) SCLOSE) |
+                    (MAP SOPEN (BYTE | INT | FLOAT | STRING) COMMA typeOrStruct SCLOSE) |
+                    (STACK SOPEN typeOrStruct SCLOSE) |
+                    (QUEUE SOPEN typeOrStruct SCLOSE)
+                ) ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            QUIT ;
 for:            FOR IDENTIFIER (COLON type)? EQ expression TO expression (STEP expression)? statements NEXT ;
@@ -171,14 +179,6 @@ type
     | STRING
     ;
 
-collection
-    : VECTOR
-    | MAP
-    | SET
-    | QUEUE
-    | STACK
-    ;
-
 typeOrStruct
     : BYTE
     | FLOAT
@@ -269,6 +269,7 @@ SQR             : 'SQR' | 'Sqr' ;
 TAN             : 'TAN' | 'Tan' ;
 
 VECTOR          : 'VECTOR' | 'Vector' ;
+LIST            : 'LIST' | 'List' ;
 MAP             : 'MAP' | 'Map' ;
 STACK           : 'STACK' | 'Stack' ;
 QUEUE           : 'QUEUE' | 'Queue' ;

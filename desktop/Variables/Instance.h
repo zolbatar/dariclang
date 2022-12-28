@@ -10,6 +10,7 @@ enum class InstanceType {
     ARRAY,
     RECORD,
     RECORD_ARRAY,
+    LIST,
     VECTOR,
     MAP,
     SET,
