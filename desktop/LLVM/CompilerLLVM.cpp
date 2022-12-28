@@ -211,6 +211,9 @@ void CompilerLLVM::SetupLibrary() {
 
     // Containers
     Module->getOrInsertFunction("list_init", TypeVoid, TypeInt);
+	Module->getOrInsertFunction("vector_init", TypeVoid, TypeInt);
+	Module->getOrInsertFunction("set_init", TypeVoid, TypeInt, TypeVoid);
+	Module->getOrInsertFunction("map_init", TypeVoid, TypeInt, TypeInt, TypeVoid);
 
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);

@@ -99,6 +99,7 @@ add_executable(${PROJECT_NAME}
         ../runtime/Config/Config.cpp
         ../runtime/Library/StringLib.h
         ../runtime/Library/StringLib.cpp
+        ../runtime/Collections.cpp
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/CompilerInput.cpp
@@ -115,6 +116,8 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerLibrary.cpp
         Compiler/CompilerConstants.cpp
         Compiler/CompilerRead.cpp
+        Compiler/CompilerContainers.cpp
+        Compiler/CompilerArrays.cpp
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
         LLVM/CompilerLLVMVariables.cpp
@@ -159,22 +162,17 @@ add_executable(${PROJECT_NAME}
         Shared/SourceFile.cpp
         Shared/SourceFile.h
         Variables/PrimitiveTypes.h
-        Variables/Reference.h
         Variables/Reference.cpp
         Variables/Instance.cpp
-        Variables/Instance.h
         Variables/InstancePrimitive.cpp
-        Variables/InstancePrimitive.h
         Variables/InstanceConstant.cpp
-        Variables/InstanceConstant.h
         Variables/InstancePrimitiveArray.cpp
-        Variables/InstancePrimitiveArray.h
         Variables/InstanceRecord.cpp
-        Variables/InstanceRecord.h
         Variables/InstanceRecordArray.cpp
-        Variables/InstanceRecordArray.h
         Variables/InstanceList.cpp
-        Variables/InstanceList.h
+        Variables/InstanceVector.cpp
+        Variables/InstanceSet.cpp
+        Variables/InstanceMap.cpp
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
@@ -185,9 +183,8 @@ add_executable(${PROJECT_NAME}
         Containers/src/deque.c
         Containers/src/queue.c
         Containers/src/stack.c
-        Containers/src/unordered_map.c
-        Containers/src/unordered_set.c
-        )
+        Containers/src/map.c
+        Containers/src/set.c)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

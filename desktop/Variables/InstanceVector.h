@@ -2,7 +2,7 @@
 
 #include "Instance.h"
 
-class InstanceList : public Instance {
+class InstanceVector : public Instance {
 public:
     static std::shared_ptr<Instance> Build(const std::string &name,
                                            Primitive data_type,
@@ -13,7 +13,7 @@ public:
                                            llvm::IRBuilder<> *ir,
                                            Primitive default_return_type,
                                            bool is_ref);
-    InstanceList(const std::string &name,
+    InstanceVector(const std::string &name,
                       Primitive type,
                       Scope scope,
                       CompilerLLVM &llvm,
