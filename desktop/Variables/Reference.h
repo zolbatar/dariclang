@@ -15,6 +15,8 @@
 #include "InstanceVector.h"
 #include "InstanceSet.h"
 #include "InstanceMap.h"
+#include "InstanceQueue.h"
+#include "InstanceStack.h"
 
 struct StructSearch {
 	StructMember *member;

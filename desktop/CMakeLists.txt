@@ -173,6 +173,8 @@ add_executable(${PROJECT_NAME}
         Variables/InstanceVector.cpp
         Variables/InstanceSet.cpp
         Variables/InstanceMap.cpp
+        Variables/InstanceStack.cpp
+        Variables/InstanceQueue.cpp
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
