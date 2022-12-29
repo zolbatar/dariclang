@@ -135,3 +135,28 @@ llvm::AllocaInst *CompilerLLVM::GetLocal(const std::string &name) {
     return locals[name];
 }
 
+void CompilerLLVM::ClearCollections(llvm::IRBuilder<> *ir) {
+    for (auto &l: local_collections) {
+        switch (l.type) {
+            case CollectionType::Vector:
+                ir->CreateCall(Module->getFunction("queue_destroy"), {l.alloc});
+                break;
+            case CollectionType::List:
+                ir->CreateCall(Module->getFunction("list_destroy"), {l.alloc});
+                break;
+            case CollectionType::Map:
+                ir->CreateCall(Module->getFunction("map_destroy"), {l.alloc});
+                break;
+            case CollectionType::Stack:
+                ir->CreateCall(Module->getFunction("stack_destroy"), {l.alloc});
+                break;
+            case CollectionType::Queue:
+                ir->CreateCall(Module->getFunction("queue_destroy"), {l.alloc});
+                break;
+            case CollectionType::Set:
+                ir->CreateCall(Module->getFunction("set_destroy"), {l.alloc});
+                break;
+        }
+    }
+}
+

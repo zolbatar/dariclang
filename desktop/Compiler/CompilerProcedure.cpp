@@ -61,12 +61,12 @@ void Compiler::TokenProcedure(ParserToken &t) {
         } else {
             ref->GetInstance()->SetPointer(&Arg, nullptr, 0, llvm, procedure_ir);
         }
-        //Arg.setName(pp->GetName() + " (Raw)");
         i++;
     }
 
     CompileStatements(t.children[1].children);
     if (!llvm.CheckReturn(GetIR())) {
+        llvm.ClearCollections(GetIR());
         DefaultReturn(return_type, t);
     }
     procedure_pre_ir->CreateBr(bb);
@@ -162,6 +162,7 @@ void Compiler::TokenCall(ParserToken &token) {
 }
 
 void Compiler::TokenReturn(ParserToken &token) {
+    llvm.ClearCollections(GetIR());
     if (token.children.empty()) {
         DefaultReturn(return_type, token);
     } else {

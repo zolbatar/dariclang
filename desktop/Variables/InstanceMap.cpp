@@ -59,6 +59,10 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
         case Scope::LOCAL: {
             llvm.CreateLocalVoid(name, ir);
             llvm.StoreLocal(name, ir, create);
+            CollectionAssign ca;
+            ca.type = CollectionType::Map;
+            ca.alloc = create;
+            llvm.local_collections.push_back(std::move(ca));
             locals.insert(std::make_pair(name, std::make_shared<InstanceMap>(name, data_type, scope, llvm, ir, is_ref)));
             return locals.find(name)->second;
         }

@@ -12,6 +12,20 @@
 #include "../Compiler/CompilerOptions.h"
 #include "llvm/Transforms/Utils/BuildLibCalls.h"
 
+enum class CollectionType {
+    List,
+    Vector,
+    Set,
+    Map,
+    Queue,
+    Stack
+};
+
+struct CollectionAssign {
+    CollectionType type;
+    llvm::Value *alloc;
+};
+
 struct ValueType {
     llvm::Value *value;
     Primitive type;
@@ -174,6 +188,9 @@ public:
     std::unordered_map<std::string, bool> locals_isref;
     std::unordered_map<std::string, Primitive> globals_type;
     std::unordered_map<std::string, Primitive> locals_type;
+
+    std::vector<CollectionAssign> local_collections;
+    void ClearCollections(llvm::IRBuilder<> *ir);
 private:
     void SetupLibrary();
     void AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses);

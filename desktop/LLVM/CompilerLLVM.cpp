@@ -216,6 +216,12 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("map_init", TypeVoid, TypeInt, TypeInt, TypeVoid);
     Module->getOrInsertFunction("queue_init", TypeVoid, TypeInt);
     Module->getOrInsertFunction("stack_init", TypeVoid, TypeInt);
+    Module->getOrInsertFunction("list_destroy", TypeNone, TypeVoid);
+    Module->getOrInsertFunction("vector_destroy", TypeNone, TypeVoid);
+    Module->getOrInsertFunction("set_destroy", TypeNone, TypeVoid);
+    Module->getOrInsertFunction("map_destroy", TypeNone, TypeVoid);
+    Module->getOrInsertFunction("queue_destroy", TypeNone, TypeVoid);
+    Module->getOrInsertFunction("stack_destroy", TypeNone, TypeVoid);
 
     Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
     Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);
