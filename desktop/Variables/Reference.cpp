@@ -20,6 +20,30 @@ Reference *Reference::Get(size_t index) {
     return &references.find(index)->second;
 }
 
+void Reference::SetAsList() {
+    instance_type = InstanceType::LIST;
+}
+
+void Reference::SetAsVector() {
+    instance_type = InstanceType::VECTOR;
+}
+
+void Reference::SetAsSet() {
+    instance_type = InstanceType::SET;
+}
+
+void Reference::SetAsMap() {
+    instance_type = InstanceType::MAP;
+}
+
+void Reference::SetAsQueue() {
+    instance_type = InstanceType::QUEUE;
+}
+
+void Reference::SetAsStack() {
+    instance_type = InstanceType::STACK;
+}
+
 void Reference::SetAsArray() {
     instance_type = InstanceType::ARRAY;
 }
@@ -69,7 +93,12 @@ bool Reference::FindInstance() {
     return true;
 }
 
-void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope scope, bool is_ref) {
+void Reference::CreateInstance(CompilerLLVM &llvm,
+                               llvm::Function *func,
+                               Primitive default_return_type,
+                               llvm::IRBuilder<> *ir,
+                               Scope scope,
+                               bool is_ref) {
     switch (instance_type) {
         case InstanceType::PRIMITIVE:
             instance = InstancePrimitive::Build(name, data_type, scope, llvm, ir, is_ref);
@@ -85,6 +114,38 @@ void Reference::CreateInstance(CompilerLLVM &llvm, llvm::IRBuilder<> *ir, Scope 
             SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance = InstanceRecordArray::Build(name, struct_name, llvm_struct_type, scope, indices.size(), llvm, ir);
             break;
+        case InstanceType::LIST:
+            SetLLVMStructType(llvm.GetStruct(GetStructName()));
+            instance =
+                    InstanceList::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+            break;
+        case InstanceType::QUEUE:
+            SetLLVMStructType(llvm.GetStruct(GetStructName()));
+            instance =
+                    InstanceQueue::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+            break;
+        case InstanceType::STACK:
+            SetLLVMStructType(llvm.GetStruct(GetStructName()));
+            instance =
+                    InstanceStack::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+            break;
+        case InstanceType::VECTOR:
+            SetLLVMStructType(llvm.GetStruct(GetStructName()));
+            instance =
+                    InstanceVector::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+            break;
+        case InstanceType::SET:
+            instance =
+                    InstanceSet::Build(name, data_type, scope, llvm, func, ir, default_return_type, is_ref);
+            break;
+        case InstanceType::MAP: {
+            SetLLVMStructTypeVal(llvm.GetStruct(GetStructNameVal()));
+            instance =
+                    InstanceMap::Build(name, data_type,
+                                       data_type_val, llvm_struct_type_val,
+                                       scope, llvm, func, ir, default_return_type, is_ref);
+            break;
+        }
         default:
             assert(0);
     }
@@ -214,6 +275,8 @@ llvm::Value *Reference::LocalIndex(bool option_base,
                                    CompilerLLVM &llvm,
                                    llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
+    if (option_base)
+        index = ir->CreateSub(index, llvm::ConstantInt::get(llvm.TypeInt, 1));
     auto glob_v = llvm.GetLocal(name);
     auto glob = llvm.GetLocalArrayDimensions(name);
     for (size_t i = 0; i < indices_val.size() - 1; i++) {
@@ -240,6 +303,8 @@ llvm::Value *Reference::GlobalIndexPtr(bool option_base,
                                        CompilerLLVM &llvm,
                                        llvm::IRBuilder<> *ir) {
     auto index = indices_val[0].value;
+    if (option_base)
+        index = ir->CreateSub(index, llvm::ConstantInt::get(llvm.TypeInt, 1));
     auto glob = llvm.GetGlobalArrayDimensions(name);
     for (size_t i = 0; i < indices_val.size() - 1; i++) {
 
@@ -291,6 +356,8 @@ llvm::Type *Reference::GetLLVMType(bool is_ref, CompilerLLVM &llvm) {
                 return nullptr;
             return llvm::PointerType::get(ss, 0);
         }
+        default:
+            assert(0);
     }
 }
 

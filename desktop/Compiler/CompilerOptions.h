@@ -12,7 +12,6 @@ struct CompilerOptions {
 	std::string output_filename;
 	bool optimise = true;
 	bool use_exit_as_end = false;
-	bool output_ll_files = false;
 	bool run;
 	std::string file;
 };

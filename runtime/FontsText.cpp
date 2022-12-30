@@ -11,7 +11,7 @@ extern Console console;
 extern Text text;
 static float size = 20;
 static ImFont *font = nullptr;
-static std::map<std::string, T_I> loaded_fonts;
+static std::unordered_map<std::string, T_I> loaded_fonts;
 static std::vector<T_F> loaded_fonts_size = {20, 20, 20};
 
 extern "C" void gfx_uicheck();

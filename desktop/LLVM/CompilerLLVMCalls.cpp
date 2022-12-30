@@ -1,7 +1,7 @@
 #include <iostream>
 #include "CompilerLLVM.h"
 
-llvm::Value *CompilerLLVM::CreateCall(std::string &name,
+llvm::Value *CompilerLLVM::CreateCall(std::string name,
                                       llvm::IRBuilder<> *ir,
                                       llvm::Function *this_func,
                                       llvm::ArrayRef<llvm::Value *> vals,

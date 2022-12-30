@@ -46,6 +46,7 @@ find_package(assimp CONFIG REQUIRED)
 find_package(glm CONFIG REQUIRED)
 add_library(${PROJECT_NAME} STATIC
         main.cpp
+        Collections.cpp
         Config/Config.cpp
         Graphics3D/EngineWorld.cpp
         Graphics3D/EngineShapeSection.cpp
@@ -72,7 +73,7 @@ add_library(${PROJECT_NAME} STATIC
         Print.cpp
         Random.cpp
         Sprites.cpp
-        String.cpp)
+        String.cpp Collections.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

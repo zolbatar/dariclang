@@ -125,6 +125,7 @@ private:
 	void TokenConst(ParserToken &t);
 	void TokenSwap(ParserToken &t);
 	void TokenDim(ParserToken &t);
+    void TokenContainer(ParserToken &t);
 	void TokenStruct(ParserToken &t);
 	void TokenStructInstance(ParserToken &t);
 	void TokenStructArray(ParserToken &t);

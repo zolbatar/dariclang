@@ -25,10 +25,30 @@ void CompilerLLVM::CreateGlobal(const std::string &name, Primitive type, llvm::C
     globals_type[name] = type;
 }
 
+void CompilerLLVM::CreateGlobalVoid(const std::string &name) {
+    assert(!globals.contains(name));
+//	std::cout << "Creating global:" << name << std::endl;
+    globals[name] = new llvm::GlobalVariable(*Module,
+                                             TypeVoid,
+                                             false,
+                                             GetLinkage(),
+                                             llvm::ConstantInt::get(TypeVoid, 0),
+                                             name);
+
+    globals_type[name] = Primitive::NONE;
+}
+
+void CompilerLLVM::CreateLocalVoid(const std::string &name, llvm::IRBuilder<> *ir) {
+    assert(!locals.contains(name));
+    locals[name] = ir->CreateAlloca(TypeVoid, nullptr, name);
+    locals_isref[name] = false;
+    locals_type[name] = Primitive::NONE;
+}
+
 void CompilerLLVM::CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir, bool is_ref) {
     assert(!locals.contains(name));
     if (is_ref) {
-        auto pt =  llvm::PointerType::get(TypeConversion(type),0);
+        auto pt = llvm::PointerType::get(TypeConversion(type), 0);
         locals[name] = ir->CreateAlloca(pt, nullptr, name);
         locals_isref[name] = true;
     } else {
@@ -48,7 +68,7 @@ void CompilerLLVM::StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, ll
     if (!locals_isref[name]) {
         ir->CreateStore(val, locals[name]);
     } else {
-        auto pt =  llvm::PointerType::get(TypeConversion(locals_type[name]),0);
+        auto pt = llvm::PointerType::get(TypeConversion(locals_type[name]), 0);
         auto p = ir->CreateLoad(pt, locals[name]);
         ir->CreateStore(val, p);
     }
@@ -90,7 +110,7 @@ ValueType CompilerLLVM::GetVariableValue(llvm::IRBuilder<> *ir, const std::strin
         if (!locals_isref[name]) {
             vt.value = ir->CreateLoad(TypeConversion(locals_type[name]), locals[name]);
         } else {
-            auto pt =  llvm::PointerType::get(TypeConversion(locals_type[name]),0);
+            auto pt = llvm::PointerType::get(TypeConversion(locals_type[name]), 0);
             auto p = ir->CreateLoad(pt, locals[name]);
             vt.value = ir->CreateLoad(TypeConversion(locals_type[name]), p);
         }
@@ -113,5 +133,31 @@ llvm::GlobalVariable *CompilerLLVM::GetGlobal(const std::string &name) {
 
 llvm::AllocaInst *CompilerLLVM::GetLocal(const std::string &name) {
     return locals[name];
+}
+
+void CompilerLLVM::ClearCollections(llvm::IRBuilder<> *ir) {
+    for (auto &l: local_collections) {
+        switch (l.type) {
+            case CollectionType::Vector:
+                ir->CreateCall(Module->getFunction("queue_destroy"), {l.alloc});
+                break;
+            case CollectionType::List:
+                ir->CreateCall(Module->getFunction("list_destroy"), {l.alloc});
+                break;
+            case CollectionType::Map:
+                ir->CreateCall(Module->getFunction("map_destroy"), {l.alloc});
+                break;
+            case CollectionType::Stack:
+                ir->CreateCall(Module->getFunction("stack_destroy"), {l.alloc});
+                break;
+            case CollectionType::Queue:
+                ir->CreateCall(Module->getFunction("queue_destroy"), {l.alloc});
+                break;
+            case CollectionType::Set:
+                ir->CreateCall(Module->getFunction("set_destroy"), {l.alloc});
+                break;
+        }
+    }
+    local_collections.clear();
 }
 

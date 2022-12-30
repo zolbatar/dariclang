@@ -9,7 +9,13 @@ enum class InstanceType {
     PRIMITIVE,
     ARRAY,
     RECORD,
-    RECORD_ARRAY
+    RECORD_ARRAY,
+    LIST,
+    VECTOR,
+    MAP,
+    SET,
+    STACK,
+    QUEUE
 };
 
 class Instance {
@@ -64,7 +70,4 @@ protected:
 
     static std::unordered_map<std::string, std::shared_ptr<Instance>> locals;
     static std::unordered_map<std::string, std::shared_ptr<Instance>> globals;
-
-private:
-    llvm::StructType *struct_type;
 };

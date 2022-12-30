@@ -28,7 +28,7 @@ void Compiler::TokenStructInstance(ParserToken &t) {
         VariableAlreadyExists(t, ref->GetName());
     }
 
-    ref->CreateInstance(llvm, GetPreIR(), t.scope, false);
+    ref->CreateInstance(llvm, GetFunction(), return_type,GetPreIR(), t.scope, false);
     auto instance = ref->GetInstance();
 
     // Initialise any fields?
@@ -61,10 +61,10 @@ void Compiler::TokenStructArray(ParserToken &t) {
     if (procedure == nullptr) {
         if (t.scope != Scope::GLOBAL) return;
         CreateGlobalDimensions(var, Primitive::NONE, llvm_struct);
-        var->CreateInstance(llvm, GetIR(), Scope::GLOBAL, false);
+        var->CreateInstance(llvm, GetFunction(), return_type,GetIR(), Scope::GLOBAL, false);
     } else {
         if (t.scope != Scope::LOCAL) return;
         CreateLocalDimensions(var, Primitive::NONE, llvm_struct);
-        var->CreateInstance(llvm, GetIR(), Scope::LOCAL, false);
+        var->CreateInstance(llvm, GetFunction(), return_type,GetIR(), Scope::LOCAL, false);
     }
 }

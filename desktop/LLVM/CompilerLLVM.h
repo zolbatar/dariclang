@@ -12,6 +12,20 @@
 #include "../Compiler/CompilerOptions.h"
 #include "llvm/Transforms/Utils/BuildLibCalls.h"
 
+enum class CollectionType {
+    List,
+    Vector,
+    Set,
+    Map,
+    Queue,
+    Stack
+};
+
+struct CollectionAssign {
+    CollectionType type;
+    llvm::Value *alloc;
+};
+
 struct ValueType {
     llvm::Value *value;
     Primitive type;
@@ -20,7 +34,7 @@ struct ValueType {
 class CompilerLLVM {
 public:
     CompilerLLVM();
-    void SetupProfile(const CompilerOptions& options, std::string
+    void SetupProfile(const CompilerOptions &options, std::string
     module,
     SourceFileData &state
     );
@@ -56,7 +70,9 @@ public:
     // Core store/load
     void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
     void CreateGlobal(const std::string &name, Primitive type, llvm::Constant *val);
+    void CreateGlobalVoid(const std::string &name);
     void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir, bool is_ref);
+    void CreateLocalVoid(const std::string &name, llvm::IRBuilder<> *ir);
     void StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     void StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
     void StoreLocalPointer(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
@@ -94,7 +110,7 @@ public:
     void AutoConversion2Way(llvm::IRBuilder<> *ir, ValueType &value_type1, ValueType &value_type2);
 
     // Calls
-    llvm::Value *CreateCall(std::string &name,
+    llvm::Value *CreateCall(std::string name,
                             llvm::IRBuilder<> *ir,
                             llvm::Function *this_func,
                             llvm::ArrayRef<llvm::Value *> vals,
@@ -158,10 +174,12 @@ public:
     llvm::Type *TypeFloat = nullptr;
     llvm::Type *TypeString = nullptr;
     llvm::Type *TypeByte = nullptr;
+    llvm::Type *TypeVoid = nullptr;
 
     std::unique_ptr<llvm::LLVMContext> Context = nullptr;
     std::unique_ptr<llvm::TargetMachine> Target = nullptr;
     std::unique_ptr<llvm::Module> Module = nullptr;
+    std::unique_ptr<llvm::DataLayout> dl = nullptr;
 
     std::unordered_map<std::string, std::string> global_structs;
     std::unordered_map<std::string, std::string> local_structs;
@@ -170,6 +188,9 @@ public:
     std::unordered_map<std::string, bool> locals_isref;
     std::unordered_map<std::string, Primitive> globals_type;
     std::unordered_map<std::string, Primitive> locals_type;
+
+    std::vector<CollectionAssign> local_collections;
+    void ClearCollections(llvm::IRBuilder<> *ir);
 private:
     void SetupLibrary();
     void AddOptPasses(llvm::legacy::PassManagerBase &passes, llvm::legacy::FunctionPassManager &fnPasses);
@@ -178,8 +199,8 @@ private:
     llvm::Triple TheTriple;
 
     std::unordered_map<std::string, llvm::StructType *> structs;
-    std::map<std::string, unsigned> locals_array_num_dimensions;
-    std::map<std::string, unsigned> globals_array_num_dimensions;
-    std::map<std::string, llvm::AllocaInst *> locals_array_dimensions;
-    std::map<std::string, llvm::GlobalVariable *> globals_array_dimensions;
+    std::unordered_map<std::string, unsigned> locals_array_num_dimensions;
+    std::unordered_map<std::string, unsigned> globals_array_num_dimensions;
+    std::unordered_map<std::string, llvm::AllocaInst *> locals_array_dimensions;
+    std::unordered_map<std::string, llvm::GlobalVariable *> globals_array_dimensions;
 };

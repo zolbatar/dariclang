@@ -99,8 +99,10 @@ add_executable(${PROJECT_NAME}
         ../runtime/Config/Config.cpp
         ../runtime/Library/StringLib.h
         ../runtime/Library/StringLib.cpp
+        ../runtime/Collections.cpp
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
+        Compiler/CompilerInput.cpp
         Compiler/Compiler.h
         Compiler/CompilerOption.cpp
         Compiler/CompilerPrint.cpp
@@ -114,6 +116,8 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerLibrary.cpp
         Compiler/CompilerConstants.cpp
         Compiler/CompilerRead.cpp
+        Compiler/CompilerContainers.cpp
+        Compiler/CompilerArrays.cpp
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
         LLVM/CompilerLLVMVariables.cpp
@@ -133,6 +137,7 @@ add_executable(${PROJECT_NAME}
         Parser/ParserToken.h
         Parser/ParserTokenType.h
         Parser/ParserLiteral.cpp
+        Parser/Core/ParserCollection.cpp
         Parser/Core/ParserAssignment.cpp
         Parser/Core/ParserExpression.cpp
         Parser/Core/ParserFunctions.cpp
@@ -157,26 +162,31 @@ add_executable(${PROJECT_NAME}
         Shared/SourceFile.cpp
         Shared/SourceFile.h
         Variables/PrimitiveTypes.h
-        Variables/Reference.h
         Variables/Reference.cpp
         Variables/Instance.cpp
-        Variables/Instance.h
         Variables/InstancePrimitive.cpp
-        Variables/InstancePrimitive.h
         Variables/InstanceConstant.cpp
-        Variables/InstanceConstant.h
         Variables/InstancePrimitiveArray.cpp
-        Variables/InstancePrimitiveArray.h
         Variables/InstanceRecord.cpp
-        Variables/InstanceRecord.h
         Variables/InstanceRecordArray.cpp
-        Variables/InstanceRecordArray.h
+        Variables/InstanceList.cpp
+        Variables/InstanceVector.cpp
+        Variables/InstanceSet.cpp
+        Variables/InstanceMap.cpp
+        Variables/InstanceStack.cpp
+        Variables/InstanceQueue.cpp
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
         ../runtime/Library/json.hpp
-        Compiler/CompilerInput.cpp)
+        Containers/src/list.c
+        Containers/src/vector.c
+        Containers/src/deque.c
+        Containers/src/queue.c
+        Containers/src/stack.c
+        Containers/src/map.c
+        Containers/src/set.c)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
@@ -224,7 +234,14 @@ elseif(WIN32)
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
 endif()
-install(TARGETS ${PROJECT_NAME}
-        RUNTIME DESTINATION .
-        LIBRARY DESTINATION .
-        ARCHIVE DESTINATION .)
+if(APPLE)
+    install(TARGETS ${PROJECT_NAME}
+            RUNTIME DESTINATION mac
+            LIBRARY DESTINATION mac
+            ARCHIVE DESTINATION mac)
+else()
+    install(TARGETS ${PROJECT_NAME}
+            RUNTIME DESTINATION win
+            LIBRARY DESTINATION win
+            ARCHIVE DESTINATION win)
+endif()

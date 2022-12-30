@@ -21,7 +21,7 @@ ValueType CompilerLLVM::ComparisonEQ(llvm::IRBuilder<> *ir, ValueType &t1, Value
 		default:
 			assert(0);
 	}
-	vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), true);;
+	vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), false);
 	return vt;
 }
 
@@ -46,7 +46,7 @@ ValueType CompilerLLVM::ComparisonNE(llvm::IRBuilder<> *ir, ValueType &t1, Value
 		default:
 			assert(0);
 	}
-    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), true);;
+    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), false);
 	return vt;
 }
 
@@ -71,7 +71,7 @@ ValueType CompilerLLVM::ComparisonLE(llvm::IRBuilder<> *ir, ValueType &t1, Value
 		default:
 			assert(0);
 	}
-    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), true);;
+    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), false);
 	return vt;
 }
 
@@ -96,7 +96,7 @@ ValueType CompilerLLVM::ComparisonLT(llvm::IRBuilder<> *ir, ValueType &t1, Value
 		default:
 			assert(0);
 	}
-    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), true);;
+    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), false);
 	return vt;
 }
 
@@ -121,7 +121,7 @@ ValueType CompilerLLVM::ComparisonGE(llvm::IRBuilder<> *ir, ValueType &t1, Value
 		default:
 			assert(0);
 	}
-    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), true);;
+    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), false);
 	return vt;
 }
 
@@ -146,6 +146,6 @@ ValueType CompilerLLVM::ComparisonGT(llvm::IRBuilder<> *ir, ValueType &t1, Value
 		default:
 			assert(0);
 	}
-    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), true);;
+    vt.value = ir->CreateIntCast(vt.value, TypeConversion(vt.type), false);
 	return vt;
 }

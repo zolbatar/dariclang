@@ -51,9 +51,17 @@ case:           CASE expression OF separator? when* (OTHERWISE statements)? END 
 const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (COLON type)? ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
-dim:            DIM IDENTIFIER COLON type SOPEN expression? (COMMA expression)* SCLOSE ;
+dim:            DIM IDENTIFIER COLON (
+                    (type SOPEN expression? (COMMA expression)* SCLOSE) |
+                    (VECTOR SOPEN typeOrStruct SCLOSE) |
+                    (LIST SOPEN typeOrStruct SCLOSE) |
+                    (SET SOPEN (BYTE | INT | FLOAT | STRING) SCLOSE) |
+                    (MAP SOPEN (BYTE | INT | FLOAT | STRING) COMMA typeOrStruct SCLOSE) |
+                    (STACK SOPEN typeOrStruct SCLOSE) |
+                    (QUEUE SOPEN typeOrStruct SCLOSE)
+                ) ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
-end:            END ;
+end:            QUIT ;
 for:            FOR IDENTIFIER (COLON type)? EQ expression TO expression (STEP expression)? statements NEXT ;
 importlib:      IMPORT stringLiteral ;
 if:             IF expression THEN? statementsl (ELSE statementsl)? ;
@@ -221,6 +229,7 @@ OF              : 'OF' | 'Of' ;
 OPTION          : 'OPTION' | 'Option' ;
 OTHERWISE       : 'OTHERWISE' | 'Otherwise' ;
 PRINT           : 'PRINT' | 'Print' ;
+QUIT            : 'QUIT' | 'Quit' ;
 READ            : 'READ' | 'Read' ;
 RECORD          : 'RECORD' | 'Record' ;
 REF             : 'BYREF' | 'ByRef' ;
@@ -258,6 +267,13 @@ SGN             : 'SGN' | 'Sgn' ;
 SIN             : 'SIN' | 'Sin' ;
 SQR             : 'SQR' | 'Sqr' ;
 TAN             : 'TAN' | 'Tan' ;
+
+VECTOR          : 'VECTOR' | 'Vector' ;
+LIST            : 'LIST' | 'List' ;
+MAP             : 'MAP' | 'Map' ;
+STACK           : 'STACK' | 'Stack' ;
+QUEUE           : 'QUEUE' | 'Queue' ;
+SET             : 'SET' | 'Set' ;
 
 FALSE           : 'FALSE' | 'False' ;
 TRUE            : 'TRUE' | 'True' ;
