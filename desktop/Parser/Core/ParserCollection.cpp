@@ -13,6 +13,8 @@ std::any Parser::visitClear(DaricParser::ClearContext *context) {
 std::any Parser::visitPop(DaricParser::PopContext *context) {
     auto ps = CreateToken(context, ParserTokenType::POP);
     auto r = std::any_cast<Reference *>(visit(context->variable(1)));
+    if (!r->GetIndices().empty())
+        RaiseException("Indices not allowed with POP", context);
     ps.reference = r->GetRef();
 
     // To variable
@@ -25,9 +27,8 @@ std::any Parser::visitPop(DaricParser::PopContext *context) {
 }
 
 std::any Parser::visitPush(DaricParser::PushContext *context) {
-    auto ps = CreateToken(context, ParserTokenType::PUSH);
-
     // Source variable
+    auto ps = CreateToken(context, ParserTokenType::PUSH);
     auto pse = CreateToken(context, ParserTokenType::VARIABLE);
     auto rs = std::any_cast<Reference *>(visit(context->variable(0)));
     pse.reference = rs->GetRef();
@@ -35,16 +36,48 @@ std::any Parser::visitPush(DaricParser::PushContext *context) {
 
     // Destination
     auto r = std::any_cast<Reference *>(visit(context->variable(1)));
+    if (!r->GetIndices().empty())
+        RaiseException("Indices not allowed with PUSH", context);
     ps.reference = r->GetRef();
 
     return ps;
 }
 
 std::any Parser::visitSet(DaricParser::SetContext *context) {
-    auto ps = CreateToken(context, ParserTokenType::SET);
-    auto pse1 = std::any_cast<ParserToken>(visit(context->expression(0)));
-    ps.children.push_back(std::move(pse1));
-    auto pse2 = std::any_cast<ParserToken>(visit(context->expression(1)));
-    ps.children.push_back(std::move(pse2));
+    // Source variable
+    auto ps = CreateToken(context, ParserTokenType::PLACE);
+    auto pse = CreateToken(context, ParserTokenType::VARIABLE);
+    auto rs = std::any_cast<Reference *>(visit(context->variable(0)));
+    pse.reference = rs->GetRef();
+    ps.children.push_back(std::move(pse));
+
+    // Destination
+    auto r = std::any_cast<Reference *>(visit(context->variable(1)));
+    if (r->GetIndices().size() != 1)
+        RaiseException("PLACE needs a single index", context);
+    ps.reference = r->GetRef();
+
     return ps;
 }
+
+std::any Parser::visitGet(DaricParser::GetContext *context) {
+    // Destination variable
+    auto ps = CreateToken(context, ParserTokenType::FETCH);
+    auto pse = CreateToken(context, ParserTokenType::VARIABLE);
+    auto rs = std::any_cast<Reference *>(visit(context->variable(0)));
+    pse.reference = rs->GetRef();
+    ps.children.push_back(std::move(pse));
+
+    // Source
+    auto r = std::any_cast<Reference *>(visit(context->variable(1)));
+    if (r->GetIndices().size() != 1)
+        RaiseException("PLACE needs a single index", context);
+    ps.reference = r->GetRef();
+
+    return ps;
+}
+
+
+std::any Parser::visitCassign(DaricParser::CassignContext *context) {
+}
+

@@ -17,6 +17,7 @@ statement
     : assign
     | call
     | case
+    | cassign
     | clear
     | const
     | data
@@ -24,6 +25,7 @@ statement
     | dim
     | end
     | for
+    | get
     | if
     | ifml
     | input
@@ -89,8 +91,10 @@ while:          WHILE expression statements END WHILE ;
 // Collections
 clear:          CLEAR IDENTIFIER (SOPEN expression SCLOSE)? ;
 pop:            POP variable FROM variable ;
+get:            FETCH variable FROM variable ;
+set:            PLACE variable AT variable ;
 push:           PUSH variable INTO variable ;
-set:            ASSIGN expression TO variable SOPEN expression SCLOSE ;
+cassign:        ASSIGN expression TO variable SOPEN expression SCLOSE ;
 
 variable
     : IDENTIFIER
@@ -222,6 +226,7 @@ BlockComment:   '#{' .*? '}#' -> skip;
 LineComment:    (REM | '\'') ~ [\r\n]* -> skip;
 
 ASSIGN          : 'ASSIGN' | 'Assign' ;
+AT              : 'AT' | 'At' ;
 CASE            : 'CASE' | 'Case' ;
 CONST           : 'CONST' | 'Const' ;
 CLEAR           : 'CLEAR' | 'Clear' ;
@@ -233,6 +238,7 @@ ELSE            : 'ELSE' | 'Else' ;
 END             : 'END' | 'End' ;
 FOR             : 'FOR' | 'For' ;
 FROM            : 'FROM' | 'From' ;
+FETCH           : 'FETCH' | 'Fetch' ;
 IF              : 'IF' | 'If' ;
 IMPORT          : 'IMPORT' | 'Import' ;
 INPUT           : 'INPUT' | 'Input' ;
@@ -243,6 +249,7 @@ OF              : 'OF' | 'Of' ;
 OPTION          : 'OPTION' | 'Option' ;
 OTHERWISE       : 'OTHERWISE' | 'Otherwise' ;
 PRINT           : 'PRINT' | 'Print' ;
+PLACE           : 'PLACE' | 'Place' ;
 POP             : 'POP' | 'Pop' ;
 PUSH            : 'PUSH' | 'Push' ;
 QUIT            : 'QUIT' | 'Quit' ;

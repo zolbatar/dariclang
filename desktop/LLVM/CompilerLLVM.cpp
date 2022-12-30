@@ -31,7 +31,9 @@
 const bool verbose = false;
 
 #ifdef __APPLE__
+
 #include <sys/sysctl.h>
+
 #endif
 
 #ifdef WINDOWS
@@ -112,97 +114,127 @@ static std::string getFeaturesStr() {
     return Features.getString();
 }
 
-void CompilerLLVM::SetupProfile(const CompilerOptions& options, std::string module, SourceFileData &state) {
-    llvm::CodeGenOpt::Level OLvl = llvm::CodeGenOpt::Default;
-    this->options = options;
-    if (options.optimise) {
-        OLvl = llvm::CodeGenOpt::Aggressive;
-    }
+void CompilerLLVM::SetupProfile(const CompilerOptions &options, std::string
+module,
+SourceFileData &state
+) {
+llvm::CodeGenOpt::Level OLvl = llvm::CodeGenOpt::Default;
+this->
+options = options;
+if (options.optimise) {
+OLvl = llvm::CodeGenOpt::Aggressive;
+}
 
-    // Options
-    std::string CPUArch = getCPUArch();
-    std::string CPUStr = getCPUStr();
-    std::string FeaturesStr = getFeaturesStr();
-    std::cout << "CPU Architecture: " << CPUArch << std::endl;
-    if (verbose) {
-        std::cout << "CPU String: " << CPUStr << std::endl;
-        std::cout << "CPU Features: " << FeaturesStr << std::endl;
-    }
+// Options
+std::string CPUArch = getCPUArch();
+std::string CPUStr = getCPUStr();
+std::string FeaturesStr = getFeaturesStr();
+std::cout << "CPU Architecture: " << CPUArch <<
+std::endl;
+if (verbose) {
+std::cout << "CPU String: " << CPUStr <<
+std::endl;
+std::cout << "CPU Features: " << FeaturesStr <<
+std::endl;
+}
 
-    // Due to a bug in LLVM (https://github.com/llvm/llvm-project/issues/55979), we need to do a bit of wrangling here
-    auto tri_raw = llvm::sys::getProcessTriple();
-    if (verbose)
-        std::cout << "Target Triple (raw): " << tri_raw << std::endl;
-    auto f = tri_raw.find_first_of('-');
-    tri_raw = tri_raw.substr(f);
-    if (CPUArch == "x86-64") {
-        tri_raw = "x86_64" + tri_raw;
-    } else {
-        tri_raw = "aarch64" + tri_raw;
-    }
-    if (verbose)
-        std::cout << "Target Triple (modified): " << tri_raw << std::endl;
-    TheTriple.setTriple(tri_raw);
+// Due to a bug in LLVM (https://github.com/llvm/llvm-project/issues/55979), we need to do a bit of wrangling here
+auto tri_raw = llvm::sys::getProcessTriple();
+if (verbose)
+std::cout << "Target Triple (raw): " << tri_raw <<
+std::endl;
+auto f = tri_raw.find_first_of('-');
+tri_raw = tri_raw.substr(f);
+if (CPUArch == "x86-64") {
+tri_raw = "x86_64" + tri_raw;
+} else {
+tri_raw = "aarch64" + tri_raw;
+}
+if (verbose)
+std::cout << "Target Triple (modified): " << tri_raw <<
+std::endl;
+TheTriple.
+setTriple(tri_raw);
 
-    // Target
-    if (verbose)
-        std::cout << "Looking up target" << std::endl;
-    llvm::TargetOptions Options;
-    std::string Error;
-    const llvm::Target *TheTarget = llvm::TargetRegistry::lookupTarget(CPUArch, TheTriple, Error);
-    if (Error.length() > 0) {
-        std::cout << "LLVM Error code: " << Error << std::endl;
-        exit(1);
-    }
-    if (verbose)
-        std::cout << "Creating target machine" << std::endl;
-    Target = std::unique_ptr<llvm::TargetMachine>(TheTarget->createTargetMachine(
-            TheTriple.getTriple(), CPUStr, FeaturesStr,
-            Options, llvm::None, llvm::None, OLvl, options.target != CompileTarget::EXE));
-    if (Target == nullptr) {
-        std::cout << "Couldn't allocate target machine\n";
-        exit(1);
-    }
+// Target
+if (verbose)
+std::cout << "Looking up target" <<
+std::endl;
+llvm::TargetOptions Options;
+std::string Error;
+const llvm::Target *TheTarget = llvm::TargetRegistry::lookupTarget(CPUArch, TheTriple, Error);
+if (Error.
+length()
+> 0) {
+std::cout << "LLVM Error code: " << Error <<
+std::endl;
+exit(1);
+}
+if (verbose)
+std::cout << "Creating target machine" <<
+std::endl;
+Target = std::unique_ptr<llvm::TargetMachine>(TheTarget->createTargetMachine(
+        TheTriple.getTriple(), CPUStr, FeaturesStr,
+        Options, llvm::None, llvm::None, OLvl, options.target != CompileTarget::EXE));
+if (Target == nullptr) {
+std::cout << "Couldn't allocate target machine\n";
+exit(1);
+}
 
-    // LLVM Core stuff
-    if (verbose)
-        std::cout << "Creating module and context" << std::endl;
-    Context = std::make_unique<llvm::LLVMContext>();
-    Module = std::make_unique<llvm::Module>(module, *Context);
-    dl = std::make_unique<llvm::DataLayout>(Target->createDataLayout());
-    Module.get()->setDataLayout(*dl);
+// LLVM Core stuff
+if (verbose)
+std::cout << "Creating module and context" <<
+std::endl;
+Context = std::make_unique<llvm::LLVMContext>();
+Module = std::make_unique<llvm::Module>(
+module, *Context);
+dl = std::make_unique<llvm::DataLayout>(Target->createDataLayout());
+Module.get()->setDataLayout(*dl);
 
-    // Types
-    TypeNone = llvm::Type::getVoidTy(Module->getContext());
-    TypeBit = llvm::Type::getInt1Ty(Module->getContext());
-    TypeFloat = llvm::Type::getDoubleTy(Module->getContext());
-    TypeByte = llvm::Type::getInt8Ty(Module->getContext());
-    TypeInt = llvm::Type::getInt64Ty(Module->getContext());
-    TypeString = llvm::Type::getInt8PtrTy(Module->getContext());
-    TypeVoid = llvm::Type::getInt8PtrTy(Module->getContext());
+// Types
+TypeNone = llvm::Type::getVoidTy(Module->getContext());
+TypeBit = llvm::Type::getInt1Ty(Module->getContext());
+TypeFloat = llvm::Type::getDoubleTy(Module->getContext());
+TypeByte = llvm::Type::getInt8Ty(Module->getContext());
+TypeInt = llvm::Type::getInt64Ty(Module->getContext());
+TypeString = llvm::Type::getInt8PtrTy(Module->getContext());
+TypeVoid = llvm::Type::getInt8PtrTy(Module->getContext());
 
-    // Build DATA
-    auto stackInt = state.GetData().size();
-    auto typ = llvm::ArrayType::get(TypeInt, stackInt);
-    std::vector<llvm::Constant *> values;
-    for (auto &iv: state.GetData()) {
-        values.push_back(llvm::ConstantInt::get(TypeInt, iv));
-    }
-    auto data = llvm::ConstantArray::get(typ, values);
-    globals["~DATA"] = new llvm::GlobalVariable(*Module,
-                                                llvm::ArrayType::get(TypeInt, stackInt),
-                                                true,
-                                                GetLinkage(),
-                                                data,
-                                                "DATA");
-    globals["~DATAPtr"] = new llvm::GlobalVariable(*Module, TypeInt, false, llvm::GlobalValue::InternalLinkage, llvm::ConstantInt::get(TypeInt, 0), "DATAPtr");
-    if (!options.use_exit_as_end) {
-        globals["~QuitRequested"] = new llvm::GlobalVariable(*Module, TypeBit, false,
-                                                             GetLinkage(),
-                                                             llvm::ConstantInt::get(TypeBit, 0),
-                                                             "QuitRequested");
-    }
-    SetupLibrary();
+// Build DATA
+auto stackInt = state.GetData().size();
+auto typ = llvm::ArrayType::get(TypeInt, stackInt);
+std::vector<llvm::Constant *> values;
+for (
+auto &iv
+: state.
+GetData()
+) {
+values.
+push_back(llvm::ConstantInt::get(TypeInt, iv)
+);
+}
+auto data = llvm::ConstantArray::get(typ, values);
+globals["~DATA"] = new
+llvm::GlobalVariable(*Module,
+        llvm::ArrayType::get(TypeInt, stackInt),
+true,
+GetLinkage(),
+        data,
+"DATA");
+globals["~DATAPtr"] = new
+llvm::GlobalVariable(*Module, TypeInt,
+false, llvm::GlobalValue::InternalLinkage,
+llvm::ConstantInt::get(TypeInt,
+0), "DATAPtr");
+if (!options.use_exit_as_end) {
+globals["~QuitRequested"] = new
+llvm::GlobalVariable(*Module, TypeBit,
+false,
+GetLinkage(),
+        llvm::ConstantInt::get(TypeBit, 0),
+"QuitRequested");
+}
+SetupLibrary();
 }
 
 void CompilerLLVM::SetupLibrary() {
@@ -211,9 +243,9 @@ void CompilerLLVM::SetupLibrary() {
 
     // Containers
     Module->getOrInsertFunction("list_init", TypeVoid, TypeInt);
-	Module->getOrInsertFunction("vector_init", TypeVoid, TypeInt);
-	Module->getOrInsertFunction("set_init", TypeVoid, TypeInt, TypeVoid);
-	Module->getOrInsertFunction("map_init", TypeVoid, TypeInt, TypeInt, TypeVoid);
+    Module->getOrInsertFunction("vector_init", TypeVoid, TypeInt);
+    Module->getOrInsertFunction("set_init", TypeVoid, TypeInt, TypeVoid);
+    Module->getOrInsertFunction("map_init", TypeVoid, TypeInt, TypeInt, TypeVoid);
     Module->getOrInsertFunction("queue_init", TypeVoid, TypeInt);
     Module->getOrInsertFunction("stack_init", TypeVoid, TypeInt);
 
@@ -223,6 +255,10 @@ void CompilerLLVM::SetupLibrary() {
     Module->getOrInsertFunction("map_destroy", TypeNone, TypeVoid);
     Module->getOrInsertFunction("queue_destroy", TypeNone, TypeVoid);
     Module->getOrInsertFunction("stack_destroy", TypeNone, TypeVoid);
+
+    Module->getOrInsertFunction("vector_add_at", TypeNone, TypeVoid, TypeInt, TypeVoid);
+    Module->getOrInsertFunction("vector_set_at", TypeNone, TypeVoid, TypeInt, TypeVoid);
+    Module->getOrInsertFunction("vector_get_at", TypeNone, TypeVoid, TypeVoid, TypeInt);
 
     Module->getOrInsertFunction("list_size", TypeInt, TypeVoid);
     Module->getOrInsertFunction("vector_size", TypeInt, TypeVoid);

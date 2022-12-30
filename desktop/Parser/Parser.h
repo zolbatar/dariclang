@@ -127,6 +127,8 @@ protected:
     std::any visitPop(DaricParser::PopContext *context) override;
     std::any visitPush(DaricParser::PushContext *context) override;
     std::any visitSet(DaricParser::SetContext *context) override;
+    std::any visitGet(DaricParser::GetContext *context) override;
+    std::any visitCassign(DaricParser::CassignContext *context) override;
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

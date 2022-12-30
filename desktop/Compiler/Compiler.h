@@ -137,7 +137,8 @@ private:
 	void TokenRestore(ParserToken &t);
 	void TokenOptionBase(ParserToken &t);
     void TokenInput(ParserToken &t);
-    void TokenSet(ParserToken &t);
+    void TokenPlace(ParserToken &t);
+    void TokenFetch(ParserToken &t);
     void TokenPush(ParserToken &t);
     void TokenPop(ParserToken &t);
     void TokenClear(ParserToken &t);

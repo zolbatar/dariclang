@@ -101,6 +101,9 @@ std::any Parser::visitStatement(DaricParser::StatementContext *context) {
     if (context->set()) {
         return std::any_cast<ParserToken>(visit(context->set()));
     }
+    if (context->get()) {
+        return std::any_cast<ParserToken>(visit(context->get()));
+    }
     if (context->push()) {
         return std::any_cast<ParserToken>(visit(context->push()));
     }
