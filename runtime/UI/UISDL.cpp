@@ -224,7 +224,8 @@ bool UISDL::Render(std::function<void()> callback) {
             } else {
                 std::cout << "Frame draw (classic) at " << ctime(&tt);
             }
-            std::cout << ms.count() << "ms" << std::endl;        }
+            std::cout << ms.count() << "ms" << std::endl;
+        }
 
         // Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();

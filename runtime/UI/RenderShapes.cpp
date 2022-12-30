@@ -42,19 +42,35 @@ void UISDL::Flip(bool userSpecified) {
 void UISDL::RenderShapes() {
     const std::lock_guard<std::mutex> lock(shapes_lock);
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
+    ImGuiID id = 0;
+    ImGui::BeginChild(id++);
+    size_t count = 0;
     if (mode == Mode::CLASSIC) {
         //std::cout << "Rendering " << shapesBackBuffer.size() << " shapes" << std::endl;
         for (auto it = shapesBackBuffer.begin(); it != shapesBackBuffer.end(); ++it) {
             it->get()->AddToList(draw_list);
+            count++;
+            if (count > 32768) {
+                count = 0;
+                ImGui::EndChild();
+                ImGui::BeginChild(id++);
+            }
         }
 //        std::cout << "Draw list size: " << draw_list->IdxBuffer.size() << std::endl;
     } else {
         // std::cout << "Rendering " << shapes.size() << " shapes" << std::endl;
         for (auto it = shapes.begin(); it != shapes.end(); ++it) {
             it->get()->AddToList(draw_list);
+            count++;
+            if (count > 32768) {
+                count = 0;
+                ImGui::EndChild();
+                ImGui::BeginChild(id++);
+            }
         }
 //        std::cout << "Draw list size: " << draw_list->IdxBuffer.size() << std::endl;
     }
+    ImGui::EndChild();
 }
 
 void UISDL::Cls() {
@@ -181,11 +197,17 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
     return ImVec2(v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a);
 }
 
-void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped) {
+void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y) {
     // Convert degrees to radians
     auto rot = rot_d * M_PI / 180.0;
     auto center = ImVec2(sx + (sb->width) / 2, sy + (sb->height / 2));
-    auto size = ImVec2(sb->width * scale, sb->height * scale);
+    float scale_x = 1.0f;
+    float scale_y = 1.0f;
+    if (sz_x != 0 || sz_y != 0) {
+        scale_x = static_cast<float>(sz_x) / static_cast<float>(sb->width);
+        scale_y = static_cast<float>(sz_y) / static_cast<float>(sb->height);
+    }
+    auto size = ImVec2(sb->width * scale * scale_x, sb->height * scale * scale_y);
     float cos_a = cosf(rot);
     float sin_a = sinf(rot);
     ImVec2 pos[4] =
@@ -195,13 +217,22 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
                     center + ImRotate(ImVec2(+size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a),
                     center + ImRotate(ImVec2(-size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a)
             };
-    ImVec2 uvs[4] =
-            {
-                    ImVec2(0.0f, !flipped ? 0.0f : 1.0f),
-                    ImVec2(1.0f, !flipped ? 0.0f : 1.0f),
-                    ImVec2(1.0f, !flipped ? 1.0f : 0.0f),
-                    ImVec2(0.0f, !flipped ? 1.0f : 0.0f)
-            };
+    ImVec2 uvs[4];
+    if (sz_x != 0 || sz_y != 0) {
+        float ratio_off_x = static_cast<float>(off_x) / static_cast<float>(sb->width);
+        float ratio_off_y = static_cast<float>(off_y) / static_cast<float>(sb->height);
+        float ratio_sz_x = static_cast<float>(off_x + sz_x) / static_cast<float>(sb->width);
+        float ratio_sz_y = static_cast<float>(off_y + sz_y) / static_cast<float>(sb->height);
+        uvs[0] = ImVec2(ratio_off_x, !flipped ? ratio_off_y : ratio_sz_y);
+        uvs[1] = ImVec2(ratio_sz_x, !flipped ? ratio_off_y : ratio_sz_y);
+        uvs[2] = ImVec2(ratio_sz_x, !flipped ? ratio_sz_y : ratio_off_y);
+        uvs[3] = ImVec2(ratio_off_x, !flipped ? ratio_sz_y : ratio_off_y);
+    } else {
+        uvs[0] = ImVec2(0.0f, !flipped ? 0.0f : 1.0f);
+        uvs[1] = ImVec2(1.0f, !flipped ? 0.0f : 1.0f);
+        uvs[2] = ImVec2(1.0f, !flipped ? 1.0f : 0.0f);
+        uvs[3] = ImVec2(0.0f, !flipped ? 1.0f : 0.0f);
+    }
 
     const std::lock_guard<std::mutex> lock(shapes_lock);
     shapesBackBuffer.emplace_back(new ShapeSprite(sb, pos, uvs));

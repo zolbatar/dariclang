@@ -100,6 +100,14 @@ add_executable(${PROJECT_NAME}
         ../runtime/Library/StringLib.h
         ../runtime/Library/StringLib.cpp
         ../runtime/Collections.cpp
+        ../runtime/Library/json.hpp
+        ../runtime/Containers/src/list.c
+        ../runtime/Containers/src/vector.c
+        ../runtime/Containers/src/deque.c
+        ../runtime/Containers/src/queue.c
+        ../runtime/Containers/src/stack.c
+        ../runtime/Containers/src/map.c
+        ../runtime/Containers/src/set.c
         Compiler/CompilerOptions.h
         Compiler/Compiler.cpp
         Compiler/CompilerInput.cpp
@@ -178,15 +186,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp
-        ../runtime/Library/json.hpp
-        Containers/src/list.c
-        Containers/src/vector.c
-        Containers/src/deque.c
-        Containers/src/queue.c
-        Containers/src/stack.c
-        Containers/src/map.c
-        Containers/src/set.c)
+        Grammar/DaricVisitor.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

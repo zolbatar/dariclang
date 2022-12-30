@@ -31,7 +31,8 @@ struct Sprite {
 class Sprites {
 public:
     void DeleteSprite(int handle);
-    bool DrawSprite(int handle, int bank, double x, double y, double rot, double scale);
+    bool DrawSprite(int handle, int bank, int x, int y, double rot, double scale);
+    bool DrawPartSprite(int handle, int bank, int x, int y, double rot, double scale, int off_x, int off_y, int sz_x, int sz_y);
     int LoadSprite(std::string filename);
 
     Sprite *GetSprite(size_t index) {

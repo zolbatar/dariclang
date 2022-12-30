@@ -62,7 +62,7 @@ void Sprites::DeleteSprite(int handle) {
     ui->GetSpriteLock()->unlock();
 }
 
-bool Sprites::DrawSprite(int handle, int bank, double sx, double sy, double rot, double scale) {
+bool Sprites::DrawSprite(int handle, int bank, int sx, int sy, double rot, double scale) {
     ui->GetSpriteLock()->lock();
     auto sprite = sprites.find(handle);
 
@@ -81,7 +81,32 @@ bool Sprites::DrawSprite(int handle, int bank, double sx, double sy, double rot,
 
     auto sb = &s->banks[bank];
     if (sb->state == SpriteState::OK) {
-        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped);
+        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, 0, 0, 0, 0);
+    }
+    ui->GetSpriteLock()->unlock();
+    return true;
+}
+
+bool Sprites::DrawPartSprite(int handle, int bank, int sx, int sy, double rot, double scale, int off_x, int off_y, int sz_x, int sz_y) {
+    ui->GetSpriteLock()->lock();
+    auto sprite = sprites.find(handle);
+
+    // Does sprite exist?
+    if (sprite == sprites.end()) {
+        ui->GetSpriteLock()->unlock();
+        return false;
+    }
+    auto s = &sprite->second;
+
+    // Does bank exist?
+    if (static_cast<size_t>(bank) >= s->banks.size()) {
+        ui->GetSpriteLock()->unlock();
+        return false;
+    }
+
+    auto sb = &s->banks[bank];
+    if (sb->state == SpriteState::OK) {
+        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, off_x, off_y, sz_x, sz_y);
     }
     ui->GetSpriteLock()->unlock();
     return true;
