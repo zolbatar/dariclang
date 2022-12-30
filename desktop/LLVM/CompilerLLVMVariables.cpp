@@ -158,5 +158,6 @@ void CompilerLLVM::ClearCollections(llvm::IRBuilder<> *ir) {
                 break;
         }
     }
+    local_collections.clear();
 }
 
