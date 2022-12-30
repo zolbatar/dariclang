@@ -20,7 +20,7 @@ public:
                    bool is_ref);
 
     size_t IndicesCount() override { return 0; }
-    std::string &GetStructName() override { return struct_name; }
+    std::string GetStructName() override { return struct_name; }
     InstanceType GetInstanceType() override { return InstanceType::RECORD; }
     Primitive GetType() override { return Primitive::NONE; }
 

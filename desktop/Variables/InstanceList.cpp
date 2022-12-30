@@ -1,6 +1,7 @@
 #include "InstanceList.h"
 
 std::shared_ptr<Instance> InstanceList::Build(const std::string &name,
+                                              const std::string &struct_name,
                                               Primitive data_type,
                                               llvm::StructType *llvm_struct_type,
                                               Scope scope,
@@ -28,13 +29,13 @@ std::shared_ptr<Instance> InstanceList::Build(const std::string &name,
             ca.type = CollectionType::List;
             ca.alloc = create;
             llvm.local_collections.push_back(std::move(ca));
-            locals.insert(std::make_pair(name, std::make_shared<InstanceList>(name, data_type, scope, llvm, ir, is_ref)));
+            locals.insert(std::make_pair(name, std::make_shared<InstanceList>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return locals.find(name)->second;
         }
         case Scope::GLOBAL: {
             llvm.CreateGlobalVoid(name);
             llvm.StoreGlobal(name, ir, create);
-            globals.insert(std::make_pair(name, std::make_shared<InstanceList>(name, data_type, scope, llvm, ir, is_ref)));
+            globals.insert(std::make_pair(name, std::make_shared<InstanceList>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return globals.find(name)->second;
         }
         default:
@@ -43,12 +44,14 @@ std::shared_ptr<Instance> InstanceList::Build(const std::string &name,
 }
 
 InstanceList::InstanceList(const std::string &name,
+                           const std::string &struct_name,
                            Primitive type,
                            Scope scope,
                            CompilerLLVM &llvm,
                            llvm::IRBuilder<> *ir,
                            bool is_ref) : type(type) {
     this->name = name;
+    this->struct_name = struct_name;
     this->scope = scope;
     this->is_ref = is_ref;
 }

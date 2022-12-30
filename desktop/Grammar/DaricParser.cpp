@@ -288,9 +288,9 @@ void daricParserInitialize() {
   	0,0,547,548,5,44,0,0,548,65,1,0,0,0,549,550,5,6,0,0,550,555,5,121,0,0,
   	551,552,5,94,0,0,552,553,3,76,38,0,553,554,5,95,0,0,554,556,1,0,0,0,555,
   	551,1,0,0,0,555,556,1,0,0,0,556,67,1,0,0,0,557,558,5,25,0,0,558,559,3,
-  	74,37,0,559,560,5,14,0,0,560,561,5,121,0,0,561,69,1,0,0,0,562,563,5,26,
-  	0,0,563,564,3,76,38,0,564,565,5,18,0,0,565,566,5,121,0,0,566,71,1,0,0,
-  	0,567,568,5,3,0,0,568,569,3,76,38,0,569,570,5,40,0,0,570,571,5,121,0,
+  	74,37,0,559,560,5,14,0,0,560,561,3,74,37,0,561,69,1,0,0,0,562,563,5,26,
+  	0,0,563,564,3,74,37,0,564,565,5,18,0,0,565,566,3,74,37,0,566,71,1,0,0,
+  	0,567,568,5,3,0,0,568,569,3,76,38,0,569,570,5,40,0,0,570,571,3,74,37,
   	0,571,572,5,94,0,0,572,573,3,76,38,0,573,574,5,95,0,0,574,73,1,0,0,0,
   	575,588,5,121,0,0,576,578,5,94,0,0,577,579,3,76,38,0,578,577,1,0,0,0,
   	578,579,1,0,0,0,579,584,1,0,0,0,580,581,5,87,0,0,581,583,3,76,38,0,582,
@@ -4171,16 +4171,16 @@ tree::TerminalNode* DaricParser::PopContext::POP() {
   return getToken(DaricParser::POP, 0);
 }
 
-DaricParser::VariableContext* DaricParser::PopContext::variable() {
-  return getRuleContext<DaricParser::VariableContext>(0);
+std::vector<DaricParser::VariableContext *> DaricParser::PopContext::variable() {
+  return getRuleContexts<DaricParser::VariableContext>();
+}
+
+DaricParser::VariableContext* DaricParser::PopContext::variable(size_t i) {
+  return getRuleContext<DaricParser::VariableContext>(i);
 }
 
 tree::TerminalNode* DaricParser::PopContext::FROM() {
   return getToken(DaricParser::FROM, 0);
-}
-
-tree::TerminalNode* DaricParser::PopContext::IDENTIFIER() {
-  return getToken(DaricParser::IDENTIFIER, 0);
 }
 
 
@@ -4216,7 +4216,7 @@ DaricParser::PopContext* DaricParser::pop() {
     setState(559);
     match(DaricParser::FROM);
     setState(560);
-    match(DaricParser::IDENTIFIER);
+    variable();
    
   }
   catch (RecognitionException &e) {
@@ -4238,16 +4238,16 @@ tree::TerminalNode* DaricParser::PushContext::PUSH() {
   return getToken(DaricParser::PUSH, 0);
 }
 
-DaricParser::ExpressionContext* DaricParser::PushContext::expression() {
-  return getRuleContext<DaricParser::ExpressionContext>(0);
+std::vector<DaricParser::VariableContext *> DaricParser::PushContext::variable() {
+  return getRuleContexts<DaricParser::VariableContext>();
+}
+
+DaricParser::VariableContext* DaricParser::PushContext::variable(size_t i) {
+  return getRuleContext<DaricParser::VariableContext>(i);
 }
 
 tree::TerminalNode* DaricParser::PushContext::INTO() {
   return getToken(DaricParser::INTO, 0);
-}
-
-tree::TerminalNode* DaricParser::PushContext::IDENTIFIER() {
-  return getToken(DaricParser::IDENTIFIER, 0);
 }
 
 
@@ -4279,11 +4279,11 @@ DaricParser::PushContext* DaricParser::push() {
     setState(562);
     match(DaricParser::PUSH);
     setState(563);
-    expression(0);
+    variable();
     setState(564);
     match(DaricParser::INTO);
     setState(565);
-    match(DaricParser::IDENTIFIER);
+    variable();
    
   }
   catch (RecognitionException &e) {
@@ -4317,8 +4317,8 @@ tree::TerminalNode* DaricParser::SetContext::TO() {
   return getToken(DaricParser::TO, 0);
 }
 
-tree::TerminalNode* DaricParser::SetContext::IDENTIFIER() {
-  return getToken(DaricParser::IDENTIFIER, 0);
+DaricParser::VariableContext* DaricParser::SetContext::variable() {
+  return getRuleContext<DaricParser::VariableContext>(0);
 }
 
 tree::TerminalNode* DaricParser::SetContext::SOPEN() {
@@ -4362,7 +4362,7 @@ DaricParser::SetContext* DaricParser::set() {
     setState(569);
     match(DaricParser::TO);
     setState(570);
-    match(DaricParser::IDENTIFIER);
+    variable();
     setState(571);
     match(DaricParser::SOPEN);
     setState(572);

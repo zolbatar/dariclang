@@ -460,7 +460,6 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 VariableError(t, ref->GetName());
             }
             ValueType vt;
-            ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
             vt.type = Primitive::INT;
             switch (ref->GetInstanceType()) {
                 case InstanceType::ARRAY:
@@ -468,21 +467,27 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                     vt.value = llvm.GetArraySize(ref->GetName(), GetIR());
                     break;
                 case InstanceType::SET:
+                    ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
                     vt.value = CreateCall("set_size", {vt.value});
                     break;
                 case InstanceType::QUEUE:
+                    ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
                     vt.value = CreateCall("queue_size", {vt.value});
                     break;
                 case InstanceType::STACK:
+                    ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
                     vt.value = CreateCall("stack_size", {vt.value});
                     break;
                 case InstanceType::LIST:
+                    ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
                     vt.value = CreateCall("list_size", {vt.value});
                     break;
                 case InstanceType::VECTOR:
+                    ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
                     vt.value = CreateCall("vector_size", {vt.value});
                     break;
                 case InstanceType::MAP:
+                    ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
                     vt.value = CreateCall("map_size", {vt.value});
                     break;
             }

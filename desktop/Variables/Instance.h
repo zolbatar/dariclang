@@ -31,7 +31,7 @@ public:
     std::string &GetName() { return name; }
     virtual size_t IndicesCount() = 0;
     virtual Primitive GetType() = 0;
-    virtual std::string &GetStructName() = 0;
+    virtual std::string GetStructName() = 0;
     bool IsRef() { return is_ref; }
 
     // Get/set stuff

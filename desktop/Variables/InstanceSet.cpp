@@ -6,6 +6,7 @@ extern int set_comp_float(T_F a, T_F b);
 extern int set_comp_string(T_S a, T_S b);
 
 std::shared_ptr<Instance> InstanceSet::Build(const std::string &name,
+                                             const std::string &struct_name,
                                              Primitive data_type,
                                              Scope scope,
                                              CompilerLLVM &llvm,
@@ -46,13 +47,13 @@ std::shared_ptr<Instance> InstanceSet::Build(const std::string &name,
             ca.type = CollectionType::Set;
             ca.alloc = create;
             llvm.local_collections.push_back(std::move(ca));
-            locals.insert(std::make_pair(name, std::make_shared<InstanceSet>(name, data_type, scope, llvm, ir, is_ref)));
+            locals.insert(std::make_pair(name, std::make_shared<InstanceSet>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return locals.find(name)->second;
         }
         case Scope::GLOBAL: {
             llvm.CreateGlobalVoid(name);
             llvm.StoreGlobal(name, ir, create);
-            globals.insert(std::make_pair(name, std::make_shared<InstanceSet>(name, data_type, scope, llvm, ir, is_ref)));
+            globals.insert(std::make_pair(name, std::make_shared<InstanceSet>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return globals.find(name)->second;
         }
         default:
@@ -61,12 +62,14 @@ std::shared_ptr<Instance> InstanceSet::Build(const std::string &name,
 }
 
 InstanceSet::InstanceSet(const std::string &name,
+                         const std::string &struct_name,
                          Primitive type,
                          Scope scope,
                          CompilerLLVM &llvm,
                          llvm::IRBuilder<> *ir,
                          bool is_ref) : type(type) {
     this->name = name;
+    this->struct_name = struct_name;
     this->scope = scope;
     this->is_ref = is_ref;
 }

@@ -1,6 +1,7 @@
 #include "InstanceVector.h"
 
 std::shared_ptr<Instance> InstanceVector::Build(const std::string &name,
+                                                const std::string &struct_name,
                                                 Primitive data_type,
                                                 llvm::StructType *llvm_struct_type,
                                                 Scope scope,
@@ -28,14 +29,14 @@ std::shared_ptr<Instance> InstanceVector::Build(const std::string &name,
             ca.type = CollectionType::Vector;
             ca.alloc = create;
             llvm.local_collections.push_back(std::move(ca));
-            locals.insert(std::make_pair(name, std::make_shared<InstanceVector>(name, data_type, scope, llvm, ir, is_ref)));
+            locals.insert(std::make_pair(name, std::make_shared<InstanceVector>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return locals.find(name)->second;
         }
         case Scope::GLOBAL: {
             llvm.CreateGlobalVoid(name);
             llvm.StoreGlobal(name, ir, create);
             globals.insert(std::make_pair(name,
-                                          std::make_shared<InstanceVector>(name, data_type, scope, llvm, ir, is_ref)));
+                                          std::make_shared<InstanceVector>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return globals.find(name)->second;
         }
         default:
@@ -44,12 +45,14 @@ std::shared_ptr<Instance> InstanceVector::Build(const std::string &name,
 }
 
 InstanceVector::InstanceVector(const std::string &name,
+                               const std::string &struct_name,
                                Primitive type,
                                Scope scope,
                                CompilerLLVM &llvm,
                                llvm::IRBuilder<> *ir,
                                bool is_ref) : type(type) {
     this->name = name;
+    this->struct_name = struct_name;
     this->scope = scope;
     this->is_ref = is_ref;
 }

@@ -772,9 +772,9 @@ public:
     PopContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *POP();
-    VariableContext *variable();
+    std::vector<VariableContext *> variable();
+    VariableContext* variable(size_t i);
     antlr4::tree::TerminalNode *FROM();
-    antlr4::tree::TerminalNode *IDENTIFIER();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -788,9 +788,9 @@ public:
     PushContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *PUSH();
-    ExpressionContext *expression();
+    std::vector<VariableContext *> variable();
+    VariableContext* variable(size_t i);
     antlr4::tree::TerminalNode *INTO();
-    antlr4::tree::TerminalNode *IDENTIFIER();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -807,7 +807,7 @@ public:
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *TO();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    VariableContext *variable();
     antlr4::tree::TerminalNode *SOPEN();
     antlr4::tree::TerminalNode *SCLOSE();
 

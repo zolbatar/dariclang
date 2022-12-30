@@ -34,7 +34,7 @@ std::any Parser::visitWhen(DaricParser::WhenContext *context) {
     ps.children.push_back(std::move(ps_cond));
 
     // And expressions to match
-    for (auto i = 0; i < context->expression().size(); i++) {
+    for (size_t i = 0; i < context->expression().size(); i++) {
         auto when = std::any_cast<ParserToken>(visit(context->expression(i)));
         ps.children.push_back(when);
     }

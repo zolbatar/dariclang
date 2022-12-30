@@ -88,9 +88,9 @@ while:          WHILE expression statements END WHILE ;
 
 // Collections
 clear:          CLEAR IDENTIFIER (SOPEN expression SCLOSE)? ;
-pop:            POP variable FROM IDENTIFIER ;
-push:           PUSH expression INTO IDENTIFIER ;
-set:            ASSIGN expression TO IDENTIFIER SOPEN expression SCLOSE ;
+pop:            POP variable FROM variable ;
+push:           PUSH variable INTO variable ;
+set:            ASSIGN expression TO variable SOPEN expression SCLOSE ;
 
 variable
     : IDENTIFIER

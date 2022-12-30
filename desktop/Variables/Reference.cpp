@@ -70,6 +70,7 @@ bool Reference::FindInstanceUnknownInstanceType() {
         return false;
     data_type = instance->GetType();
     instance_type = instance->GetInstanceType();
+    struct_name = instance->GetStructName();
     return true;
 }
 
@@ -112,31 +113,31 @@ void Reference::CreateInstance(CompilerLLVM &llvm,
         case InstanceType::LIST:
             SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance =
-                    InstanceList::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+                    InstanceList::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::QUEUE:
             SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance =
-                    InstanceQueue::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+                    InstanceQueue::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::STACK:
             SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance =
-                    InstanceStack::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+                    InstanceStack::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::VECTOR:
             SetLLVMStructType(llvm.GetStruct(GetStructName()));
             instance =
-                    InstanceVector::Build(name, data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+                    InstanceVector::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::SET:
             instance =
-                    InstanceSet::Build(name, data_type, scope, llvm, func, ir, default_return_type, is_ref);
+                    InstanceSet::Build(name, GetStructName(), data_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::MAP: {
             SetLLVMStructTypeVal(llvm.GetStruct(GetStructNameVal()));
             instance =
-                    InstanceMap::Build(name, data_type,
+                    InstanceMap::Build(name, GetStructName(), data_type,
                                        data_type_val, llvm_struct_type_val,
                                        scope, llvm, func, ir, default_return_type, is_ref);
             break;
