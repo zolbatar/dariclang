@@ -25,21 +25,7 @@ void Compiler::TokenPush(ParserToken &t) {
     }
 
     // Get address of struct (or variable)
-    value_type.value = ref_in->GetPointer(option_base, {}, llvm, GetIR());
-    switch (ref_in->GetInstanceType()) {
-        case InstanceType::ARRAY:
-        case InstanceType::RECORD_ARRAY:
-            break;
-        default:
-            switch (ref_in->GetInstance()->GetScope()) {
-                case Scope::GLOBAL:
-                    value_type.value = llvm.GetGlobal(ref_in->GetName());
-                    break;
-                case Scope::LOCAL:
-                    value_type.value = llvm.GetLocal(ref_in->GetName());
-                    break;
-            }
-    }
+    value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
 
     // Get collection var
     ValueType vt_var;
@@ -87,14 +73,7 @@ void Compiler::TokenPop(ParserToken &t) {
     }
 
     // Get address of struct (or variable)
-    switch (ref_in->GetInstance()->GetScope()) {
-        case Scope::GLOBAL:
-            value_type.value = llvm.GetGlobal(ref_in->GetName());
-            break;
-        case Scope::LOCAL:
-            value_type.value = llvm.GetLocal(ref_in->GetName());
-            break;
-    }
+    value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
 
     // Get collection var
     ValueType vt_var;
