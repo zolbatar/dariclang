@@ -22,7 +22,7 @@ public:
 
     size_t IndicesCount() override { return 0; }
     Primitive GetType() override { return type; }
-    InstanceType GetInstanceType() override { return InstanceType::LIST; }
+    InstanceType GetInstanceType() override { return InstanceType::QUEUE; }
     std::string &GetStructName() override {
         assert(0);
         return name;

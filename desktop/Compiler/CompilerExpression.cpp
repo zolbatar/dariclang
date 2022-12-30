@@ -150,6 +150,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 case ParserTokenType::MULTIPLY:
                     return llvm.MathsMultiply(GetIR(), t1, t2);
                 case ParserTokenType::EQ:
+
                     return llvm.ComparisonEQ(GetIR(), t1, t2);
                 case ParserTokenType::NE:
                     return llvm.ComparisonNE(GetIR(), t1, t2);
@@ -452,11 +453,41 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             return vt;
         }
         case ParserTokenType::SIZE: {
+            auto ref = Reference::Get(t.reference);
+            if (!ref->InstanceExists())
+                VariableNotFound(t, ref->GetName());
+            if (!ref->FindInstanceUnknownInstanceType()) {
+                VariableError(t, ref->GetName());
+            }
             ValueType vt;
+            ref->GetInstance()->Get(vt, nullptr, 0, llvm, GetIR());
             vt.type = Primitive::INT;
-            vt.value = llvm.GetArraySize(t.identifier, GetIR());
+            switch (ref->GetInstanceType()) {
+                case InstanceType::ARRAY:
+                case InstanceType::RECORD_ARRAY:
+                    vt.value = llvm.GetArraySize(ref->GetName(), GetIR());
+                    break;
+                case InstanceType::SET:
+                    vt.value = CreateCall("set_size", {vt.value});
+                    break;
+                case InstanceType::QUEUE:
+                    vt.value = CreateCall("queue_size", {vt.value});
+                    break;
+                case InstanceType::STACK:
+                    vt.value = CreateCall("stack_size", {vt.value});
+                    break;
+                case InstanceType::LIST:
+                    vt.value = CreateCall("list_size", {vt.value});
+                    break;
+                case InstanceType::VECTOR:
+                    vt.value = CreateCall("vector_size", {vt.value});
+                    break;
+                case InstanceType::MAP:
+                    vt.value = CreateCall("map_size", {vt.value});
+                    break;
+            }
             if (!vt.value) {
-                RaiseException("Error getting array dimensions", t);
+                RaiseException("Error getting size or array dimensions", t);
             }
             return vt;
         }

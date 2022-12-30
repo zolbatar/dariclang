@@ -176,6 +176,18 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::INPUT:
                 TokenInput(token);
                 break;
+            case ParserTokenType::SET:
+                TokenSet(token);
+                break;
+            case ParserTokenType::PUSH:
+                TokenPush(token);
+                break;
+            case ParserTokenType::POP:
+                TokenPop(token);
+                break;
+            case ParserTokenType::CLEAR:
+                TokenClear(token);
+                break;
             default:
                 assert(0);
         }

@@ -17,6 +17,7 @@ statement
     : assign
     | call
     | case
+    | clear
     | const
     | data
     | dataLabel
@@ -30,10 +31,13 @@ statement
     | option
     | procedure
     | print
+    | push
+    | pop
     | read
     | repeat
     | restore
     | return
+    | set
     | struct
     | structDim
     | structInstance
@@ -81,6 +85,12 @@ structInstance: DIM IDENTIFIER COLON IDENTIFIER (LPAREN (IDENTIFIER EQ expressio
 swap:           SWAP variable COMMA variable ;
 when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements END WHILE ;
+
+// Collections
+clear:          CLEAR IDENTIFIER (SOPEN expression SCLOSE)? ;
+pop:            POP variable FROM IDENTIFIER ;
+push:           PUSH expression INTO IDENTIFIER ;
+set:            ASSIGN expression TO IDENTIFIER SOPEN expression SCLOSE ;
 
 variable
     : IDENTIFIER
@@ -143,7 +153,7 @@ expression
     | LEN expression
 
     // Array functions
-    | SIZE LPAREN? IDENTIFIER RPAREN?
+    | SIZE LPAREN? variable RPAREN?
 
     // Maths
     | <assoc=right> expression HAT expression
@@ -211,8 +221,10 @@ stringLiteral
 BlockComment:   '#{' .*? '}#' -> skip;
 LineComment:    (REM | '\'') ~ [\r\n]* -> skip;
 
+ASSIGN          : 'ASSIGN' | 'Assign' ;
 CASE            : 'CASE' | 'Case' ;
 CONST           : 'CONST' | 'Const' ;
+CLEAR           : 'CLEAR' | 'Clear' ;
 DATA            : 'DATA' | 'Data' ;
 DATALABEL       : 'DATALABEL' | 'DataLabel' ;
 DEF             : 'DEF' | 'Def' ;
@@ -220,15 +232,19 @@ DIM             : 'DIM' | 'Dim' ;
 ELSE            : 'ELSE' | 'Else' ;
 END             : 'END' | 'End' ;
 FOR             : 'FOR' | 'For' ;
+FROM            : 'FROM' | 'From' ;
 IF              : 'IF' | 'If' ;
 IMPORT          : 'IMPORT' | 'Import' ;
 INPUT           : 'INPUT' | 'Input' ;
+INTO            : 'INTO' | 'Into';
 LET             : 'LET' | 'Let' ;
 NEXT            : 'NEXT' | 'Next' ;
 OF              : 'OF' | 'Of' ;
 OPTION          : 'OPTION' | 'Option' ;
 OTHERWISE       : 'OTHERWISE' | 'Otherwise' ;
 PRINT           : 'PRINT' | 'Print' ;
+POP             : 'POP' | 'Pop' ;
+PUSH            : 'PUSH' | 'Push' ;
 QUIT            : 'QUIT' | 'Quit' ;
 READ            : 'READ' | 'Read' ;
 RECORD          : 'RECORD' | 'Record' ;

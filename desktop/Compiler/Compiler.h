@@ -137,6 +137,10 @@ private:
 	void TokenRestore(ParserToken &t);
 	void TokenOptionBase(ParserToken &t);
     void TokenInput(ParserToken &t);
+    void TokenSet(ParserToken &t);
+    void TokenPush(ParserToken &t);
+    void TokenPop(ParserToken &t);
+    void TokenClear(ParserToken &t);
 
 	std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
 	llvm::BasicBlock *CreateBB(std::string block_name, ParserToken &token);

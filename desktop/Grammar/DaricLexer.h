@@ -12,25 +12,26 @@
 class  DaricLexer : public antlr4::Lexer {
 public:
   enum {
-    BlockComment = 1, LineComment = 2, CASE = 3, CONST = 4, DATA = 5, DATALABEL = 6, 
-    DEF = 7, DIM = 8, ELSE = 9, END = 10, FOR = 11, IF = 12, IMPORT = 13, 
-    INPUT = 14, LET = 15, NEXT = 16, OF = 17, OPTION = 18, OTHERWISE = 19, 
-    PRINT = 20, QUIT = 21, READ = 22, RECORD = 23, REF = 24, REM = 25, REPEAT = 26, 
-    RESTORE = 27, RETURN = 28, THEN = 29, SIZE = 30, STEP = 31, SYS = 32, 
-    SWAP = 33, TO = 34, UNTIL = 35, WHEN = 36, WITH = 37, WHILE = 38, MAIN = 39, 
-    ABS = 40, ACS = 41, ASN = 42, ATN = 43, COS = 44, DEG = 45, EXP = 46, 
-    FLOOR = 47, LN = 48, LOG = 49, PI = 50, RAD = 51, ROUND = 52, SGN = 53, 
-    SIN = 54, SQR = 55, TAN = 56, VECTOR = 57, LIST = 58, MAP = 59, STACK = 60, 
-    QUEUE = 61, SET = 62, FALSE = 63, TRUE = 64, ASC = 65, CHR = 66, INSTR = 67, 
-    LEFT = 68, MID = 69, RIGHT = 70, LEN = 71, BYTE = 72, INT = 73, FLOAT = 74, 
-    STRING = 75, DOLLAR = 76, HASH = 77, COLON = 78, SEMICOLON = 79, DOT = 80, 
-    COMMA = 81, QUOTE = 82, NEWLINE = 83, PERCENT = 84, UNDERSCORE = 85, 
-    LPAREN = 86, RPAREN = 87, SOPEN = 88, SCLOSE = 89, EQ = 90, NE = 91, 
-    GT = 92, GE = 93, LT = 94, LE = 95, HAT = 96, PLUS = 97, MINUS = 98, 
-    MULTIPLY = 99, DIVIDE = 100, SHL = 101, SHR = 102, MOD = 103, DIV = 104, 
-    COMP = 105, NOT = 106, AND = 107, OR = 108, EOR = 109, STRINGLITERAL = 110, 
-    HEXNUMBER = 111, BINARYNUMBER = 112, FLOATLITERAL = 113, INTEGERLITERAL = 114, 
-    IDENTIFIER = 115, WS = 116
+    BlockComment = 1, LineComment = 2, ASSIGN = 3, CASE = 4, CONST = 5, 
+    CLEAR = 6, DATA = 7, DATALABEL = 8, DEF = 9, DIM = 10, ELSE = 11, END = 12, 
+    FOR = 13, FROM = 14, IF = 15, IMPORT = 16, INPUT = 17, INTO = 18, LET = 19, 
+    NEXT = 20, OF = 21, OPTION = 22, OTHERWISE = 23, PRINT = 24, POP = 25, 
+    PUSH = 26, QUIT = 27, READ = 28, RECORD = 29, REF = 30, REM = 31, REPEAT = 32, 
+    RESTORE = 33, RETURN = 34, THEN = 35, SIZE = 36, STEP = 37, SYS = 38, 
+    SWAP = 39, TO = 40, UNTIL = 41, WHEN = 42, WITH = 43, WHILE = 44, MAIN = 45, 
+    ABS = 46, ACS = 47, ASN = 48, ATN = 49, COS = 50, DEG = 51, EXP = 52, 
+    FLOOR = 53, LN = 54, LOG = 55, PI = 56, RAD = 57, ROUND = 58, SGN = 59, 
+    SIN = 60, SQR = 61, TAN = 62, VECTOR = 63, LIST = 64, MAP = 65, STACK = 66, 
+    QUEUE = 67, SET = 68, FALSE = 69, TRUE = 70, ASC = 71, CHR = 72, INSTR = 73, 
+    LEFT = 74, MID = 75, RIGHT = 76, LEN = 77, BYTE = 78, INT = 79, FLOAT = 80, 
+    STRING = 81, DOLLAR = 82, HASH = 83, COLON = 84, SEMICOLON = 85, DOT = 86, 
+    COMMA = 87, QUOTE = 88, NEWLINE = 89, PERCENT = 90, UNDERSCORE = 91, 
+    LPAREN = 92, RPAREN = 93, SOPEN = 94, SCLOSE = 95, EQ = 96, NE = 97, 
+    GT = 98, GE = 99, LT = 100, LE = 101, HAT = 102, PLUS = 103, MINUS = 104, 
+    MULTIPLY = 105, DIVIDE = 106, SHL = 107, SHR = 108, MOD = 109, DIV = 110, 
+    COMP = 111, NOT = 112, AND = 113, OR = 114, EOR = 115, STRINGLITERAL = 116, 
+    HEXNUMBER = 117, BINARYNUMBER = 118, FLOATLITERAL = 119, INTEGERLITERAL = 120, 
+    IDENTIFIER = 121, WS = 122
   };
 
   explicit DaricLexer(antlr4::CharStream *input);

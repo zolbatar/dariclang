@@ -57,8 +57,8 @@ private:
                     .error = msg
             });
         } else {*/
-            throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
-                                  context->getStart()->getCharPositionInLine(), msg);
+        throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
+                              context->getStart()->getCharPositionInLine(), msg);
 //        }
     }
 
@@ -123,6 +123,10 @@ protected:
     std::any visitOption(DaricParser::OptionContext *context) override;
     std::any visitImportlib(DaricParser::ImportlibContext *context) override;
     std::any visitInput(DaricParser::InputContext *context) override;
+    std::any visitClear(DaricParser::ClearContext *context) override;
+    std::any visitPop(DaricParser::PopContext *context) override;
+    std::any visitPush(DaricParser::PushContext *context) override;
+    std::any visitSet(DaricParser::SetContext *context) override;
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

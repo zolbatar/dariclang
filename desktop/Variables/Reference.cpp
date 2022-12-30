@@ -68,13 +68,8 @@ bool Reference::FindInstanceUnknownInstanceType() {
     instance = Instance::FindInstance(name);
     if (!instance)
         return false;
-    this->data_type = instance->GetType();
-
-    // Validate
+    data_type = instance->GetType();
     instance_type = instance->GetInstanceType();
-//    if (instance->IndicesCount() != indices.size())
-//        return false;
-
     return true;
 }
 

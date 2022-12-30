@@ -93,19 +93,17 @@ bool InstanceMap::Set(llvm::Value *v,
                       size_t field_index,
                       CompilerLLVM &llvm,
                       llvm::IRBuilder<> *ir) {
-    switch (scope) {
-        case Scope::GLOBAL:
-            llvm.StoreGlobal(name, ir, v);
-            break;
-        case Scope::LOCAL:
-            llvm.StoreLocal(name, ir, v);
-            break;
-        default:
-            assert(0);
-    }
+    assert(0);
     return true;
 }
 
 void InstanceMap::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
-    vt = llvm.GetVariableValue(ir, name, type);
+    switch (scope) {
+        case Scope::GLOBAL:
+            vt.value = ir->CreateLoad(llvm.TypeVoid, llvm.GetGlobal(GetName()));
+            break;
+        case Scope::LOCAL:
+            vt.value = ir->CreateLoad(llvm.TypeVoid, llvm.GetLocal(GetName()));
+            break;
+    }
 }

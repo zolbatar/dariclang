@@ -149,7 +149,8 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 	// Array
 	if (context->SIZE() != NULL) {
 		auto ps = CreateToken(context, ParserTokenType::SIZE);
-		ps.identifier = context->IDENTIFIER()->getText();
+        auto r = std::any_cast<Reference *>(visit(context->variable()));
+        ps.reference = r->GetRef();
 		return ps;
 	}
 

@@ -147,6 +147,22 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitClear(DaricParser::ClearContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitPop(DaricParser::PopContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitPush(DaricParser::PushContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitSet(DaricParser::SetContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitVariable(DaricParser::VariableContext *ctx) override {
     return visitChildren(ctx);
   }

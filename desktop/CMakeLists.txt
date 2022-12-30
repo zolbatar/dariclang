@@ -186,7 +186,7 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp)
+        Grammar/DaricVisitor.cpp Compiler/CompilerCollections.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
