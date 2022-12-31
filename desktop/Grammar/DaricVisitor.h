@@ -91,8 +91,6 @@ public:
 
     virtual std::any visitSet(DaricParser::SetContext *context) = 0;
 
-    virtual std::any visitCassign(DaricParser::CassignContext *context) = 0;
-
     virtual std::any visitVariable(DaricParser::VariableContext *context) = 0;
 
     virtual std::any visitExpression(DaricParser::ExpressionContext *context) = 0;

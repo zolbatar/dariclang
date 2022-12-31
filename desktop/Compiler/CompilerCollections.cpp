@@ -21,7 +21,6 @@ void Compiler::TokenPlace(ParserToken &t) {
 		GetIR()->CreateStore(vt.value, scratch);
 
 		value_type.value = scratch;
-//			llvm::PointerType::get(llvm.TypeConversion(vt.type), 0);
 	} else {
 		ref_in = Reference::Get(t.children[0].reference);
 		if (!ref_in->InstanceExists())
@@ -101,6 +100,11 @@ void Compiler::TokenPlace(ParserToken &t) {
 			RaiseException("Indices not valid for STACKs", t);
 		CreateCall("stack_push", {vt_var.value, value_type.value});
 		break;
+	case InstanceType::SET:
+		if (!ref->GetIndices().empty())
+			RaiseException("Indices not valid for SETs", t);
+		CreateCall("set_put", {vt_var.value, value_type.value});
+		break;
 	default:
 		TypeError(t);
 	}
@@ -116,9 +120,6 @@ void Compiler::TokenFetch(ParserToken &t) {
 
 	Reference *ref_in = Reference::Get(t.children[0].reference);
 	if (!ref_in->InstanceExists()) {
-		if (ref_in->GetName()=="bhi") {
-			int a = 1;
-			}
 		ref_in->CopyFrom(ref);
 		ref_in->CreateInstance(llvm, GetFunction(), return_type, GetIR(), t.scope, false);
 	}

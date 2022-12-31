@@ -17,7 +17,6 @@ statement
     : assign
     | call
     | case
-    | cassign
     | clear
     | const
     | data
@@ -90,7 +89,6 @@ while:          WHILE expression statements END WHILE ;
 clear:          CLEAR variable ;
 get:            in=variable ASSIGNL coll=variable ;
 set:            (in=variable | expression) ASSIGNR coll=variable ;
-cassign:        ASSIGN expression TO variable SOPEN expression SCLOSE ;
 
 variable
     : IDENTIFIER
@@ -221,7 +219,6 @@ stringLiteral
 BlockComment:   '#{' .*? '}#' -> skip;
 LineComment:    (REM | '\'') ~ [\r\n]* -> skip;
 
-ASSIGN          : 'ASSIGN' | 'Assign' ;
 AT              : 'AT' | 'At' ;
 CASE            : 'CASE' | 'Case' ;
 CONST           : 'CONST' | 'Const' ;

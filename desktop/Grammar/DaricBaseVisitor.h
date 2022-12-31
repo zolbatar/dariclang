@@ -159,10 +159,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitCassign(DaricParser::CassignContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitVariable(DaricParser::VariableContext *ctx) override {
     return visitChildren(ctx);
   }

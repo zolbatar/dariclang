@@ -39,6 +39,3 @@ std::any Parser::visitGet(DaricParser::GetContext *context) {
 	return ps;
 }
 
-std::any Parser::visitCassign(DaricParser::CassignContext *context) {
-}
-

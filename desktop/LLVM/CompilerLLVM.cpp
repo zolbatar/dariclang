@@ -254,6 +254,12 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("vector_add_at", TypeNone, TypeVoid, TypeInt, TypeVoid);
 	Module->getOrInsertFunction("vector_set_at", TypeNone, TypeVoid, TypeInt, TypeVoid);
 	Module->getOrInsertFunction("vector_get_at", TypeNone, TypeVoid, TypeVoid, TypeInt);
+	Module->getOrInsertFunction("set_put", TypeNone, TypeVoid, TypeVoid);
+
+	Module->getOrInsertFunction("set_comp_byte", TypeInt, TypeVoid, TypeVoid);
+	Module->getOrInsertFunction("set_comp_int", TypeInt, TypeVoid, TypeVoid);
+	Module->getOrInsertFunction("set_comp_float", TypeInt, TypeVoid, TypeVoid);
+	Module->getOrInsertFunction("set_comp_string", TypeInt, TypeVoid, TypeVoid);
 
 	Module->getOrInsertFunction("list_size", TypeInt, TypeVoid);
 	Module->getOrInsertFunction("vector_size", TypeInt, TypeVoid);

@@ -1,9 +1,9 @@
 #include "InstanceMap.h"
 
-extern int set_comp_byte(T_B a, T_B b);
-extern int set_comp_int(T_I a, T_I b);
-extern int set_comp_float(T_F a, T_F b);
-extern int set_comp_string(T_S a, T_S b);
+extern int set_comp_byte(T_B *a, T_B *b);
+extern int set_comp_int(T_I *a, T_I *b);
+extern int set_comp_float(T_F *a, T_F *b);
+extern int set_comp_string(T_S *a, T_S *b);
 
 std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
                                              const std::string &struct_name,
