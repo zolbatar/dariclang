@@ -205,7 +205,7 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	SetButtonStyle(0);
 	if (ImGui::Button("Run"))
 	{
-		cmd = ((exe_path / "Daric").generic_string() + " @" + this->editor_name);
+		cmd = ((exe_path / "Daric").native() + " @" + this->editor_name);
 		run.store(true);
 	}
 	ImGui::SameLine();
