@@ -88,8 +88,8 @@ while:          WHILE expression statements END WHILE ;
 
 // Collections
 clear:          CLEAR variable ;
-get:            variable ASSIGNL variable ;
-set:            variable ASSIGNR variable ;
+get:            in=variable ASSIGNL coll=variable ;
+set:            (in=variable | expression) ASSIGNR coll=variable ;
 cassign:        ASSIGN expression TO variable SOPEN expression SCLOSE ;
 
 variable

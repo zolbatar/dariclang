@@ -30,6 +30,15 @@ public:
 	static Reference *Create(SourceFileData &state, std::string name);
 	static Reference *Get(size_t index);
 
+	void CopyFrom(Reference *ref) {
+		this->struct_name_val = ref->struct_name_val;
+		this->struct_name = ref->struct_name;
+		this->data_type = ref->data_type;
+		if (!this->struct_name.empty()) {
+			this->instance_type = InstanceType::RECORD;
+		}
+	}
+
 	// Get/set state
 	std::string GetName() { return name; }
 	[[nodiscard]] size_t GetRef() const { return index; }

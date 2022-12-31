@@ -1,20 +1,41 @@
 #include "Compiler.h"
 
 void Compiler::TokenPlace(ParserToken &t) {
-	// Collection
-	auto ref = Reference::Get(t.reference);
+	// Destination
+	Reference *ref = Reference::Get(t.reference);
 	if (!ref->InstanceExists())
 		VariableNotFound(t, ref->GetName());
 	if (!ref->FindInstanceUnknownInstanceType()) {
 		VariableError(t, ref->GetName());
 	}
 
-	// Element
-	Reference *ref_in = Reference::Get(t.children[0].reference);
-	if (!ref_in->InstanceExists())
-		VariableNotFound(t, ref->GetName());
-	if (!ref_in->FindInstanceUnknownInstanceType()) {
-		VariableError(t, ref->GetName());
+	// Source
+	Reference *ref_in;
+	ValueType value_type;
+	if (t.children[0].type != ParserTokenType::VARIABLE) {
+		ValueType vt = CompileExpression(t.children[0]);
+
+		// Create temp var and store
+		auto temp_name = GetScratchName(t.line);
+		auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(vt.type), nullptr, temp_name);
+		GetIR()->CreateStore(vt.value, scratch);
+
+		value_type.value = scratch;
+//			llvm::PointerType::get(llvm.TypeConversion(vt.type), 0);
+	} else {
+		ref_in = Reference::Get(t.children[0].reference);
+		if (!ref_in->InstanceExists())
+			VariableNotFound(t, ref_in->GetName());
+		if (!ref_in->FindInstanceUnknownInstanceType()) {
+			VariableError(t, ref_in->GetName());
+		}
+
+		// Correct type?
+		if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
+			TypeError(t);
+		}
+
+		value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
 	}
 
 	// Check is a collection
@@ -31,21 +52,11 @@ void Compiler::TokenPlace(ParserToken &t) {
 		break;
 	}
 
-	// Value
-	ValueType value_type;
-
-	// Correct type?
-	if (ref_in->GetStructName() != ref->GetStructName()) {
-		TypeError(t);
-	}
-
-	// Get address of struct (or variable)
-	value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
-
 	// Get collection var
 	ValueType vt_var;
 	ref->GetInstance()->Get(vt_var, nullptr, 0, llvm, GetIR());
 
+	// Store
 	switch (ref->GetInstanceType()) {
 	case InstanceType::VECTOR: {
 		// Get collection index
@@ -96,7 +107,6 @@ void Compiler::TokenPlace(ParserToken &t) {
 }
 
 void Compiler::TokenFetch(ParserToken &t) {
-	// Collection
 	auto ref = Reference::Get(t.reference);
 	if (!ref->InstanceExists())
 		VariableNotFound(t, ref->GetName());
@@ -104,12 +114,16 @@ void Compiler::TokenFetch(ParserToken &t) {
 		VariableError(t, ref->GetName());
 	}
 
-	// Element
 	Reference *ref_in = Reference::Get(t.children[0].reference);
-	if (!ref_in->InstanceExists())
-		VariableNotFound(t, ref->GetName());
+	if (!ref_in->InstanceExists()) {
+		if (ref_in->GetName()=="bhi") {
+			int a = 1;
+			}
+		ref_in->CopyFrom(ref);
+		ref_in->CreateInstance(llvm, GetFunction(), return_type, GetIR(), t.scope, false);
+	}
 	if (!ref_in->FindInstanceUnknownInstanceType()) {
-		VariableError(t, ref->GetName());
+		VariableError(t, ref_in->GetName());
 	}
 
 	// Check is a collection

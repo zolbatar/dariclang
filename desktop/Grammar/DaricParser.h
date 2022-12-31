@@ -766,11 +766,13 @@ public:
 
   class  GetContext : public antlr4::ParserRuleContext {
   public:
+    DaricParser::VariableContext *in = nullptr;
+    DaricParser::VariableContext *coll = nullptr;
     GetContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ASSIGNL();
     std::vector<VariableContext *> variable();
     VariableContext* variable(size_t i);
-    antlr4::tree::TerminalNode *ASSIGNL();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -781,11 +783,14 @@ public:
 
   class  SetContext : public antlr4::ParserRuleContext {
   public:
+    DaricParser::VariableContext *in = nullptr;
+    DaricParser::VariableContext *coll = nullptr;
     SetContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *ASSIGNR();
     std::vector<VariableContext *> variable();
     VariableContext* variable(size_t i);
-    antlr4::tree::TerminalNode *ASSIGNR();
+    ExpressionContext *expression();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

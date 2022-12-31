@@ -30,6 +30,7 @@ enum class ParserTokenType {
     EOR,
     EQ,
     EXP,
+	EXPRESSION,
     FALSE,
     FLOOR,
     FOR,
