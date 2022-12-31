@@ -87,13 +87,9 @@ public:
 
     virtual std::any visitClear(DaricParser::ClearContext *context) = 0;
 
-    virtual std::any visitPop(DaricParser::PopContext *context) = 0;
-
     virtual std::any visitGet(DaricParser::GetContext *context) = 0;
 
     virtual std::any visitSet(DaricParser::SetContext *context) = 0;
-
-    virtual std::any visitPush(DaricParser::PushContext *context) = 0;
 
     virtual std::any visitCassign(DaricParser::CassignContext *context) = 0;
 

@@ -66,8 +66,6 @@ enum class ParserTokenType {
     PARAMETER,
     PARAMETER_REF,
     PI,
-    PUSH,
-    POP,
     PLACE,
     PRINT,
     PRINTSYS,

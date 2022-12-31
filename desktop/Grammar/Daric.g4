@@ -33,8 +33,6 @@ statement
     | option
     | procedure
     | print
-    | push
-    | pop
     | read
     | repeat
     | restore
@@ -89,11 +87,9 @@ when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements END WHILE ;
 
 // Collections
-clear:          CLEAR IDENTIFIER (SOPEN expression SCLOSE)? ;
-pop:            POP variable FROM variable ;
-get:            FETCH variable FROM variable ;
-set:            PLACE variable AT variable ;
-push:           PUSH variable INTO variable ;
+clear:          CLEAR variable ;
+get:            variable ASSIGNL variable ;
+set:            variable ASSIGNR variable ;
 cassign:        ASSIGN expression TO variable SOPEN expression SCLOSE ;
 
 variable
@@ -238,7 +234,6 @@ ELSE            : 'ELSE' | 'Else' ;
 END             : 'END' | 'End' ;
 FOR             : 'FOR' | 'For' ;
 FROM            : 'FROM' | 'From' ;
-FETCH           : 'FETCH' | 'Fetch' ;
 IF              : 'IF' | 'If' ;
 IMPORT          : 'IMPORT' | 'Import' ;
 INPUT           : 'INPUT' | 'Input' ;
@@ -249,9 +244,6 @@ OF              : 'OF' | 'Of' ;
 OPTION          : 'OPTION' | 'Option' ;
 OTHERWISE       : 'OTHERWISE' | 'Otherwise' ;
 PRINT           : 'PRINT' | 'Print' ;
-PLACE           : 'PLACE' | 'Place' ;
-POP             : 'POP' | 'Pop' ;
-PUSH            : 'PUSH' | 'Push' ;
 QUIT            : 'QUIT' | 'Quit' ;
 READ            : 'READ' | 'Read' ;
 RECORD          : 'RECORD' | 'Record' ;
@@ -328,6 +320,9 @@ LPAREN          : '(' ;
 RPAREN          : ')' ;
 SOPEN           : '[' ;
 SCLOSE          : ']' ;
+
+ASSIGNL         : '<-' ;
+ASSIGNR         : '->' ;
 
 // Comparison and maths
 EQ              : '=' ;

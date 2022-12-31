@@ -139,8 +139,6 @@ private:
     void TokenInput(ParserToken &t);
     void TokenPlace(ParserToken &t);
     void TokenFetch(ParserToken &t);
-    void TokenPush(ParserToken &t);
-    void TokenPop(ParserToken &t);
     void TokenClear(ParserToken &t);
 
 	std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);

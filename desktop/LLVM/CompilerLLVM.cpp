@@ -234,6 +234,16 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("queue_init", TypeVoid, TypeInt);
 	Module->getOrInsertFunction("stack_init", TypeVoid, TypeInt);
 
+	Module->getOrInsertFunction("vector_remove_at", TypeNone, TypeVoid, TypeInt);
+	Module->getOrInsertFunction("list_remove_at", TypeNone, TypeVoid, TypeInt);
+
+	Module->getOrInsertFunction("list_clear", TypeNone, TypeVoid);
+	Module->getOrInsertFunction("vector_clear", TypeNone, TypeVoid);
+	Module->getOrInsertFunction("set_clear", TypeNone, TypeVoid);
+	Module->getOrInsertFunction("map_clear", TypeNone, TypeVoid);
+	Module->getOrInsertFunction("queue_clear", TypeNone, TypeVoid);
+	Module->getOrInsertFunction("stack_clear", TypeNone, TypeVoid);
+
 	Module->getOrInsertFunction("list_destroy", TypeNone, TypeVoid);
 	Module->getOrInsertFunction("vector_destroy", TypeNone, TypeVoid);
 	Module->getOrInsertFunction("set_destroy", TypeNone, TypeVoid);

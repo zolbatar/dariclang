@@ -182,12 +182,6 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::PLACE:
                 TokenPlace(token);
                 break;
-            case ParserTokenType::PUSH:
-                TokenPush(token);
-                break;
-            case ParserTokenType::POP:
-                TokenPop(token);
-                break;
             case ParserTokenType::CLEAR:
                 TokenClear(token);
                 break;

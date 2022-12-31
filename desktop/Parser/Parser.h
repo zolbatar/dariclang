@@ -124,8 +124,6 @@ protected:
     std::any visitImportlib(DaricParser::ImportlibContext *context) override;
     std::any visitInput(DaricParser::InputContext *context) override;
     std::any visitClear(DaricParser::ClearContext *context) override;
-    std::any visitPop(DaricParser::PopContext *context) override;
-    std::any visitPush(DaricParser::PushContext *context) override;
     std::any visitSet(DaricParser::SetContext *context) override;
     std::any visitGet(DaricParser::GetContext *context) override;
     std::any visitCassign(DaricParser::CassignContext *context) override;
