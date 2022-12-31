@@ -53,6 +53,7 @@ public:
 	// Maps
 	std::string GetStructNameVal() { return struct_name_val; }
 	void SetDataTypeVal(Primitive _data_type) { data_type_val = _data_type; }
+	Primitive GetDataTypeVal() { return data_type_val; }
 	void SetStructNameVal(std::string _name) { struct_name_val = std::move(_name); }
 	void SetLLVMStructTypeVal(llvm::StructType *type) { this->llvm_struct_type_val = type; }
 
@@ -140,7 +141,7 @@ private:
 	llvm::StructType *llvm_struct_type;
 	Primitive data_type;
 	llvm::StructType *llvm_struct_type_val;
-	Primitive data_type_val;
+	Primitive data_type_val = Primitive::NONE;
 	InstanceType instance_type = InstanceType::PRIMITIVE;
 	std::vector<ParserToken> indices;
 	std::string fields;

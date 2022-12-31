@@ -255,6 +255,7 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("vector_set_at", TypeNone, TypeVoid, TypeInt, TypeVoid);
 	Module->getOrInsertFunction("vector_get_at", TypeNone, TypeVoid, TypeVoid, TypeInt);
 	Module->getOrInsertFunction("set_put", TypeNone, TypeVoid, TypeVoid);
+	Module->getOrInsertFunction("map_put", TypeNone, TypeVoid, TypeVoid, TypeVoid);
 
 	Module->getOrInsertFunction("set_comp_byte", TypeInt, TypeVoid, TypeVoid);
 	Module->getOrInsertFunction("set_comp_int", TypeInt, TypeVoid, TypeVoid);
@@ -279,6 +280,7 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("vector_get_last", TypeNone, TypeVoid, TypeVoid);
 	Module->getOrInsertFunction("queue_pop", TypeNone, TypeVoid, TypeVoid);
 	Module->getOrInsertFunction("stack_pop", TypeNone, TypeVoid, TypeVoid);
+	Module->getOrInsertFunction("map_get", TypeNone, TypeVoid, TypeVoid, TypeVoid);
 
 	Module->getOrInsertFunction("PrintByte", TypeNone, TypeByte);
 	Module->getOrInsertFunction("PrintInteger", TypeNone, TypeInt);

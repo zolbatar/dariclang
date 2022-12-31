@@ -124,7 +124,6 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerLibrary.cpp
         Compiler/CompilerConstants.cpp
         Compiler/CompilerRead.cpp
-        Compiler/CompilerContainers.cpp
         Compiler/CompilerArrays.cpp
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp

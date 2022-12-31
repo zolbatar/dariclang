@@ -35,34 +35,31 @@ std::any Parser::visitDim(DaricParser::DimContext *context) {
 		ps.type = ParserTokenType::CONTAINER;
 		r->SetAsSet();
 		if (context->BYTE())
-			r->SetDataType(Primitive::BYTE);
+			r->SetDataTypeVal(Primitive::BYTE);
 		else if (context->INT())
-			r->SetDataType(Primitive::INT);
+			r->SetDataTypeVal(Primitive::INT);
 		else if (context->STRING())
-			r->SetDataType(Primitive::STRING);
+			r->SetDataTypeVal(Primitive::STRING);
 		else if (context->FLOAT())
-			r->SetDataType(Primitive::FLOAT);
+			r->SetDataTypeVal(Primitive::FLOAT);
 	} else if (context->MAP()) {
 		ps.type = ParserTokenType::CONTAINER;
 		r->SetAsMap();
 		if (context->BYTE())
-			r->SetDataType(Primitive::BYTE);
+			r->SetDataTypeVal(Primitive::BYTE);
 		else if (context->INT())
-			r->SetDataType(Primitive::INT);
+			r->SetDataTypeVal(Primitive::INT);
 		else if (context->STRING())
-			r->SetDataType(Primitive::STRING);
+			r->SetDataTypeVal(Primitive::STRING);
 		else if (context->FLOAT())
-			r->SetDataType(Primitive::FLOAT);
-		auto pss = CreateToken(context, ParserTokenType::NONE);
+			r->SetDataTypeVal(Primitive::FLOAT);
 		auto t = std::any_cast<TypeOrStruct>(visit(context->typeOrStruct()));
-		if (t.is_struct) {
-			r->SetDataTypeVal(Primitive::NONE);
-			r->SetStructNameVal(t.name);
-		} else {
-			r->SetDataTypeVal(t.type);
+		if (!t.is_struct)
+			r->SetDataType(t.type);
+		else {
+			r->SetStructName(t.name);
+			r->SetDataType(Primitive::NONE);
 		}
-		pss.identifier = context->IDENTIFIER()->getText();
-		ps.children.push_back(pss);
 	} else if (context->QUEUE()) {
 		ps.type = ParserTokenType::CONTAINER;
 		auto t = std::any_cast<TypeOrStruct>(visit(context->typeOrStruct()));

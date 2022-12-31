@@ -26,13 +26,15 @@ public:
     static std::shared_ptr<Instance> FindInstance(std::string name);
 
     // Scope, name and type
+	Primitive GetDataType() { return data_type_val; }
     Scope GetScope() { return scope; }
     virtual InstanceType GetInstanceType() = 0;
     std::string &GetName() { return name; }
     virtual size_t IndicesCount() = 0;
-    virtual Primitive GetType() = 0;
-    virtual std::string GetStructName() = 0;
+	std::string GetStructName() { return struct_name; }
+	std::string GetStructNameVal() { return struct_name_val; }
     bool IsRef() { return is_ref; }
+	Primitive GetType() { return type; }
 
     // Get/set stuff
     virtual void Get(ValueType &vt,
@@ -67,6 +69,10 @@ protected:
     std::string name;
     Scope scope;
     bool is_ref;
+	Primitive data_type_val = Primitive::NONE;
+	std::string struct_name = "";
+	std::string struct_name_val = "";
+	Primitive type = Primitive::NONE;
 
     static std::unordered_map<std::string, std::shared_ptr<Instance>> locals;
     static std::unordered_map<std::string, std::shared_ptr<Instance>> globals;

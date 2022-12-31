@@ -67,11 +67,12 @@ InstanceSet::InstanceSet(const std::string &name,
 						 Scope scope,
 						 CompilerLLVM &llvm,
 						 llvm::IRBuilder<> *ir,
-						 bool is_ref) : type(type) {
+						 bool is_ref) {
 	this->name = name;
 	this->struct_name = struct_name;
 	this->scope = scope;
 	this->is_ref = is_ref;
+	this->type = type;
 }
 
 bool InstanceSet::Set(llvm::Value *v,

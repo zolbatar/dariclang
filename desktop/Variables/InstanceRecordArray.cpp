@@ -28,10 +28,10 @@ InstanceRecordArray::InstanceRecordArray(const std::string &name,
                                          size_t no_indices,
                                          CompilerLLVM &llvm,
                                          llvm::IRBuilder<> *ir) : no_indices(no_indices),
-                                                                  struct_name(struct_name),
                                                                   struct_type(struct_type) {
     this->name = name;
     this->scope = scope;
+	this->struct_name = struct_name;
 }
 
 bool InstanceRecordArray::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {

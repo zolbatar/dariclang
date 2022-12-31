@@ -1,5 +1,24 @@
 #include "Compiler.h"
 
+void Compiler::TokenContainer(ParserToken &t) {
+	auto var = Reference::Get(t.reference);
+
+	if (var->GetDataType() == Primitive::NONE) {
+		if (!state.StructExists(var->GetStructName()))
+			RecordNotFound(t, var->GetStructName());
+	}
+
+	if (procedure == nullptr) {
+		if (t.scope != Scope::GLOBAL)
+			return;
+		var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::GLOBAL, false);
+	} else {
+		if (t.scope != Scope::LOCAL)
+			return;
+		var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::LOCAL, false);
+	}
+}
+
 void Compiler::TokenPlace(ParserToken &t) {
 	// Destination
 	Reference *ref = Reference::Get(t.reference);
@@ -30,8 +49,18 @@ void Compiler::TokenPlace(ParserToken &t) {
 		}
 
 		// Correct type?
-		if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
-			TypeError(t);
+		if (ref->GetInstanceType() == InstanceType::MAP) {
+			auto t1 = ref_in->GetDataType();
+			auto t2 = ref->GetInstance()->GetType();
+			auto t3 = ref_in->GetStructName();
+			auto t4 = ref->GetInstance()->GetStructNameVal();
+			if (t1 != t2 || t3 != t4) {
+				TypeError(t);
+			}
+		} else {
+			if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
+				TypeError(t);
+			}
 		}
 
 		value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
@@ -105,6 +134,17 @@ void Compiler::TokenPlace(ParserToken &t) {
 			RaiseException("Indices not valid for SETs", t);
 		CreateCall("set_put", {vt_var.value, value_type.value});
 		break;
+	case InstanceType::MAP: {
+		if (ref->GetIndices().size() != 1)
+			RaiseException("Key required for MAP", t);
+
+		auto key = CompileExpression(ref->GetIndices()[0]);
+		if (key.type != ref->GetInstance()->GetDataType()) {
+			TypeError(t);
+		}
+		CreateCall("map_put", {vt_var.value, key.value, value_type.value});
+		break;
+	}
 	default:
 		TypeError(t);
 	}
@@ -141,15 +181,23 @@ void Compiler::TokenFetch(ParserToken &t) {
 		break;
 	}
 
-	// Value
-	ValueType value_type;
-
 	// Correct type?
-	if (ref_in->GetStructName() != ref->GetStructName()) {
-		TypeError(t);
+	if (ref->GetInstanceType() == InstanceType::MAP) {
+		auto t1 = ref_in->GetDataType();
+		auto t2 = ref->GetInstance()->GetType();
+		auto t3 = ref_in->GetStructName();
+		auto t4 = ref->GetInstance()->GetStructNameVal();
+		if (t1 != t2 || t3 != t4) {
+			TypeError(t);
+		}
+	} else {
+		if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
+			TypeError(t);
+		}
 	}
 
 	// Get address of struct (or variable)
+	ValueType value_type;
 	value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
 
 	// Get collection var
@@ -183,6 +231,17 @@ void Compiler::TokenFetch(ParserToken &t) {
 			RaiseException("Indices not valid for STACKs", t);
 		CreateCall("stack_pop", {value_type.value, vt_var.value});
 		break;
+	case InstanceType::MAP: {
+		if (ref->GetIndices().size() != 1)
+			RaiseException("Key required for MAP", t);
+
+		auto key = CompileExpression(ref->GetIndices()[0]);
+		if (key.type != ref->GetInstance()->GetDataType()) {
+			TypeError(t);
+		}
+		CreateCall("map_get", {value_type.value, vt_var.value, key.value});
+		break;
+	}
 	default:
 		TypeError(t);
 	}
