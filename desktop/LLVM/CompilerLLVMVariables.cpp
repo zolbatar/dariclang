@@ -139,7 +139,7 @@ void CompilerLLVM::ClearCollections(llvm::IRBuilder<> *ir) {
     for (auto &l: local_collections) {
         switch (l.type) {
             case CollectionType::Vector:
-                ir->CreateCall(Module->getFunction("queue_destroy"), {l.alloc});
+                ir->CreateCall(Module->getFunction("vector_destroy"), {l.alloc});
                 break;
             case CollectionType::List:
                 ir->CreateCall(Module->getFunction("list_destroy"), {l.alloc});

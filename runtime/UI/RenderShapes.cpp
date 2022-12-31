@@ -42,7 +42,7 @@ void UISDL::Flip(bool userSpecified) {
 void UISDL::RenderShapes() {
     const std::lock_guard<std::mutex> lock(shapes_lock);
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
-    ImGuiID id = 0;
+    ImGuiID id = 1;
     ImGui::BeginChild(id++);
     size_t count = 0;
     if (mode == Mode::CLASSIC) {
