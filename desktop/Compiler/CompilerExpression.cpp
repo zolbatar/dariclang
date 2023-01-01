@@ -502,6 +502,44 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             vt.value = llvm::ConstantInt::get(llvm.TypeInt, compiling_main_file);
             return vt;
         }
+        case ParserTokenType::HAS: {
+            auto expr = CompileExpression(t.children[0]);
+            auto temp_name = GetScratchName(t.line);
+            auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(expr.type), nullptr, temp_name);
+            GetIR()->CreateStore(expr.value, scratch);
+
+            // Var
+            auto ref = Reference::Get(t.reference);
+            if (!ref->InstanceExists())
+                VariableNotFound(t, ref->GetName());
+            if (!ref->FindInstanceUnknownInstanceType()) {
+                VariableError(t, ref->GetName());
+            }
+            ValueType vt_var;
+            ref->GetInstance()->Get(vt_var, nullptr, 0, llvm, GetIR());
+
+            // Check key type
+            if (expr.type != ref->GetInstance()->GetDataType()) {
+                TypeError(t);
+            }
+
+            // Do lookup
+            ValueType vt;
+            vt.type = Primitive::INT;
+            switch (ref->GetInstanceType()) {
+                case InstanceType::SET: {
+                    vt.value = CreateCall("set_contains", {vt_var.value, scratch});
+                    break;
+                }
+                case InstanceType::MAP: {
+                    vt.value = CreateCall("map_contains", {vt_var.value, scratch});
+                    break;
+                }
+                default:
+                    TypeError(t);
+            }
+            return vt;
+        }
         default:
             assert(0);
     }

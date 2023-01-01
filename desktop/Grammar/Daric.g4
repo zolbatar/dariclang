@@ -103,6 +103,9 @@ expression
     | exprcall
     | variable
 
+    // Collection
+    | variable HAS expression
+
     // Unary
     | MINUS expression
     | PLUS expression
@@ -231,6 +234,7 @@ ELSE            : 'ELSE' | 'Else' ;
 END             : 'END' | 'End' ;
 FOR             : 'FOR' | 'For' ;
 FROM            : 'FROM' | 'From' ;
+HAS             : 'HAS' | 'Has' ;
 IF              : 'IF' | 'If' ;
 IMPORT          : 'IMPORT' | 'Import' ;
 INPUT           : 'INPUT' | 'Input' ;

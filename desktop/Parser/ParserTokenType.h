@@ -36,6 +36,7 @@ enum class ParserTokenType {
     FOR,
     FETCH,
     HAT,
+    HAS,
     INSTR,
     INPUT,
     FLOAT,
