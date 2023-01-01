@@ -337,7 +337,27 @@ void Compiler::TokenClear(ParserToken &t) {
 				auto temp_name = GetScratchName(t.line);
 				auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
 				GetIR()->CreateStore(key.value, scratch);
+
+				// Do we contain it?
+				auto trueBB = CreateBB("Contains check True", t);
+				auto endBB = CreateBB("Contains check End", t);
+				auto contains = CreateCall("set_contains", {vt_var.value, scratch});
+				auto comp = GetIR()->CreateICmpNE(contains, llvm::ConstantInt::get(llvm.TypeInt, 0));
+
+				// Actual condition
+				GetIR()->CreateCondBr(comp, trueBB, endBB);
+
+				// Create true block
+				AddBB(trueBB);
 				CreateCall("set_remove", {vt_var.value, scratch});
+
+				// String key we need to release?
+				if (key.type == Primitive::STRING) {
+					llvm.ClearPermString(CreateCall("GetStringComp", {}), GetIR());
+				}
+				GetIR()->CreateBr(endBB);
+
+				AddBB(endBB);
 				break;
 			}
 			case InstanceType::MAP: {
