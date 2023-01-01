@@ -48,6 +48,7 @@ project(IDE)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(${PROJECT_NAME}
+        ../runtime/Library/StringLib.cpp
         ../runtime/Config/Config.cpp
         UI/UISDL.cpp
         UI/Lodepng.cpp

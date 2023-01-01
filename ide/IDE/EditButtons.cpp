@@ -3,6 +3,7 @@
 #include "Edit.h"
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../UI/UISDL.h"
+#include "../../runtime/Library/StringLib.h"
 
 extern std::filesystem::path exe_path;
 std::string message;
@@ -205,7 +206,10 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	SetButtonStyle(0);
 	if (ImGui::Button("Run"))
 	{
-		cmd = ((exe_path / "Daric").native() + " @" + this->editor_name);
+		cmd = ((exe_path / "Daric").generic_string() + " @" + this->editor_name);
+#if _WIN64
+        replaceAll(cmd, "/", "\\");
+#endif
 		run.store(true);
 	}
 	ImGui::SameLine();
