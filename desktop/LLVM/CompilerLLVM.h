@@ -39,6 +39,7 @@ public:
 	llvm::IRBuilder<> *CreateBuilder(std::string name, llvm::Function *func);
 	void AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir);
 	void MakePermString(llvm::Value *v, llvm::IRBuilder<> *ir);
+	void AddPermString(llvm::Value *v, llvm::IRBuilder<> *ir);
 	void ClearPermString(llvm::Value *v, llvm::IRBuilder<> *ir);
 	void ClearTempStrings(llvm::IRBuilder<> *ir);
 	static llvm::GlobalVariable::LinkageTypes GetLinkage() { return llvm::GlobalVariable::InternalLinkage; }

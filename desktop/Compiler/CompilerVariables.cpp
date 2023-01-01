@@ -1,6 +1,7 @@
 #include "Compiler.h"
 
 void Compiler::ClearLocals() {
+	// Local vars
 	for (auto &l : Instance::locals) {
 		auto var = llvm.locals[l.first];
 		if (l.second->GetInstanceType() == InstanceType::PRIMITIVE && l.second->GetType() == Primitive::STRING) {
@@ -23,6 +24,9 @@ void Compiler::ClearLocals() {
 	}
 	llvm.ClearLocals();
 	Instance::locals.clear();
+
+	// Local collections
+	llvm.ClearCollections(GetIR());
 }
 
 void Compiler::GenericVariable(ParserToken &token, Scope scope) {

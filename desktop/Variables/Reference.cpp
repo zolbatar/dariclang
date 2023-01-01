@@ -71,7 +71,8 @@ bool Reference::FindInstanceUnknownInstanceType() {
 	data_type = instance->GetType();
 	instance_type = instance->GetInstanceType();
 	struct_name = instance->GetStructName();
-	//struct_name_val = GetStructNameVal();
+	llvm_struct_type = instance->GetStructType();
+	struct_name_val = GetStructNameVal();
 	return true;
 }
 

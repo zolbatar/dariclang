@@ -33,6 +33,26 @@ void Compiler::TokenStructInstance(ParserToken &t) {
 	ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), t.scope, false);
 	auto instance = ref->GetInstance();
 
+	// Init to defaults
+/*	size_t idx = 0;
+	for (auto &f : si->fields) {
+		switch (f.type) {
+			case Primitive::INT:
+			case Primitive::BYTE:
+				instance->Set(llvm::ConstantInt::get(llvm.TypeConversion(f.type), 0), nullptr, idx, llvm, GetIR());
+				break;
+			case Primitive::FLOAT:
+				instance->Set(llvm::ConstantFP::get(llvm.TypeFloat, 0.0), nullptr, idx, llvm, GetIR());
+				break;
+			case Primitive::STRING: {
+				auto v = GetIR()->CreateGlobalStringPtr("");
+				instance->Set(v, nullptr, idx, llvm, GetIR());
+				break;
+			}
+		}
+		idx++;
+	}*/
+
 	// Initialise any fields?
 	for (auto &init : t.children) {
 		// Is this a valid field?

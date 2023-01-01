@@ -263,6 +263,8 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("set_comp_int", TypeInt, TypeVoid, TypeVoid);
 	Module->getOrInsertFunction("set_comp_float", TypeInt, TypeVoid, TypeVoid);
 	Module->getOrInsertFunction("set_comp_string", TypeInt, TypeVoid, TypeVoid);
+	Module->getOrInsertFunction("GetStringComp", TypeString);
+	Module->getOrInsertFunction("map_contains", TypeInt, TypeVoid, TypeVoid);
 
 	Module->getOrInsertFunction("list_size", TypeInt, TypeVoid);
 	Module->getOrInsertFunction("vector_size", TypeInt, TypeVoid);
@@ -322,10 +324,12 @@ void CompilerLLVM::SetupLibrary() {
 	Module->getOrInsertFunction("times", TypeString);
 
 	// String
+	Module->getOrInsertFunction("clone_string", TypeString, TypeString);
 	Module->getOrInsertFunction("add_string", TypeString, TypeString, TypeString);
 	Module->getOrInsertFunction("String_Compare", TypeInt, TypeString, TypeString);
 	Module->getOrInsertFunction("Add_Temp_String", TypeNone, TypeString);
 	Module->getOrInsertFunction("Make_Perm_String", TypeNone, TypeString);
+	Module->getOrInsertFunction("Add_Perm_String", TypeNone, TypeString);
 	Module->getOrInsertFunction("Clear_Perm_String", TypeNone, TypeString);
 	Module->getOrInsertFunction("Clear_Temp_Strings", TypeNone);
 	Module->getOrInsertFunction("asc", TypeInt, TypeString);
@@ -380,13 +384,13 @@ void CompilerLLVM::CreateLLVMPasses() {
 		}
 	}
 
-	std::error_code EC;
+/*	std::error_code EC;
 	std::string filename_s(options.output_filename + ".o");
 	llvm::raw_fd_ostream out_s(filename_s, EC, llvm::sys::fs::CreationDisposition::CD_CreateAlways);
 	if (Target->addPassesToEmitFile(passes, out_s, nullptr, llvm::CodeGenFileType::CGFT_ObjectFile)) {
 		std::cout << "LLVM output of object files not supported\n";
 		exit(1);
-	}
+	}*/
 
 	fnPasses.doFinalization();
 	passes.run(*Module);
@@ -407,6 +411,11 @@ llvm::IRBuilder<> *CompilerLLVM::CreateBuilder(std::string name, llvm::Function 
 
 void CompilerLLVM::AddTempString(llvm::Value *v, llvm::IRBuilder<> *ir) {
 	auto fun = Module->getFunction("Add_Temp_String");
+	ir->CreateCall(fun, {v});
+}
+
+void CompilerLLVM::AddPermString(llvm::Value *v, llvm::IRBuilder<> *ir) {
+	auto fun = Module->getFunction("Add_Perm_String");
 	ir->CreateCall(fun, {v});
 }
 
