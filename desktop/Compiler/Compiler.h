@@ -86,6 +86,7 @@ private:
 	static void AddLibraryCall(std::string name, std::string func, Primitive ret, std::string parameters);
 	static std::unordered_map<std::string, LibraryFunc> library;
 
+	void ClearLocals();
 	std::string GetScratchName(size_t line);
 	size_t scratch_index = 0;
 	llvm::Function *GetFunction() {

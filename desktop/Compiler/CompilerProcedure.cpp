@@ -65,6 +65,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
     }
 
     CompileStatements(t.children[1].children);
+	ClearLocals();
     if (!llvm.CheckReturn(GetIR())) {
         llvm.ClearCollections(GetIR());
         DefaultReturn(return_type, t);
@@ -72,7 +73,6 @@ void Compiler::TokenProcedure(ParserToken &t) {
     procedure_pre_ir->CreateBr(bb);
     procedure = nullptr;
     return_type = Primitive::NONE;
-    Instance::ClearLocals(llvm);
 }
 
 void Compiler::TokenCall(ParserToken &token) {

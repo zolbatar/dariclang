@@ -3,7 +3,7 @@
 #include <unordered_set>
 #include "Types.h"
 
-//#define DEBUG 1
+#define DEBUG 1
 
 std::unordered_set<const char *> temp_strings;
 std::unordered_set<const char *> perm_strings;

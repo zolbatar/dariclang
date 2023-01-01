@@ -45,11 +45,12 @@ InstanceRecord::InstanceRecord(const std::string &name,
 							   Scope scope,
 							   CompilerLLVM &llvm,
 							   llvm::IRBuilder<> *ir,
-							   bool is_ref) : struct_type(struct_type) {
+							   bool is_ref) {
 	this->name = name;
 	this->scope = scope;
 	this->is_ref = is_ref;
 	this->struct_name = struct_name;
+	this->struct_type = struct_type;
 }
 
 bool InstanceRecord::Set(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
