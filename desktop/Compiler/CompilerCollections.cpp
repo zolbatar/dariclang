@@ -3,10 +3,16 @@
 void Compiler::TokenContainer(ParserToken &t) {
 	auto var = Reference::Get(t.reference);
 
-	if (var->GetDataType() == Primitive::NONE) {
-		if (!state.StructExists(var->GetStructName()))
-			RecordNotFound(t, var->GetStructName());
-	}
+    switch (var->GetInstanceType()) {
+        case InstanceType::SET:
+            break;
+        default:
+            if (var->GetDataType() == Primitive::NONE) {
+                if (!state.StructExists(var->GetStructName()))
+                    RecordNotFound(t, var->GetStructName());
+            }
+            break;
+    }
 
 	if (procedure == nullptr) {
 		if (t.scope != Scope::GLOBAL)
