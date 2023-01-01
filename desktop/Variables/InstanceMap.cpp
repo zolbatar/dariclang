@@ -20,7 +20,7 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
 	// Key
 	llvm::Constant *size = llvm::ConstantInt::get(
 		llvm.TypeInt,
-		llvm.dl->getTypeAllocSize(llvm.TypeConversion(data_type)));
+		llvm.dl->getTypeAllocSize(llvm.TypeConversion(data_type_val)));
 
 	// Val
 	llvm::Constant *size_val;
@@ -36,7 +36,7 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
 
 	// Comparator
 	void *comp = NULL;
-	switch (data_type) {
+	switch (data_type_val) {
 	case Primitive::BYTE:
 		comp = (void *)&set_comp_byte;
 		break;
@@ -66,14 +66,14 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
 		ca.alloc = create;
 		llvm.local_collections.push_back(std::move(ca));
 		locals.insert(std::make_pair(name,
-									 std::make_shared<InstanceMap>(name, struct_name, struct_name_val, data_type, data_type_val, scope, llvm, ir, is_ref)));
+									 std::make_shared<InstanceMap>(name, struct_name, struct_name_val, data_type_val, data_type, scope, llvm, ir, is_ref)));
 		return locals.find(name)->second;
 	}
 	case Scope::GLOBAL: {
 		llvm.CreateGlobalVoid(name);
 		llvm.StoreGlobal(name, ir, create);
 		globals.insert(std::make_pair(name,
-									  std::make_shared<InstanceMap>(name, struct_name, struct_name_val, data_type, data_type_val, scope, llvm, ir, is_ref)));
+									  std::make_shared<InstanceMap>(name, struct_name, struct_name_val, data_type_val, data_type, scope, llvm, ir, is_ref)));
 		return globals.find(name)->second;
 	}
 	default:

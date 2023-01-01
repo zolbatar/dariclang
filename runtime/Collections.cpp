@@ -14,5 +14,10 @@ int set_comp_float(T_F *a, T_F *b) {
 }
 
 int set_comp_string(T_S *a, T_S *b) {
-	return strcmp(*a, *b);
+	auto aa = *a;
+	auto bb = *b;
+	auto al = strlen(aa);
+	auto bl = strlen(bb);
+	auto r = strcmp(aa, bb);
+	return r;
 }

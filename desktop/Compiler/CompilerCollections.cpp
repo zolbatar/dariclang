@@ -49,18 +49,8 @@ void Compiler::TokenPlace(ParserToken &t) {
 		}
 
 		// Correct type?
-		if (ref->GetInstanceType() == InstanceType::MAP) {
-			auto t1 = ref_in->GetDataType();
-			auto t2 = ref->GetInstance()->GetType();
-			auto t3 = ref_in->GetStructName();
-			auto t4 = ref->GetInstance()->GetStructNameVal();
-			if (t1 != t2 || t3 != t4) {
-				TypeError(t);
-			}
-		} else {
-			if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
-				TypeError(t);
-			}
+		if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
+			TypeError(t);
 		}
 
 		value_type.value = ref_in->GetPointer(option_base, ProcessIndices(ref_in, t), llvm, GetIR(), t);
@@ -142,7 +132,10 @@ void Compiler::TokenPlace(ParserToken &t) {
 		if (key.type != ref->GetInstance()->GetDataType()) {
 			TypeError(t);
 		}
-		CreateCall("map_put", {vt_var.value, key.value, value_type.value});
+		auto temp_name = GetScratchName(t.line);
+		auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
+		GetIR()->CreateStore(key.value, scratch);
+		CreateCall("map_put", {vt_var.value, scratch, value_type.value});
 		break;
 	}
 	default:
@@ -182,18 +175,8 @@ void Compiler::TokenFetch(ParserToken &t) {
 	}
 
 	// Correct type?
-	if (ref->GetInstanceType() == InstanceType::MAP) {
-		auto t1 = ref_in->GetDataType();
-		auto t2 = ref->GetInstance()->GetType();
-		auto t3 = ref_in->GetStructName();
-		auto t4 = ref->GetInstance()->GetStructNameVal();
-		if (t1 != t2 || t3 != t4) {
-			TypeError(t);
-		}
-	} else {
-		if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
-			TypeError(t);
-		}
+	if (ref_in->GetDataType() != ref->GetDataType() || ref_in->GetStructName() != ref->GetStructName()) {
+		TypeError(t);
 	}
 
 	// Get address of struct (or variable)
@@ -239,7 +222,10 @@ void Compiler::TokenFetch(ParserToken &t) {
 		if (key.type != ref->GetInstance()->GetDataType()) {
 			TypeError(t);
 		}
-		CreateCall("map_get", {value_type.value, vt_var.value, key.value});
+		auto temp_name = GetScratchName(t.line);
+		auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
+		GetIR()->CreateStore(key.value, scratch);
+		CreateCall("map_get", {value_type.value, vt_var.value, scratch});
 		break;
 	}
 	default:
