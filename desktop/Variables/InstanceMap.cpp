@@ -24,10 +24,10 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
 
 	// Val
 	llvm::Constant *size_val;
-	if (data_type_val != Primitive::NONE) {
+	if (data_type != Primitive::NONE) {
 		size_val = llvm::ConstantInt::get(
 			llvm.TypeInt,
-			llvm.dl->getTypeAllocSize(llvm.TypeConversion(data_type_val)));
+			llvm.dl->getTypeAllocSize(llvm.TypeConversion(data_type)));
 	} else {
 		size_val = llvm::ConstantInt::get(
 			llvm.TypeInt,

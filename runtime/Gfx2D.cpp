@@ -40,17 +40,17 @@ extern "C" DLLEXTERN void gfx2d_mode(T_I w, T_I h, T_I flags) {
     screen_width = w;
     screen_height = h;
     screen_flags = flags;
-    start_ui = true;
+    start_ui.store(true);
+
+    // Wait for UI to be initialised
+    while (!ui_started.load()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
     if (flags & 2) {
         ui->BankedOn();
     } else {
         ui->BankedOff();
-    }
-
-    // Wait for UI to be initialised
-    while (!ui_started.load()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 }
 

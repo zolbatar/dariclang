@@ -136,7 +136,7 @@ void Reference::CreateInstance(CompilerLLVM &llvm,
 			InstanceSet::Build(name, GetStructName(), data_type_val, scope, llvm, func, ir, default_return_type, is_ref);
 		break;
 	case InstanceType::MAP: {
-		SetLLVMStructTypeVal(llvm.GetStruct(GetStructNameVal()));
+		SetLLVMStructTypeVal(llvm.GetStruct(GetStructName()));
 		instance = InstanceMap::Build(name, GetStructName(), data_type,
 									  data_type_val, llvm_struct_type_val,
 									  GetStructNameVal(),

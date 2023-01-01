@@ -71,6 +71,7 @@ void RunThread() {
 }
 
 void do_quit() {
+    ui_started.store(false);
     delete ui;
     exit(0);
 }
