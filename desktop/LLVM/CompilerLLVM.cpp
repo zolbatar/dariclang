@@ -236,6 +236,8 @@ void CompilerLLVM::SetupLibrary() {
 
 	Module->getOrInsertFunction("vector_remove_at", TypeNone, TypeVoid, TypeInt);
 	Module->getOrInsertFunction("list_remove_at", TypeNone, TypeVoid, TypeInt);
+    Module->getOrInsertFunction("map_remove", TypeNone, TypeVoid, TypeVoid);
+    Module->getOrInsertFunction("set_remove", TypeNone, TypeVoid, TypeVoid);
 
 	Module->getOrInsertFunction("list_clear", TypeNone, TypeVoid);
 	Module->getOrInsertFunction("vector_clear", TypeNone, TypeVoid);

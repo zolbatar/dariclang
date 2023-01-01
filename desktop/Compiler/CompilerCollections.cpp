@@ -279,6 +279,32 @@ void Compiler::TokenClear(ParserToken &t) {
             case InstanceType::LIST:
                 CreateCall("list_remove_at", {vt_var.value, index.value});
                 break;
+            case InstanceType::SET: {
+                if (ref->GetIndices().size() != 1)
+                    RaiseException("Key required for SET", t);
+                auto key = CompileExpression(ref->GetIndices()[0]);
+                if (key.type != ref->GetDataType()) {
+                    TypeError(t);
+                }
+                auto temp_name = GetScratchName(t.line);
+                auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
+                GetIR()->CreateStore(key.value, scratch);
+                CreateCall("set_remove", {vt_var.value, scratch});
+                break;
+            }
+            case InstanceType::MAP: {
+                if (ref->GetIndices().size() != 1)
+                    RaiseException("Key required for MAP", t);
+                auto key = CompileExpression(ref->GetIndices()[0]);
+                if (key.type != ref->GetInstance()->GetDataType()) {
+                    TypeError(t);
+                }
+                auto temp_name = GetScratchName(t.line);
+                auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
+                GetIR()->CreateStore(key.value, scratch);
+                CreateCall("map_remove", {vt_var.value, scratch});
+                break;
+            }
             default:
                 TypeError(t);
         }
