@@ -18,6 +18,7 @@ void Config::Load() {
         exit(1);
     }
     std::ifstream f(exe_path / p);
+    std::cout << "Loading config file: " << (exe_path / p).generic_string() << std::endl;
     json data = json::parse(f);
     for (json::iterator it = data.begin(); it != data.end(); ++it) {
         if (it.key() == "mono_font") {

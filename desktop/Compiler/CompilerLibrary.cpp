@@ -59,6 +59,11 @@ void Compiler::SetupLibrary() {
     // Core
     AddLibraryCall("Sleep", "__sleep", Primitive::NONE, "F");
 
+    // GUI
+    AddLibraryCall("Window", "gui_window", Primitive::NONE, "SIIII");
+    AddLibraryCall("SetWindow", "gui_startwindow", Primitive::NONE, "S");
+    AddLibraryCall("UnsetWindow", "gui_endwindow", Primitive::NONE, "");
+
     // Chrono
     AddLibraryCall("Timer", "__time", Primitive::FLOAT, "");
     AddLibraryCall("Time", "times", Primitive::STRING, "");
@@ -71,6 +76,8 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("Origin", "gfx2d_origin", Primitive::NONE, "FF");
     AddLibraryCall("ScreenWidth", "gfx2d_swidth", Primitive::INT, "");
     AddLibraryCall("ScreenHeight", "gfx2d_sheight", Primitive::INT, "");
+    AddLibraryCall("WindowWidth", "gfx2d_wwidth", Primitive::INT, "S");
+    AddLibraryCall("WindowHeight", "gfx2d_wheight", Primitive::INT, "S");
     AddLibraryCall("Flip", "gfx2d_flip", Primitive::NONE, "");
     AddLibraryCall("Cls", "gfx2d_cls", Primitive::NONE, "");
     AddLibraryCall("Plot", "gfx2d_plot", Primitive::NONE, "FF");

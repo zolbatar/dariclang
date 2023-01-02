@@ -82,6 +82,18 @@ extern "C" DLLEXTERN T_I gfx2d_sheight() {
     return ui->GetScreenHeight();
 }
 
+extern int GetWindowWidth(T_S window);
+extern "C" DLLEXTERN T_I gfx2d_wwidth(T_S window) {
+    gfx_uicheck();
+    return GetWindowWidth(window);
+}
+
+extern int GetWindowHeight(T_S window);
+extern "C" DLLEXTERN T_I gfx2d_wheight(T_S window) {
+    gfx_uicheck();
+    return GetWindowHeight(window);
+}
+
 extern "C" DLLEXTERN void gfx2d_flip() {
     gfx_uicheck();
     ui->Flip(true);

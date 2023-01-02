@@ -21,6 +21,9 @@ extern World world;
 extern std::filesystem::path exe_path;
 extern Config config;
 
+extern void RenderWindows();
+extern void GUIInit();
+
 UISDL::UISDL() {
     std::cout << "Starting UI initialisation" << std::endl;
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -172,6 +175,9 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
     ImGui_ImplOpenGL3_Init(glsl_version);
     std::cout << "Dear ImGui init complete" << std::endl;
+
+    // Setup default render
+    GUIInit();
 }
 
 bool UISDL::Render(std::function<void()> callback) {
@@ -203,9 +209,6 @@ bool UISDL::Render(std::function<void()> callback) {
 
     SpriteActions();
 
-    const ImGuiViewport *main_viewport = ImGui::GetMainViewport();
-    bool window_output = true;
-
     // Generate this frame?
     bool gen = false;
     if (mode == Mode::BANKED) {
@@ -236,18 +239,18 @@ bool UISDL::Render(std::function<void()> callback) {
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
+/*        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
         ImGui::SetNextWindowPos(main_viewport->Pos);
         ImGui::SetNextWindowSize(main_viewport->Size);
         ImGui::Begin("Fullscreen", &window_output,
                      ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoSavedSettings |
-                     ImGuiWindowFlags_NoBackground);
+                     ImGuiWindowFlags_NoBackground);*/
 
 
         // Render shadows
-        if (!config.Is3DDisabled()) {
+/*        if (!config.Is3DDisabled()) {
             if (world.shadows) {
                 glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
                 world.RenderOpenGL3Shadow();
@@ -268,13 +271,16 @@ bool UISDL::Render(std::function<void()> callback) {
                                   desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
             }
             glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        }
+        }*/
 
-        RenderShapes();
-        console.Update();
-        ImGui::End();
+//        RenderShapes();
+//        console.Update();
+/*        ImGui::End();
         ImGui::PopStyleVar();
-        ImGui::PopStyleVar();
+        ImGui::PopStyleVar();*/
+
+        // Render windows
+        RenderWindows();
 
         // Callback?
         callback();

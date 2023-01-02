@@ -40,7 +40,7 @@ public:
     void BankedOn();
     void BankedOff();
     bool Render(std::function<void()> callback);
-    void RenderShapes();
+    void RenderShapes(std::vector<std::unique_ptr<RenderShape>> *front, std::vector<std::unique_ptr<RenderShape>> *back);
     void Render3D();
     void SetFGColour(ImU32 colour);
     void SetBGColour(ImU32 colour);
@@ -64,8 +64,12 @@ public:
     void ClipOff();
     void SetLineWidth(float lw) { this->line_width = lw; }
     void Sprite(SpriteBank *sb, int sx, int sy, float rot, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y);
-    int64_t GetScreenWidth() { return desktop_screen_width; }
-    int64_t GetScreenHeight() { return desktop_screen_height; }
+    int64_t GetScreenWidth() {
+        return desktop_screen_width;
+    }
+    int64_t GetScreenHeight() {
+        return desktop_screen_height;
+    }
     float GetDPIRatio() { return dpi_ratio; }
     void RequestFontLoad(std::string font, float size) {
         new_font_requested = font;
@@ -75,6 +79,14 @@ public:
     Mode GetMode() { return mode; }
     ImU32 GetFGColour() { return fgColour; }
     std::mutex *GetSpriteLock() { return &sprite_lock; }
+    void SetShapesBuffer(std::vector<std::unique_ptr<RenderShape>> *front, std::vector<std::unique_ptr<RenderShape>> *back) {
+        shapes = front;
+        shapesBackBuffer = back;
+    }
+    void SetOrigin(float x, float y) {
+        origin_x = x;
+        origin_y = y;
+    }
 private:
     void _CreateWindow(bool windowed);
     void Create3DBuffer();
@@ -96,8 +108,8 @@ private:
     SDL_Window *window;
     Mode mode = Mode::CLASSIC;
 
-    std::vector<std::unique_ptr<RenderShape>> shapes;
-    std::vector<std::unique_ptr<RenderShape>> shapesBackBuffer;
+    std::vector<std::unique_ptr<RenderShape>> *shapes = nullptr;
+    std::vector<std::unique_ptr<RenderShape>> *shapesBackBuffer = nullptr;
 
     // 3D
     bool msaa = true;

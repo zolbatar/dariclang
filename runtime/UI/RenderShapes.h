@@ -12,7 +12,7 @@ void AddTriangleFilledMultiColor(ImDrawList *draw_list, const ImVec2 &a, const I
 
 class RenderShape {
 public:
-    virtual void AddToList(ImDrawList *draw_list) = 0;
+    virtual void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) = 0;
 
     virtual ~RenderShape() = default;
 };
@@ -25,8 +25,10 @@ public:
 
     ~ShapeClipOn() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->PushClipRect(min, max);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + min.x, wpos.y + min.y);
+        ImVec2 ap2 = ImVec2(wpos.x + max.x, wpos.y + max.y);
+        draw_list->PushClipRect(ap1, ap2);
     }
 
 private:
@@ -39,7 +41,7 @@ public:
 
     ~ShapeClipOff() {}
 
-    void AddToList(ImDrawList *draw_list) override {
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
         draw_list->PopClipRect();
     }
 };
@@ -52,7 +54,7 @@ public:
 
     ~ShapeRender() {}
 
-    void AddToList(ImDrawList *draw_list) override {
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
         draw_list->AddImage((void *) (intptr_t) fb, ImVec2(0.0, 0.0), ImVec2(w, h), ImVec2(0, 1), ImVec2(1, 0));
     }
 
@@ -69,8 +71,10 @@ public:
 
     ~ShapePixel() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddRectFilled(p1, p2, col);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        draw_list->AddRectFilled(ap1, ap2, col);
     }
 
 private:
@@ -86,8 +90,10 @@ public:
 
     ~ShapeLine() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddLine(p1, p2, col, thickness);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        draw_list->AddLine(ap1, ap2, col, thickness);
     }
 
 private:
@@ -104,8 +110,10 @@ public:
 
     ~ShapeRectangle() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddRect(p1, p2, col, 0.0f, ImDrawFlags_Closed, thickness);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        draw_list->AddRect(ap1, ap2, col, 0.0f, ImDrawFlags_Closed, thickness);
     }
 
 private:
@@ -122,8 +130,10 @@ public:
 
     ~ShapeRectangleFilled() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddRectFilled(p1, p2, col, 0.0f, ImDrawFlags_Closed);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        draw_list->AddRectFilled(ap1, ap2, col, 0.0f, ImDrawFlags_Closed);
     }
 
 private:
@@ -139,8 +149,11 @@ public:
 
     ~ShapeTriangle() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddTriangle(p1, p2, p3, col, thickness);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        ImVec2 ap3 = ImVec2(wpos.x + p3.x, wpos.y + p3.y);
+        draw_list->AddTriangle(ap1, ap2, ap3, col, thickness);
     }
 
 private:
@@ -157,8 +170,11 @@ public:
 
     ~ShapeTriangleFilled() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddTriangleFilled(p1, p2, p3, col);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        ImVec2 ap3 = ImVec2(wpos.x + p3.x, wpos.y + p3.y);
+        draw_list->AddTriangleFilled(ap1, ap2, ap3, col);
     }
 
 private:
@@ -174,8 +190,11 @@ public:
 
     ~ShapeTriangleShaded() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        AddTriangleFilledMultiColor(draw_list, p1, p2, p3, col1, col2, col3);
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap1 = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        ImVec2 ap2 = ImVec2(wpos.x + p2.x, wpos.y + p2.y);
+        ImVec2 ap3 = ImVec2(wpos.x + p3.x, wpos.y + p3.y);
+        AddTriangleFilledMultiColor(draw_list, ap1, ap2, ap3, col1, col2, col3);
     }
 
 private:
@@ -191,10 +210,11 @@ public:
 
     ~ShapeCircle() {}
 
-    void AddToList(ImDrawList *draw_list) override {
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
         int sections = radius / 3.0f;
         sections = std::max(16, sections);
-        draw_list->AddCircle(p, radius, col, sections, thickness);
+        ImVec2 ap = ImVec2(wpos.x + p.x, wpos.y + p.y);
+        draw_list->AddCircle(ap, radius, col, sections, thickness);
     }
 
 private:
@@ -212,10 +232,11 @@ public:
 
     ~ShapeCircleFilled() {}
 
-    void AddToList(ImDrawList *draw_list) override {
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
         int sections = radius / 3.0f;
         sections = std::max(16, sections);
-        draw_list->AddCircleFilled(p, radius, col, sections);
+        ImVec2 ap = ImVec2(wpos.x + p.x, wpos.y + p.y);
+        draw_list->AddCircleFilled(ap, radius, col, sections);
     }
 
 private:
@@ -233,8 +254,9 @@ public:
 
     ~ShapeText() {}
 
-    void AddToList(ImDrawList *draw_list) override {
-        draw_list->AddText(font, size, p1, col, text.c_str());
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
+        ImVec2 ap = ImVec2(wpos.x + p1.x, wpos.y + p1.y);
+        draw_list->AddText(font, size, ap, col, text.c_str());
     }
 
 private:
@@ -263,9 +285,13 @@ public:
 
     ~ShapeSprite() {}
 
-    void AddToList(ImDrawList *draw_list) override {
+    void AddToList(ImDrawList *draw_list, ImVec2 wpos, ImVec2 wsize) override {
         auto l = (void *) (intptr_t) bank->id;
-        draw_list->AddImageQuad(l, pos[0], pos[1], pos[2], pos[3], uvs[0], uvs[1], uvs[2], uvs[3], IM_COL32_WHITE);
+        ImVec2 apos0 = ImVec2(wpos.x + pos[0].x, wpos.y + pos[0].y);
+        ImVec2 apos1 = ImVec2(wpos.x + pos[1].x, wpos.y + pos[1].y);
+        ImVec2 apos2 = ImVec2(wpos.x + pos[2].x, wpos.y + pos[2].y);
+        ImVec2 apos3 = ImVec2(wpos.x + pos[3].x, wpos.y + pos[3].y);
+        draw_list->AddImageQuad(l, apos0, apos1, apos2, apos3, uvs[0], uvs[1], uvs[2], uvs[3], IM_COL32_WHITE);
     }
 
 private:

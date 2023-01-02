@@ -73,7 +73,7 @@ add_library(${PROJECT_NAME} STATIC
         Print.cpp
         Random.cpp
         Sprites.cpp
-        String.cpp Collections.cpp)
+        String.cpp Collections.cpp GUI.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
