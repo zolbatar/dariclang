@@ -153,8 +153,8 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     io.Fonts->Build();
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsClassic();
+    //ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
     //ImGui::StyleColorsLight();
 
     // Output window
@@ -239,46 +239,6 @@ bool UISDL::Render(std::function<void()> callback) {
         glClearColor(0.0, 0.0, 0.0, 1.0);
         glClear(GL_COLOR_BUFFER_BIT);
 
-/*        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-        ImGui::SetNextWindowPos(main_viewport->Pos);
-        ImGui::SetNextWindowSize(main_viewport->Size);
-        ImGui::Begin("Fullscreen", &window_output,
-                     ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
-                     ImGuiWindowFlags_NoSavedSettings |
-                     ImGuiWindowFlags_NoBackground);*/
-
-
-        // Render shadows
-/*        if (!config.Is3DDisabled()) {
-            if (world.shadows) {
-                glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
-                world.RenderOpenGL3Shadow();
-                glBindFramebuffer(GL_FRAMEBUFFER, 0);
-            }
-
-            // Render 3D
-            world.Cleanup();
-            if (!msaa)
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
-            else
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D_msaa);
-            world.RenderOpenGL3(depthTexture);
-            if (msaa) {
-                glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo3D_msaa);
-                glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
-                glBlitFramebuffer(0, 0, desktop_screen_width, desktop_screen_height, 0, 0, desktop_screen_width,
-                                  desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-            }
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-        }*/
-
-//        RenderShapes();
-//        console.Update();
-/*        ImGui::End();
-        ImGui::PopStyleVar();
-        ImGui::PopStyleVar();*/
-
         // Render windows
         RenderWindows();
 
@@ -296,6 +256,31 @@ bool UISDL::Render(std::function<void()> callback) {
         flip_requested = false;
     }
     return false;
+}
+
+void UISDL::Render3DWindow() {
+    if (!config.Is3DDisabled()) {
+        if (world.shadows) {
+            glBindFramebuffer(GL_FRAMEBUFFER, depthFB);
+            world.RenderOpenGL3Shadow();
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        }
+
+        // Render 3D
+        world.Cleanup();
+        if (!msaa)
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
+        else
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D_msaa);
+        world.RenderOpenGL3(depthTexture);
+        if (msaa) {
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo3D_msaa);
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo3D);
+            glBlitFramebuffer(0, 0, desktop_screen_width, desktop_screen_height, 0, 0, desktop_screen_width,
+                              desktop_screen_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+        }
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    }
 }
 
 void UISDL::_CreateWindow(bool windowed) {

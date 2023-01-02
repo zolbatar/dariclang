@@ -55,8 +55,9 @@ void RenderWindows() {
     ImGui::Begin("Fullscreen", &window_output,
                  ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize |
                  ImGuiWindowFlags_NoSavedSettings |
-                 ImGuiWindowFlags_NoBackground);
+                 ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoBringToFrontOnFocus);
     gui_endwindow();
+    ui->Render3DWindow();
     ui->RenderShapes(&regular.shapes, &regular.shapesBackBuffer);
     console.Update();
     ImGui::End();
@@ -67,7 +68,7 @@ void RenderWindows() {
     for (auto &w: windows) {
         auto ff = &w.second;
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
-        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 1.0f);
         ImGui::SetNextWindowPos(ImVec2(ff->x1, ff->y1), ImGuiCond_FirstUseEver);
         ImGui::SetNextWindowContentSize(ImVec2(ff->x2, ff->y2));
         ImGui::Begin(ff->name.c_str(), &ff->show, ImGuiWindowFlags_NoSavedSettings);
