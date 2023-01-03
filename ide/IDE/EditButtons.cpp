@@ -147,9 +147,6 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	ImGui::SameLine();
 	if (ImGui::BeginPopup("load_demo_popup"))
 	{
-		if (ImGui::Selectable("Welcome Tape"))
-			LoadFile(path + "Welcome.daric");
-		ImGui::Separator();
 		if (ImGui::Selectable("Darch (Zarch style graphics)"))
 			LoadFile("Darch/Darch.daric");
 		ImGui::Separator();
@@ -179,6 +176,9 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 			LoadFile(path + "Sprites.daric");
 		if (ImGui::Selectable("WorldInLines"))
 			LoadFile(path + "WorldInLines.daric");
+		ImGui::Separator();
+		if (ImGui::Selectable("Windowed GUI"))
+			LoadFile(path + "GUI.daric");
 		ImGui::Separator();
 		if (ImGui::Selectable("Cubes"))
 			LoadFile(path + "Cubes.daric");
