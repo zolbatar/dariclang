@@ -206,7 +206,7 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	SetButtonStyle(0);
 	if (ImGui::Button("Run"))
 	{
-		cmd = ((exe_path / "Daric").generic_string() + " @" + this->editor_name);
+		cmd = ((exe_path / "Daric").generic_string() + " \"@" + this->editor_name + "\"");
 #if _WIN64
 		replaceAll(cmd, "/", "\\");
 #endif
