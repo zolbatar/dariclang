@@ -3,6 +3,7 @@
 #include <filesystem>
 #include "Config.h"
 #include "json.hpp"
+#include "../../runtime/Library/StringLib.h"
 
 extern std::filesystem::path exe_path;
 using json = nlohmann::json;
@@ -17,11 +18,12 @@ void Config::Load() {
         std::cout << "Config file (config.json) not found\n" << std::endl;
         exit(1);
     }
+    auto cmd = (exe_path / p).generic_string();
 #if _WIN64
     replaceAll(cmd, "/", "\\");
 #endif
-    std::ifstream f(exe_path / p);
-    std::cout << "Loading config file: " << (exe_path / p).generic_string() << std::endl;
+    std::ifstream f(cmd);
+    std::cout << "Loading config file: " << cmd << std::endl;
     json data = json::parse(f);
     for (json::iterator it = data.begin(); it != data.end(); ++it) {
         if (it.key() == "mono_font") {
@@ -56,4 +58,5 @@ void Config::Load() {
         }
 //        std::cout << it.key() << " : " << it.value() << "\n";
     }
+    std::cout << "Successfully loaded file " << std::endl;
 }
