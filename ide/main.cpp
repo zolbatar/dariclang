@@ -21,7 +21,7 @@ std::list<CaughtException> errors;
 
 int main(int argc, char* argv[])
 {
-	exe_path = absolute(std::filesystem::path(argv[0])).parent_path();
+	exe_path = std::filesystem::canonical(std::filesystem::path(argv[0])).parent_path();
 	std::cout << "Welcome to Daric!" << std::endl;
 	std::cout << "Path: " << exe_path.generic_string() << std::endl;
 	config.Load();
