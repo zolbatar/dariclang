@@ -17,6 +17,9 @@ void Config::Load() {
         std::cout << "Config file (config.json) not found\n" << std::endl;
         exit(1);
     }
+#if _WIN64
+    replaceAll(cmd, "/", "\\");
+#endif
     std::ifstream f(exe_path / p);
     std::cout << "Loading config file: " << (exe_path / p).generic_string() << std::endl;
     json data = json::parse(f);
