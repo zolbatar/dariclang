@@ -14,11 +14,11 @@ Config::Config() {
 
 void Config::Load() {
     auto p = std::filesystem::path("Config.json");
-    if (!std::filesystem::exists(exe_path / p)) {
-        std::cout << "Config file (config.json) not found\n" << std::endl;
+	auto cmd = (exe_path / p).generic_string();
+    if (!std::filesystem::exists(cmd)) {
+        std::cout << "Config file (config.json) not found at " << cmd << std::endl;
         exit(1);
     }
-    auto cmd = (exe_path / p).generic_string();
 #if _WIN64
     replaceAll(cmd, "/", "\\");
 #endif

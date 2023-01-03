@@ -117,6 +117,8 @@ extern "C" DLLEXTERN void gfx2d_plot(T_F x, T_F y) {
 
 extern "C" DLLEXTERN void gfx2d_origin(T_F x, T_F y) {
     gfx_uicheck();
+    GetWindow()->origin_x = x;
+    GetWindow()->origin_y = y;
     ui->Origin(x, y);
 }
 

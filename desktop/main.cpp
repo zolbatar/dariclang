@@ -72,8 +72,7 @@ void RunThread() {
 }
 
 int main(int argc, char *argv[]) {
-    exe_path = std::filesystem::path{argv[0]}.parent_path();
-
+    exe_path = absolute(std::filesystem::path(argv[0])).parent_path();
     std::cout << "Welcome to Daric!" << std::endl;
     config.Load();
     Compiler::SetupLibrary();

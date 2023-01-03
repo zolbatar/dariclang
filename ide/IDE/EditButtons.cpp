@@ -139,7 +139,7 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	ImGui::SameLine();
 	if (dis) ImGui::EndDisabled();
 
-	std::string path = (exe_path.parent_path() / "Demos/").generic_string();
+	std::string path = (exe_path.parent_path().parent_path() / "Demos/").generic_string();
 	SetButtonStyle(3);
 	if (ImGui::Button("Load Demo"))
 		ImGui::OpenPopup("load_demo_popup");
