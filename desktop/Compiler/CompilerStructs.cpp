@@ -38,14 +38,12 @@ void Compiler::TokenStructInstance(ParserToken &t) {
             llvm.TypeInt,
             llvm.dl->getTypeAllocSize(instance->GetStructType()));
     if (instance->GetScope() == Scope::GLOBAL) {
-        CreateCall("memset", {
-                llvm.GetGlobal(instance->GetName()),
-                llvm::ConstantInt::get(llvm.TypeByte, 0), size});
+        auto varptr = GetIR()->CreatePointerCast(llvm.GetGlobal(instance->GetName()), llvm.TypeVoid);
+        CreateCall("memset", {varptr, llvm::ConstantInt::get(llvm.TypeInt, 0), size});
 
     } else {
-        CreateCall("memset", {
-                llvm.GetLocal(instance->GetName()),
-                llvm::ConstantInt::get(llvm.TypeByte, 0), size});
+        auto varptr = GetIR()->CreatePointerCast(llvm.GetLocal(instance->GetName()), llvm.TypeVoid);
+        CreateCall("memset", {varptr, llvm::ConstantInt::get(llvm.TypeInt, 0), size});
     }
 
     // Initialise any fields?

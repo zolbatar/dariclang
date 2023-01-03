@@ -68,7 +68,7 @@ void RunThread() {
     std::ofstream out(exe_path / "Throwback.json");
     out << j.dump(4) << std::endl;
     done.store(true);
-    while (1);
+    //while (1);
 }
 
 int main(int argc, char *argv[]) {
@@ -92,6 +92,11 @@ int main(int argc, char *argv[]) {
         std::cout << "Running from IDE" << std::endl;
     }
     std::cout << "Filename: " << options.file << std::endl;
+
+    // Set current path based on source file
+    auto path = std::filesystem::path(options.file);
+    path = path.parent_path();
+    std::filesystem::current_path(path);
 
     // What sort of compile?
     if (argc == 2) {

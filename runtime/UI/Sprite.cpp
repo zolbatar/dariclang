@@ -137,6 +137,5 @@ int Sprites::LoadSprite(std::string filename) {
     while (ss->second.banks[0].id == 0) {
         std::this_thread::sleep_for(std::chrono::microseconds(sprite_create_wait));
     }
-
     return static_cast<int>(index);
 }

@@ -146,7 +146,7 @@ void CompilerLLVM::SetupProfile(const CompilerOptions &options, std::string mod,
     TheTriple.
             setTriple(tri_raw);
 
-// Target
+    // Target
     if (verbose)
         std::cout << "Looking up target" << std::endl;
     llvm::TargetOptions Options;

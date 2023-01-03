@@ -395,7 +395,7 @@ void UISDL::SpriteActions() {
                     it->height = 0;
                     bool ret = LoadTextureFromFile(it->filename.c_str(), &it->id, &it->width, &it->height);
                     IM_ASSERT(ret);
-                    std::cout << "Loaded sprite: " << it->filename << " with ID: " << it->id << std::endl;
+                    std::cout << "Loaded sprite: " << it->filename << " with ID: " << (int)it->id << std::endl;
                     it->state = SpriteState::OK;
                     break;
                 }
