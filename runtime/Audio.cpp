@@ -15,8 +15,8 @@ struct Audio {
 std::vector<Mix_Chunk *> samples;
 std::vector<Mix_Music *> music;
 
-static fluid_settings_t *settings;
-static fluid_synth_t *synth;
+//static fluid_settings_t *settings;
+//static fluid_synth_t *synth;
 //static fluid_audio_driver_t *adriver;
 
 extern "C" DLLEXTERN void audio_init() {
@@ -51,7 +51,7 @@ extern "C" DLLEXTERN void audio_init() {
 }
 
 extern "C" DLLEXTERN void audio_loadsoundfont(T_S font) {
-    fluid_synth_sfload(synth, font, true);
+    //fluid_synth_sfload(synth, font, true);
     if (Mix_SetSoundFonts(font) == 0) {
         printf("Can't open Soundfont file\n");
         exit(1);
@@ -60,8 +60,8 @@ extern "C" DLLEXTERN void audio_loadsoundfont(T_S font) {
 }
 
 void audio_shutdown() {
-    delete_fluid_synth(synth);
-    delete_fluid_settings(settings);
+//    delete_fluid_synth(synth);
+//    delete_fluid_settings(settings);
 }
 
 extern "C" DLLEXTERN T_I audio_loadwav(T_S filename) {
@@ -109,9 +109,9 @@ extern "C" DLLEXTERN void audio_volume(T_I channel, T_F volume) {
     Mix_Volume(channel, volume * 128);
 }
 
-extern "C" DLLEXTERN void audio_bank(T_I channel, T_I bank, T_I preset) {
+/*extern "C" DLLEXTERN void audio_bank(T_I channel, T_I bank, T_I preset) {
     fluid_synth_bank_select(synth, channel, bank);
-    fluid_synth_program_change(synth,channel , preset);
+    fluid_synth_program_change(synth, channel, preset);
 }
 
 extern "C" DLLEXTERN void audio_noteon(T_I channel, T_I pitch, T_I velocity) {
@@ -120,4 +120,4 @@ extern "C" DLLEXTERN void audio_noteon(T_I channel, T_I pitch, T_I velocity) {
 
 extern "C" DLLEXTERN void audio_noteoff(T_I channel, T_I pitch) {
     fluid_synth_noteoff(synth, channel, 40);
-}
+}*/

@@ -15,6 +15,10 @@ static std::list<std::string> library = { "Sleep",
 
 										  "Timer", "Time", "Date",
 
+										  "Window", "SetWindow", "UnsetWindow",
+
+										  "WindowWidth", "WindowHeight", "ScreenWidth", "ScreenHeight",
+
 										  "Mode", "BankedOn", "BankedOff", "Origin", "ScreenWidth", "ScreenHeight", "Flip",
 										  "Cls", "Plot", "SetLineWidth", "Rectangle", "RectangleFilled", "Triangle", "TriangleFilled", "TriangleShaded",
 										  "Circle", "CircleFilled", "ClipOn", "ClipOff", "Line", "SetFG", "SetAlpha", "SetBG", "Colour", "CursorOn", "CursorOff",

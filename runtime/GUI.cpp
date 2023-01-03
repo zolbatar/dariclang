@@ -3,34 +3,21 @@
 #include <vector>
 #include <memory>
 #include "Types.h"
-#include "UI/UISDL.h"
-#include "imgui.h"
-
-struct Window {
-    std::string name;
-    int x1;
-    int y1;
-    int x2;
-    int y2;
-    ImU32 fgColour = 0xFFFFFFFF;
-    ImU32 bgColour = 0x000000FF;
-    float line_width = 1.0f;
-    float alpha = 1.0f;
-    float origin_x = 0.0f;
-    float origin_y = 0.0f;
-    bool show = true;
-    std::vector<std::unique_ptr<RenderShape>> shapes;
-    std::vector<std::unique_ptr<RenderShape>> shapesBackBuffer;
-};
+#include "Window.h"
 
 extern UISDL *ui;
 extern Console console;
 Window regular;
 std::unordered_map<std::string, Window> windows;
 extern "C" void gui_endwindow();
+Window *current = nullptr;
 
 void GUIInit() {
     gui_endwindow();
+}
+
+Window *GetWindow() {
+    return current;
 }
 
 int GetWindowWidth(T_S window) {
@@ -97,6 +84,7 @@ extern "C" void gui_window(T_S name, T_I x1, T_I y1, T_I x2, T_I y2) {
 extern "C" void gui_startwindow(T_S win) {
     auto ff = &windows.find(win)->second;
     ui->SetShapesBuffer(&ff->shapes, &ff->shapesBackBuffer);
+    current = ff;
 }
 
 extern "C" void gui_endwindow() {
@@ -106,4 +94,5 @@ extern "C" void gui_endwindow() {
     ui->SetLineWidth(regular.line_width);
     ui->SetOrigin(regular.origin_x, regular.origin_y);
     ui->SetShapesBuffer(&regular.shapes, &regular.shapesBackBuffer);
+    current = &regular;
 }

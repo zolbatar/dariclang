@@ -202,9 +202,9 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
 void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y) {
     // Convert degrees to radians
     auto rot = rot_d * M_PI / 180.0;
-    auto center = ImVec2(sx + (sb->width) / 2, sy + (sb->height / 2));
     float scale_x = 1.0f;
     float scale_y = 1.0f;
+    auto centre = ImVec2(sx, sy);
     if (sz_x != 0 || sz_y != 0) {
         scale_x = static_cast<float>(sz_x) / static_cast<float>(sb->width);
         scale_y = static_cast<float>(sz_y) / static_cast<float>(sb->height);
@@ -214,10 +214,10 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
     float sin_a = sinf(rot);
     ImVec2 pos[4] =
             {
-                    center + ImRotate(ImVec2(-size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
-                    center + ImRotate(ImVec2(+size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
-                    center + ImRotate(ImVec2(+size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a),
-                    center + ImRotate(ImVec2(-size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a)
+                    centre + ImRotate(ImVec2(-size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
+                    centre + ImRotate(ImVec2(+size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
+                    centre + ImRotate(ImVec2(+size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a),
+                    centre + ImRotate(ImVec2(-size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a)
             };
     ImVec2 uvs[4];
     if (sz_x != 0 || sz_y != 0) {

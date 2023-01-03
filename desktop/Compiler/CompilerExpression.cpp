@@ -462,6 +462,9 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             ValueType vt;
             vt.type = Primitive::INT;
             switch (ref->GetInstanceType()) {
+                case InstanceType::PRIMITIVE:
+                case InstanceType::RECORD:
+                    assert(0);
                 case InstanceType::ARRAY:
                 case InstanceType::RECORD_ARRAY:
                     vt.value = llvm.GetArraySize(ref->GetName(), GetIR());
