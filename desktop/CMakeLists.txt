@@ -65,6 +65,7 @@ message(STATUS "LLD Libs: ${LLD_LIBS}")
 
 add_executable(${PROJECT_NAME}
         main.cpp
+        ../runtime/GUI.cpp
         ../runtime/KeyboardMouse.cpp
         ../runtime/FontsText.cpp
         ../runtime/FileIO.cpp

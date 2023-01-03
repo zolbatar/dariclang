@@ -226,7 +226,6 @@ void Compiler::TokenEnd(ParserToken &token) {
     if (!options.use_exit_as_end) {
         llvm.StoreGlobal("~QuitRequested", GetIR(), llvm::ConstantInt::get(llvm.TypeBit, 1));
         DefaultReturn(return_type, token);
-//		CreateAndInsertBB("Post set quit requested", false, token);
     } else {
         CreateCall("daric_end", {});
     }

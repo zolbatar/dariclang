@@ -3,9 +3,14 @@
 #include <thread>
 #include <chrono>
 #include "Types.h"
+#include "UI/UISDL.h"
+
+extern std::atomic_bool done;
 
 extern "C" DLLEXTERN void daric_end() {
-    exit(0);
+    std::cout << "Program terminated" << std::endl;
+    done.store(true);
+    while (1);
 }
 
 extern "C" DLLEXTERN void __sleep(double time) {

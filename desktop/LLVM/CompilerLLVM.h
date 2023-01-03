@@ -188,7 +188,7 @@ public:
 	std::unordered_map<std::string, Primitive> locals_type;
 
 	std::vector<CollectionAssign> local_collections;
-	void ClearCollections(llvm::IRBuilder<> *ir);
+	void GCCollections(llvm::IRBuilder<> *ir);
 private:
 	void SetupLibrary();
 	void BuildData(SourceFileData &state);

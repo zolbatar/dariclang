@@ -67,13 +67,8 @@ void RunThread() {
     // Now write out
     std::ofstream out(exe_path / "Throwback.json");
     out << j.dump(4) << std::endl;
-    done = true;
-}
-
-void do_quit() {
-    ui_started.store(false);
-    delete ui;
-    exit(0);
+    done.store(true);
+    while (1);
 }
 
 int main(int argc, char *argv[]) {
@@ -94,7 +89,7 @@ int main(int argc, char *argv[]) {
     if (options.file[0] == '@') {
         options.file = options.file.substr(1);
         is_run_from_ide = true;
-		std::cout << "Running from IDE" << std::endl;
+        std::cout << "Running from IDE" << std::endl;
     }
     std::cout << "Filename: " << options.file << std::endl;
 
@@ -111,18 +106,19 @@ int main(int argc, char *argv[]) {
     ui = new UISDL();
     auto t = std::thread(&RunThread);
     t.detach();
-    while (!done) {
-        if (start_ui) {
+    while (!done.load()) {
+        if (start_ui.load()) {
             ui->Start(screen_width, screen_height, screen_flags & 1, screen_flags & 2);
             start_ui.store(false);
             ui_started.store(true);
         }
         if (ui_started.load()) {
             if (ui->Render([]() {})) {
-                do_quit();
+                std::cout << "Shutdown requested" << std::endl;
+                done.store(true);
             }
         }
     }
-    do_quit();
+    delete ui;
     return 0;
 }

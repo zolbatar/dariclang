@@ -4,6 +4,7 @@
 #include "UI/UISDL.h"
 #include "UI/Console/Console.h"
 #include "Graphics3D/Engine.h"
+#include "Window.h"
 
 extern UISDL *ui;
 extern Console console;
@@ -12,6 +13,8 @@ extern std::atomic_bool start_ui;
 extern int screen_width;
 extern int screen_height;
 extern int screen_flags;
+
+extern Window *GetWindow();
 
 extern "C" DLLEXTERN void gfx_uicheck() {
     if (ui_started.load())
@@ -32,6 +35,7 @@ extern "C" DLLEXTERN void gfx2d_bankedoff() {
 
 extern "C" DLLEXTERN void gfx2d_linewidth(T_F width) {
     gfx_uicheck();
+    GetWindow()->line_width = width;
     ui->SetLineWidth(width);
 }
 
@@ -82,6 +86,20 @@ extern "C" DLLEXTERN T_I gfx2d_sheight() {
     return ui->GetScreenHeight();
 }
 
+extern int GetWindowWidth(T_S window);
+
+extern "C" DLLEXTERN T_I gfx2d_wwidth(T_S window) {
+    gfx_uicheck();
+    return GetWindowWidth(window);
+}
+
+extern int GetWindowHeight(T_S window);
+
+extern "C" DLLEXTERN T_I gfx2d_wheight(T_S window) {
+    gfx_uicheck();
+    return GetWindowHeight(window);
+}
+
 extern "C" DLLEXTERN void gfx2d_flip() {
     gfx_uicheck();
     ui->Flip(true);
@@ -117,13 +135,17 @@ extern "C" DLLEXTERN void gfx2d_fg(T_I r, T_I g, T_I b) {
     auto v1 = static_cast<float>(r) / 255.0f;
     auto v2 = static_cast<float>(g) / 255.0f;
     auto v3 = static_cast<float>(b) / 255.0f;
-    ui->SetFGColour(ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, ui->GetAlpha())));
+    auto colour = ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, ui->GetAlpha()));
+    ui->SetFGColour(colour);
+    GetWindow()->fgColour = colour;
     console.SetColour(ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, 1.0)));
 }
 
 extern "C" DLLEXTERN void gfx2d_set_alpha(T_I a) {
     gfx_uicheck();
-    ui->SetAlpha(static_cast<float>(a) / 255.0f);
+    auto aa = static_cast<float>(a) / 255.0f;
+    GetWindow()->alpha = aa;
+    ui->SetAlpha(aa);
 }
 
 extern "C" DLLEXTERN void gfx2d_bg(T_I r, T_I g, T_I b) {
@@ -132,7 +154,7 @@ extern "C" DLLEXTERN void gfx2d_bg(T_I r, T_I g, T_I b) {
     auto v2 = static_cast<float>(g) / 255.0f;
     auto v3 = static_cast<float>(b) / 255.0f;
     auto im = ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, 1.0));
-    ui->SetBGColour(im);
+    GetWindow()->fgColour = im;
     ui->SetBGColour(im);
 }
 

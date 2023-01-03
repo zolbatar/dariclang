@@ -121,6 +121,7 @@ ValueType CompilerLLVM::GetVariableValue(llvm::IRBuilder<> *ir, const std::strin
 
 void CompilerLLVM::ClearLocals() {
 	locals.clear();
+    locals_isref.clear();
 	locals_type.clear();
 	local_structs.clear();
 	locals_array_dimensions.clear();
@@ -135,7 +136,7 @@ llvm::AllocaInst *CompilerLLVM::GetLocal(const std::string &name) {
 	return locals[name];
 }
 
-void CompilerLLVM::ClearCollections(llvm::IRBuilder<> *ir) {
+void CompilerLLVM::GCCollections(llvm::IRBuilder<> *ir) {
 	for (auto &l : local_collections) {
 		switch (l.type) {
 		case CollectionType::Vector:
@@ -158,6 +159,5 @@ void CompilerLLVM::ClearCollections(llvm::IRBuilder<> *ir) {
 			break;
 		}
 	}
-	local_collections.clear();
 }
 

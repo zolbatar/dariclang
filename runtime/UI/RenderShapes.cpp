@@ -25,9 +25,9 @@ void UISDL::Flip(bool userSpecified) {
     // Update
     {
         const std::lock_guard<std::mutex> lock(shapes_lock);
-        shapes.clear();
-        shapes.swap(shapesBackBuffer);
-        //std::cout << "s1: " << shapes.size() << " : " << shapesBackBuffer.size() << std::endl;
+        shapes->clear();
+        shapes->swap(*shapesBackBuffer);
+        //std::cout << "s1: " << shapes.size() << " : " << shapesBackBuffer->size() << std::endl;
     }
 
     flip_requested = true;
@@ -39,16 +39,18 @@ void UISDL::Flip(bool userSpecified) {
     }
 }
 
-void UISDL::RenderShapes() {
+void UISDL::RenderShapes(std::vector<std::unique_ptr<RenderShape>> *front, std::vector<std::unique_ptr<RenderShape>> *back) {
     const std::lock_guard<std::mutex> lock(shapes_lock);
     ImDrawList *draw_list = ImGui::GetWindowDrawList();
+    auto pos = ImGui::GetCursorScreenPos();
+    auto size = ImGui::GetWindowSize();
     ImGuiID id = 1;
     ImGui::BeginChild(id++);
     size_t count = 0;
     if (mode == Mode::CLASSIC) {
-        //std::cout << "Rendering " << shapesBackBuffer.size() << " shapes" << std::endl;
-        for (auto it = shapesBackBuffer.begin(); it != shapesBackBuffer.end(); ++it) {
-            it->get()->AddToList(draw_list);
+        //std::cout << "Rendering " << shapesBackBuffer->size() << " shapes" << std::endl;
+        for (auto it = back->begin(); it != back->end(); ++it) {
+            it->get()->AddToList(draw_list, pos, size);
             count++;
             if (count > 32768) {
                 count = 0;
@@ -59,8 +61,8 @@ void UISDL::RenderShapes() {
 //        std::cout << "Draw list size: " << draw_list->IdxBuffer.size() << std::endl;
     } else {
         // std::cout << "Rendering " << shapes.size() << " shapes" << std::endl;
-        for (auto it = shapes.begin(); it != shapes.end(); ++it) {
-            it->get()->AddToList(draw_list);
+        for (auto it = front->begin(); it != front->end(); ++it) {
+            it->get()->AddToList(draw_list, pos, size);
             count++;
             if (count > 32768) {
                 count = 0;
@@ -75,7 +77,7 @@ void UISDL::RenderShapes() {
 
 void UISDL::Cls() {
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.clear();
+    shapesBackBuffer->clear();
     console.Cls();
     flip_requested = false;
 }
@@ -97,40 +99,40 @@ void AddTriangleFilledMultiColor(ImDrawList *draw_list, const ImVec2 &a, const I
 
 void UISDL::Render3D() {
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeRender(texColorBuffer3D, desktop_screen_width, desktop_screen_height, dpi_ratio));
+    shapesBackBuffer->emplace_back(new ShapeRender(texColorBuffer3D, desktop_screen_width, desktop_screen_height, dpi_ratio));
 }
 
 void UISDL::Line(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeLine(p1, p2, fgColour, line_width));
+    shapesBackBuffer->emplace_back(new ShapeLine(p1, p2, fgColour, line_width));
 }
 
 void UISDL::Rectangle(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeRectangle(p1, p2, fgColour, line_width));
+    shapesBackBuffer->emplace_back(new ShapeRectangle(p1, p2, fgColour, line_width));
 }
 
 void UISDL::FilledRectangle(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1 + origin_x, y1 + origin_y);
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeRectangleFilled(p1, p2, bgColour));
+    shapesBackBuffer->emplace_back(new ShapeRectangleFilled(p1, p2, bgColour));
 }
 
 void UISDL::Circle(float xc, float yc, float r) {
     auto p = ImVec2(xc + origin_x, yc + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeCircle(p, r, fgColour, line_width));
+    shapesBackBuffer->emplace_back(new ShapeCircle(p, r, fgColour, line_width));
 }
 
 void UISDL::FilledCircle(float xc, float yc, float r) {
     auto p = ImVec2(xc + origin_x, yc + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeCircleFilled(p, r, bgColour));
+    shapesBackBuffer->emplace_back(new ShapeCircleFilled(p, r, bgColour));
 }
 
 void UISDL::Triangle(float x1, float y1, float x2, float y2, float x3, float y3) {
@@ -138,7 +140,7 @@ void UISDL::Triangle(float x1, float y1, float x2, float y2, float x3, float y3)
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeTriangle(p1, p2, p3, fgColour, line_width));
+    shapesBackBuffer->emplace_back(new ShapeTriangle(p1, p2, p3, fgColour, line_width));
 }
 
 void UISDL::FilledTriangle(float x1, float y1, float x2, float y2, float x3, float y3) {
@@ -146,7 +148,7 @@ void UISDL::FilledTriangle(float x1, float y1, float x2, float y2, float x3, flo
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeTriangleFilled(p1, p2, p3, bgColour));
+    shapesBackBuffer->emplace_back(new ShapeTriangleFilled(p1, p2, p3, bgColour));
 }
 
 void UISDL::ShadedTriangle(float x1, float y1, float x2, float y2, float x3, float y3, ImU32 colour1, ImU32 colour2,
@@ -155,21 +157,21 @@ void UISDL::ShadedTriangle(float x1, float y1, float x2, float y2, float x3, flo
     auto p2 = ImVec2(x2 + origin_x, y2 + origin_y);
     auto p3 = ImVec2(x3 + origin_x, y3 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeTriangleShaded(p1, p2, p3, colour1, colour2, colour3));
+    shapesBackBuffer->emplace_back(new ShapeTriangleShaded(p1, p2, p3, colour1, colour2, colour3));
 }
 
 void UISDL::DrawText(ImFont *font, float size, float x, float y, float w, float h, std::string text) {
     auto p1 = ImVec2(x, y);
     auto p2 = ImVec2(x + w + origin_x, y + h + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeText(font, size, p1, p2, fgColour, text));
+    shapesBackBuffer->emplace_back(new ShapeText(font, size, p1, p2, fgColour, text));
 }
 
 void UISDL::Plot(float x, float y) {
     auto p1 = ImVec2(x + origin_x, y + origin_y);
     auto p2 = ImVec2(x + 1 + origin_x, y + 1 + origin_y);
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapePixel(p1, p2, fgColour));
+    shapesBackBuffer->emplace_back(new ShapePixel(p1, p2, fgColour));
 }
 
 void UISDL::Origin(float x, float y) {
@@ -181,12 +183,12 @@ void UISDL::Clip(float x1, float y1, float x2, float y2) {
     auto p1 = ImVec2(x1, y1);
     auto p2 = ImVec2(x2, y2);;
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeClipOn(p1, p2));
+    shapesBackBuffer->emplace_back(new ShapeClipOn(p1, p2));
 }
 
 void UISDL::ClipOff() {
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeClipOff());
+    shapesBackBuffer->emplace_back(new ShapeClipOff());
 }
 
 static inline ImVec2 operator+(const ImVec2 &lhs, const ImVec2 &rhs) {
@@ -200,9 +202,9 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
 void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y) {
     // Convert degrees to radians
     auto rot = rot_d * M_PI / 180.0;
-    auto center = ImVec2(sx + (sb->width) / 2, sy + (sb->height / 2));
     float scale_x = 1.0f;
     float scale_y = 1.0f;
+    auto centre = ImVec2(sx, sy);
     if (sz_x != 0 || sz_y != 0) {
         scale_x = static_cast<float>(sz_x) / static_cast<float>(sb->width);
         scale_y = static_cast<float>(sz_y) / static_cast<float>(sb->height);
@@ -212,10 +214,10 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
     float sin_a = sinf(rot);
     ImVec2 pos[4] =
             {
-                    center + ImRotate(ImVec2(-size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
-                    center + ImRotate(ImVec2(+size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
-                    center + ImRotate(ImVec2(+size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a),
-                    center + ImRotate(ImVec2(-size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a)
+                    centre + ImRotate(ImVec2(-size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
+                    centre + ImRotate(ImVec2(+size.x * 0.5f, -size.y * 0.5f), cos_a, sin_a),
+                    centre + ImRotate(ImVec2(+size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a),
+                    centre + ImRotate(ImVec2(-size.x * 0.5f, +size.y * 0.5f), cos_a, sin_a)
             };
     ImVec2 uvs[4];
     if (sz_x != 0 || sz_y != 0) {
@@ -235,5 +237,5 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
     }
 
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer.emplace_back(new ShapeSprite(sb, pos, uvs));
+    shapesBackBuffer->emplace_back(new ShapeSprite(sb, pos, uvs));
 }
