@@ -87,6 +87,7 @@ void Compiler::TokenPlace(ParserToken &t) {
     ref->GetInstance()->Get(vt_var, nullptr, 0, llvm, GetIR());
 
     // Store
+    auto value_typeptr = GetIR()->CreatePointerCast(value_type.value, llvm.TypeVoid);
     switch (ref->GetInstanceType()) {
         case InstanceType::VECTOR: {
             // Get collection index
@@ -105,12 +106,12 @@ void Compiler::TokenPlace(ParserToken &t) {
 
             // Create true block
             AddBB(trueBB);
-            CreateCall("vector_set_at", {vt_var.value, index.value, value_type.value});
+            CreateCall("vector_set_at", {vt_var.value, index.value, value_typeptr});
             GetIR()->CreateBr(endBB);
 
             // Create false block (create entry)
             AddBB(falseBB);
-            CreateCall("vector_add_at", {vt_var.value, index.value, value_type.value});
+            CreateCall("vector_add_at", {vt_var.value, index.value, value_typeptr});
             GetIR()->CreateBr(endBB);
 
             AddBB(endBB);
@@ -119,22 +120,22 @@ void Compiler::TokenPlace(ParserToken &t) {
         case InstanceType::LIST:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for LISTs", t);
-            CreateCall("list_add_last", {vt_var.value, value_type.value});
+            CreateCall("list_add_last", {vt_var.value, value_typeptr});
             break;
         case InstanceType::QUEUE:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for QUEUEs", t);
-            CreateCall("queue_push", {vt_var.value, value_type.value});
+            CreateCall("queue_push", {vt_var.value, value_typeptr});
             break;
         case InstanceType::STACK:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for STACKs", t);
-            CreateCall("stack_push", {vt_var.value, value_type.value});
+            CreateCall("stack_push", {vt_var.value, value_typeptr});
             break;
         case InstanceType::SET:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for SETs", t);
-            CreateCall("set_put", {vt_var.value, value_type.value});
+            CreateCall("set_put", {vt_var.value, value_typeptr});
             break;
         case InstanceType::MAP: {
             if (ref->GetIndices().size() != 1)
@@ -156,7 +157,6 @@ void Compiler::TokenPlace(ParserToken &t) {
                 GetIR()->CreateStore(key.value, scratch);
             }
             auto scratchptr = GetIR()->CreatePointerCast(scratch, llvm.TypeVoid);
-            auto value_typeptr = GetIR()->CreatePointerCast(value_type.value, llvm.TypeVoid);
             CreateCall("map_put", {vt_var.value, scratchptr, value_typeptr});
             break;
         }
@@ -229,6 +229,7 @@ void Compiler::TokenFetch(ParserToken &t) {
     ref->GetInstance()->Get(vt_var, nullptr, 0, llvm, GetIR());
 
     // Right type?
+    auto value_typeptr = GetIR()->CreatePointerCast(value_type.value, llvm.TypeVoid);
     switch (ref->GetInstanceType()) {
         case InstanceType::VECTOR: {
             // Get collection index
@@ -236,24 +237,24 @@ void Compiler::TokenFetch(ParserToken &t) {
             if (option_base)
                 index.value = GetIR()->CreateSub(index.value, llvm::ConstantInt::get(llvm.TypeInt, 1));
 
-            CreateCall("vector_get_at", {value_type.value, vt_var.value, index.value});
+            CreateCall("vector_get_at", {value_typeptr, vt_var.value, index.value});
             break;
         }
         case InstanceType::LIST:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for LISTs", t);
-            CreateCall("list_get_last", {value_type.value, vt_var.value});
+            CreateCall("list_get_last", {value_typeptr, vt_var.value});
             CreateCall("list_remove_last", {vt_var.value});
             break;
         case InstanceType::QUEUE:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for QUEUEs", t);
-            CreateCall("queue_pop", {value_type.value, vt_var.value});
+            CreateCall("queue_pop", {value_typeptr, vt_var.value});
             break;
         case InstanceType::STACK:
             if (!ref->GetIndices().empty())
                 RaiseException("Indices not valid for STACKs", t);
-            CreateCall("stack_pop", {value_type.value, vt_var.value});
+            CreateCall("stack_pop", {value_typeptr, vt_var.value});
             break;
         case InstanceType::MAP: {
             if (ref->GetIndices().size() != 1)
@@ -279,7 +280,6 @@ void Compiler::TokenFetch(ParserToken &t) {
             // Create true block
             AddBB(trueBB);
             scratchptr = GetIR()->CreatePointerCast(scratch, llvm.TypeVoid);
-            auto value_typeptr = GetIR()->CreatePointerCast(value_type.value, llvm.TypeVoid);
             CreateCall("map_get", {value_typeptr, vt_var.value, scratchptr});
             GetIR()->CreateBr(endBB);
 
@@ -352,7 +352,8 @@ void Compiler::TokenClear(ParserToken &t) {
                 // Do we contain it?
                 auto trueBB = CreateBB("Contains check True", t);
                 auto endBB = CreateBB("Contains check End", t);
-                auto contains = CreateCall("set_contains", {vt_var.value, scratch});
+                auto scratchptr = GetIR()->CreatePointerCast(scratch, llvm.TypeVoid);
+                auto contains = CreateCall("set_contains", {vt_var.value, scratchptr});
                 auto comp = GetIR()->CreateICmpNE(contains, llvm::ConstantInt::get(llvm.TypeInt, 0));
 
                 // Actual condition
@@ -360,7 +361,7 @@ void Compiler::TokenClear(ParserToken &t) {
 
                 // Create true block
                 AddBB(trueBB);
-                CreateCall("set_remove", {vt_var.value, scratch});
+                CreateCall("set_remove", {vt_var.value, scratchptr});
 
                 // String key we need to release?
                 if (key.type == Primitive::STRING) {

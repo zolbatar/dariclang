@@ -29,3 +29,8 @@ extern "C" DLLEXTERN void sprites_partdraw(T_I handle, T_I bank, T_I x, T_I y, T
     gfx_uicheck();
     sprite.DrawPartSprite(handle, bank, x, y, rot, scale, off_x, off_y, sz_x, sz_y);
 }
+
+extern "C" DLLEXTERN void sprites_renderpoint(T_I option) {
+    gfx_uicheck();
+    sprite.SetRenderPoint(option);
+}

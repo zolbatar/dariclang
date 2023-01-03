@@ -44,7 +44,9 @@ public:
     void Render3D();
     void SetFGColour(ImU32 colour);
     void SetBGColour(ImU32 colour);
-    void SetAlpha(float _alpha) { this->alpha = _alpha; }
+    void SetAlpha(float _alpha) {
+        this->alpha = _alpha;
+    }
     float GetAlpha() { return alpha; }
     void Cls();
     void Flip(bool userSpecified);
@@ -63,7 +65,7 @@ public:
     void Clip(float x1, float y1, float x2, float y2);
     void ClipOff();
     void SetLineWidth(float lw) { this->line_width = lw; }
-    void Sprite(SpriteBank *sb, int sx, int sy, float rot, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y);
+    void Sprite(SpriteBank *sb, int sx, int sy, float rot, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y, int render_point);
     void Render3DWindow();
     int64_t GetScreenWidth() {
         return desktop_screen_width;
@@ -79,6 +81,7 @@ public:
     bool IsFontRequestActive() { return !new_font_requested.empty(); }
     Mode GetMode() { return mode; }
     ImU32 GetFGColour() { return fgColour; }
+    ImU32 GetBGColour() { return bgColour; }
     std::mutex *GetSpriteLock() { return &sprite_lock; }
     void SetShapesBuffer(std::vector<std::unique_ptr<RenderShape>> *front, std::vector<std::unique_ptr<RenderShape>> *back) {
         shapes = front;

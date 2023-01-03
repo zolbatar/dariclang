@@ -99,7 +99,7 @@ void AddTriangleFilledMultiColor(ImDrawList *draw_list, const ImVec2 &a, const I
 
 void UISDL::Render3D() {
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer->emplace_back(new ShapeRender(texColorBuffer3D, desktop_screen_width, desktop_screen_height, dpi_ratio));
+    shapesBackBuffer->emplace_back(new ShapeRender(texColorBuffer3D, desktop_screen_width, desktop_screen_height, dpi_ratio, alpha));
 }
 
 void UISDL::Line(float x1, float y1, float x2, float y2) {
@@ -199,15 +199,22 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
     return ImVec2(v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a);
 }
 
-void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y) {
+void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y, int render_point) {
     // Convert degrees to radians
     auto rot = rot_d * M_PI / 180.0;
     float scale_x = 1.0f;
     float scale_y = 1.0f;
     auto centre = ImVec2(sx, sy);
     if (sz_x != 0 || sz_y != 0) {
+        if (render_point == 1) {
+            centre = ImVec2(sx + (sz_x) / 2, sy + (sz_y / 2));
+        }
         scale_x = static_cast<float>(sz_x) / static_cast<float>(sb->width);
         scale_y = static_cast<float>(sz_y) / static_cast<float>(sb->height);
+    } else {
+        if (render_point == 1) {
+            centre = ImVec2(sx + (sb->width) / 2, sy + (sb->height / 2));
+        }
     }
     auto size = ImVec2(sb->width * scale * scale_x, sb->height * scale * scale_y);
     float cos_a = cosf(rot);
@@ -237,5 +244,5 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
     }
 
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer->emplace_back(new ShapeSprite(sb, pos, uvs));
+    shapesBackBuffer->emplace_back(new ShapeSprite(sb, pos, uvs, alpha));
 }

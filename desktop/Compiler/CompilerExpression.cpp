@@ -244,6 +244,16 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             }
             break;
         }
+        case ParserTokenType::MIN: {
+            auto t1 = CompileExpression(t.children[0]);
+            auto t2 = CompileExpression(t.children[1]);
+            return llvm.MathsMIN(GetIR(), t1, t2);
+        }
+        case ParserTokenType::MAX: {
+            auto t1 = CompileExpression(t.children[0]);
+            auto t2 = CompileExpression(t.children[1]);
+            return llvm.MathsMAX(GetIR(), t1, t2);
+        }
         case ParserTokenType::TRUE: {
             ValueType vt;
             vt.type = Primitive::INT;
@@ -529,13 +539,14 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             // Do lookup
             ValueType vt;
             vt.type = Primitive::INT;
+            auto scratchptr = GetIR()->CreatePointerCast(scratch, llvm.TypeVoid);
             switch (ref->GetInstanceType()) {
                 case InstanceType::SET: {
-                    vt.value = CreateCall("set_contains", {vt_var.value, scratch});
+                    vt.value = CreateCall("set_contains", {vt_var.value, scratchptr});
                     break;
                 }
                 case InstanceType::MAP: {
-                    vt.value = CreateCall("map_contains", {vt_var.value, scratch});
+                    vt.value = CreateCall("map_contains", {vt_var.value, scratchptr});
                     break;
                 }
                 default:

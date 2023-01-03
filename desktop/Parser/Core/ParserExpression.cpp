@@ -19,6 +19,14 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
         return CreateToken(context, ParserTokenType::MAIN);
     }
 
+    // Min/Max
+    if (context->MIN() != NULL) {
+        return DoubleExpression(context, ParserTokenType::MIN);
+    }
+    if (context->MAX() != NULL) {
+        return DoubleExpression(context, ParserTokenType::MAX);
+    }
+
     // Maths
     if (context->HAT() != NULL) {
         return DoubleExpression(context, ParserTokenType::HAT);

@@ -7,3 +7,4 @@ void Compiler::TokenOptionBase(ParserToken &t) {
         option_base = true;
     }
 }
+
