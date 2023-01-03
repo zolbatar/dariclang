@@ -51,7 +51,7 @@ separator
 assign:         LET? variable (COLON type)? EQ expression ;
 call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
 case:           CASE expression OF separator? when* (OTHERWISE statements)? END CASE ;
-const:          CONST IDENTIFIER EQ literal (COMMA IDENTIFIER EQ literal)* (COLON type)? ;
+const:          CONST IDENTIFIER (COLON type)? EQ literal (COMMA IDENTIFIER EQ literal)* ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
 dim:            DIM IDENTIFIER COLON (
@@ -143,6 +143,10 @@ expression
     | SIN expression
     | SQR expression
     | TAN expression
+
+    // Min/Max
+    | MIN LPAREN? expression COMMA expression RPAREN?
+    | MAX LPAREN? expression COMMA expression RPAREN?
 
     // String functions
     | ASC expression
@@ -276,6 +280,8 @@ EXP             : 'EXP' | 'Exp' ;
 FLOOR           : 'FLOOR' | 'Floor' ;
 LN              : 'LN' | 'Ln' ;
 LOG             : 'LOG' | 'Log' ;
+MIN             : 'MIN' | 'Min' ;
+MAX             : 'MAX' | 'Max' ;
 PI              : 'PI' | 'Pi' ;
 RAD             : 'RAD' | 'Rad' ;
 ROUND           : 'ROUND' | 'Round' ;

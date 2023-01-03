@@ -194,7 +194,7 @@ void World::SetupOpenGL3() {
 
     // Alpha
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Enable depth test
     glEnable(GL_DEPTH_TEST);

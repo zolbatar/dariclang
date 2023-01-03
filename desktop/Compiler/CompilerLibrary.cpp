@@ -105,6 +105,7 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("GrabSprite", "sprites_create", Primitive::INT, "IIII");
     AddLibraryCall("DrawSprite", "sprites_draw", Primitive::NONE, "IIIIFF");
     AddLibraryCall("DrawPartSprite", "sprites_partdraw", Primitive::NONE, "IIIIFFIIII");
+    AddLibraryCall("SpriteRenderPoint", "sprites_renderpoint", Primitive::NONE, "I");
 
     // 3D Graphics
     AddLibraryCall("Object", "gfx3d_object", Primitive::INT, "IFFFFFFFI");

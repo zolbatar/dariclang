@@ -20,18 +20,18 @@ public:
     RETURN = 33, THEN = 34, SIZE = 35, STEP = 36, SYS = 37, SWAP = 38, TO = 39, 
     UNTIL = 40, WHEN = 41, WITH = 42, WHILE = 43, MAIN = 44, ABS = 45, ACS = 46, 
     ASN = 47, ATN = 48, COS = 49, DEG = 50, EXP = 51, FLOOR = 52, LN = 53, 
-    LOG = 54, PI = 55, RAD = 56, ROUND = 57, SGN = 58, SIN = 59, SQR = 60, 
-    TAN = 61, VECTOR = 62, LIST = 63, MAP = 64, STACK = 65, QUEUE = 66, 
-    SET = 67, FALSE = 68, TRUE = 69, ASC = 70, CHR = 71, INSTR = 72, LEFT = 73, 
-    MID = 74, RIGHT = 75, LEN = 76, BYTE = 77, INT = 78, FLOAT = 79, STRING = 80, 
-    DOLLAR = 81, HASH = 82, COLON = 83, SEMICOLON = 84, DOT = 85, COMMA = 86, 
-    QUOTE = 87, NEWLINE = 88, PERCENT = 89, UNDERSCORE = 90, LPAREN = 91, 
-    RPAREN = 92, SOPEN = 93, SCLOSE = 94, ASSIGNL = 95, ASSIGNR = 96, EQ = 97, 
-    NE = 98, GT = 99, GE = 100, LT = 101, LE = 102, HAT = 103, PLUS = 104, 
-    MINUS = 105, MULTIPLY = 106, DIVIDE = 107, SHL = 108, SHR = 109, MOD = 110, 
-    DIV = 111, COMP = 112, NOT = 113, AND = 114, OR = 115, EOR = 116, STRINGLITERAL = 117, 
-    HEXNUMBER = 118, BINARYNUMBER = 119, FLOATLITERAL = 120, INTEGERLITERAL = 121, 
-    IDENTIFIER = 122, WS = 123
+    LOG = 54, MIN = 55, MAX = 56, PI = 57, RAD = 58, ROUND = 59, SGN = 60, 
+    SIN = 61, SQR = 62, TAN = 63, VECTOR = 64, LIST = 65, MAP = 66, STACK = 67, 
+    QUEUE = 68, SET = 69, FALSE = 70, TRUE = 71, ASC = 72, CHR = 73, INSTR = 74, 
+    LEFT = 75, MID = 76, RIGHT = 77, LEN = 78, BYTE = 79, INT = 80, FLOAT = 81, 
+    STRING = 82, DOLLAR = 83, HASH = 84, COLON = 85, SEMICOLON = 86, DOT = 87, 
+    COMMA = 88, QUOTE = 89, NEWLINE = 90, PERCENT = 91, UNDERSCORE = 92, 
+    LPAREN = 93, RPAREN = 94, SOPEN = 95, SCLOSE = 96, ASSIGNL = 97, ASSIGNR = 98, 
+    EQ = 99, NE = 100, GT = 101, GE = 102, LT = 103, LE = 104, HAT = 105, 
+    PLUS = 106, MINUS = 107, MULTIPLY = 108, DIVIDE = 109, SHL = 110, SHR = 111, 
+    MOD = 112, DIV = 113, COMP = 114, NOT = 115, AND = 116, OR = 117, EOR = 118, 
+    STRINGLITERAL = 119, HEXNUMBER = 120, BINARYNUMBER = 121, FLOATLITERAL = 122, 
+    INTEGERLITERAL = 123, IDENTIFIER = 124, WS = 125
   };
 
   enum {
@@ -286,10 +286,10 @@ public:
     antlr4::tree::TerminalNode* EQ(size_t i);
     std::vector<LiteralContext *> literal();
     LiteralContext* literal(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
     antlr4::tree::TerminalNode *COLON();
     TypeContext *type();
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -859,11 +859,13 @@ public:
     antlr4::tree::TerminalNode *SIN();
     antlr4::tree::TerminalNode *SQR();
     antlr4::tree::TerminalNode *TAN();
+    antlr4::tree::TerminalNode *MIN();
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+    antlr4::tree::TerminalNode *MAX();
     antlr4::tree::TerminalNode *ASC();
     antlr4::tree::TerminalNode *CHR();
     antlr4::tree::TerminalNode *INSTR();
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
     antlr4::tree::TerminalNode *LEFT();
     antlr4::tree::TerminalNode *MID();
     antlr4::tree::TerminalNode *RIGHT();

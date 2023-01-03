@@ -144,6 +144,10 @@ public:
 	ValueType MathsACS(llvm::IRBuilder<> *ir, ValueType &t1);
 	ValueType MathsATN(llvm::IRBuilder<> *ir, ValueType &t1);
 
+    // Min/Max
+    ValueType MathsMIN(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
+    ValueType MathsMAX(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
+
 	// Bit shifting
 	ValueType MathsSHL(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
 	ValueType MathsSHR(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);

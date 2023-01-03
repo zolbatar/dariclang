@@ -139,7 +139,7 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	ImGui::SameLine();
 	if (dis) ImGui::EndDisabled();
 
-	std::string path = "Demos/";//exe_path.parent_path().generic_string();
+	std::string path = (exe_path.parent_path() / "Demos/").generic_string();
 	SetButtonStyle(3);
 	if (ImGui::Button("Load Demo"))
 		ImGui::OpenPopup("load_demo_popup");
@@ -208,7 +208,7 @@ void Edit::EditButtons(const ImGuiViewport* main_viewport)
 	{
 		cmd = ((exe_path / "Daric").generic_string() + " @" + this->editor_name);
 #if _WIN64
-        replaceAll(cmd, "/", "\\");
+		replaceAll(cmd, "/", "\\");
 #endif
 		run.store(true);
 	}

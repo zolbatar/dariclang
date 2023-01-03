@@ -48,7 +48,7 @@ public:
 
 class ShapeRender : public RenderShape {
 public:
-    ShapeRender(GLuint fb, int w, int h, float dpi_ratio)
+    ShapeRender(GLuint fb, int w, int h, float dpi_ratio, float alpha)
             : fb(fb), w(w), h(h) {
     };
 
@@ -271,8 +271,9 @@ class ShapeSprite : public RenderShape {
 public:
     ShapeSprite(SpriteBank *bank,
                 ImVec2 pos[4],
-                ImVec2 uvs[4])
-            : bank(bank) {
+                ImVec2 uvs[4],
+                float alpha)
+            : bank(bank), alpha(alpha) {
         this->pos[0] = pos[0];
         this->pos[1] = pos[1];
         this->pos[2] = pos[2];
@@ -291,10 +292,17 @@ public:
         ImVec2 apos1 = ImVec2(wpos.x + pos[1].x, wpos.y + pos[1].y);
         ImVec2 apos2 = ImVec2(wpos.x + pos[2].x, wpos.y + pos[2].y);
         ImVec2 apos3 = ImVec2(wpos.x + pos[3].x, wpos.y + pos[3].y);
-        draw_list->AddImageQuad(l, apos0, apos1, apos2, apos3, uvs[0], uvs[1], uvs[2], uvs[3], IM_COL32_WHITE);
+        ImVec4 colour;
+        colour.x = 1.0f;
+        colour.y = 1.0f;
+        colour.z = 1.0f;
+        colour.w = alpha;
+        ImU32 col = ImGui::ColorConvertFloat4ToU32(colour);
+        draw_list->AddImageQuad(l, apos0, apos1, apos2, apos3, uvs[0], uvs[1], uvs[2], uvs[3], col);
     }
 
 private:
     SpriteBank *bank;
+    float alpha;
     ImVec2 pos[4], uvs[4];
 };

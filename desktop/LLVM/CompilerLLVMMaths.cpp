@@ -277,3 +277,43 @@ ValueType CompilerLLVM::MathsROUND(llvm::IRBuilder<> *ir, ValueType &t1) {
     t1.value = ir->CreateIntrinsic(llvm::Intrinsic::round, {TypeFloat}, {t1.value});
     return t1;
 }
+
+ValueType CompilerLLVM::MathsMIN(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
+    AutoConversion2Way(ir, t1, t2);
+    ValueType vt;
+    vt.type = Primitive::FLOAT;
+    switch (t1.type) {
+        case Primitive::INT:
+        case Primitive::BYTE:
+            AutoConversion(ir, t1, vt.type);
+            AutoConversion(ir, t2, vt.type);
+            vt.value = ir->CreateMinNum(t1.value, t2.value);
+            break;
+        case Primitive::FLOAT:
+            vt.value = ir->CreateMinNum(t1.value, t2.value);
+            break;
+        default:
+            assert(0);
+    }
+    return vt;
+}
+
+ValueType CompilerLLVM::MathsMAX(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2) {
+    AutoConversion2Way(ir, t1, t2);
+    ValueType vt;
+    vt.type = Primitive::FLOAT;
+    switch (t1.type) {
+        case Primitive::INT:
+        case Primitive::BYTE:
+            AutoConversion(ir, t1, vt.type);
+            AutoConversion(ir, t2, vt.type);
+            vt.value = ir->CreateMaxNum(t1.value, t2.value);
+            break;
+        case Primitive::FLOAT:
+            vt.value = ir->CreateMaxNum(t1.value, t2.value);
+            break;
+        default:
+            assert(0);
+    }
+    return vt;
+}

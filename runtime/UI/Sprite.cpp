@@ -10,7 +10,6 @@
 
 Sprites sprite;
 size_t sprite_index = 0;
-const int sprite_create_wait = 10;
 extern UISDL *ui;
 extern std::atomic_bool ui_started;
 extern "C" void gfx_uicheck();
@@ -81,7 +80,7 @@ bool Sprites::DrawSprite(int handle, int bank, int sx, int sy, double rot, doubl
 
     auto sb = &s->banks[bank];
     if (sb->state == SpriteState::OK) {
-        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, 0, 0, 0, 0);
+        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, 0, 0, 0, 0, render_point);
     }
     ui->GetSpriteLock()->unlock();
     return true;
@@ -106,7 +105,7 @@ bool Sprites::DrawPartSprite(int handle, int bank, int sx, int sy, double rot, d
 
     auto sb = &s->banks[bank];
     if (sb->state == SpriteState::OK) {
-        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, off_x, off_y, sz_x, sz_y);
+        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, off_x, off_y, sz_x, sz_y, render_point);
     }
     ui->GetSpriteLock()->unlock();
     return true;
@@ -139,3 +138,9 @@ int Sprites::LoadSprite(std::string filename) {
     }
     return static_cast<int>(index);
 }
+
+void Sprites::SetRenderPoint(int option) {
+    this->render_point = option;
+}
+
+

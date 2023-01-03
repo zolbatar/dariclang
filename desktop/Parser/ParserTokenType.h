@@ -55,6 +55,8 @@ enum class ParserTokenType {
     LT,
     MAIN,
     MIDS,
+    MIN,
+    MAX,
     MINUS,
     MOD,
     IMPORT,

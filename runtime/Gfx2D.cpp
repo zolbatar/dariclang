@@ -138,7 +138,7 @@ extern "C" DLLEXTERN void gfx2d_fg(T_I r, T_I g, T_I b) {
     auto colour = ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, ui->GetAlpha()));
     ui->SetFGColour(colour);
     GetWindow()->fgColour = colour;
-    console.SetColour(ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, 1.0)));
+    console.SetColour(colour);
 }
 
 extern "C" DLLEXTERN void gfx2d_set_alpha(T_I a) {
@@ -146,6 +146,18 @@ extern "C" DLLEXTERN void gfx2d_set_alpha(T_I a) {
     auto aa = static_cast<float>(a) / 255.0f;
     GetWindow()->alpha = aa;
     ui->SetAlpha(aa);
+
+    // Update FG & BG
+    auto fg = ImGui::ColorConvertU32ToFloat4(ui->GetFGColour());
+    auto bg = ImGui::ColorConvertU32ToFloat4(ui->GetBGColour());
+    fg.w = aa;
+    auto fgc = ImGui::ColorConvertFloat4ToU32(fg);
+    ui->SetFGColour(fgc);
+    bg.w = aa;
+    auto bgc = ImGui::ColorConvertFloat4ToU32(bg);
+    ui->SetBGColour(bgc);
+    GetWindow()->fgColour = fgc;
+    console.SetColour(fgc);
 }
 
 extern "C" DLLEXTERN void gfx2d_bg(T_I r, T_I g, T_I b) {
@@ -153,7 +165,7 @@ extern "C" DLLEXTERN void gfx2d_bg(T_I r, T_I g, T_I b) {
     auto v1 = static_cast<float>(r) / 255.0f;
     auto v2 = static_cast<float>(g) / 255.0f;
     auto v3 = static_cast<float>(b) / 255.0f;
-    auto im = ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, 1.0));
+    auto im = ImGui::ColorConvertFloat4ToU32(ImVec4(v1, v2, v3, ui->GetAlpha()));
     GetWindow()->fgColour = im;
     ui->SetBGColour(im);
 }
