@@ -172,7 +172,7 @@ public:
                 : mPreprocChar('#'), mAutoIndentation(true), mTokenize(nullptr), mCaseSensitive(true) {
         }
 
-          static const LanguageDefinition &DARIC();
+        static const LanguageDefinition &DARIC();
     };
 
     TextEditor();

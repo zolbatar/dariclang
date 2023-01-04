@@ -28,7 +28,7 @@ void Console::Setup(int w, int h, float dpiRatio, int sx, int sy, bool banked) {
     bgColours.resize(charsAcross * charsDown);
 
     ImGuiIO &io = ImGui::GetIO();
-    font = io.Fonts->AddFontFromFileTTF((exe_path / config.MonoFont()).generic_string().c_str(),
+    font = io.Fonts->AddFontFromFileTTF((exe_path.parent_path() / config.MonoFont()).generic_string().c_str(),
                                         size * dpiRatio);
     if (font == NULL) {
         std::cout << "Console font '" + (exe_path / config.MonoFont()).generic_string() + "' can't be found" << std::endl;

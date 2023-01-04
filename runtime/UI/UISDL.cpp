@@ -22,6 +22,7 @@ extern std::filesystem::path exe_path;
 extern Config config;
 
 extern void RenderWindows();
+
 extern void GUIInit();
 
 UISDL::UISDL() {
@@ -110,7 +111,7 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
 #else
     std::cout << "OpenGL:GL GL 3.0 + GLSL 130" << std::endl;
     // GL 3.0 + GLSL 130
-    const char* glsl_version = "#version 130";
+    const char *glsl_version = "#version 130";
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -130,9 +131,8 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
 #if _WIN64
     glewExperimental = GL_TRUE;
     GLenum glewError = glewInit();
-    if( glewError != GLEW_OK )
-    {
-        printf( "Error initializing GLEW! %s\n", glewGetErrorString( glewError ) );
+    if (glewError != GLEW_OK) {
+        printf("Error initializing GLEW! %s\n", glewGetErrorString(glewError));
     }
 #endif
 
@@ -147,8 +147,13 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     (void) io;
     io.Fonts->Clear();
 
-    std::cout << "Loading font" << std::endl;
-    io.Fonts->AddFontFromFileTTF((exe_path / "Roboto-Regular.ttf").generic_string().c_str(), config.UIFontSize() * dpi_ratio);
+    auto p = (exe_path.parent_path() / "Roboto-Regular.ttf").generic_string().c_str();
+    std::cout << "Loading font " << p << std::endl;
+    auto r = io.Fonts->AddFontFromFileTTF(p, config.UIFontSize() * dpi_ratio);
+    if (r == nullptr) {
+        std::cout << "Failed" << std::endl;
+        exit(1);
+    }
     io.FontGlobalScale /= dpi_ratio * 1.0f;
     io.Fonts->Build();
 
@@ -200,7 +205,14 @@ bool UISDL::Render(std::function<void()> callback) {
     // This is so app thread can lock to load fonts etc before start of frame
     if (!new_font_requested.empty()) {
         ImGui_ImplOpenGL3_DestroyFontsTexture();
-        io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), new_font_size_requested * dpi_ratio);
+
+        std::cout << "Loading font " << new_font_requested.c_str() << std::endl;
+        auto r = io.Fonts->AddFontFromFileTTF(new_font_requested.c_str(), new_font_size_requested * dpi_ratio);
+        if (r == nullptr) {
+            std::cout << "Failed" << std::endl;
+            exit(1);
+        }
+
         io.Fonts->Build();
         ImGui_ImplOpenGL3_CreateFontsTexture();
         std::cout << "Loaded font: " << new_font_requested << " at " << new_font_size_requested << std::endl;
@@ -395,7 +407,7 @@ void UISDL::SpriteActions() {
                     it->height = 0;
                     bool ret = LoadTextureFromFile(it->filename.c_str(), &it->id, &it->width, &it->height);
                     IM_ASSERT(ret);
-                    std::cout << "Loaded sprite: " << it->filename << " with ID: " << (int)it->id << std::endl;
+                    std::cout << "Loaded sprite: " << it->filename << " with ID: " << (int) it->id << std::endl;
                     it->state = SpriteState::OK;
                     break;
                 }

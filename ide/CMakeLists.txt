@@ -42,10 +42,9 @@ elseif(WIN32)
     find_package(GLEW CONFIG REQUIRED)
 endif()
 
-cmake_minimum_required(VERSION 3.24)
-project(IDE)
-
-set(CMAKE_CXX_STANDARD 20)
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG)
+endif()
 
 add_executable(${PROJECT_NAME}
         ../runtime/Library/StringLib.cpp
