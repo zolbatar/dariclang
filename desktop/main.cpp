@@ -73,7 +73,11 @@ void RunThread() {
 
 int main(int argc, char *argv[]) {
     std::cout << "Welcome to Daric!" << std::endl;
+#ifdef DEBUG
+    exe_path = std::filesystem::path("/Users/daryl/Shared/Daric/mac");
+#else
     exe_path = std::filesystem::canonical(std::filesystem::path(argv[0])).parent_path();
+#endif
     std::cout << "Path: " << exe_path.generic_string() << std::endl;
     config.Load();
     Compiler::SetupLibrary();

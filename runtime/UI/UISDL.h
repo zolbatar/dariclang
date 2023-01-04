@@ -65,7 +65,8 @@ public:
     void Clip(float x1, float y1, float x2, float y2);
     void ClipOff();
     void SetLineWidth(float lw) { this->line_width = lw; }
-    void Sprite(SpriteBank *sb, int sx, int sy, float rot, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y, int render_point);
+    void Sprite(SpriteBank *sb, float sx, float sy, float rot, float scale, bool flipped,
+                int off_x, int off_y, int sz_x, int sz_y, int render_point, bool use_colour);
     void Render3DWindow();
     int64_t GetScreenWidth() {
         return desktop_screen_width;

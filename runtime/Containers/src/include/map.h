@@ -25,6 +25,12 @@
 
 #include "_bk_defines.h"
 
+#ifdef _WIN64
+#define DLLEXTERN __declspec(dllexport)
+#else
+#define DLLEXTERN __attribute__((visibility("default")))
+#endif
+
 /**
  * The map data structure, which is a collection of key-value pairs, sorted by
  * keys, keys are unique.
@@ -32,29 +38,29 @@
 typedef struct internal_map *map;
 
 /* Starting */
-map map_init(size_t key_size, size_t value_size,
-             int (*comparator)(const void *const one, const void *const two));
+DLLEXTERN map map_init(size_t key_size, size_t value_size,
+                       int (*comparator)(const void *const one, const void *const two));
 
 /* Capacity */
-size_t map_size(map me);
-bk_bool map_is_empty(map me);
+DLLEXTERN size_t map_size(map me);
+DLLEXTERN bk_bool map_is_empty(map me);
 
 /* Accessing */
-bk_err map_put(map me, void *key, void *value);
-bk_bool map_get(void *value, map me, void *key);
-bk_bool map_contains(map me, void *key);
-bk_bool map_remove(map me, void *key);
+DLLEXTERN bk_err map_put(map me, void *key, void *value);
+DLLEXTERN bk_bool map_get(void *value, map me, void *key);
+DLLEXTERN bk_bool map_contains(map me, void *key);
+DLLEXTERN bk_bool map_remove(map me, void *key);
 
 /* Retrieval */
-void *map_first(map me);
-void *map_last(map me);
-void *map_lower(map me, void *key);
-void *map_higher(map me, void *key);
-void *map_floor(map me, void *key);
-void *map_ceiling(map me, void *key);
+DLLEXTERN void *map_first(map me);
+DLLEXTERN void *map_last(map me);
+DLLEXTERN void *map_lower(map me, void *key);
+DLLEXTERN void *map_higher(map me, void *key);
+DLLEXTERN void *map_floor(map me, void *key);
+DLLEXTERN void *map_ceiling(map me, void *key);
 
 /* Ending */
-void map_clear(map me);
-map map_destroy(map me);
+DLLEXTERN void map_clear(map me);
+DLLEXTERN map map_destroy(map me);
 
 #endif /* BKTHOMPS_CONTAINERS_MAP_H */

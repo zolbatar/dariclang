@@ -272,8 +272,9 @@ public:
     ShapeSprite(SpriteBank *bank,
                 ImVec2 pos[4],
                 ImVec2 uvs[4],
+                ImU32 col,
                 float alpha)
-            : bank(bank), alpha(alpha) {
+            : bank(bank), col(col), alpha(alpha) {
         this->pos[0] = pos[0];
         this->pos[1] = pos[1];
         this->pos[2] = pos[2];
@@ -292,10 +293,7 @@ public:
         ImVec2 apos1 = ImVec2(wpos.x + pos[1].x, wpos.y + pos[1].y);
         ImVec2 apos2 = ImVec2(wpos.x + pos[2].x, wpos.y + pos[2].y);
         ImVec2 apos3 = ImVec2(wpos.x + pos[3].x, wpos.y + pos[3].y);
-        ImVec4 colour;
-        colour.x = 1.0f;
-        colour.y = 1.0f;
-        colour.z = 1.0f;
+        ImVec4 colour = ImGui::ColorConvertU32ToFloat4(col);
         colour.w = alpha;
         ImU32 col = ImGui::ColorConvertFloat4ToU32(colour);
         draw_list->AddImageQuad(l, apos0, apos1, apos2, apos3, uvs[0], uvs[1], uvs[2], uvs[3], col);
@@ -304,5 +302,6 @@ public:
 private:
     SpriteBank *bank;
     float alpha;
+    ImU32 col;
     ImVec2 pos[4], uvs[4];
 };

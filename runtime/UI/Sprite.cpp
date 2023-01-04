@@ -61,7 +61,7 @@ void Sprites::DeleteSprite(int handle) {
     ui->GetSpriteLock()->unlock();
 }
 
-bool Sprites::DrawSprite(int handle, int bank, int sx, int sy, double rot, double scale) {
+bool Sprites::DrawSprite(int handle, int bank, float sx, float sy, float rot, float scale) {
     ui->GetSpriteLock()->lock();
     auto sprite = sprites.find(handle);
 
@@ -80,13 +80,13 @@ bool Sprites::DrawSprite(int handle, int bank, int sx, int sy, double rot, doubl
 
     auto sb = &s->banks[bank];
     if (sb->state == SpriteState::OK) {
-        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, 0, 0, 0, 0, render_point);
+        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, 0, 0, 0, 0, render_point, use_colour);
     }
     ui->GetSpriteLock()->unlock();
     return true;
 }
 
-bool Sprites::DrawPartSprite(int handle, int bank, int sx, int sy, double rot, double scale, int off_x, int off_y, int sz_x, int sz_y) {
+bool Sprites::DrawPartSprite(int handle, int bank, float sx, float sy, float rot, float scale, int off_x, int off_y, int sz_x, int sz_y) {
     ui->GetSpriteLock()->lock();
     auto sprite = sprites.find(handle);
 
@@ -105,7 +105,7 @@ bool Sprites::DrawPartSprite(int handle, int bank, int sx, int sy, double rot, d
 
     auto sb = &s->banks[bank];
     if (sb->state == SpriteState::OK) {
-        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, off_x, off_y, sz_x, sz_y, render_point);
+        ui->Sprite(sb, sx, sy, rot, scale, sb->flipped, off_x, off_y, sz_x, sz_y, render_point, use_colour);
     }
     ui->GetSpriteLock()->unlock();
     return true;
@@ -143,4 +143,7 @@ void Sprites::SetRenderPoint(int option) {
     this->render_point = option;
 }
 
+void Sprites::SetUseColour(bool use_colour) {
+    this->use_colour = use_colour;
+}
 

@@ -103,9 +103,10 @@ void Compiler::SetupLibrary() {
     AddLibraryCall("LoadSprite", "sprites_load", Primitive::INT, "S");
     AddLibraryCall("DeleteSprite", "sprites_delete", Primitive::NONE, "I");
     AddLibraryCall("GrabSprite", "sprites_create", Primitive::INT, "IIII");
-    AddLibraryCall("DrawSprite", "sprites_draw", Primitive::NONE, "IIIIFF");
-    AddLibraryCall("DrawPartSprite", "sprites_partdraw", Primitive::NONE, "IIIIFFIIII");
+    AddLibraryCall("DrawSprite", "sprites_draw", Primitive::NONE, "IIFFFF");
+    AddLibraryCall("DrawPartSprite", "sprites_partdraw", Primitive::NONE, "IIFFFFIIII");
     AddLibraryCall("SpriteRenderPoint", "sprites_renderpoint", Primitive::NONE, "I");
+    AddLibraryCall("SpriteUseFGColour", "sprites_usecolour", Primitive::NONE, "I");
 
     // 3D Graphics
     AddLibraryCall("Object", "gfx3d_object", Primitive::INT, "IFFFFFFFI");

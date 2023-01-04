@@ -51,7 +51,7 @@ static const size_t node_key_offset = 1 + 3 * sizeof(char *);
  *         initialized due to either invalid input arguments or memory
  *         allocation error
  */
-map map_init(const size_t key_size, const size_t value_size,
+DLLEXTERN map map_init(const size_t key_size, const size_t value_size,
              int (*const comparator)(const void *const, const void *const))
 {
     struct internal_map *init;
@@ -317,7 +317,7 @@ static char *map_create_node(map me, const void *const key,
  * @return  BK_OK     if no error
  * @return -BK_ENOMEM if out of memory
  */
-bk_err map_put(map me, void *const key, void *const value)
+DLLEXTERN bk_err map_put(map me, void *const key, void *const value)
 {
     char *traverse;
     if (!me->root) {
@@ -416,7 +416,7 @@ static char *map_equal_match(map me, const void *const key)
  *
  * @return BK_TRUE if the map contained the key-value pair, otherwise BK_FALSE
  */
-bk_bool map_get(void *const value, map me, void *const key)
+DLLEXTERN bk_bool map_get(void *const value, map me, void *const key)
 {
     char *const traverse = map_equal_match(me, key);
     if (!traverse) {
@@ -438,7 +438,7 @@ bk_bool map_get(void *const value, map me, void *const key)
  *
  * @return BK_TRUE if the map contained the element, otherwise BK_FALSE
  */
-bk_bool map_contains(map me, void *const key)
+DLLEXTERN bk_bool map_contains(map me, void *const key)
 {
     return map_equal_match(me, key) != NULL;
 }
@@ -711,7 +711,7 @@ static void map_remove_element(map me, char *const traverse)
  *
  * @return BK_TRUE if the map contained the key-value pair, otherwise BK_FALSE
  */
-bk_bool map_remove(map me, void *const key)
+DLLEXTERN bk_bool map_remove(map me, void *const key)
 {
     char *const traverse = map_equal_match(me, key);
     if (!traverse) {
@@ -730,7 +730,7 @@ bk_bool map_remove(map me, void *const key)
  *
  * @return the lowest key in this map, or NULL if it is empty
  */
-void *map_first(map me)
+DLLEXTERN void *map_first(map me)
 {
     char *traverse = me->root;
     char *traverse_left;
@@ -754,7 +754,7 @@ void *map_first(map me)
  *
  * @return the highest key in this map, or NULL if it is empty
  */
-void *map_last(map me)
+DLLEXTERN void *map_last(map me)
 {
     char *traverse = me->root;
     char *traverse_right;
@@ -778,7 +778,7 @@ void *map_last(map me)
  *
  * @return the key which is strictly lower, or NULL if it does not exist
  */
-void *map_lower(map me, void *const key)
+DLLEXTERN void *map_lower(map me, void *const key)
 {
     char *ret = NULL;
     char *traverse = me->root;
@@ -804,7 +804,7 @@ void *map_lower(map me, void *const key)
  *
  * @return the key which is strictly higher, or NULL if it does not exist
  */
-void *map_higher(map me, void *const key)
+DLLEXTERN void *map_higher(map me, void *const key)
 {
     char *ret = NULL;
     char *traverse = me->root;
@@ -830,7 +830,7 @@ void *map_higher(map me, void *const key)
  *
  * @return the key which is the floor, or NULL if it does not exist
  */
-void *map_floor(map me, void *const key)
+DLLEXTERN void *map_floor(map me, void *const key)
 {
     char *ret = NULL;
     char *traverse = me->root;
@@ -856,7 +856,7 @@ void *map_floor(map me, void *const key)
  *
  * @return the key which is the ceiling, or NULL if it does not exist
  */
-void *map_ceiling(map me, void *const key)
+DLLEXTERN void *map_ceiling(map me, void *const key)
 {
     char *ret = NULL;
     char *traverse = me->root;
@@ -877,7 +877,7 @@ void *map_ceiling(map me, void *const key)
  *
  * @param me the map to clear
  */
-void map_clear(map me)
+DLLEXTERN void map_clear(map me)
 {
     while (me->root) {
         map_remove_element(me, me->root);
@@ -893,7 +893,7 @@ void map_clear(map me)
  *
  * @return NULL
  */
-map map_destroy(map me)
+DLLEXTERN map map_destroy(map me)
 {
     if (me) {
         map_clear(me);

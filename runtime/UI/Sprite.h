@@ -31,10 +31,11 @@ struct Sprite {
 class Sprites {
 public:
     void DeleteSprite(int handle);
-    bool DrawSprite(int handle, int bank, int x, int y, double rot, double scale);
-    bool DrawPartSprite(int handle, int bank, int x, int y, double rot, double scale, int off_x, int off_y, int sz_x, int sz_y);
+    bool DrawSprite(int handle, int bank, float x, float y, float rot, float scale);
+    bool DrawPartSprite(int handle, int bank, float x, float y, float rot, float scale, int off_x, int off_y, int sz_x, int sz_y);
     int LoadSprite(std::string filename);
     void SetRenderPoint(int option);
+    void SetUseColour(bool use_colour);
 
     Sprite *GetSprite(size_t index) {
         return &sprites[index];
@@ -47,5 +48,6 @@ public:
 private:
     const int sprite_create_wait = 5;
     int render_point = 0;
+    bool use_colour = false;
     std::unordered_map<size_t, Sprite> sprites;
 };

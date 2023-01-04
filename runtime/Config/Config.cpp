@@ -40,14 +40,8 @@ void Config::Save() {
 }
 
 std::string Config::GetFilename() {
-    std::string cmd;
-#ifdef DEBUG
-    cmd = "/Users/daryl/Shared/Daric/Config.json";
-#else
     auto p = std::filesystem::path("Config.json");
-    cmd = (exe_path.parent_path() / p).generic_string();
-#endif
-    return cmd;
+    return (exe_path.parent_path() / p).generic_string();
 }
 
 void Config::Load() {

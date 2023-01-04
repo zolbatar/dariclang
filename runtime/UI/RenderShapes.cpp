@@ -199,7 +199,8 @@ static inline ImVec2 ImRotate(const ImVec2 &v, float cos_a, float sin_a) {
     return ImVec2(v.x * cos_a - v.y * sin_a, v.x * sin_a + v.y * cos_a);
 }
 
-void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y, int render_point) {
+void UISDL::Sprite(SpriteBank *sb, float sx, float sy, float rot_d, float scale, bool flipped, int off_x, int off_y, int sz_x, int sz_y,
+                   int render_point, bool use_colour) {
     // Convert degrees to radians
     auto rot = rot_d * M_PI / 180.0;
     float scale_x = 1.0f;
@@ -244,5 +245,7 @@ void UISDL::Sprite(SpriteBank *sb, int sx, int sy, float rot_d, float scale, boo
     }
 
     const std::lock_guard<std::mutex> lock(shapes_lock);
-    shapesBackBuffer->emplace_back(new ShapeSprite(sb, pos, uvs, alpha));
+    shapesBackBuffer->emplace_back(new ShapeSprite(sb, pos, uvs,
+                                                   use_colour ? fgColour : ImGui::ColorConvertFloat4ToU32(ImVec4(1.0, 1.0, 1.0, 1.0)),
+                                                   alpha));
 }
