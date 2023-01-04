@@ -147,7 +147,8 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     (void) io;
     io.Fonts->Clear();
 
-    auto p = (exe_path.parent_path() / "Roboto-Regular.ttf").generic_string().c_str();
+    auto p1 = (exe_path.parent_path() / "Roboto-Regular.ttf");
+    auto p = p1.c_str();
     std::cout << "Loading font " << p << std::endl;
     auto r = io.Fonts->AddFontFromFileTTF(p, config.UIFontSize() * dpi_ratio);
     if (r == nullptr) {

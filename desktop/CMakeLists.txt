@@ -63,6 +63,10 @@ message(STATUS "LLVM Libs: ${LLVM_LIBS}")
 message(STATUS "LLVM System Libs: ${LLVM_SYSTEM_LIBS}")
 message(STATUS "LLD Libs: ${LLD_LIBS}")
 
+if (CMAKE_BUILD_TYPE MATCHES Debug)
+    add_definitions(-DDEBUG)
+endif()
+
 add_executable(${PROJECT_NAME}
         main.cpp
         ../runtime/GUI.cpp

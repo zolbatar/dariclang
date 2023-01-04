@@ -17,7 +17,8 @@ extern std::list<CaughtException> errors;
 
 Edit::Edit() {
     ImGuiIO &io = ImGui::GetIO();
-    auto p = (exe_path.parent_path() / std::filesystem::path(config.MonoFont())).generic_string().c_str();
+    auto p1 = (exe_path.parent_path() / std::filesystem::path(config.MonoFont()));
+    auto p = p1.c_str();
     font = io.Fonts->AddFontFromFileTTF(p, config.MonoFontSize() * ui->GetDPIRatio());
     if (font == nullptr) {
         std::cout << "Failed" << std::endl;
