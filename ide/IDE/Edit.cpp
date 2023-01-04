@@ -43,7 +43,6 @@ bool Edit::LoadFile(std::string filename) {
         editor.SetLanguageDefinition(TextEditor::LanguageDefinition::DARIC());
         editors.insert(std::make_pair(filename, std::move(editor)));
         EditorFile ef;
-        ef.is_file_based = true;
         editor_files.insert(std::make_pair(filename, std::move(ef)));
 
         // Save to config
@@ -90,7 +89,6 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
 
     std::string title = "Editor";
     ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
-    ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Appearing);
     ImGui::SetNextWindowSize(ImVec2(main_viewport->Size.x, main_viewport->Size.y), ImGuiCond_Appearing);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::Begin(title.c_str(),
@@ -120,6 +118,12 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(1, 0, 0, 0.8));
                 ImGui::PushStyleColor(ImGuiCol_TabUnfocused, ImVec4(1, 0, 0, 0.8));
                 ImGui::PushStyleColor(ImGuiCol_TabUnfocusedActive, ImVec4(1, 0, 0, 0.4));
+            } else {
+                ImGui::PushStyleColor(ImGuiCol_Tab, ImVec4(0.3, 0.3, 0.3, 0.8));
+                ImGui::PushStyleColor(ImGuiCol_TabActive, ImVec4(0.3, 0.3, 0.3, 1.0));
+                ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(0.3, 0.3, 0.3, 0.8));
+                ImGui::PushStyleColor(ImGuiCol_TabUnfocused, ImVec4(1, 0, 0, 0.8));
+                ImGui::PushStyleColor(ImGuiCol_TabUnfocusedActive, ImVec4(0.3, 0.3, 0.3, 0.4));
             }
 
             if (ImGui::BeginTabItem(s.first.c_str(), &editor_files[s.first].open)) {
@@ -135,8 +139,8 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 }
                 editor->SetErrorMarkers(markers);
 
-                ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(20, 20, 20, 255));
-                float height = ImGui::GetFrameHeightWithSpacing() + 2;
+/*                ImGui::PushStyleColor(ImGuiCol_ChildBg, IM_COL32(20, 20, 20, 255));
+                float height = ImGui::GetFrameHeightWithSpacing();
                 ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4, 4));
                 ImGui::BeginChild("Summary Panel", ImVec2(main_viewport->Size.x, height), false,
                                   ImGuiWindowFlags_AlwaysUseWindowPadding);
@@ -150,7 +154,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::PopFont();
                 ImGui::EndChild();
                 ImGui::PopStyleVar();
-                ImGui::PopStyleColor();
+                ImGui::PopStyleColor();*/
                 ImGui::BeginChild("Edit Panel", ImVec2(main_viewport->Size.x, 0));
                 ImGui::PushFont(font);
                 editor->SetShowWhitespaces(false);
@@ -159,8 +163,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
-            if (any_errors)
-                ImGui::PopStyleColor(5);
+            ImGui::PopStyleColor(5);
         }
         if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip)) {
             TextEditor editor;

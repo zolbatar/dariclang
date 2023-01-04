@@ -127,6 +127,19 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     //ImGui::StyleColorsClassic();
     //ImGui::StyleColorsLight();
 
+    ImGuiStyle *style = &ImGui::GetStyle();
+    style->WindowPadding            = ImVec2(15, 15);
+    style->WindowRounding           = 3.0f;
+    style->FramePadding             = ImVec2(8, 8);
+    style->FrameRounding            = 3.0f;
+    style->ItemSpacing              = ImVec2(12, 8);
+    style->ItemInnerSpacing         = ImVec2(8, 4);
+    style->IndentSpacing            = 25.0f;
+    style->ScrollbarSize            = 20.0f;
+    style->ScrollbarRounding        = 3.0f;
+    style->GrabMinSize              = 5.0f;
+    style->GrabRounding             = 3.0f;
+
     // Setup Platform/Renderer backends
     std::cout << "Setting up Dear ImGui backend" << std::endl;
     ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
@@ -193,8 +206,8 @@ void UISDL::_CreateWindow(bool windowed) {
     std::cout << "Creating SDL window\n";
     SDL_WindowFlags window_flags;
     if (!windowed) {
-        window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
-        //window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
+        //window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
+        window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric IDE",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,
