@@ -4,12 +4,14 @@
 #include "ImGuiFileDialog/ImGuiFileDialog.h"
 #include "../UI/UISDL.h"
 #include "../../runtime/Library/StringLib.h"
+#include "../../runtime/Config/Config.h"
 
 extern std::filesystem::path exe_path;
 std::string message;
 extern UISDL *ui;
 extern std::atomic_bool run;
 extern std::string cmd;
+extern Config config;
 
 void Edit::SetButtonStyle(int i) {
     ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4) ImColor::HSV(i / 7.0f, 0.6f, 0.6f));

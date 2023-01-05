@@ -32,6 +32,7 @@ void Config::Save() {
     j["msaa_levels"] = msaa_levels;
     j["logging"] = logging;
     j["disable_3d"] = disable3d;
+    j["theme"] = theme;
     std::vector<std::string> files(filenames.begin(), filenames.end());
     json j_vec(files);
     j["open_files"] = j_vec;
@@ -83,6 +84,8 @@ void Config::Load() {
             logging = it.value();
         } else if (it.key() == "disable_3d") {
             disable3d = it.value();
+        } else if (it.key() == "theme") {
+            theme = it.value();
         } else if (it.key() == "open_files") {
             std::vector<std::string> files = it.value();
             filenames.insert(files.begin(), files.end());

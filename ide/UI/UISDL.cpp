@@ -111,7 +111,7 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     (void) io;
     io.Fonts->Clear();
 
-    auto p1 = (exe_path.parent_path() / "Roboto-Regular.ttf");
+    auto p1 = (exe_path.parent_path() / config.UIFont());
     auto p = p1.c_str();
     std::cout << "Loading font " << p << std::endl;
     auto r = io.Fonts->AddFontFromFileTTF(p, config.UIFontSize() * dpi_ratio);
@@ -123,22 +123,25 @@ void UISDL::Start(int w, int h, bool windowed, bool banked) {
     io.Fonts->Build();
 
     // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
+    if (config.GetTheme() == "dark") {
+        ImGui::StyleColorsDark();
+    } else {
+        ImGui::StyleColorsLight();
+    }
     //ImGui::StyleColorsClassic();
-    //ImGui::StyleColorsLight();
 
     ImGuiStyle *style = &ImGui::GetStyle();
-    style->WindowPadding            = ImVec2(15, 15);
-    style->WindowRounding           = 3.0f;
-    style->FramePadding             = ImVec2(8, 8);
-    style->FrameRounding            = 3.0f;
-    style->ItemSpacing              = ImVec2(12, 8);
-    style->ItemInnerSpacing         = ImVec2(8, 4);
-    style->IndentSpacing            = 25.0f;
-    style->ScrollbarSize            = 20.0f;
-    style->ScrollbarRounding        = 3.0f;
-    style->GrabMinSize              = 5.0f;
-    style->GrabRounding             = 3.0f;
+    style->WindowPadding = ImVec2(10, 10);
+    style->WindowRounding = 3.0f;
+    style->FramePadding = ImVec2(8, 8);
+    style->FrameRounding = 3.0f;
+    style->ItemSpacing = ImVec2(6, 2);
+    style->ItemInnerSpacing = ImVec2(6, 2);
+    style->IndentSpacing = 20.0f;
+    style->ScrollbarSize = 20.0f;
+    style->ScrollbarRounding = 3.0f;
+    style->GrabMinSize = 5.0f;
+    style->GrabRounding = 3.0f;
 
     // Setup Platform/Renderer backends
     std::cout << "Setting up Dear ImGui backend" << std::endl;
@@ -207,7 +210,7 @@ void UISDL::_CreateWindow(bool windowed) {
     SDL_WindowFlags window_flags;
     if (!windowed) {
         //window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_ALLOW_HIGHDPI);
-        window_flags = (SDL_WindowFlags)(SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
+        window_flags = (SDL_WindowFlags) (SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_ALLOW_HIGHDPI);
         window = SDL_CreateWindow("Daric IDE",
                                   SDL_WINDOWPOS_CENTERED,
                                   SDL_WINDOWPOS_CENTERED,
