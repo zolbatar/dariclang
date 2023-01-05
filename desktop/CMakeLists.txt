@@ -130,6 +130,7 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerConstants.cpp
         Compiler/CompilerRead.cpp
         Compiler/CompilerArrays.cpp
+        Compiler/CompilerCollections.cpp
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
         LLVM/CompilerLLVMVariables.cpp
@@ -190,7 +191,10 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
-        Grammar/DaricVisitor.cpp Compiler/CompilerCollections.cpp)
+        Grammar/DaricVisitor.cpp
+        Types/TypeSignature.h
+        Types/TypePrimitive.h
+        Types/TypeInstance.h)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
