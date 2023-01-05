@@ -102,7 +102,7 @@ void Compiler::TokenFor(ParserToken &t) {
     auto direction = GetIR()->CreateTruncOrBitCast(comp.value, llvm.TypeBit);
 
     // Flag to indicate completion
-    auto temp_name = GetScratchName(t.line);
+    auto temp_name = GetScratchName(t.file.line);
     auto finished = GetIR()->CreateAlloca(llvm.TypeBit, nullptr, temp_name);
     GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 0), finished);
 

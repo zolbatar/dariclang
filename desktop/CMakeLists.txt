@@ -3,7 +3,7 @@ if (APPLE)
     #set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
     #set(CMAKE_OSX_ARCHITECTURES "x86_64")
     #set(CMAKE_OSX_ARCHITECTURES "arm64")
-endif()
+endif ()
 set(CMAKE_CXX_STANDARD 20)
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
@@ -16,7 +16,7 @@ if (APPLE)
     set(triplet daric)
     link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
     add_compile_options(-Wno-reorder-ctor -Wno-unknown-pragmas -Wno-covered-switch-default -Wno-missing-field-initializers -Wno-implicit-fallthrough)
-elseif(WIN32)
+elseif (WIN32)
     set(triplet x64-windows-static)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     message(STATUS ${CMAKE_CXX_FLAGS})
@@ -24,13 +24,13 @@ elseif(WIN32)
     message(STATUS ${CMAKE_CXX_FLAGS_RELEASE})
     SET(CMAKE_CXX_FLAGS "/DWIN32 /D_WINDOWS /EHsc")
     SET(CMAKE_CXX_FLAGS_DEBUG "/Zi /Ob0 /Od /RTC1 /EHsc")
-    SET(CMAKE_CXX_FLAGS_RELEASE  "/EHsc /MT")
+    SET(CMAKE_CXX_FLAGS_RELEASE "/EHsc /MT")
     if (CMAKE_BUILD_TYPE STREQUAL "Release")
         link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/lib)
-    else()
+    else ()
         link_directories(${VCPKG_INSTALLED_DIR}/${triplet}/debug/lib)
-    endif()
-endif()
+    endif ()
+endif ()
 include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include)
 project(Daric)
 find_package(antlr4-runtime CONFIG REQUIRED)
@@ -38,11 +38,11 @@ find_package(Freetype REQUIRED)
 find_package(SDL2 CONFIG REQUIRED)
 if (APPLE)
     include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include/antlr4-runtime)
-elseif(WIN32)
+elseif (WIN32)
     set(FluidSynth_LIBRARY ${VCPKG_INSTALLED_DIR}/${triplet}/lib/libfluidsynth.lib)
     include_directories(${VCPKG_INSTALLED_DIR}/${triplet}/include/antlr4-runtime)
     find_package(GLEW CONFIG REQUIRED)
-endif()
+endif ()
 find_package(SDL2_mixer CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 find_package(assimp CONFIG REQUIRED)
@@ -52,11 +52,11 @@ message(status ${LLVM_CMAKE_DIR})
 find_package(LLVM CONFIG REQUIRED)
 include(HandleLLVMOptions)
 add_definitions(${LLVM_DEFINITIONS})
-if(APPLE)
+if (APPLE)
     execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/${triplet}/tools/llvm/llvm-config --libs OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-else()
+else ()
     execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/${triplet}/tools/llvm/llvm-config --libnames OUTPUT_VARIABLE LLVM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
-endif()
+endif ()
 execute_process(COMMAND ${VCPKG_INSTALLED_DIR}/${triplet}/tools/llvm/llvm-config --system-libs OUTPUT_VARIABLE LLVM_SYSTEM_LIBS OUTPUT_STRIP_TRAILING_WHITESPACE)
 set(LLD_LIBS lldCommon lldELF lldMachO)
 message(STATUS "LLVM Libs: ${LLVM_LIBS}")
@@ -65,7 +65,7 @@ message(STATUS "LLD Libs: ${LLD_LIBS}")
 
 if (CMAKE_BUILD_TYPE MATCHES Debug)
     add_definitions(-DDEBUG)
-endif()
+endif ()
 
 add_executable(${PROJECT_NAME}
         main.cpp
@@ -157,6 +157,7 @@ add_executable(${PROJECT_NAME}
         Parser/Core/ParserType.cpp
         Parser/Core/ParserVariable.cpp
         Parser/Core/ParserStatements.cpp
+        Parser/Core/ParserTypeSignature.cpp
         Parser/Tokens/ParserSTRUCT.cpp
         Parser/Tokens/ParserIF.cpp
         Parser/Tokens/ParserMODULE.cpp
@@ -193,8 +194,12 @@ add_executable(${PROJECT_NAME}
         Grammar/DaricParser.cpp
         Grammar/DaricVisitor.cpp
         Types/TypeSignature.h
+        Types/TypeSignature.cpp
         Types/TypePrimitive.h
-        Types/TypeInstance.h)
+        Types/TypePrimitive.cpp
+        Types/TypePrimitiveArray.h
+        Types/TypePrimitiveArray.cpp
+        Types/Type.h)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"
@@ -215,7 +220,7 @@ if (APPLE)
             ${LLD_LIBS}
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
-elseif(WIN32)
+elseif (WIN32)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             OpenGL32
             GlU32
@@ -241,15 +246,15 @@ elseif(WIN32)
             ${LLD_LIBS}
             ${LLVM_LIBS}
             ${LLVM_SYSTEM_LIBS})
-endif()
-if(APPLE)
+endif ()
+if (APPLE)
     install(TARGETS ${PROJECT_NAME}
             RUNTIME DESTINATION mac
             LIBRARY DESTINATION mac
             ARCHIVE DESTINATION mac)
-else()
+else ()
     install(TARGETS ${PROJECT_NAME}
             RUNTIME DESTINATION win
             LIBRARY DESTINATION win
             ARCHIVE DESTINATION win)
-endif()
+endif ()

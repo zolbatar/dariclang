@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+
 typedef int64_t T_I;
 typedef double T_F;
 typedef const char *T_S;

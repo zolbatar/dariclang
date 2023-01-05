@@ -7,15 +7,15 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
         case ParserTokenType::LITERAL: {
             switch (t.data_type) {
                 case Primitive::INT:
-                    return ValueType{llvm.CreateConstantInt(t.data_type, t.iv), t.data_type};
+                    return ValueType{llvm.CreateConstantInt(t.data_type, t.literal.iv), t.data_type};
                 case Primitive::FLOAT:
-                    return ValueType{llvm.CreateConstantFloat(t.data_type, t.fv), t.data_type};
+                    return ValueType{llvm.CreateConstantFloat(t.data_type, t.literal.fv), t.data_type};
                 case Primitive::STRING:
                     return ValueType{
-                            llvm.CreateConstantString(GetIR(), GetFunction(), t.data_type, t.sv.c_str(), t.identifier),
+                            llvm.CreateConstantString(GetIR(), GetFunction(), t.data_type, t.literal.sv.c_str(), t.identifier),
                             t.data_type};
                 case Primitive::BYTE:
-                    return ValueType{llvm.CreateConstantInt(t.data_type, t.iv), t.data_type};
+                    return ValueType{llvm.CreateConstantInt(t.data_type, t.literal.iv), t.data_type};
                 default:
                     RaiseException("Unexpected type", t);
             }
@@ -517,7 +517,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
         }
         case ParserTokenType::HAS: {
             auto expr = CompileExpression(t.children[0]);
-            auto temp_name = GetScratchName(t.line);
+            auto temp_name = GetScratchName(t.file.line);
             auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(expr.type), nullptr, temp_name);
             GetIR()->CreateStore(expr.value, scratch);
 

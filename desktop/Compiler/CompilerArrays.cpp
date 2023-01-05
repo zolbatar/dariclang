@@ -34,7 +34,7 @@ void Compiler::CreateGlobalDimensions(Reference *var, Primitive type1, llvm::Typ
 			// All dimensions need to be literals
 			RaiseException("For global arrays, dimensions need to be literal integers", s);
 		}
-		indices.push_back(s.iv);
+		indices.push_back(s.literal.iv);
 	}
 
 	size_t size = 1;

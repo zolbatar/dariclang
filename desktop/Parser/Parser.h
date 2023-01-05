@@ -48,36 +48,27 @@ private:
     std::unordered_map<std::string, Procedure> procedures;
     Procedure *current_procedure = nullptr;
 
+    Scope GetScope() {
+        return current_procedure == nullptr ? Scope::GLOBAL : Scope::LOCAL;
+    }
+
     void RaiseException(std::string msg, antlr4::ParserRuleContext *context) {
-/*        if (options.target == CompileTarget::INTERACTIVE) {
-            errors.emplace_back(CaughtException{.type = ExceptionType::PARSER,
-                    .filename = filename,
-                    .line_number = context->getStart()->getLine(),
-                    .char_position =context->getStart()->getCharPositionInLine(),
-                    .error = msg
-            });
-        } else {*/
         throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
                               context->getStart()->getCharPositionInLine(), msg);
-//        }
     }
 
     ParserToken CreateToken(antlr4::ParserRuleContext *context) {
         ParserToken p;
-        p.line = context->getStart()->getLine();
-        p.filename = this->filename;
-        p.char_position = context->getStart()->getCharPositionInLine();
+        p.scope = GetScope();
+        p.file.line = context->getStart()->getLine();
+        p.file.filename = this->filename;
+        p.file.char_position = context->getStart()->getCharPositionInLine();
         return p;
     }
 
     ParserToken CreateToken(antlr4::ParserRuleContext *context, ParserTokenType type) {
-        ParserToken p;
-        p.scope = current_procedure == nullptr ? Scope::GLOBAL : Scope::LOCAL;
+        ParserToken p = CreateToken(context);
         p.type = type;
-        p.filename = this->filename;
-        p.line = context->getStart()->getLine();
-        p.char_position = context->getStart()->getCharPositionInLine();
-
         return p;
     }
 
@@ -126,6 +117,11 @@ protected:
     std::any visitClear(DaricParser::ClearContext *context) override;
     std::any visitSet(DaricParser::SetContext *context) override;
     std::any visitGet(DaricParser::GetContext *context) override;
+    std::any visitTypeSignature(DaricParser::TypeSignatureContext *context) override;
+    std::any visitTypeSignatureSingle(DaricParser::TypeSignatureSingleContext *context) override;
+    std::any visitTypeSignatureArray(DaricParser::TypeSignatureArrayContext *context) override;
+    std::any visitTypeSignatureRecord(DaricParser::TypeSignatureRecordContext *context) override;
+    std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) override;
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

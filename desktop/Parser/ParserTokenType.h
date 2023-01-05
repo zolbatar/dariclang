@@ -1,7 +1,5 @@
 #pragma once
 
-#include <string>
-
 enum class ParserTokenType {
     NONE,
 
@@ -9,7 +7,6 @@ enum class ParserTokenType {
     ACS,
     ADD,
     AND,
-    ASSIGNMENT,
     ASC,
     ASN,
     ATN,
@@ -30,7 +27,7 @@ enum class ParserTokenType {
     EOR,
     EQ,
     EXP,
-	EXPRESSION,
+    EXPRESSION,
     FALSE,
     FLOOR,
     FOR,

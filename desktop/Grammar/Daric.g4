@@ -48,10 +48,10 @@ separator
     : (COLON | NEWLINE)+
     ;
 
-assign:         LET? variable (COLON type)? EQ expression ;
+assign:         LET? typeSignature EQ expression ;
 call:           IDENTIFIER name=LPAREN? expression? (COMMA expression)* name=RPAREN? ;
 case:           CASE expression OF separator? when* (OTHERWISE statements)? END CASE ;
-const:          CONST IDENTIFIER (COLON type)? EQ literal (COMMA IDENTIFIER EQ literal)* ;
+const:          CONST typeSignature EQ literal ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
 dim:            DIM IDENTIFIER COLON (
@@ -94,6 +94,18 @@ variable
     : IDENTIFIER
         (SOPEN expression? (COMMA expression)* SCLOSE)?
         (DOT IDENTIFIER)*
+    ;
+
+typeSignatureSingle:        IDENTIFIER (COLON (BYTE | INT | FLOAT | STRING))? ; // For creating primitive variables
+typeSignatureArray:         IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE) ;
+typeSignatureRecord:        IDENTIFIER (DOT IDENTIFIER)* ;
+typeSignatureRecordArray:   IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE) (DOT IDENTIFIER)*;
+
+typeSignature
+    : typeSignatureSingle
+    | typeSignatureArray
+    | typeSignatureRecord
+    | typeSignatureRecordArray
     ;
 
 expression

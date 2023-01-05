@@ -41,7 +41,7 @@ void Compiler::TokenPlace(ParserToken &t) {
         ValueType vt = CompileExpression(t.children[0]);
 
         // Create temp var and store
-        auto temp_name = GetScratchName(t.line);
+        auto temp_name = GetScratchName(t.file.line);
         auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(vt.type), nullptr, temp_name);
 
         // if string, clone and add to permanent list so we dont unallocate
@@ -147,7 +147,7 @@ void Compiler::TokenPlace(ParserToken &t) {
             }
 
             // Clone key?
-            auto temp_name = GetScratchName(t.line);
+            auto temp_name = GetScratchName(t.file.line);
             auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
             if (key.type == Primitive::STRING) {
                 auto vv = CreateCall("clone_string", key.value);
@@ -263,7 +263,7 @@ void Compiler::TokenFetch(ParserToken &t) {
             if (key.type != ref->GetInstance()->GetDataType()) {
                 TypeError(t);
             }
-            auto temp_name = GetScratchName(t.line);
+            auto temp_name = GetScratchName(t.file.line);
             auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
             GetIR()->CreateStore(key.value, scratch);
 
@@ -345,7 +345,7 @@ void Compiler::TokenClear(ParserToken &t) {
                 if (key.type != ref->GetDataType()) {
                     TypeError(t);
                 }
-                auto temp_name = GetScratchName(t.line);
+                auto temp_name = GetScratchName(t.file.line);
                 auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
                 GetIR()->CreateStore(key.value, scratch);
 
@@ -379,7 +379,7 @@ void Compiler::TokenClear(ParserToken &t) {
                 if (key.type != ref->GetInstance()->GetDataType()) {
                     TypeError(t);
                 }
-                auto temp_name = GetScratchName(t.line);
+                auto temp_name = GetScratchName(t.file.line);
                 auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(key.type), nullptr, temp_name);
                 GetIR()->CreateStore(key.value, scratch);
 

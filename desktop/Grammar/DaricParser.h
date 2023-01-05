@@ -43,8 +43,10 @@ public:
     RuleRepeat = 23, RuleRead = 24, RuleRestore = 25, RuleReturn = 26, RuleStruct = 27, 
     RuleStructDim = 28, RuleStructInstance = 29, RuleSwap = 30, RuleWhen = 31, 
     RuleWhile = 32, RuleClear = 33, RuleGet = 34, RuleSet = 35, RuleVariable = 36, 
-    RuleExpression = 37, RuleType = 38, RuleTypeOrStruct = 39, RuleLiteral = 40, 
-    RuleFloatLiteral = 41, RuleIntegerLiteral = 42, RuleStringLiteral = 43
+    RuleTypeSignatureSingle = 37, RuleTypeSignatureArray = 38, RuleTypeSignatureRecord = 39, 
+    RuleTypeSignatureRecordArray = 40, RuleTypeSignature = 41, RuleExpression = 42, 
+    RuleType = 43, RuleTypeOrStruct = 44, RuleLiteral = 45, RuleFloatLiteral = 46, 
+    RuleIntegerLiteral = 47, RuleStringLiteral = 48
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -101,6 +103,11 @@ public:
   class GetContext;
   class SetContext;
   class VariableContext;
+  class TypeSignatureSingleContext;
+  class TypeSignatureArrayContext;
+  class TypeSignatureRecordContext;
+  class TypeSignatureRecordArrayContext;
+  class TypeSignatureContext;
   class ExpressionContext;
   class TypeContext;
   class TypeOrStructContext;
@@ -219,12 +226,10 @@ public:
   public:
     AssignContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    VariableContext *variable();
+    TypeSignatureContext *typeSignature();
     antlr4::tree::TerminalNode *EQ();
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *LET();
-    antlr4::tree::TerminalNode *COLON();
-    TypeContext *type();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -280,16 +285,9 @@ public:
     ConstContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CONST();
-    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
-    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> EQ();
-    antlr4::tree::TerminalNode* EQ(size_t i);
-    std::vector<LiteralContext *> literal();
-    LiteralContext* literal(size_t i);
-    antlr4::tree::TerminalNode *COLON();
-    TypeContext *type();
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
+    TypeSignatureContext *typeSignature();
+    antlr4::tree::TerminalNode *EQ();
+    LiteralContext *literal();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -818,6 +816,97 @@ public:
   };
 
   VariableContext* variable();
+
+  class  TypeSignatureSingleContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureSingleContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *COLON();
+    antlr4::tree::TerminalNode *BYTE();
+    antlr4::tree::TerminalNode *INT();
+    antlr4::tree::TerminalNode *FLOAT();
+    antlr4::tree::TerminalNode *STRING();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureSingleContext* typeSignatureSingle();
+
+  class  TypeSignatureArrayContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureArrayContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *SOPEN();
+    antlr4::tree::TerminalNode *SCLOSE();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureArrayContext* typeSignatureArray();
+
+  class  TypeSignatureRecordContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureRecordContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> DOT();
+    antlr4::tree::TerminalNode* DOT(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureRecordContext* typeSignatureRecord();
+
+  class  TypeSignatureRecordArrayContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureRecordArrayContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    antlr4::tree::TerminalNode *SOPEN();
+    antlr4::tree::TerminalNode *SCLOSE();
+    std::vector<antlr4::tree::TerminalNode *> DOT();
+    antlr4::tree::TerminalNode* DOT(size_t i);
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureRecordArrayContext* typeSignatureRecordArray();
+
+  class  TypeSignatureContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TypeSignatureSingleContext *typeSignatureSingle();
+    TypeSignatureArrayContext *typeSignatureArray();
+    TypeSignatureRecordContext *typeSignatureRecord();
+    TypeSignatureRecordArrayContext *typeSignatureRecordArray();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureContext* typeSignature();
 
   class  ExpressionContext : public antlr4::ParserRuleContext {
   public:

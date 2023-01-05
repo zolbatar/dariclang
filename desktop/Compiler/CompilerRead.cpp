@@ -30,9 +30,9 @@ void Compiler::TokenRead(ParserToken &t) {
 }
 
 void Compiler::TokenRestore(ParserToken &t) {
-    auto ff =state.FindDataLabel(t.sv);
+    auto ff =state.FindDataLabel(t.literal.sv);
     if (ff == state.DataLabelEnd()) {
-        RaiseException("Unable to find DATALABEL '" + t.sv + "'", t);
+        RaiseException("Unable to find DATALABEL '" + t.literal.sv + "'", t);
     }
     auto index = ff->second;
     auto vv = llvm::ConstantInt::get(llvm.TypeInt, index);

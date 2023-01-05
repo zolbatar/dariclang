@@ -206,7 +206,7 @@ void Compiler::Run() {
 }
 
 llvm::BasicBlock *Compiler::CreateBB(std::string block_name, ParserToken &token) {
-    return llvm.CreateBB(block_name, token.line);
+    return llvm.CreateBB(block_name, token.file.line);
 }
 
 void Compiler::AddBB(llvm::BasicBlock *bb) {
@@ -215,7 +215,7 @@ void Compiler::AddBB(llvm::BasicBlock *bb) {
 }
 
 llvm::BasicBlock *Compiler::CreateAndInsertBB(std::string block_name, bool branch, ParserToken &token) {
-    return llvm.CreateAndInsertBB(std::move(block_name), branch, token.line, GetFunction(), GetIR());
+    return llvm.CreateAndInsertBB(std::move(block_name), branch, token.file.line, GetFunction(), GetIR());
 }
 
 void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {

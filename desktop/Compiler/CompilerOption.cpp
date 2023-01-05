@@ -1,9 +1,9 @@
 #include "Compiler.h"
 
 void Compiler::TokenOptionBase(ParserToken &t) {
-    if (t.iv == 0) {
+    if (t.literal.iv == 0) {
         option_base = false;
-    } else if (t.iv == 1) {
+    } else if (t.literal.iv == 1) {
         option_base = true;
     }
 }

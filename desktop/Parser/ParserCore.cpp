@@ -23,8 +23,8 @@ std::any Parser::visitOption(DaricParser::OptionContext *context) {
 
     if (p1 == "BASE" || p1 == "Base") {
         ParserToken ps = CreateToken(context, ParserTokenType::OPTIONBASE);
-        ps.iv = std::any_cast<ParserToken>(visit(context->integerLiteral())).iv;
-        if (ps.iv != 0 && ps.iv != 1) {
+        ps.literal.iv = std::any_cast<ParserToken>(visit(context->integerLiteral())).literal.iv;
+        if (ps.literal.iv != 0 && ps.literal.iv != 1) {
             RaiseException("Unknown OPTION BASE value", context);
         }
         return ps;

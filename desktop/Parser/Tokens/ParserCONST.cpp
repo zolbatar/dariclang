@@ -1,21 +1,11 @@
 #include "../Parser.h"
 
 std::any Parser::visitConst(DaricParser::ConstContext *context) {
-    Primitive assignment_type;
-    if (context->type()) {
-        assignment_type = std::any_cast<Primitive>(visit(context->type()));
-    } else {
-        assignment_type = Primitive::INT;
-    }
     if (current_procedure) {
         RaiseException("CONST not allowed inside procedures", context);
     }
     ParserToken ps = CreateToken(context, ParserTokenType::CONSTANT);
-    ps.data_type = assignment_type;
-    for (size_t i = 0; i < context->IDENTIFIER().size(); i++) {
-        auto assign = std::any_cast<ParserToken>(visit(context->literal(i)));
-        assign.identifier = context->IDENTIFIER(i)->getText();
-        ps.children.push_back(std::move(assign));
-    }
+    ps.signature = std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature()));
+    ps.children.push_back(std::any_cast<ParserToken>(visit(context->literal())));
     return ps;
 }

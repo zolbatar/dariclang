@@ -93,6 +93,16 @@ public:
 
     virtual std::any visitVariable(DaricParser::VariableContext *context) = 0;
 
+    virtual std::any visitTypeSignatureSingle(DaricParser::TypeSignatureSingleContext *context) = 0;
+
+    virtual std::any visitTypeSignatureArray(DaricParser::TypeSignatureArrayContext *context) = 0;
+
+    virtual std::any visitTypeSignatureRecord(DaricParser::TypeSignatureRecordContext *context) = 0;
+
+    virtual std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) = 0;
+
+    virtual std::any visitTypeSignature(DaricParser::TypeSignatureContext *context) = 0;
+
     virtual std::any visitExpression(DaricParser::ExpressionContext *context) = 0;
 
     virtual std::any visitType(DaricParser::TypeContext *context) = 0;

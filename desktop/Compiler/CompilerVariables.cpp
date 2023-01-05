@@ -108,10 +108,10 @@ void Compiler::TokenConst(ParserToken &token) {
         InstanceConstant::Build(s.identifier, s.data_type, Scope::GLOBAL, llvm, GetIR());
         switch (s.data_type) {
             case Primitive::INT:
-                llvm.CreateConstant(s.identifier, s.data_type, llvm.CreateConstantInt(s.data_type, s.iv));
+                llvm.CreateConstant(s.identifier, s.data_type, llvm.CreateConstantInt(s.data_type, s.literal.iv));
                 break;
             case Primitive::FLOAT:
-                llvm.CreateConstant(s.identifier, s.data_type, llvm.CreateConstantFloat(s.data_type, s.fv));
+                llvm.CreateConstant(s.identifier, s.data_type, llvm.CreateConstantFloat(s.data_type, s.literal.fv));
                 break;
             case Primitive::STRING:
                 llvm.CreateConstant(s.identifier,
@@ -119,7 +119,7 @@ void Compiler::TokenConst(ParserToken &token) {
                                     llvm.CreateConstantString(GetIRImplicit(),
                                                               GetFunctionImplicit(),
                                                               s.data_type,
-                                                              s.sv.c_str(),
+                                                              s.literal.sv.c_str(),
                                                               token.identifier));
                 break;
             default:

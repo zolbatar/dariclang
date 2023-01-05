@@ -151,43 +151,43 @@ private:
 
     static void TypeError(ParserToken &token);
     static void RaiseException(std::string msg, ParserToken &t) {
-        throw CustomException(ExceptionType::COMPILER, t.filename, t.line, t.char_position, msg);
+        throw CustomException(ExceptionType::COMPILER, t.file.filename, t.file.line, t.file.char_position, msg);
     }
     static void SyntaxError(ParserToken &t) {
-        throw CustomException(ExceptionType::COMPILER, t.filename, t.line, t.char_position, "Syntax error");
+        throw CustomException(ExceptionType::COMPILER, t.file.filename, t.file.line, t.file.char_position, "Syntax error");
     }
     static void VariableNotFound(ParserToken &t, std::string name) {
         throw CustomException(ExceptionType::COMPILER,
-                              t.filename,
-                              t.line,
-                              t.char_position,
+                              t.file.filename,
+                              t.file.line,
+                              t.file.char_position,
                               "Variable '" + name + "' not found");
     }
     static void VariableError(ParserToken &t, std::string name) {
         throw CustomException(ExceptionType::COMPILER,
-                              t.filename,
-                              t.line,
-                              t.char_position,
+                              t.file.filename,
+                              t.file.line,
+                              t.file.char_position,
                               "Variable error with '" + name + "'");
     }
     static void RecordNotFound(ParserToken &t, std::string name) {
         throw CustomException(ExceptionType::COMPILER,
-                              t.filename,
-                              t.line,
-                              t.char_position,
+                              t.file.filename,
+                              t.file.line,
+                              t.file.char_position,
                               "Record '" + name + "' not found");
     }
 
     static void VariableAlreadyExists(ParserToken &t, std::string name) {
         throw CustomException(ExceptionType::COMPILER,
-                              t.filename,
-                              t.line,
-                              t.char_position,
+                              t.file.filename,
+                              t.file.line,
+                              t.file.char_position,
                               "Variable '" + name + "' already defined");
     }
 
     static void ProcedureNotFound(ParserToken &t, std::string name) {
-        throw CustomException(ExceptionType::COMPILER, t.filename,
-                              t.line, t.char_position, "Procedure '" + name + "' not found");
+        throw CustomException(ExceptionType::COMPILER, t.file.filename,
+                              t.file.line, t.file.char_position, "Procedure '" + name + "' not found");
     }
 };
