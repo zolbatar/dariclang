@@ -69,7 +69,7 @@ void Compiler::TokenStructInstance(ParserToken &t) {
 }
 
 void Compiler::TokenStructArray(ParserToken &t) {
-    auto var = Reference::Get(t.reference);
+/*    auto var = Reference::Get(t.reference);
 
     // Do we have this struct?
     if (!state.StructExists(var->GetStructName()))
@@ -88,5 +88,5 @@ void Compiler::TokenStructArray(ParserToken &t) {
             return;
         CreateLocalDimensions(var, Primitive::NONE, llvm_struct);
         var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::LOCAL, false);
-    }
+    }*/
 }

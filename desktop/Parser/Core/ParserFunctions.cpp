@@ -13,17 +13,18 @@ std::any Parser::visitProcedure(DaricParser::ProcedureContext *context) {
 	}
 
 	// Parameters
-    ParserToken ps_pars = CreateToken(context, ParserTokenType::NONE);
-    for (size_t i = 0; i < context->parameter().size(); i++) {
+	ParserToken ps_pars = CreateToken(context, ParserTokenType::NONE);
+	for (size_t i = 0; i < context->parameter().size(); i++) {
 		auto psp = std::any_cast<ParserToken>(visit(context->parameter(i)));
-        ps_pars.children.push_back(std::move(psp));
+		ps_pars.children.push_back(std::move(psp));
 	}
-    ps.children.push_back(std::move(ps_pars));
+	ps.children.push_back(std::move(ps_pars));
 
 	// Code
-    ParserToken ps_code = CreateToken(context, ParserTokenType::NONE);
+	ParserToken ps_code = CreateToken(context, ParserTokenType::NONE);
 	ps_code.children = std::any_cast<std::vector<ParserToken>>(visit(context->statements()));
-    ps.children.push_back(std::move(ps_code));
+	ps.children.push_back(std::move(ps_code));
+	TypeSignature::ClearLocals();
 	current_procedure = nullptr;
 	return ps;
 }
@@ -37,10 +38,10 @@ std::any Parser::visitParameter(DaricParser::ParameterContext *context) {
 		ps.type = ParserTokenType::PARAMETER_REF;
 	}
 	if (context->type()) {
-        r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
-    } else if (!context->type() && context->IDENTIFIER().size() == 1) {
-        // Default type
-        r->SetDataType(Primitive::INT);
+		r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
+	} else if (!context->type() && context->IDENTIFIER().size() == 1) {
+		// Default type
+		r->SetDataType(Primitive::INT);
 	} else {
 		if (!context->REF())
 			RaiseException("Record parameters needs REF", context);

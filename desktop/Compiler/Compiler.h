@@ -121,8 +121,6 @@ private:
 	llvm::Value *IntToBitConditional(llvm::Value *value);
 	ValueType CompileExpression(ParserToken &t);
 	void GenericVariable(ParserToken &token, Scope scope);
-	void CreateGlobalDimensions(Reference *var, Primitive type1, llvm::Type *type2);
-	void CreateLocalDimensions(Reference *var, Primitive type1, llvm::Type *type2);
 	void Constants();
 	void CreateConstant(const std::string &name, Primitive type, llvm::Constant *val);
 	void CreateLookaheadProc(ParserToken &t);

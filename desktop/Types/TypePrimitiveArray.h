@@ -11,7 +11,4 @@ public:
 	void Create(SignatureCall &call) override;
 	ValueType Get(SignatureCall &call) override;
 	void Set(SignatureCall &call, ValueType value) override;
-protected:
-	std::list<ParserToken> expressions;
-	size_t num_dimensions;
 };

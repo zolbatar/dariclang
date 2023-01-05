@@ -26,13 +26,35 @@ bool TypePrimitiveArray::operator==(TypeSignature &other) {
 }
 
 bool TypePrimitiveArray::Matches(Primitive type, std::list<ParserToken> &expressions) {
+	if (expressions.size() != num_dimensions)
+		return false;
+	if (type == Primitive::NONE)
+		return true;
 	return this->primitive_type == type;
 }
 
 void TypePrimitiveArray::Create(SignatureCall &call) {
+	switch (scope) {
+		case Scope::GLOBAL: {
+			CreateGlobalDimensions(call, primitive_type);
+			call.llvm.locals_isref[name] = false;
+		}
+		case Scope::LOCAL: {
+			CreateLocalDimensions(call, primitive_type);
+		}
+	}
 	created = true;
 }
 
-ValueType TypePrimitiveArray::Get(SignatureCall &call) {}
+ValueType TypePrimitiveArray::Get(SignatureCall &call) {
+	ValueType vt;
+	vt.type = primitive_type;
+	vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(primitive_type),
+								   scope == Scope::GLOBAL ? GlobalIndex(call) : LocalIndex(call));
+	return vt;
+}
 
-void TypePrimitiveArray::Set(SignatureCall &call, ValueType value) {}
+void TypePrimitiveArray::Set(SignatureCall &call, ValueType value) {
+	assert(value.type == primitive_type);
+	call.ir->CreateStore(value.value, scope == Scope::GLOBAL ? GlobalIndex(call) : LocalIndex(call));
+}

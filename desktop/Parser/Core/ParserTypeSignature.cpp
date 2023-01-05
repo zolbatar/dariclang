@@ -5,6 +5,10 @@ std::any Parser::visitTypeSignature(DaricParser::TypeSignatureContext *context) 
 	return visitChildren(context);
 }
 
+std::any Parser::visitTypeSignatureArrayOrCollection(DaricParser::TypeSignatureArrayOrCollectionContext *context) {
+	return visitChildren(context);
+}
+
 std::any Parser::visitTypeSignatureSingle(DaricParser::TypeSignatureSingleContext *context) {
 
 	// Context values
@@ -96,6 +100,3 @@ std::any Parser::visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext 
 	assert(0);
 }
 
-std::any Parser::visitTypeSignatureArrayOrCollection(DaricParser::TypeSignatureArrayOrCollectionContext *context) {
-	assert(0);
-}

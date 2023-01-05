@@ -6,6 +6,7 @@
 #include "../Variables/PrimitiveTypes.h"
 #include "../LLVM/CompilerLLVM.h"
 #include "../Parser/ParserToken.h"
+#include "../Exception/Exception.h"
 
 enum class FindResult {
 	OK,
@@ -55,16 +56,36 @@ public:
 	virtual void Create(SignatureCall &call) = 0;
 	virtual ValueType Get(SignatureCall &call) = 0;
 	virtual void Set(SignatureCall &call, ValueType value) = 0;
+
+	static void RaiseException(std::string msg, ParserToken &t) {
+		throw CustomException(ExceptionType::COMPILER, t.file.filename, t.file.line, t.file.char_position, msg);
+	}
+
+	// Indices
+	std::list<ParserToken> &GetExpressions();
+	void SetValues(std::vector<llvm::Value *> values);
+
+	// Clear locals at end of procedure
+	static void ClearLocals();
 protected:
+	void CreateLocalDimensions(SignatureCall &call, Primitive primitive_type);
+	void CreateGlobalDimensions(SignatureCall &call, Primitive primitive_type);
+	llvm::Value *LocalIndex(SignatureCall &call);
+	llvm::Value *GlobalIndexPtr(SignatureCall &call);
+	llvm::Value *GlobalIndex(SignatureCall &call);
+
 	std::string name;
 	SignatureClass clazz;
 	Scope scope;
 	bool created = false;
 	bool is_ref = false;
+	size_t index;
+	std::list<ParserToken> expressions;
+	std::vector<llvm::Value *> values;
+	size_t num_dimensions;
 
 	static std::map<std::string, std::shared_ptr<TypeSignature>> signatures;
 	static std::vector<std::shared_ptr<TypeSignature>> signatures_by_index;
-	size_t index;
 	static size_t index_ptr;
 };
 
