@@ -101,7 +101,21 @@ public:
 
     virtual std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) = 0;
 
+    virtual std::any visitTypeSignatureList(DaricParser::TypeSignatureListContext *context) = 0;
+
+    virtual std::any visitTypeSignatureVector(DaricParser::TypeSignatureVectorContext *context) = 0;
+
+    virtual std::any visitTypeSignatureSet(DaricParser::TypeSignatureSetContext *context) = 0;
+
+    virtual std::any visitTypeSignatureMap(DaricParser::TypeSignatureMapContext *context) = 0;
+
+    virtual std::any visitTypeSignatureStack(DaricParser::TypeSignatureStackContext *context) = 0;
+
+    virtual std::any visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext *context) = 0;
+
     virtual std::any visitTypeSignature(DaricParser::TypeSignatureContext *context) = 0;
+
+    virtual std::any visitTypeSignatureArrayOrCollection(DaricParser::TypeSignatureArrayOrCollectionContext *context) = 0;
 
     virtual std::any visitExpression(DaricParser::ExpressionContext *context) = 0;
 

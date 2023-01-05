@@ -22,7 +22,8 @@ std::vector<std::string> Parser::Parse(std::istream &source, CompileTarget targe
 		DaricErrorListener errorListener;
 		parser.addErrorListener(&errorListener);
 		//parser.setBuildParseTree(true);
-		parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
+        //parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
+		parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL);
 		DaricParser::ProgramContext *tree = parser.program();
 		visitProgram(tree);
 #ifdef CATCH

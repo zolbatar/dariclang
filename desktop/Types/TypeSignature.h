@@ -4,8 +4,8 @@
 #include <list>
 #include <tuple>
 #include "../Variables/PrimitiveTypes.h"
-#include "../Grammar/DaricParser.h"
 #include "../LLVM/CompilerLLVM.h"
+#include "../Parser/ParserToken.h"
 
 enum class FindResult {
     OK,
@@ -19,25 +19,23 @@ enum class SignatureClass {
     PrimitiveArray
 };
 
-enum class PrimitiveClass {
-    UNKNOWN,
-    INT,
-    FLOAT,
-    STRING,
-    BYTE
-};
-
-
 class TypeSignature {
 public:
     virtual ~TypeSignature() = default;
     SignatureClass GetClass() { return clazz; }
+    size_t GetIndex() { return index; }
 
     // Check two signatures are identical
     virtual bool operator==(TypeSignature &) = 0;
 
     // Managing instances of this type
-    static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindInstance(DaricParser::TypeSignatureSingleContext *context);
+    static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindInstanceSingle(
+            std::string name,
+            Primitive *type);
+    static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindInstanceArray(
+            std::string name,
+            Primitive *type,
+            std::list<ParserToken> &expressions);
 
     // Passing around
     //llvm::Value *GetValue();
@@ -48,8 +46,13 @@ public:
     static std::shared_ptr<TypeSignature> PrimitiveString;*/
 
 protected:
-    static std::map<std::string, std::shared_ptr<TypeSignature>> signatures;
+    std::string name;
     SignatureClass clazz;
     Scope scope;
+
+    static std::map<std::string, std::shared_ptr<TypeSignature>> signatures;
+    static std::vector<std::shared_ptr<TypeSignature>> signatures_by_index;
+    size_t index;
+    static size_t index_ptr;
 };
 

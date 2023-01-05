@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 #include "../Variables/PrimitiveTypes.h"
-#include "../Types/TypeSignature.h"
 #include "ParserTokenType.h"
 
 struct ParserTokenFile {
@@ -27,7 +26,8 @@ struct ParserToken {
     std::string identifier;
     std::vector<ParserToken> children;
     Scope scope;
-    std::shared_ptr<TypeSignature> signature = nullptr;
+    size_t signature;
+//    std::shared_ptr<TypeSignature> signature = nullptr;
 
     Primitive data_type; // Deprecated
     size_t reference; // Deprecated

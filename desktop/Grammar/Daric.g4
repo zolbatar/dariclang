@@ -54,7 +54,7 @@ case:           CASE expression OF separator? when* (OTHERWISE statements)? END 
 const:          CONST typeSignature EQ literal ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
-dim:            DIM IDENTIFIER COLON (
+/*dim:            DIM IDENTIFIER COLON (
                     (type SOPEN expression? (COMMA expression)* SCLOSE) |
                     (VECTOR SOPEN typeOrStruct SCLOSE) |
                     (LIST SOPEN typeOrStruct SCLOSE) |
@@ -62,7 +62,8 @@ dim:            DIM IDENTIFIER COLON (
                     (MAP SOPEN (BYTE | INT | FLOAT | STRING) COMMA typeOrStruct SCLOSE) |
                     (STACK SOPEN typeOrStruct SCLOSE) |
                     (QUEUE SOPEN typeOrStruct SCLOSE)
-                ) ;
+                ) ;*/
+dim:            DIM typeSignatureArrayOrCollection ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            QUIT ;
 for:            FOR IDENTIFIER (COLON type)? EQ expression TO expression (STEP expression)? statements NEXT ;
@@ -96,16 +97,33 @@ variable
         (DOT IDENTIFIER)*
     ;
 
-typeSignatureSingle:        IDENTIFIER (COLON (BYTE | INT | FLOAT | STRING))? ; // For creating primitive variables
-typeSignatureArray:         IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE) ;
+typeSignatureSingle:        IDENTIFIER (COLON type)? ; // For creating primitive variables
+typeSignatureArray:         IDENTIFIER (COLON type)? SOPEN expression? (COMMA expression)* SCLOSE ;
 typeSignatureRecord:        IDENTIFIER (DOT IDENTIFIER)* ;
-typeSignatureRecordArray:   IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE) (DOT IDENTIFIER)*;
+typeSignatureRecordArray:   IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE) (DOT IDENTIFIER)* ;
+typeSignatureList:          IDENTIFIER COLON LIST SOPEN typeOrStruct SCLOSE ;
+typeSignatureVector:        IDENTIFIER COLON VECTOR SOPEN typeOrStruct SCLOSE ;
+typeSignatureSet:           IDENTIFIER COLON SET SOPEN type SCLOSE ;
+typeSignatureMap:           IDENTIFIER COLON MAP SOPEN type COMMA typeOrStruct SCLOSE ;
+typeSignatureStack:         IDENTIFIER COLON STACK SOPEN typeOrStruct SCLOSE ;
+typeSignatureQueue:         IDENTIFIER COLON QUEUE SOPEN typeOrStruct SCLOSE ;
 
 typeSignature
     : typeSignatureSingle
     | typeSignatureArray
     | typeSignatureRecord
     | typeSignatureRecordArray
+    ;
+
+typeSignatureArrayOrCollection
+    : typeSignatureArray
+    | typeSignatureRecordArray
+    | typeSignatureList
+    | typeSignatureVector
+    | typeSignatureSet
+    | typeSignatureMap
+    | typeSignatureStack
+    | typeSignatureQueue
     ;
 
 expression

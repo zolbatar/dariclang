@@ -179,7 +179,35 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitTypeSignatureList(DaricParser::TypeSignatureListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureVector(DaricParser::TypeSignatureVectorContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureSet(DaricParser::TypeSignatureSetContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureMap(DaricParser::TypeSignatureMapContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureStack(DaricParser::TypeSignatureStackContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitTypeSignature(DaricParser::TypeSignatureContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureArrayOrCollection(DaricParser::TypeSignatureArrayOrCollectionContext *ctx) override {
     return visitChildren(ctx);
   }
 

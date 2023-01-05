@@ -28,7 +28,7 @@ private:
     std::string name;
 };
 
-class Parser : DaricVisitor {
+class Parser : public DaricVisitor {
 public:
     Parser(SourceFileData &state, CompilerOptions &options) : state(state), options(options) {}
     std::vector<std::string> Parse(std::istream &source, CompileTarget target);
@@ -55,6 +55,11 @@ private:
     void RaiseException(std::string msg, antlr4::ParserRuleContext *context) {
         throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
                               context->getStart()->getCharPositionInLine(), msg);
+    }
+
+    void VariableException(antlr4::ParserRuleContext *context) {
+        throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
+                              context->getStart()->getCharPositionInLine(), "Variable not found, or of wrong type");
     }
 
     ParserToken CreateToken(antlr4::ParserRuleContext *context) {
@@ -122,6 +127,13 @@ protected:
     std::any visitTypeSignatureArray(DaricParser::TypeSignatureArrayContext *context) override;
     std::any visitTypeSignatureRecord(DaricParser::TypeSignatureRecordContext *context) override;
     std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) override;
+    std::any visitTypeSignatureList(DaricParser::TypeSignatureListContext *context) override;
+    std::any visitTypeSignatureVector(DaricParser::TypeSignatureVectorContext *context) override;
+    std::any visitTypeSignatureSet(DaricParser::TypeSignatureSetContext *context) override;
+    std::any visitTypeSignatureMap(DaricParser::TypeSignatureMapContext *context) override;
+    std::any visitTypeSignatureStack(DaricParser::TypeSignatureStackContext *context) override;
+    std::any visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext *context) override;
+    std::any visitTypeSignatureArrayOrCollection(DaricParser::TypeSignatureArrayOrCollectionContext *context) override;
 
     ParserToken SingleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);
     ParserToken DoubleExpression(DaricParser::ExpressionContext *context, ParserTokenType type);

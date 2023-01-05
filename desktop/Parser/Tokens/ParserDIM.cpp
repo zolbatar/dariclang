@@ -2,7 +2,7 @@
 
 std::any Parser::visitDim(DaricParser::DimContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::DIM);
-    auto r = Reference::Create(state, context->IDENTIFIER()->getText());
+/*    auto r = Reference::Create(state, context->IDENTIFIER()->getText());
 
     if (context->type()) {
         r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
@@ -81,6 +81,6 @@ std::any Parser::visitDim(DaricParser::DimContext *context) {
             r->SetDataType(Primitive::NONE);
         }
     }
-    ps.reference = r->GetRef();
+    ps.reference = r->GetRef();*/
     return ps;
 }
