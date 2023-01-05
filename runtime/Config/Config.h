@@ -38,6 +38,8 @@ public:
 
     bool Is3DDisabled() { return disable3d; }
 
+    std::string GetTheme() { return theme; }
+
 private:
     std::string ui_font = "Roboto-Regular.ttf";
     std::string serif_font = "RobotoSerif-Regular.ttf";
@@ -53,6 +55,7 @@ private:
     int msaa_levels = 0;
     bool logging = false;
     bool disable3d = false;
+    std::string theme = "dark";
 
     std::string GetFilename();
 };

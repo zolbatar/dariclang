@@ -93,7 +93,7 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
     ImGui::Begin(title.c_str(),
                  &open,
-                 ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
+                 ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
                  ImGuiWindowFlags_NoMove |
                  ImGuiWindowFlags_NoDecoration);
     EditButtons(main_viewport);
@@ -118,15 +118,17 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(1, 0, 0, 0.8));
                 ImGui::PushStyleColor(ImGuiCol_TabUnfocused, ImVec4(1, 0, 0, 0.8));
                 ImGui::PushStyleColor(ImGuiCol_TabUnfocusedActive, ImVec4(1, 0, 0, 0.4));
-            } else {
-                ImGui::PushStyleColor(ImGuiCol_Tab, ImVec4(0.3, 0.3, 0.3, 0.8));
-                ImGui::PushStyleColor(ImGuiCol_TabActive, ImVec4(0.3, 0.3, 0.3, 1.0));
-                ImGui::PushStyleColor(ImGuiCol_TabHovered, ImVec4(0.3, 0.3, 0.3, 0.8));
-                ImGui::PushStyleColor(ImGuiCol_TabUnfocused, ImVec4(1, 0, 0, 0.8));
-                ImGui::PushStyleColor(ImGuiCol_TabUnfocusedActive, ImVec4(0.3, 0.3, 0.3, 0.4));
             }
 
-            if (ImGui::BeginTabItem(s.first.c_str(), &editor_files[s.first].open)) {
+            // Truncate?
+            auto label = s.first;
+            if (label.length() > 20) {
+                label = "..." + label.substr(label.length() - 20, 20);
+            }
+
+            if (ImGui::BeginTabItem(label.c_str(), &editor_files[s.first].open,
+                                    editor_files[s.first].unsaved_changes ? ImGuiTabItemFlags_UnsavedDocument
+                                                                          : ImGuiTabItemFlags_None)) {
                 editor = &s.second;
                 editor_name = s.first;
 
@@ -163,7 +165,8 @@ void Edit::Render(const ImGuiViewport *main_viewport) {
                 ImGui::EndChild();
                 ImGui::EndTabItem();
             }
-            ImGui::PopStyleColor(5);
+            if (any_errors)
+                ImGui::PopStyleColor(5);
         }
         if (ImGui::TabItemButton("+", ImGuiTabItemFlags_Trailing | ImGuiTabItemFlags_NoTooltip)) {
             TextEditor editor;
