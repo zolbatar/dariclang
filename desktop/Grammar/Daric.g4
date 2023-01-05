@@ -131,6 +131,7 @@ expression
     | MAIN
     | literal
     | exprcall
+    | typeSignature
     | variable
 
     // Collection

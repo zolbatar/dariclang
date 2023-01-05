@@ -1038,6 +1038,7 @@ public:
     antlr4::tree::TerminalNode *MAIN();
     LiteralContext *literal();
     ExprcallContext *exprcall();
+    TypeSignatureContext *typeSignature();
     VariableContext *variable();
     antlr4::tree::TerminalNode *HAS();
     antlr4::tree::TerminalNode *MINUS();
