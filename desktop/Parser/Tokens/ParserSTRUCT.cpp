@@ -29,37 +29,37 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
 
     // Now iteratively build up the actual field list
     StructInfo ti;
-    for (auto f = fields.begin(); f != fields.end(); f++) {
-        if (!f->type.is_struct) {
+    for (auto &field: fields) {
+        if (!field.type.is_struct) {
             StructMember sm;
-            sm.type = f->type.type;
-            sm.name = f->name;
+            sm.type = field.type.type;
+            sm.name = field.name;
             ti.fields.push_back(std::move(sm));
         } else {
             // Get child struct
-            auto f2 = state.FindStructIndices(f->type.name);
+            auto f2 = state.FindStructIndices(field.type.name);
             if (f2 == state.StructIndicesEnd())
-                RaiseException("Struct '" + f->type.name + "' not found", context);
+                RaiseException("Struct '" + field.type.name + "' not found", context);
             auto child_struct = &state.GetStructInfo(f2->second).fields;
 
             // Add child fields
-            for (auto f3 = child_struct->begin(); f3 != child_struct->end(); f3++) {
+            for (auto &f3: *child_struct) {
                 StructMember sm;
-                sm.type = f3->type;
-                sm.name = f->name + "." + f3->name;
+                sm.type = f3.type;
+                sm.name = field.name + "." + f3.name;
                 ti.fields.push_back(std::move(sm));
             }
         }
     }
 
     // Add to token
-	ps.reference = state.GetNextRefIndex();
-	state.AddStruct(ps.identifier, ti, ps.reference);
+    ps.signature = state.GetNextRefIndex();
+    state.AddStruct(ps.identifier, ti, ps.signature);
 
     return ps;
 }
 
-std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {
+/*std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {
     ParserToken ps = CreateToken(context, ParserTokenType::STRUCT_DIM);
     auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
     r->SetAsStructArray();
@@ -84,10 +84,10 @@ std::any Parser::visitStructInstance(DaricParser::StructInstanceContext *context
     // Parameters
     for (size_t i = 0; i < context->expression().size(); i++) {
         auto psp = std::any_cast<ParserToken>(visit(context->expression(i)));
-        psp.identifier =  context->IDENTIFIER(i+2)->getText();
+        psp.identifier = context->IDENTIFIER(i + 2)->getText();
         ps.children.push_back(std::move(psp));
     }
 
     return ps;
 }
-
+*/

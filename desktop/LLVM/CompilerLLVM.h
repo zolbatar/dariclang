@@ -71,14 +71,10 @@ public:
 	void CreateGlobalVoid(const std::string &name);
 	void CreateLocal(const std::string &name, Primitive type, llvm::IRBuilder<> *ir, bool is_ref);
 	void CreateLocalVoid(const std::string &name, llvm::IRBuilder<> *ir);
-	void StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
-	void StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
-	void StoreLocalPointer(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val);
 	llvm::Constant *CreateConstantInt(Primitive type, T_I v);
 	llvm::Constant *CreateConstantFloat(Primitive type, T_F v);
 	llvm::Constant *CreateConstantString(llvm::IRBuilder<> *ir, llvm::Function *func,
 										 Primitive type, T_S v, std::string identifier);
-	ValueType GetVariableValue(llvm::IRBuilder<> *ir, const std::string &name, Primitive type);
 	void ClearLocals();
 
 	// Arrays
@@ -183,11 +179,8 @@ public:
 	std::unique_ptr<llvm::Module> Module = nullptr;
 	std::unique_ptr<llvm::DataLayout> dl = nullptr;
 
-	std::unordered_map<std::string, std::string> global_structs;
-	std::unordered_map<std::string, std::string> local_structs;
 	std::unordered_map<std::string, llvm::GlobalVariable *> globals;
 	std::unordered_map<std::string, llvm::AllocaInst *> locals;
-	std::unordered_map<std::string, bool> locals_isref;
 	std::unordered_map<std::string, Primitive> globals_type;
 	std::unordered_map<std::string, Primitive> locals_type;
 

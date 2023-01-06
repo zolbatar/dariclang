@@ -38,8 +38,6 @@ statement
     | return
     | set
     | struct
-    | structDim
-    | structInstance
     | swap
     | while
     ;
@@ -54,15 +52,6 @@ case:           CASE expression OF separator? when* (OTHERWISE statements)? END 
 const:          CONST typeSignature EQ literal ;
 data:           DATA integerLiteral (COMMA integerLiteral)* ;
 dataLabel:      DATALABEL stringLiteral ;
-/*dim:            DIM IDENTIFIER COLON (
-                    (type SOPEN expression? (COMMA expression)* SCLOSE) |
-                    (VECTOR SOPEN typeOrStruct SCLOSE) |
-                    (LIST SOPEN typeOrStruct SCLOSE) |
-                    (SET SOPEN (BYTE | INT | FLOAT | STRING) SCLOSE) |
-                    (MAP SOPEN (BYTE | INT | FLOAT | STRING) COMMA typeOrStruct SCLOSE) |
-                    (STACK SOPEN typeOrStruct SCLOSE) |
-                    (QUEUE SOPEN typeOrStruct SCLOSE)
-                ) ;*/
 dim:            DIM typeSignatureArrayOrCollection ;
 exprcall:       IDENTIFIER LPAREN expression? (COMMA expression)* RPAREN ;
 end:            QUIT ;
@@ -78,10 +67,10 @@ procedure:      DEF IDENTIFIER (COLON type)? LPAREN? NEWLINE* parameter? (COMMA 
 repeat:         REPEAT statements UNTIL expression ;
 read:           READ typeSignature ;
 restore:        RESTORE stringLiteral ;
-return:         RETURN expression? ;
+return:         RETURN expression?  ;
 struct:         RECORD IDENTIFIER NEWLINE* IDENTIFIER COLON typeOrStruct (NEWLINE+ IDENTIFIER COLON typeOrStruct)* NEWLINE* END RECORD ;
-structDim:      DIM IDENTIFIER COLON IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
-structInstance: DIM IDENTIFIER COLON IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
+//structDim:      DIM IDENTIFIER COLON IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
+//structInstance: DIM IDENTIFIER COLON IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP variable COMMA variable ;
 when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements END WHILE ;
@@ -99,8 +88,12 @@ variable
 
 typeSignatureSingle:        IDENTIFIER (COLON type)? ; // For creating primitive variables
 typeSignatureArray:         IDENTIFIER (COLON type)? SOPEN expression? (COMMA expression)* SCLOSE ;
-typeSignatureRecord:        IDENTIFIER (DOT IDENTIFIER)* ;
-typeSignatureRecordArray:   IDENTIFIER (SOPEN expression? (COMMA expression)* SCLOSE) (DOT IDENTIFIER)* ;
+typeSignatureRecord:        IDENTIFIER (DOT IDENTIFIER)+ ;
+typeSignatureRecordArray:   IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE (DOT IDENTIFIER)+ ;
+
+typeSignatureArrayNew:      IDENTIFIER COLON type SOPEN expression? (COMMA expression)* SCLOSE ;
+typeSignatureRecordNew:     IDENTIFIER COLON IDENTIFIER LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN ;
+typeSignatureRecordArrayNew:IDENTIFIER COLON IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
 typeSignatureList:          IDENTIFIER COLON LIST SOPEN typeOrStruct SCLOSE ;
 typeSignatureVector:        IDENTIFIER COLON VECTOR SOPEN typeOrStruct SCLOSE ;
 typeSignatureSet:           IDENTIFIER COLON SET SOPEN type SCLOSE ;
@@ -116,8 +109,9 @@ typeSignature
     ;
 
 typeSignatureArrayOrCollection
-    : typeSignatureArray
-    | typeSignatureRecordArray
+    : typeSignatureArrayNew
+    | typeSignatureRecordNew
+    | typeSignatureRecordArrayNew
     | typeSignatureList
     | typeSignatureVector
     | typeSignatureSet

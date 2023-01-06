@@ -75,10 +75,6 @@ public:
 
     virtual std::any visitStruct(DaricParser::StructContext *context) = 0;
 
-    virtual std::any visitStructDim(DaricParser::StructDimContext *context) = 0;
-
-    virtual std::any visitStructInstance(DaricParser::StructInstanceContext *context) = 0;
-
     virtual std::any visitSwap(DaricParser::SwapContext *context) = 0;
 
     virtual std::any visitWhen(DaricParser::WhenContext *context) = 0;
@@ -100,6 +96,12 @@ public:
     virtual std::any visitTypeSignatureRecord(DaricParser::TypeSignatureRecordContext *context) = 0;
 
     virtual std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) = 0;
+
+    virtual std::any visitTypeSignatureArrayNew(DaricParser::TypeSignatureArrayNewContext *context) = 0;
+
+    virtual std::any visitTypeSignatureRecordNew(DaricParser::TypeSignatureRecordNewContext *context) = 0;
+
+    virtual std::any visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureRecordArrayNewContext *context) = 0;
 
     virtual std::any visitTypeSignatureList(DaricParser::TypeSignatureListContext *context) = 0;
 

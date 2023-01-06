@@ -50,10 +50,10 @@ public:
 	void SetPointer(llvm::Value *v, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
 		switch (scope) {
 		case Scope::GLOBAL:
-			llvm.StoreGlobal(name, ir, v);
+			//llvm.StoreGlobal(name, ir, v);
 			break;
 		case Scope::LOCAL:
-			llvm.StoreLocalPointer(name, ir, v);
+//			llvm.StoreLocalPointer(name, ir, v);
 			break;
 		default:
 			assert(0);

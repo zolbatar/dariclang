@@ -1,4 +1,7 @@
 #include <codecvt>
+#include <numeric>
+#include <vector>
+#include <string>
 
 #ifdef WINDOWS
 #include <conio.h>
@@ -76,3 +79,16 @@ void replaceAll(std::string &str, const std::string &from, const std::string &to
         start_pos += to.length(); // In case 'to' contains 'from', like replacing 'x' with 'yx'
     }
 }
+
+std::string join(std::vector<std::string> const &strings, std::string delim) {
+    if (strings.empty()) {
+        return std::string();
+    }
+
+    return std::accumulate(strings.begin() + 1, strings.end(), strings[0],
+                           [&delim](std::string x, std::string y) {
+                               return x + delim + y;
+                           }
+    );
+}
+

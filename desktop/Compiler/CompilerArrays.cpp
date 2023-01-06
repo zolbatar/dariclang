@@ -6,13 +6,13 @@ void Compiler::TokenDim(ParserToken &t) {
 
 	// Create
 	auto ct = dynamic_cast<TypePrimitiveArray *>(signature);
-	std::vector<llvm::Value *> indices;
+	std::vector<ValueType> indices;
 	for (auto &s : ct->GetExpressions()) {
 		auto vt = CompileExpression(s);
 		if (vt.type != Primitive::INT) {
-			RaiseException("For local arrays, dimensions need to be integers", s);
+			RaiseException("For arrays, dimensions need to be integers", s);
 		}
-		indices.push_back(vt.value);
+		indices.push_back(vt);
 	}
 	ct->SetValues(indices);
 	signature->Create(call);

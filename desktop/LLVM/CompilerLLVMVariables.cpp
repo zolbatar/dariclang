@@ -41,7 +41,7 @@ void CompilerLLVM::CreateGlobalVoid(const std::string &name) {
 void CompilerLLVM::CreateLocalVoid(const std::string &name, llvm::IRBuilder<> *ir) {
     assert(!locals.contains(name));
     locals[name] = ir->CreateAlloca(TypeVoid, nullptr, name);
-    locals_isref[name] = false;
+//    locals_isref[name] = false;
     locals_type[name] = Primitive::NONE;
 }
 
@@ -50,37 +50,12 @@ void CompilerLLVM::CreateLocal(const std::string &name, Primitive type, llvm::IR
     if (is_ref) {
         auto pt = llvm::PointerType::get(TypeConversion(type), 0);
         locals[name] = ir->CreateAlloca(pt, nullptr, name);
-        locals_isref[name] = true;
+//        locals_isref[name] = true;
     } else {
         locals[name] = ir->CreateAlloca(TypeConversion(type), nullptr, name);
-        locals_isref[name] = false;
+        //      locals_isref[name] = false;
     }
     locals_type[name] = type;
-}
-
-void CompilerLLVM::StoreGlobal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val) {
-    assert(globals.contains(name));
-    ir->CreateStore(val, globals[name]);
-}
-
-void CompilerLLVM::StoreLocal(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val) {
-    assert(locals.contains(name));
-    if (!locals_isref[name]) {
-        ir->CreateStore(val, locals[name]);
-    } else {
-        auto pt = llvm::PointerType::get(TypeConversion(locals_type[name]), 0);
-        auto p = ir->CreateLoad(pt, locals[name]);
-        ir->CreateStore(val, p);
-    }
-}
-
-void CompilerLLVM::StoreLocalPointer(const std::string &name, llvm::IRBuilder<> *ir, llvm::Value *val) {
-    assert(locals.contains(name));
-    if (!locals_isref[name]) {
-        ir->CreateStore(val, locals[name]);
-    } else {
-        ir->CreateStore(val, locals[name]);
-    }
 }
 
 llvm::Constant *CompilerLLVM::GetDefaultForType(Primitive type, llvm::IRBuilder<> *ir) const {
@@ -99,31 +74,9 @@ llvm::Constant *CompilerLLVM::GetDefaultForType(Primitive type, llvm::IRBuilder<
     return nullptr;
 }
 
-ValueType CompilerLLVM::GetVariableValue(llvm::IRBuilder<> *ir, const std::string &name, Primitive type) {
-    ValueType vt{};
-    vt.value = nullptr;
-    if (globals.contains(name)) {
-        // Search globals first
-        vt.value = ir->CreateLoad(TypeConversion(globals_type[name]), globals[name]);
-        vt.type = globals_type[name];
-    } else if (locals.contains(name)) {
-        if (!locals_isref[name]) {
-            vt.value = ir->CreateLoad(TypeConversion(locals_type[name]), locals[name]);
-        } else {
-            auto pt = llvm::PointerType::get(TypeConversion(locals_type[name]), 0);
-            auto p = ir->CreateLoad(pt, locals[name]);
-            vt.value = ir->CreateLoad(TypeConversion(locals_type[name]), p);
-        }
-        vt.type = locals_type[name];
-    }
-    return vt;
-}
-
 void CompilerLLVM::ClearLocals() {
     locals.clear();
-    locals_isref.clear();
     locals_type.clear();
-    local_structs.clear();
     locals_array_dimensions.clear();
     locals_array_num_dimensions.clear();
 }

@@ -1,32 +1,13 @@
 #include "../Variables/PrimitiveTypes.h"
-#include "TypePrimitive.h"
-#include "TypePrimitiveArray.h"
-#include "TypeSignature.h"
+#include "Type.h"
 
 size_t TypeSignature::index_ptr = 0;
+size_t TypeSignature::instance_ptr = 0;
 std::map<std::string, std::shared_ptr<TypeSignature>> TypeSignature::signatures;
 std::vector<std::shared_ptr<TypeSignature>> TypeSignature::signatures_by_index;
 
-std::tuple<FindResult, std::shared_ptr<TypeSignature>> TypeSignature::FindInstanceSingle(
-        std::string name,
-        Primitive type) {
-
-    // Find by name
-    auto sig = signatures.find(name);
-    if (sig == signatures.end())
-        return std::make_tuple(FindResult::NOT_FOUND, nullptr);
-
-    // Ensure is correct class
-    if (sig->second.get()->clazz != SignatureClass::Primitive)
-        return std::make_tuple(FindResult::INCORRECT_CLASS, nullptr);
-
-    // Now specific class matching
-    auto ct = std::dynamic_pointer_cast<TypePrimitive>(sig->second);
-    if (ct.get()->Matches(type)) {
-        return std::make_tuple(FindResult::OK, sig->second);
-    }
-
-    return std::make_tuple(FindResult::NO_MATCH, nullptr);
+std::string TypeSignature::GetLatestInstanceIndex() {
+    return " #" + std::to_string(instance_ptr++);
 }
 
 void TypeSignature::ClearLocals() {
@@ -41,29 +22,6 @@ void TypeSignature::ClearLocals() {
     }
 }
 
-std::tuple<FindResult, std::shared_ptr<TypeSignature>> TypeSignature::FindInstanceArray(
-        std::string name,
-        Primitive type,
-        std::list<ParserToken> &expressions) {
-
-    // Find by name
-    auto sig = signatures.find(name);
-    if (sig == signatures.end())
-        return std::make_tuple(FindResult::NOT_FOUND, nullptr);
-
-    // Ensure is correct class
-    if (sig->second.get()->clazz != SignatureClass::PrimitiveArray)
-        return std::make_tuple(FindResult::INCORRECT_CLASS, nullptr);
-
-    // Now specific class matching
-    auto ct = std::dynamic_pointer_cast<TypePrimitiveArray>(sig->second);
-    if (ct.get()->Matches(type, expressions)) {
-        return std::make_tuple(FindResult::OK, sig->second);
-    }
-
-    return std::make_tuple(FindResult::NO_MATCH, nullptr);
-}
-
 void TypeSignature::CreateLocalDimensions(SignatureCall &call, Primitive primitive_type) {
 
     // Store dimensions (list of dimensions)
@@ -71,7 +29,7 @@ void TypeSignature::CreateLocalDimensions(SignatureCall &call, Primitive primiti
     llvm::Value *size = llvm::ConstantInt::get(call.llvm.TypeInt, 1);
     size_t i = 0;
     for (auto &iv: values) {
-        size = call.ir->CreateMul(size, iv);
+        size = call.ir->CreateMul(size, iv.value);
         auto ptr = call.ir->CreateGEP(call.llvm.TypeInt, la, {llvm::ConstantInt::get(call.llvm.TypeInt, i)});
         call.ir->CreateStore(size, ptr);
         i++;
@@ -109,12 +67,12 @@ std::list<ParserToken> &TypeSignature::GetExpressions() {
     return expressions;
 }
 
-void TypeSignature::SetValues(std::vector<llvm::Value *> values) {
+void TypeSignature::SetValues(std::vector<ValueType> values) {
     this->values = values;
 }
 
 llvm::Value *TypeSignature::LocalIndex(SignatureCall &call) {
-    auto index = values[0];
+    auto index = values[0].value;
     if (call.option_base)
         index = call.ir->CreateSub(index, llvm::ConstantInt::get(call.llvm.TypeInt, 1));
     auto glob_v = call.llvm.GetLocal(name);
@@ -127,7 +85,7 @@ llvm::Value *TypeSignature::LocalIndex(SignatureCall &call) {
         auto size = call.ir->CreateLoad(call.llvm.TypeInt, ptr);
 
         // 0 or 1 base index
-        auto value = values[i + 1];
+        auto value = values[i + 1].value;
         if (call.option_base)
             value = call.ir->CreateSub(value, llvm::ConstantInt::get(call.llvm.TypeInt, 1));
 
@@ -139,7 +97,7 @@ llvm::Value *TypeSignature::LocalIndex(SignatureCall &call) {
 }
 
 llvm::Value *TypeSignature::GlobalIndexPtr(SignatureCall &call) {
-    auto index = values[0];
+    auto index = values[0].value;
     if (call.option_base)
         index = call.ir->CreateSub(index, llvm::ConstantInt::get(call.llvm.TypeInt, 1));
     auto glob = call.llvm.GetGlobalArrayDimensions(name);
@@ -151,7 +109,7 @@ llvm::Value *TypeSignature::GlobalIndexPtr(SignatureCall &call) {
         auto size = call.ir->CreateLoad(call.llvm.TypeInt, ptr);
 
         // 0 or 1 base index
-        auto value = values[i + 1];
+        auto value = values[i + 1].value;
         if (call.option_base)
             value = call.ir->CreateSub(value, llvm::ConstantInt::get(call.llvm.TypeInt, 1));
 

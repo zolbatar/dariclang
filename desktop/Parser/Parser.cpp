@@ -241,7 +241,7 @@ void Parser::Constants() {
 }
 
 void Parser::CreateConstantInt(const std::string &name, T_I val) {
-    auto signature = TypePrimitive::Create(Scope::GLOBAL, name, Primitive::INT).get();
+    auto signature = TypePrimitive::Create(state, Scope::GLOBAL, name, Primitive::INT).get();
 
     ParserToken p;
     p.type = ParserTokenType::CONSTANT;

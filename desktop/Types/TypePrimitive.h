@@ -4,8 +4,8 @@
 
 class TypePrimitive : public TypeSignature {
 public:
-    TypePrimitive(Primitive type, std::string name, Scope scope);
-    static std::shared_ptr<TypeSignature> Create(Scope scope, std::string name, Primitive type);
+    TypePrimitive(SourceFileData &state, Primitive type, std::string name, Scope scope);
+    static std::shared_ptr<TypeSignature> Create(SourceFileData &state, Scope scope, std::string name, Primitive type);
     bool operator==(TypeSignature &other) override;
     bool Matches(Primitive type);
     Primitive GetPrimitiveType() override;
@@ -15,6 +15,9 @@ public:
     ValueType Get(SignatureCall &call) override;
     void Set(SignatureCall &call, ValueType value) override;
     void SetAsConstant();
+    static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindInstanceSingle(
+            std::string name,
+            Primitive type);
 protected:
     Primitive primitive_type;
     bool constant = false;

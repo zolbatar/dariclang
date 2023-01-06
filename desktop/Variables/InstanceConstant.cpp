@@ -28,7 +28,7 @@ InstanceConstant::InstanceConstant(const std::string &name,
 }
 
 void InstanceConstant::Get(ValueType &vt, llvm::Value *idx, size_t field_index, CompilerLLVM &llvm, llvm::IRBuilder<> *ir) {
-	vt = llvm.GetVariableValue(ir, name, type);
+	//vt = llvm.GetVariableValue(ir, name, type);
 }
 
 

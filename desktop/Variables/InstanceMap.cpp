@@ -60,7 +60,7 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
     switch (scope) {
         case Scope::LOCAL: {
             llvm.CreateLocalVoid(name, ir);
-            llvm.StoreLocal(name, ir, create);
+//            llvm.StoreLocal(name, ir, create);
             CollectionAssign ca;
             ca.type = CollectionType::Map;
             ca.alloc = create;
@@ -71,7 +71,7 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
         }
         case Scope::GLOBAL: {
             llvm.CreateGlobalVoid(name);
-            llvm.StoreGlobal(name, ir, create);
+            //llvm.StoreGlobal(name, ir, create);
             globals.insert(std::make_pair(name,
                                           std::make_shared<InstanceMap>(name, struct_name, struct_name_val, data_type_val, data_type, scope, llvm, ir,
                                                                         is_ref)));

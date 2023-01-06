@@ -1,6 +1,6 @@
 #include "TypePrimitive.h"
 
-TypePrimitive::TypePrimitive(Primitive type, std::string name, Scope scope) {
+TypePrimitive::TypePrimitive(SourceFileData &state, Primitive type, std::string name, Scope scope) : TypeSignature(state) {
     this->index = index_ptr++;
     this->clazz = SignatureClass::Primitive;
     this->primitive_type = type;
@@ -8,8 +8,8 @@ TypePrimitive::TypePrimitive(Primitive type, std::string name, Scope scope) {
     this->name = name;
 }
 
-std::shared_ptr<TypeSignature> TypePrimitive::Create(Scope scope, std::string name, Primitive type) {
-    std::shared_ptr<TypePrimitive> v = std::make_shared<TypePrimitive>(TypePrimitive(Primitive::NONE, name, scope));
+std::shared_ptr<TypeSignature> TypePrimitive::Create(SourceFileData &state, Scope scope, std::string name, Primitive type) {
+    std::shared_ptr<TypePrimitive> v = std::make_shared<TypePrimitive>(TypePrimitive(state, Primitive::NONE, name, scope));
     signatures_by_index.push_back(v);
     signatures.emplace(name, v);
     return v;
@@ -36,6 +36,28 @@ Primitive TypePrimitive::GetPrimitiveType() {
 
 void TypePrimitive::SetPrimitiveType(Primitive primitive_type) {
     this->primitive_type = primitive_type;
+}
+
+std::tuple<FindResult, std::shared_ptr<TypeSignature>> TypePrimitive::FindInstanceSingle(
+        std::string name,
+        Primitive type) {
+
+    // Find by name
+    auto sig = signatures.find(name);
+    if (sig == signatures.end())
+        return std::make_tuple(FindResult::NOT_FOUND, nullptr);
+
+    // Ensure is correct class
+    if (sig->second.get()->GetClass() != SignatureClass::Primitive)
+        return std::make_tuple(FindResult::INCORRECT_CLASS, nullptr);
+
+    // Now specific class matching
+    auto ct = std::dynamic_pointer_cast<TypePrimitive>(sig->second);
+    if (ct.get()->Matches(type)) {
+        return std::make_tuple(FindResult::OK, sig->second);
+    }
+
+    return std::make_tuple(FindResult::NO_MATCH, nullptr);
 }
 
 void TypePrimitive::SetAsConstant() {
@@ -88,7 +110,15 @@ void TypePrimitive::Create(SignatureCall &call) {
 }
 
 ValueType TypePrimitive::Get(SignatureCall &call) {
-    auto vt = call.llvm.GetVariableValue(call.ir, name, primitive_type);
+    ValueType vt;
+    vt.value = nullptr;
+    if (scope == Scope::GLOBAL) {
+        vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(call.llvm.globals_type[name]), call.llvm.globals[name]);
+        vt.type = call.llvm.globals_type[name];
+    } else {
+        vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(call.llvm.locals_type[name]), call.llvm.locals[name]);
+        vt.type = call.llvm.locals_type[name];
+    }
     assert(vt.type == primitive_type);
     return vt;
 }
@@ -98,10 +128,10 @@ void TypePrimitive::Set(SignatureCall &call, ValueType value) {
         assert(value.type == primitive_type);
         switch (scope) {
             case Scope::GLOBAL:
-                call.llvm.StoreGlobal(name, call.ir, value.value);
+                call.ir->CreateStore(value.value, call.llvm.globals[name]);
                 break;
             case Scope::LOCAL:
-                call.llvm.StoreLocal(name, call.ir, value.value);
+                call.ir->CreateStore(value.value, call.llvm.locals[name]);
                 break;
         }
     } else {

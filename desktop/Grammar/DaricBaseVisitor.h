@@ -127,14 +127,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitStructDim(DaricParser::StructDimContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual std::any visitStructInstance(DaricParser::StructInstanceContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitSwap(DaricParser::SwapContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -176,6 +168,18 @@ public:
   }
 
   virtual std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureArrayNew(DaricParser::TypeSignatureArrayNewContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureRecordNew(DaricParser::TypeSignatureRecordNewContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureRecordArrayNewContext *ctx) override {
     return visitChildren(ctx);
   }
 

@@ -24,7 +24,7 @@ std::shared_ptr<Instance> InstanceList::Build(const std::string &name,
 	switch (scope) {
 	case Scope::LOCAL: {
 		llvm.CreateLocalVoid(name, ir);
-		llvm.StoreLocal(name, ir, create);
+//		llvm.StoreLocal(name, ir, create);
 		CollectionAssign ca;
 		ca.type = CollectionType::List;
 		ca.alloc = create;
@@ -34,7 +34,7 @@ std::shared_ptr<Instance> InstanceList::Build(const std::string &name,
 	}
 	case Scope::GLOBAL: {
 		llvm.CreateGlobalVoid(name);
-		llvm.StoreGlobal(name, ir, create);
+//		llvm.StoreGlobal(name, ir, create);
 		globals.insert(std::make_pair(name, std::make_shared<InstanceList>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
 		return globals.find(name)->second;
 	}

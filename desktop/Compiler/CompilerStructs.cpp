@@ -7,64 +7,20 @@ void Compiler::TokenStruct(ParserToken &t) {
 }
 
 void Compiler::TokenStructInstance(ParserToken &t) {
-    auto ref = Reference::Get(t.reference);
+    auto signature = TypeSignature::Get(t.signature).get();
+    auto call = BuildTypeCall(t);
 
-    if (procedure == nullptr) {
-        if (t.scope != Scope::GLOBAL)
-            return;
-    } else {
-        if (t.scope != Scope::LOCAL)
-            return;
-    }
 
-    // Do we have this struct?
-    if (!state.StructExists(ref->GetStructName()))
-        RecordNotFound(t, ref->GetStructName());
-
-    // So fetch the struct info from LLVM and the parser
-    auto struct_index = state.GetStructIndex(ref->GetStructName());
-    auto si = state.GetStruct(struct_index);
-
-    // Start creating an instance
-    if (Instance::Exists(ref->GetName())) {
-        VariableAlreadyExists(t, ref->GetName());
-    }
-
-    ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), t.scope, false);
-    auto instance = ref->GetInstance();
-
-    // Zero out
-    llvm::Constant *size = llvm::ConstantInt::get(
-            llvm.TypeInt,
-            llvm.dl->getTypeAllocSize(instance->GetStructType()));
-    if (instance->GetScope() == Scope::GLOBAL) {
-        auto varptr = GetIR()->CreatePointerCast(llvm.GetGlobal(instance->GetName()), llvm.TypeVoid);
-        CreateCall("memset", {varptr, llvm::ConstantInt::get(llvm.TypeInt, 0), size});
-
-    } else {
-        auto varptr = GetIR()->CreatePointerCast(llvm.GetLocal(instance->GetName()), llvm.TypeVoid);
-        CreateCall("memset", {varptr, llvm::ConstantInt::get(llvm.TypeInt, 0), size});
-    }
-
-    // Initialise any fields?
-    for (auto &init: t.children) {
-        // Is this a valid field?
-        bool found = false;
-        for (size_t i = 0; i < si->fields.size(); i++) {
-            if (si->fields[i].name == init.identifier) {
-                auto value = CompileExpression(init);
-                llvm.AutoConversion(GetIR(), value, si->fields[i].type);
-                instance->Set(value.value, nullptr, i, llvm, GetIR());
-                found = true;
-
-                // If string, make sure we don't collect it
-                if (value.type == Primitive::STRING) {
-                    llvm.MakePermString(value.value, GetIR());
-                }
-            }
+    // Create if necessary
+    if (!signature->IsCreated()) {
+        auto ct = dynamic_cast<TypeRecord *>(signature);
+        std::vector<ValueType> initialisers;
+        for (auto &s: ct->GetExpressions()) {
+            auto vt = CompileExpression(s);
+            initialisers.push_back(vt);
         }
-        if (!found)
-            RaiseException("Field '" + init.identifier + "' not found in record '" + ref->GetStructName() + "'", t);
+        ct->SetValues(initialisers);
+        signature->Create(call);
     }
 }
 

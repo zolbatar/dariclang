@@ -23,8 +23,8 @@ std::shared_ptr<Instance> InstanceVector::Build(const std::string &name,
     auto create = llvm.CreateCall("vector_init", ir, func, {size}, scope == Scope::LOCAL, default_return_type);
     switch (scope) {
         case Scope::LOCAL: {
-            llvm.CreateLocalVoid(name, ir);
-            llvm.StoreLocal(name, ir, create);
+  //          llvm.CreateLocalVoid(name, ir);
+//            llvm.StoreLocal(name, ir, create);
             CollectionAssign ca;
             ca.type = CollectionType::Vector;
             ca.alloc = create;
@@ -33,8 +33,8 @@ std::shared_ptr<Instance> InstanceVector::Build(const std::string &name,
             return locals.find(name)->second;
         }
         case Scope::GLOBAL: {
-            llvm.CreateGlobalVoid(name);
-            llvm.StoreGlobal(name, ir, create);
+    //        llvm.CreateGlobalVoid(name);
+      //      llvm.StoreGlobal(name, ir, create);
             globals.insert(std::make_pair(name,
                                           std::make_shared<InstanceVector>(name, struct_name, data_type, scope, llvm, ir, is_ref)));
             return globals.find(name)->second;

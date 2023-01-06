@@ -13,12 +13,12 @@ std::shared_ptr<Instance> InstanceRecord::Build(const std::string &name,
 		if (is_ref) {
 			auto pt = llvm::PointerType::get(struct_type, 0);
 			llvm.locals[name] = ir->CreateAlloca(pt, nullptr, name);
-			llvm.locals_isref[name] = true;
+//			llvm.locals_isref[name] = true;
 		} else {
 			llvm.locals[name] = ir->CreateAlloca(struct_type, nullptr, name);
-			llvm.locals_isref[name] = false;
+//			llvm.locals_isref[name] = false;
 		}
-		llvm.local_structs.insert(std::make_pair(name, struct_name));
+//		llvm.local_structs.insert(std::make_pair(name, struct_name));
 		locals.insert(std::make_pair(name, std::make_shared<InstanceRecord>(name, struct_name, struct_type, scope, llvm, ir, is_ref)));
 		return locals.find(name)->second;
 	}
@@ -30,7 +30,7 @@ std::shared_ptr<Instance> InstanceRecord::Build(const std::string &name,
 													  llvm.GetLinkage(),
 													  llvm::ConstantAggregateZero::get(struct_type),
 													  name);
-		llvm.global_structs.insert(std::make_pair(name, struct_name));
+//		llvm.global_structs.insert(std::make_pair(name, struct_name));
 		globals.insert(std::make_pair(name, std::make_shared<InstanceRecord>(name, struct_name, struct_type, scope, llvm, ir, is_ref)));
 		return globals.find(name)->second;
 	}

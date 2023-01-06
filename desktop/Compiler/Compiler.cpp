@@ -223,7 +223,7 @@ void Compiler::RetBrCheckSplit(llvm::BasicBlock *bb1, llvm::BasicBlock *bb2) {
 
 void Compiler::TokenEnd(ParserToken &token) {
     if (!options.use_exit_as_end) {
-        llvm.StoreGlobal("~QuitRequested", GetIR(), llvm::ConstantInt::get(llvm.TypeBit, 1));
+        GetIR()->CreateStore(llvm::ConstantInt::get(llvm.TypeBit, 1), llvm.GetGlobal("~QuitRequested"));
         DefaultReturn(return_type, token);
     } else {
         CreateCall("daric_end", {});

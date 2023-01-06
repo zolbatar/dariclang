@@ -8,7 +8,7 @@ std::shared_ptr<Instance> InstancePrimitiveArray::Build(const std::string &name,
 														llvm::IRBuilder<> *ir) {
 	switch (scope) {
 	case Scope::LOCAL:
-		llvm.locals_isref[name] = false;
+//		llvm.locals_isref[name] = false;
 		locals.insert(std::make_pair(name, std::make_shared<InstancePrimitiveArray>(name, data_type, scope, no_indices, llvm, ir)));
 		return locals.find(name)->second;
 	case Scope::GLOBAL:

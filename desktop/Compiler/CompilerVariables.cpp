@@ -33,12 +33,13 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
     auto call = BuildTypeCall(token);
 
     // If no type, try and auto-guess it from the expression
+    switch (signature->GetClass())
     if (signature->GetClass() == SignatureClass::Primitive) {
         if (signature->GetPrimitiveType() == Primitive::NONE) {
             auto ct = dynamic_cast<TypePrimitive *>(signature);
             ct->SetPrimitiveType(value_type.type);
         }
-    }
+    } else if (signature)
 
     // Create if necessary
     if (!signature->IsCreated()) {

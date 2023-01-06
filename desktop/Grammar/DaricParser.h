@@ -41,14 +41,15 @@ public:
     RuleFor = 14, RuleImportlib = 15, RuleIf = 16, RuleIfml = 17, RuleInput = 18, 
     RuleOption = 19, RuleParameter = 20, RulePrint = 21, RuleProcedure = 22, 
     RuleRepeat = 23, RuleRead = 24, RuleRestore = 25, RuleReturn = 26, RuleStruct = 27, 
-    RuleStructDim = 28, RuleStructInstance = 29, RuleSwap = 30, RuleWhen = 31, 
-    RuleWhile = 32, RuleClear = 33, RuleGet = 34, RuleSet = 35, RuleVariable = 36, 
-    RuleTypeSignatureSingle = 37, RuleTypeSignatureArray = 38, RuleTypeSignatureRecord = 39, 
-    RuleTypeSignatureRecordArray = 40, RuleTypeSignatureList = 41, RuleTypeSignatureVector = 42, 
-    RuleTypeSignatureSet = 43, RuleTypeSignatureMap = 44, RuleTypeSignatureStack = 45, 
-    RuleTypeSignatureQueue = 46, RuleTypeSignature = 47, RuleTypeSignatureArrayOrCollection = 48, 
-    RuleExpression = 49, RuleType = 50, RuleTypeOrStruct = 51, RuleLiteral = 52, 
-    RuleFloatLiteral = 53, RuleIntegerLiteral = 54, RuleStringLiteral = 55
+    RuleSwap = 28, RuleWhen = 29, RuleWhile = 30, RuleClear = 31, RuleGet = 32, 
+    RuleSet = 33, RuleVariable = 34, RuleTypeSignatureSingle = 35, RuleTypeSignatureArray = 36, 
+    RuleTypeSignatureRecord = 37, RuleTypeSignatureRecordArray = 38, RuleTypeSignatureArrayNew = 39, 
+    RuleTypeSignatureRecordNew = 40, RuleTypeSignatureRecordArrayNew = 41, 
+    RuleTypeSignatureList = 42, RuleTypeSignatureVector = 43, RuleTypeSignatureSet = 44, 
+    RuleTypeSignatureMap = 45, RuleTypeSignatureStack = 46, RuleTypeSignatureQueue = 47, 
+    RuleTypeSignature = 48, RuleTypeSignatureArrayOrCollection = 49, RuleExpression = 50, 
+    RuleType = 51, RuleTypeOrStruct = 52, RuleLiteral = 53, RuleFloatLiteral = 54, 
+    RuleIntegerLiteral = 55, RuleStringLiteral = 56
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -96,8 +97,6 @@ public:
   class RestoreContext;
   class ReturnContext;
   class StructContext;
-  class StructDimContext;
-  class StructInstanceContext;
   class SwapContext;
   class WhenContext;
   class WhileContext;
@@ -109,6 +108,9 @@ public:
   class TypeSignatureArrayContext;
   class TypeSignatureRecordContext;
   class TypeSignatureRecordArrayContext;
+  class TypeSignatureArrayNewContext;
+  class TypeSignatureRecordNewContext;
+  class TypeSignatureRecordArrayNewContext;
   class TypeSignatureListContext;
   class TypeSignatureVectorContext;
   class TypeSignatureSetContext;
@@ -203,8 +205,6 @@ public:
     ReturnContext *return_();
     SetContext *set();
     StructContext *struct_();
-    StructDimContext *structDim();
-    StructInstanceContext *structInstance();
     SwapContext *swap();
     WhileContext *while_();
 
@@ -634,52 +634,6 @@ public:
 
   StructContext* struct_();
 
-  class  StructDimContext : public antlr4::ParserRuleContext {
-  public:
-    StructDimContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *DIM();
-    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
-    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    antlr4::tree::TerminalNode *COLON();
-    antlr4::tree::TerminalNode *SOPEN();
-    antlr4::tree::TerminalNode *SCLOSE();
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  StructDimContext* structDim();
-
-  class  StructInstanceContext : public antlr4::ParserRuleContext {
-  public:
-    StructInstanceContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *DIM();
-    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
-    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    antlr4::tree::TerminalNode *COLON();
-    antlr4::tree::TerminalNode *LPAREN();
-    antlr4::tree::TerminalNode *RPAREN();
-    std::vector<antlr4::tree::TerminalNode *> EQ();
-    antlr4::tree::TerminalNode* EQ(size_t i);
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  StructInstanceContext* structInstance();
-
   class  SwapContext : public antlr4::ParserRuleContext {
   public:
     SwapContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -862,8 +816,29 @@ public:
     antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
     antlr4::tree::TerminalNode *SOPEN();
     antlr4::tree::TerminalNode *SCLOSE();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
     std::vector<antlr4::tree::TerminalNode *> DOT();
     antlr4::tree::TerminalNode* DOT(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureRecordArrayContext* typeSignatureRecordArray();
+
+  class  TypeSignatureArrayNewContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureArrayNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *IDENTIFIER();
+    antlr4::tree::TerminalNode *COLON();
+    TypeContext *type();
+    antlr4::tree::TerminalNode *SOPEN();
+    antlr4::tree::TerminalNode *SCLOSE();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     std::vector<antlr4::tree::TerminalNode *> COMMA();
@@ -874,7 +849,51 @@ public:
    
   };
 
-  TypeSignatureRecordArrayContext* typeSignatureRecordArray();
+  TypeSignatureArrayNewContext* typeSignatureArrayNew();
+
+  class  TypeSignatureRecordNewContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureRecordNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    antlr4::tree::TerminalNode *COLON();
+    antlr4::tree::TerminalNode *LPAREN();
+    antlr4::tree::TerminalNode *RPAREN();
+    std::vector<antlr4::tree::TerminalNode *> EQ();
+    antlr4::tree::TerminalNode* EQ(size_t i);
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureRecordNewContext* typeSignatureRecordNew();
+
+  class  TypeSignatureRecordArrayNewContext : public antlr4::ParserRuleContext {
+  public:
+    TypeSignatureRecordArrayNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
+    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
+    antlr4::tree::TerminalNode *COLON();
+    antlr4::tree::TerminalNode *SOPEN();
+    antlr4::tree::TerminalNode *SCLOSE();
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> COMMA();
+    antlr4::tree::TerminalNode* COMMA(size_t i);
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  TypeSignatureRecordArrayNewContext* typeSignatureRecordArrayNew();
 
   class  TypeSignatureListContext : public antlr4::ParserRuleContext {
   public:
@@ -1006,8 +1025,9 @@ public:
   public:
     TypeSignatureArrayOrCollectionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TypeSignatureArrayContext *typeSignatureArray();
-    TypeSignatureRecordArrayContext *typeSignatureRecordArray();
+    TypeSignatureArrayNewContext *typeSignatureArrayNew();
+    TypeSignatureRecordNewContext *typeSignatureRecordNew();
+    TypeSignatureRecordArrayNewContext *typeSignatureRecordArrayNew();
     TypeSignatureListContext *typeSignatureList();
     TypeSignatureVectorContext *typeSignatureVector();
     TypeSignatureSetContext *typeSignatureSet();

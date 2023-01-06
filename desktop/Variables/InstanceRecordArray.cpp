@@ -9,11 +9,11 @@ std::shared_ptr<Instance> InstanceRecordArray::Build(const std::string &name,
                                                      llvm::IRBuilder<> *ir) {
     switch (scope) {
         case Scope::LOCAL:
-            llvm.local_structs.insert(std::make_pair(name, struct_name));
+//            llvm.local_structs.insert(std::make_pair(name, struct_name));
             locals.insert(std::make_pair(name, std::make_shared<InstanceRecordArray>(name, struct_name, struct_type, scope, no_indices, llvm, ir)));
             return locals.find(name)->second;
         case Scope::GLOBAL:
-            llvm.global_structs.insert(std::make_pair(name, struct_name));
+//            llvm.global_structs.insert(std::make_pair(name, struct_name));
             globals.insert(std::make_pair(name, std::make_shared<InstanceRecordArray>(name, struct_name, struct_type, scope, no_indices, llvm, ir)));
             return globals.find(name)->second;
         default:
