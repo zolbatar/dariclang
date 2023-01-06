@@ -34,7 +34,7 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
 
 	// If no type, try and auto-guess it from the expression
 	if (signature->GetClass() == SignatureClass::Primitive) {
-		if (signature->GetPrimitiveType() == Primitive::NONE) {
+		if (signature->GetPrimitiveType(call) == Primitive::NONE) {
 			auto ct = dynamic_cast<TypePrimitive *>(signature);
 			ct->SetPrimitiveType(value_type.type);
 		}
@@ -46,8 +46,8 @@ void Compiler::GenericVariable(ParserToken &token, Scope scope) {
 	}
 
 	// Do conversion
-	llvm.AutoConversion(GetIR(), value_type, signature->GetPrimitiveType());
-	if (value_type.type != signature->GetPrimitiveType()) {
+	llvm.AutoConversion(GetIR(), value_type, signature->GetPrimitiveType(call));
+	if (value_type.type != signature->GetPrimitiveType(call)) {
 		TypeError(token);
 	}
 
@@ -86,7 +86,7 @@ void Compiler::TokenConst(ParserToken &token) {
 	// Set data type
 	auto ct = dynamic_cast<TypePrimitive *>(signature);
 	ct->SetAsConstant();
-	if (ct->GetPrimitiveType() == Primitive::NONE) {
+	if (ct->GetPrimitiveType(call) == Primitive::NONE) {
 		ct->SetPrimitiveType(token.children[0].data_type);
 		token.literal = token.children[0].literal;
 	}

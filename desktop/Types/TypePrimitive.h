@@ -8,7 +8,7 @@ public:
     static std::shared_ptr<TypeSignature> Create(SourceFileData &state, Scope scope, std::string name, Primitive type);
     bool operator==(TypeSignature &other) override;
     bool Matches(Primitive type);
-    Primitive GetPrimitiveType() override;
+    Primitive GetPrimitiveType(SignatureCall &call) override;
     void SetPrimitiveType(Primitive primitive_type);
     void Create(SignatureCall &call) override;
     void CreateConstant(SignatureCall &call);

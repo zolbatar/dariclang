@@ -30,7 +30,7 @@ bool TypePrimitive::Matches(Primitive type) {
     return this->primitive_type == type;
 }
 
-Primitive TypePrimitive::GetPrimitiveType() {
+Primitive TypePrimitive::GetPrimitiveType(SignatureCall &call) {
     return primitive_type;
 }
 
@@ -124,6 +124,12 @@ ValueType TypePrimitive::Get(SignatureCall &call) {
 }
 
 void TypePrimitive::Set(SignatureCall &call, ValueType value) {
+    // Do conversion
+    call.llvm.AutoConversion(call.ir, value, primitive_type);
+    if (value.type != primitive_type) {
+        TypeError(call.token);
+    }
+
     if (!constant) {
         assert(value.type == primitive_type);
         switch (scope) {

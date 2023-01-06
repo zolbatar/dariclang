@@ -18,7 +18,7 @@ public:
 											  std::string field);
 	bool operator==(TypeSignature &other) override;
 	bool Matches(std::string struct_name);
-	Primitive GetPrimitiveType() override;
+	Primitive GetPrimitiveType(SignatureCall &call) override;
 	void Create(SignatureCall &call) override;
 	ValueType Get(SignatureCall &call) override;
 	bool HasField(std::string field);

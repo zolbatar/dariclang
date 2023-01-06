@@ -4,7 +4,7 @@ void Compiler::TokenRead(ParserToken &t) {
     auto signature = TypeSignature::Get(t.signature).get();
     auto call = BuildTypeCall(t);
 
-    if (signature->GetPrimitiveType() != Primitive::INT) {
+    if (signature->GetPrimitiveType(call) != Primitive::INT) {
         RaiseException("Only integers are supported for DATA statements", t);
     }
 

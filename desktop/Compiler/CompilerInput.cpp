@@ -11,8 +11,8 @@ void Compiler::TokenInput(ParserToken &t) {
 
     // Get value
     ValueType vt;
-    vt.type = signature->GetPrimitiveType();
-    switch (signature->GetPrimitiveType()) {
+    vt.type = signature->GetPrimitiveType(call);
+    switch (signature->GetPrimitiveType(call)) {
         default:
             assert(0);
         case Primitive::INT:

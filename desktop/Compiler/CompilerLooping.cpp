@@ -54,7 +54,7 @@ void Compiler::TokenFor(ParserToken &t) {
     auto from = CompileExpression(t.children[1]);
 
     // String?
-    if (signature->GetPrimitiveType() == Primitive::STRING) {
+    if (signature->GetPrimitiveType(call) == Primitive::STRING) {
         RaiseException("Strings not allowed in FOR loops", t);
     }
 
@@ -63,7 +63,7 @@ void Compiler::TokenFor(ParserToken &t) {
         signature->Create(call);
     }
 
-    auto loop_type = signature->GetPrimitiveType();
+    auto loop_type = signature->GetPrimitiveType(call);
 
     auto to = CompileExpression(t.children[2]);
     ValueType step;
