@@ -96,7 +96,10 @@ private:
 			.ir = GetIR(),
 			.ir_implicit = GetIRImplicit(),
 			.option_base = option_base,
-			.token = token
+			.token = token,
+			.exprcompile = [&](ParserToken &t) {
+			  return this->CompileExpression(t);
+			},
 		};
 		return sc;
 	}

@@ -67,9 +67,9 @@ std::list<ParserToken> &TypeSignature::GetExpressions() {
     return expressions;
 }
 
-void TypeSignature::SetValues(std::vector<ValueType> values) {
+/*void TypeSignature::SetValues(std::vector<ValueType> values) {
     this->values = values;
-}
+}*/
 
 llvm::Value *TypeSignature::LocalIndex(SignatureCall &call) {
     auto index = values[0].value;

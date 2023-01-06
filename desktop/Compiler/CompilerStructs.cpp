@@ -1,7 +1,7 @@
 #include "Compiler.h"
 
 void Compiler::TokenStruct(ParserToken &t) {
-    auto _struct = state.GetStruct(t.reference);
+    auto _struct = state.GetStruct(t.signature);
     if (llvm.CreateStruct(t.identifier, _struct->fields) == nullptr)
         RaiseException("Error creating record", t);
 }
@@ -9,19 +9,7 @@ void Compiler::TokenStruct(ParserToken &t) {
 void Compiler::TokenStructInstance(ParserToken &t) {
     auto signature = TypeSignature::Get(t.signature).get();
     auto call = BuildTypeCall(t);
-
-
-    // Create if necessary
-    if (!signature->IsCreated()) {
-        auto ct = dynamic_cast<TypeRecord *>(signature);
-        std::vector<ValueType> initialisers;
-        for (auto &s: ct->GetExpressions()) {
-            auto vt = CompileExpression(s);
-            initialisers.push_back(vt);
-        }
-        ct->SetValues(initialisers);
-        signature->Create(call);
-    }
+	signature->Create(call);
 }
 
 void Compiler::TokenStructArray(ParserToken &t) {

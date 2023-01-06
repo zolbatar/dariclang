@@ -105,43 +105,43 @@ void Reference::CreateInstance(CompilerLLVM &llvm,
             instance = InstancePrimitiveArray::Build(name, data_type, scope, indices.size(), llvm, ir);
             break;
         case InstanceType::RECORD:
-            SetLLVMStructType(llvm.GetStruct(GetStructName()));
-            instance = InstanceRecord::Build(name, struct_name, llvm_struct_type, scope, llvm, ir, is_ref);
+//            SetLLVMStructType(llvm.GetStruct(GetStructName()));
+  //          instance = InstanceRecord::Build(name, struct_name, llvm_struct_type, scope, llvm, ir, is_ref);
             break;
         case InstanceType::RECORD_ARRAY:
-            SetLLVMStructType(llvm.GetStruct(GetStructName()));
-            instance = InstanceRecordArray::Build(name, struct_name, llvm_struct_type, scope, indices.size(), llvm, ir);
+    //        SetLLVMStructType(llvm.GetStruct(GetStructName()));
+      //      instance = InstanceRecordArray::Build(name, struct_name, llvm_struct_type, scope, indices.size(), llvm, ir);
             break;
         case InstanceType::LIST:
-            SetLLVMStructType(llvm.GetStruct(GetStructName()));
-            instance =
-                    InstanceList::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+        //    SetLLVMStructType(llvm.GetStruct(GetStructName()));
+          //  instance =
+            //        InstanceList::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::QUEUE:
-            SetLLVMStructType(llvm.GetStruct(GetStructName()));
-            instance =
-                    InstanceQueue::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+       //     SetLLVMStructType(llvm.GetStruct(GetStructName()));
+         //   instance =
+           //         InstanceQueue::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::STACK:
-            SetLLVMStructType(llvm.GetStruct(GetStructName()));
-            instance =
-                    InstanceStack::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+          //  SetLLVMStructType(llvm.GetStruct(GetStructName()));
+          //  instance =
+            //        InstanceStack::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::VECTOR:
-            SetLLVMStructType(llvm.GetStruct(GetStructName()));
-            instance =
-                    InstanceVector::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
+          //  SetLLVMStructType(llvm.GetStruct(GetStructName()));
+           // instance =
+             //       InstanceVector::Build(name, GetStructName(), data_type, llvm_struct_type, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::SET:
             instance =
                     InstanceSet::Build(name, GetStructName(), data_type_val, scope, llvm, func, ir, default_return_type, is_ref);
             break;
         case InstanceType::MAP: {
-            SetLLVMStructTypeVal(llvm.GetStruct(GetStructName()));
+/*            SetLLVMStructTypeVal(llvm.GetStruct(GetStructName()));
             instance = InstanceMap::Build(name, GetStructName(), data_type,
                                           data_type_val, llvm_struct_type_val,
                                           GetStructNameVal(),
-                                          scope, llvm, func, ir, default_return_type, is_ref);
+                                          scope, llvm, func, ir, default_return_type, is_ref);*/
             break;
         }
         default:
@@ -350,10 +350,11 @@ llvm::Type *Reference::GetLLVMType(bool is_ref, CompilerLLVM &llvm) {
             }
         case InstanceType::RECORD:
         case InstanceType::RECORD_ARRAY: {
-            auto ss = llvm.GetStruct(struct_name);
+/*            auto ss = llvm.GetStruct(struct_name);
             if (ss == nullptr)
                 return nullptr;
-            return llvm::PointerType::get(ss, 0);
+            return llvm::PointerType::get(ss, 0);*/
+break;
         }
         default:
             assert(0);

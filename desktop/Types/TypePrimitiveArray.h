@@ -4,25 +4,25 @@
 
 class TypePrimitiveArray : public TypePrimitive {
 public:
-    TypePrimitiveArray(SourceFileData &state,
-                       Primitive type,
-                       std::string name,
-                       Scope scope,
-                       std::list<ParserToken> expressions);
-    static std::shared_ptr<TypeSignature> Create(SourceFileData &state,
-                                                 Scope scope,
-                                                 std::string name,
-                                                 Primitive type,
-                                                 std::list<ParserToken> expressions);
-    std::shared_ptr<TypeSignature> CreateLink(SourceFileData &state,
-                                              std::list<ParserToken> expressions);
-    bool operator==(TypeSignature &other) override;
-    bool Matches(Primitive type, std::list<ParserToken> &expressions);
-    void Create(SignatureCall &call) override;
-    ValueType Get(SignatureCall &call) override;
-    void Set(SignatureCall &call, ValueType value) override;
-    static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindInstanceArray(
-            std::string name,
-            Primitive type,
-            std::list<ParserToken> &expressions);
+	TypePrimitiveArray(SourceFileData &state,
+					   Primitive type,
+					   std::string name,
+					   Scope scope,
+					   std::list<ParserToken> expressions);
+	static std::shared_ptr<TypeSignature> Create(SourceFileData &state,
+												 Scope scope,
+												 std::string name,
+												 Primitive type,
+												 std::list<ParserToken> expressions);
+	std::shared_ptr<TypeSignature> CreateLink(SourceFileData &state,
+											  std::list<ParserToken> expressions);
+	bool operator==(TypeSignature &other) override;
+	bool Matches(Primitive type, std::list<ParserToken> &expressions);
+	void Create(SignatureCall &call) override;
+	ValueType Get(SignatureCall &call) override;
+	void Set(SignatureCall &call, ValueType value) override;
+	static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindInstanceArray(
+		std::string name,
+		Primitive type,
+		std::list<ParserToken> &expressions);
 };
