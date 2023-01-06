@@ -22,13 +22,8 @@ std::any Parser::visitFor(DaricParser::ForContext *context) {
     }
 
     // Find the loop variable
-    auto r = Reference::Create(state, context->IDENTIFIER()->getText());
-    ps.reference = r->GetRef();
-    if (context->type()) {
-        r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
-    } else {
-        r->SetDataType(Primitive::NONE);
-    }
+    auto signature = std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature())).get();
+    ps.signature = signature->GetIndex();
 
     return ps;
 }

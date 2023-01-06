@@ -387,15 +387,13 @@ public:
     ForContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *FOR();
-    antlr4::tree::TerminalNode *IDENTIFIER();
+    TypeSignatureContext *typeSignature();
     antlr4::tree::TerminalNode *EQ();
     std::vector<ExpressionContext *> expression();
     ExpressionContext* expression(size_t i);
     antlr4::tree::TerminalNode *TO();
     StatementsContext *statements();
     antlr4::tree::TerminalNode *NEXT();
-    antlr4::tree::TerminalNode *COLON();
-    TypeContext *type();
     antlr4::tree::TerminalNode *STEP();
 
 
@@ -464,7 +462,7 @@ public:
     InputContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *INPUT();
-    VariableContext *variable();
+    TypeSignatureContext *typeSignature();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -576,10 +574,7 @@ public:
     ReadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *READ();
-    std::vector<VariableContext *> variable();
-    VariableContext* variable(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
+    TypeSignatureContext *typeSignature();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

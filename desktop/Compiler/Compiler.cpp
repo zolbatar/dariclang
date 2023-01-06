@@ -32,7 +32,6 @@ bool Compiler::Compile() {
 
         // Library
         SetupLibraryLLVM();
-        Constants();
 
         // Setup implicit
         auto n = Primitive::NONE;
@@ -97,7 +96,7 @@ bool Compiler::Compile() {
 
 void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
     for (auto &token: statements) {
-        //std::cout << "Line: " << token.line << std::endl;
+        //std::cout << "Line: " << token.file.line << std::endl;
         switch (token.type) {
             case ParserTokenType::IMPORT:
             case ParserTokenType::NONE:

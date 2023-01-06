@@ -10,7 +10,7 @@ llvm::Type *CompilerLLVM::TypeConversion(Primitive type) {
             return TypeString;
         case Primitive::BYTE:
             return TypeByte;
-        case Primitive::NONE:
+        default:
             return TypeNone;
     }
 }

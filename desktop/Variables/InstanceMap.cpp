@@ -49,7 +49,7 @@ std::shared_ptr<Instance> InstanceMap::Build(const std::string &name,
         case Primitive::STRING:
             comp = (void *) &set_comp_string;
             break;
-        case Primitive::NONE:
+        default:
             assert(0);
     }
     auto cc = llvm::ConstantInt::get(llvm.TypeInt, (int64_t) comp);

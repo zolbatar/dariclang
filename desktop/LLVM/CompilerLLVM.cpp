@@ -308,7 +308,10 @@ void CompilerLLVM::SetupLibrary() {
     Module->getOrInsertFunction("PrintStringFormat_sys", TypeNone, TypeString, TypeString);
     Module->getOrInsertFunction("PrintNewline_sys", TypeNone);
 
-    Module->getOrInsertFunction("Input", TypeString);
+    Module->getOrInsertFunction("InputString", TypeString);
+    Module->getOrInsertFunction("InputInt", TypeInt);
+    Module->getOrInsertFunction("InputFloat", TypeFloat);
+    Module->getOrInsertFunction("InputByte", TypeByte);
 
     // Maths
     Module->getOrInsertFunction("pi", TypeFloat);

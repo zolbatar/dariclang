@@ -49,32 +49,29 @@ void Compiler::TokenWhile(ParserToken &token) {
 }
 
 void Compiler::TokenFor(ParserToken &t) {
-    auto ref = Reference::Get(t.reference);
+    auto signature = TypeSignature::Get(t.signature).get();
+    auto call = BuildTypeCall(t);
     auto from = CompileExpression(t.children[1]);
 
     // String?
-    if (ref->GetDataType() == Primitive::STRING) {
+    if (signature->GetPrimitiveType() == Primitive::STRING) {
         RaiseException("Strings not allowed in FOR loops", t);
     }
 
-    // Find the loop variable
-    if (!ref->InstanceExists()) {
-        // If no type, try and auto-guess it from the expression
-        if (ref->GetDataType() == Primitive::NONE) {
-            ref->SetDataType(from.type);
-        }
-        ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), t.scope, false);
+    // Create if necessary
+    if (!signature->IsCreated()) {
+        signature->Create(call);
     }
-    if (!ref->FindInstance())
-        VariableError(t, ref->GetName());
+
+    auto loop_type = signature->GetPrimitiveType();
 
     auto to = CompileExpression(t.children[2]);
     ValueType step;
     if (t.children.size() == 4) {
         step = CompileExpression(t.children[3]);
     } else {
-        step.type = ref->GetDataType();
-        switch (ref->GetDataType()) {
+        step.type = loop_type;
+        switch (step.type) {
             case Primitive::INT:
                 step.value = llvm.CreateConstantInt(Primitive::INT, 1);
                 break;
@@ -87,15 +84,15 @@ void Compiler::TokenFor(ParserToken &t) {
     }
 
     // Ensure all types are the same
-    llvm.AutoConversion(GetIR(), to, ref->GetDataType());
-    llvm.AutoConversion(GetIR(), from, ref->GetDataType());
-    llvm.AutoConversion(GetIR(), step, ref->GetDataType());
-    if (ref->GetDataType() != to.type || ref->GetDataType() != from.type || ref->GetDataType() != step.type) {
+    llvm.AutoConversion(GetIR(), to, loop_type);
+    llvm.AutoConversion(GetIR(), from, loop_type);
+    llvm.AutoConversion(GetIR(), step, loop_type);
+    if (loop_type != to.type || loop_type != from.type || loop_type != step.type) {
         RaiseException("In a FOR loop, all values must the same type", t);
     }
 
     // Set init loop variable value
-    ref->SetValue(option_base, from, std::vector<ValueType>(), llvm, GetIR(), t);
+    signature->Set(call, from);
 
     // Work out direction
     auto comp = llvm.ComparisonGT(GetIR(), from, to);
@@ -117,9 +114,9 @@ void Compiler::TokenFor(ParserToken &t) {
     AddBB(bodyEndBB);
 
     // Add step to loop variable
-    auto v = ref->GetValue(option_base, std::vector<ValueType>(), llvm, GetIR(), t);
+    auto v = signature->Get(call);
     auto nv = llvm.MathsAdd(GetIR(), v, step);
-    ref->SetValue(option_base, nv, std::vector<ValueType>(), llvm, GetIR(), t);
+    signature->Set(call, nv);
 
     // Have we completed?
     auto dirCheckBBLower = CreateBB("FOR direction check (lower)", t);

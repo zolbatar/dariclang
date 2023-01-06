@@ -1,19 +1,32 @@
 #include "Compiler.h"
 
 void Compiler::TokenInput(ParserToken &t) {
-    auto ref = Reference::Get(t.reference);
+    auto signature = TypeSignature::Get(t.signature).get();
+    auto call = BuildTypeCall(t);
 
-    // Does it exist?
-    if (!ref->InstanceExists()) {
-        ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), t.scope, false);
+    // Create if necessary
+    if (!signature->IsCreated()) {
+        signature->Create(call);
     }
-    ref->FindInstance();
 
     // Get value
     ValueType vt;
-    vt.type = Primitive::STRING;
-    vt.value = CreateCall("Input", {});
-
-    // Save value
-    ref->SetValue(option_base, vt, ProcessIndices(ref, t), llvm, GetIR(), t);
+    vt.type = signature->GetPrimitiveType();
+    switch (signature->GetPrimitiveType()) {
+        default:
+            assert(0);
+        case Primitive::INT:
+            vt.value = CreateCall("InputInt", {});
+            break;
+        case Primitive::BYTE:
+            vt.value = CreateCall("InputByte", {});
+            break;
+        case Primitive::FLOAT:
+            vt.value = CreateCall("InputFloat", {});
+            break;
+        case Primitive::STRING:
+            vt.value = CreateCall("InputString", {});
+            break;
+    }
+    signature->Set(call, vt);
 }

@@ -2,8 +2,7 @@
 
 std::any Parser::visitInput(DaricParser::InputContext *context) {
     auto ps = CreateToken(context, ParserTokenType::INPUT);
-    auto r = std::any_cast<Reference *>(visit(context->variable()));
-    r->SetDataType(Primitive::STRING);
-    ps.reference = r->GetRef();
+    auto signature = std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature())).get();
+    ps.signature = signature->GetIndex();
     return ps;
 }

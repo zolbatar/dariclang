@@ -79,7 +79,10 @@ private:
 	}
 
 protected:
-	std::any visitAssign(DaricParser::AssignContext *context) override;
+    void Constants();
+    void CreateConstantInt(const std::string &name, T_I val);
+
+    std::any visitAssign(DaricParser::AssignContext *context) override;
 	std::any visitCall(DaricParser::CallContext *context) override;
 	std::any visitConst(DaricParser::ConstContext *context) override;
 	std::any visitEnd(DaricParser::EndContext *context) override;

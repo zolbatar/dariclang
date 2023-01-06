@@ -7,7 +7,6 @@ std::any Parser::visitConst(DaricParser::ConstContext *context) {
     }
     ParserToken ps = CreateToken(context, ParserTokenType::CONSTANT);
     ps.signature = std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature())).get()->GetIndex();
-	change to const??
     ps.children.push_back(std::any_cast<ParserToken>(visit(context->literal())));
     return ps;
 }

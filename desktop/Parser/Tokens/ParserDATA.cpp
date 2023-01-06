@@ -23,12 +23,7 @@ std::any Parser::visitRestore(DaricParser::RestoreContext *context) {
 
 std::any Parser::visitRead(DaricParser::ReadContext *context) {
     auto ps = CreateToken(context, ParserTokenType::READ);
-    for (size_t i = 0; i < context->variable().size(); i++) {
-        auto psc = CreateToken(context, ParserTokenType::READ);
-        auto r = std::any_cast<Reference *>(visit(context->variable(i)));
-        r->SetDataType(Primitive::INT);
-        psc.reference = r->GetRef();
-        ps.children.push_back(psc);
-    }
+    auto signature = std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature())).get();
+    ps.signature = signature->GetIndex();
     return ps;
 }

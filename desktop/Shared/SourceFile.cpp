@@ -46,6 +46,10 @@ SourceFile::SourceFile(CompilerOptions &options) : options(options) {
             // Get file and check it exists
             parser->setFilename(file);
             std::ifstream stream(file);
+            if (!stream.is_open()) {
+                std::cout << "Error opening stream for file '" + file + "'" << std::endl;
+                exit(1);
+            }
 
             // Mark as done
             already_imported.insert(file);

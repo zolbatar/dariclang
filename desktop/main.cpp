@@ -95,6 +95,7 @@ int main(int argc, char *argv[]) {
         is_run_from_ide = true;
         std::cout << "Running from IDE" << std::endl;
     }
+    options.file = exe_path / options.file;
     std::cout << "Filename: " << options.file << std::endl;
 
     // Set current path based on source file
