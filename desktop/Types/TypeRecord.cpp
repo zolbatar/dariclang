@@ -60,11 +60,7 @@ StructInfo *TypeRecord::GetStructInfo() {
 
 bool TypeRecord::HasField(std::string field) {
 	auto si = GetStructInfo();
-	for (auto &f : si->fields) {
-		if (f.name == field)
-			return true;
-	}
-	return false;
+	return (si->field_mappings.contains(field));
 }
 
 std::tuple<FindResult, std::shared_ptr<TypeSignature>> TypeRecord::FindRecordSingle(
@@ -181,5 +177,18 @@ ValueType TypeRecord::Get(SignatureCall &call) {
 }
 
 void TypeRecord::Set(SignatureCall &call, ValueType value) {
-	assert(0);
+	auto struct_type = call.llvm.GetStruct(struct_name);
+	auto si = GetStructInfo();
+	auto index = si->field_mappings.find(field_name)->second;
+	llvm.AutoConversion(ir, vt, ref->GetDataType());
+	assert (si->fields[index].type == value.type);
+	if (scope == Scope::GLOBAL) {
+		assert(call.llvm.globals.contains(name));
+		auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetGlobal(name), index);
+		call.ir->CreateStore(value.value, gep);
+	} else {
+		assert(call.llvm.locals.contains(name));
+		auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetLocal(name), index);
+		call.ir->CreateStore(value.value, gep);
+	}
 }

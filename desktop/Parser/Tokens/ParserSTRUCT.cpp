@@ -1,62 +1,69 @@
 #include "../Parser.h"
 
 struct StructField {
-    std::string name;
-    TypeOrStruct type;
+	std::string name;
+	TypeOrStruct type;
 };
 
 std::any Parser::visitStruct(DaricParser::StructContext *context) {
-    if (this->current_procedure != nullptr) {
-        RaiseException("Record can only be defined outside of a procedure", context);
-    }
+	if (this->current_procedure != nullptr) {
+		RaiseException("Record can only be defined outside of a procedure", context);
+	}
 
-    ParserToken ps = CreateToken(context, ParserTokenType::STRUCT);
-    ps.identifier = context->IDENTIFIER(0)->getText();
+	ParserToken ps = CreateToken(context, ParserTokenType::STRUCT);
+	ps.identifier = context->IDENTIFIER(0)->getText();
 
-    if (state.StructExists(ps.identifier)) {
-        RaiseException("Record '" + ps.identifier + "' already defined", context);
-    }
+	if (state.StructExists(ps.identifier)) {
+		RaiseException("Record '" + ps.identifier + "' already defined", context);
+	}
 
-    // Build members
-    std::vector<StructField> fields;
-    for (size_t i = 1; i < context->IDENTIFIER().size(); i++) {
-        StructField sf{
-                .name = context->IDENTIFIER(i)->getText(),
-                .type =std::any_cast<TypeOrStruct>(visit(context->typeOrStruct(i - 1)))
-        };
-        fields.push_back(std::move(sf));
-    }
+	// Build members
+	std::vector<StructField> fields;
+	for (size_t i = 1; i < context->IDENTIFIER().size(); i++) {
+		StructField sf{
+			.name = context->IDENTIFIER(i)->getText(),
+			.type =std::any_cast<TypeOrStruct>(visit(context->typeOrStruct(i - 1)))
+		};
+		fields.push_back(std::move(sf));
+	}
 
-    // Now iteratively build up the actual field list
-    StructInfo ti;
-    for (auto &field: fields) {
-        if (!field.type.is_struct) {
-            StructMember sm;
-            sm.type = field.type.type;
-            sm.name = field.name;
-            ti.fields.push_back(std::move(sm));
-        } else {
-            // Get child struct
-            auto f2 = state.FindStructIndices(field.type.name);
-            if (f2 == state.StructIndicesEnd())
-                RaiseException("Struct '" + field.type.name + "' not found", context);
-            auto child_struct = &state.GetStructInfo(f2->second).fields;
+	// Now iteratively build up the actual field list
+	StructInfo ti;
+	for (auto &field : fields) {
+		if (!field.type.is_struct) {
+			StructMember sm;
+			sm.type = field.type.type;
+			sm.name = field.name;
+			ti.fields.push_back(std::move(sm));
+		} else {
+			// Get child struct
+			auto f2 = state.FindStructIndices(field.type.name);
+			if (f2 == state.StructIndicesEnd())
+				RaiseException("Struct '" + field.type.name + "' not found", context);
+			auto child_struct = &state.GetStructInfo(f2->second).fields;
 
-            // Add child fields
-            for (auto &f3: *child_struct) {
-                StructMember sm;
-                sm.type = f3.type;
-                sm.name = field.name + "." + f3.name;
-                ti.fields.push_back(std::move(sm));
-            }
-        }
-    }
+			// Add child fields
+			for (auto &f3 : *child_struct) {
+				StructMember sm;
+				sm.type = f3.type;
+				sm.name = field.name + "." + f3.name;
+				ti.fields.push_back(std::move(sm));
+			}
+		}
+	}
 
-    // Add to token
-    ps.signature = state.GetNextRefIndex();
-    state.AddStruct(ps.identifier, ti, ps.signature);
+	// Now create a map to speed lookup
+	size_t i = 0;
+	for (auto &f : ti.fields) {
+		ti.field_mappings.insert(std::make_pair(f.name, i));
+		i++;
+	}
 
-    return ps;
+	// Add to token
+	ps.signature = state.GetNextRefIndex();
+	state.AddStruct(ps.identifier, ti, ps.signature);
+
+	return ps;
 }
 
 /*std::any Parser::visitStructDim(DaricParser::StructDimContext *context) {

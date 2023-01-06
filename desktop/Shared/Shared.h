@@ -12,13 +12,14 @@ struct StructMember {
 
 struct StructInfo {
 	std::vector<StructMember> fields;
+	std::unordered_map<std::string, size_t> field_mappings;
 };
 
 class SourceFileData {
 public:
-    static void Reset() {
-        ref_index_ptr = 0;
-    }
+	static void Reset() {
+		ref_index_ptr = 0;
+	}
 	bool StructExists(std::string name) { return struct_indexes.contains(name); }
 	size_t GetStructIndex(std::string name);
 	StructInfo *GetStruct(size_t index) { return &structs[index]; }
