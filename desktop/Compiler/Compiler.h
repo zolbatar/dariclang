@@ -91,8 +91,10 @@ private:
 		SignatureCall sc{
 			.llvm = llvm,
 			.func = GetFunction(),
+			.func_implicit = GetFunctionImplicit(),
 			.default_return_type = return_type,
 			.ir = GetIR(),
+			.ir_implicit = GetIRImplicit(),
 			.option_base = option_base,
 			.token = token
 		};

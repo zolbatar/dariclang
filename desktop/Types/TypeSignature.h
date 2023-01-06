@@ -18,6 +18,7 @@ enum class FindResult {
 enum class SignatureClass {
 	Primitive,
 	PrimitiveArray,
+	Constant,
 	Record,
 	RecordArray
 };
@@ -25,8 +26,10 @@ enum class SignatureClass {
 struct SignatureCall {
 	CompilerLLVM &llvm;
 	llvm::Function *func;
+	llvm::Function *func_implicit;
 	Primitive default_return_type;
 	llvm::IRBuilder<> *ir;
+	llvm::IRBuilder<> *ir_implicit;
 	bool option_base;
 	ParserToken &token;
 };

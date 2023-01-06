@@ -199,7 +199,7 @@ add_executable(${PROJECT_NAME}
         Types/TypePrimitive.cpp
         Types/TypePrimitiveArray.h
         Types/TypePrimitiveArray.cpp
-        Types/Type.h)
+        Types/Type.h Types/TypeConstant.h Types/TypeConstant.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

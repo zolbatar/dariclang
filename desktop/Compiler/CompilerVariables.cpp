@@ -80,27 +80,20 @@ void Compiler::TokenLocal(ParserToken &token) {
 }
 
 void Compiler::TokenConst(ParserToken &token) {
-	for (auto &s : token.children) {
-		InstanceConstant::Build(s.identifier, s.data_type, Scope::GLOBAL, llvm, GetIR());
-		switch (s.data_type) {
-			case Primitive::INT:
-				llvm.CreateConstant(s.identifier, s.data_type, llvm.CreateConstantInt(s.data_type, s.literal.iv));
-				break;
-			case Primitive::FLOAT:
-				llvm.CreateConstant(s.identifier, s.data_type, llvm.CreateConstantFloat(s.data_type, s.literal.fv));
-				break;
-			case Primitive::STRING:
-				llvm.CreateConstant(s.identifier,
-									s.data_type,
-									llvm.CreateConstantString(GetIRImplicit(),
-															  GetFunctionImplicit(),
-															  s.data_type,
-															  s.literal.sv.c_str(),
-															  token.identifier));
-				break;
-			default:
-				TypeError(token);
+	auto signature = TypeSignature::Get(token.signature).get();
+	auto call = BuildTypeCall(token);
+
+	// If no type, try and auto-guess it from the expression
+	if (signature->GetClass() == SignatureClass::Constant) {
+		if (signature->GetPrimitiveType() == Primitive::NONE) {
+			auto ct = dynamic_cast<TypeConstant *>(signature);
+			ct->SetPrimitiveType(token.data_type);
 		}
+	}
+
+	// Create
+	if (!signature->IsCreated()) {
+		signature->Create(call);
 	}
 }
 
