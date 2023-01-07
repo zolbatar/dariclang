@@ -37,8 +37,8 @@ void Compiler::CreateLookaheadProc(ParserToken &t) {
     procedures.insert(std::make_pair(t.identifier, f));
 }
 
-void Compiler::TokenProcedure(ParserToken &t) {
-    auto f = &procedures.find(t.identifier)->second;
+/*
+ *     auto f = &procedures.find(t.identifier)->second;
     procedure = f->func;
     return_type = t.data_type;
     procedure_pre_ir = llvm.CreateBuilder(t.identifier + " Pre-Builder", procedure);
@@ -48,22 +48,60 @@ void Compiler::TokenProcedure(ParserToken &t) {
     // Create local variables for parameters
     auto i = 0;
     for (auto &Arg: f->func->args()) {
-/*        auto pp = &f->parameters[i];
+        auto pp = &f->parameters[i];
+        auto ref = pp->GetReference();
+
+        if (ref->FindInstance()) {
+            RaiseException("Variable name '" + ref->GetName() + "' already exists, are you shadowing a global variable",
+                           t);
+        }
+
+        ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), Scope::LOCAL, pp->IsRef());
+        if (!pp->IsRef()) {
+            ref->GetInstance()->Set(&Arg, nullptr, 0, llvm, procedure_ir);
+        } else {
+            ref->GetInstance()->SetPointer(&Arg, nullptr, 0, llvm, procedure_ir);
+        }
+        i++;
+    }
+
+    CompileStatements(t.children[1].children);
+    llvm.ClearLocals();
+    Instance::locals.clear();
+    if (!llvm.CheckReturn(GetIR())) {
+        DefaultReturn(return_type, t);
+    }
+    procedure_pre_ir->CreateBr(bb);
+    procedure = nullptr;
+    return_type = Primitive::NONE;
+ */
+
+void Compiler::TokenProcedure(ParserToken &t) {
+    auto f = &procedures.find(t.identifier)->second;
+    procedure = f->func;
+    return_type = t.data_type;
+    procedure_pre_ir = llvm.CreateBuilder(t.identifier + " Pre-Builder", procedure);
+    procedure_ir = llvm.CreateBuilder(t.identifier + " Builder", procedure);
+
+    // Create local variables for parameters
+    auto i = 0;
+    for (auto &Arg: f->func->args()) {
+        auto pp = &f->parameters[i];
         auto signature = pp->GetSignature();
         auto call = BuildTypeCall(t);
         call.ir = GetPreIR();
         signature->Create(call);
 
         // Set value passed in
-        auto call2 = BuildTypeCall(t);
         ValueType vt;
         vt.value = &Arg;
-        vt.type = signature->GetPrimitiveType(call2);
-        signature->Set(call2, vt);
-        i++;*/
+        vt.type = signature->GetPrimitiveType(call);
+        signature->Set(call, vt);
+        i++;
     }
 
     // Compile actual code
+    auto bb = procedure_ir->GetInsertBlock();
     CompileStatements(t.children[1].children);
 
     // Clear and GC locals

@@ -65,6 +65,8 @@ void TypePrimitive::SetAsConstant() {
 }
 
 void TypePrimitive::Create(SignatureCall &call) {
+    if (primitive_type == Primitive::NONE)
+        TypeError(call.token);
     if (!constant) {
         switch (scope) {
             case Scope::LOCAL:
