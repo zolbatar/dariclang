@@ -264,8 +264,8 @@ void daricParserInitialize() {
   	0,423,426,1,0,0,0,424,422,1,0,0,0,424,425,1,0,0,0,425,430,1,0,0,0,426,
   	424,1,0,0,0,427,429,5,90,0,0,428,427,1,0,0,0,429,432,1,0,0,0,430,428,
   	1,0,0,0,430,431,1,0,0,0,431,433,1,0,0,0,432,430,1,0,0,0,433,434,5,12,
-  	0,0,434,435,5,28,0,0,435,55,1,0,0,0,436,437,5,38,0,0,437,438,3,68,34,
-  	0,438,439,5,88,0,0,439,440,3,68,34,0,440,57,1,0,0,0,441,442,5,41,0,0,
+  	0,0,434,435,5,28,0,0,435,55,1,0,0,0,436,437,5,38,0,0,437,438,3,96,48,
+  	0,438,439,5,88,0,0,439,440,3,96,48,0,440,57,1,0,0,0,441,442,5,41,0,0,
   	442,447,3,100,50,0,443,444,5,88,0,0,444,446,3,100,50,0,445,443,1,0,0,
   	0,446,449,1,0,0,0,447,445,1,0,0,0,447,448,1,0,0,0,448,450,1,0,0,0,449,
   	447,1,0,0,0,450,451,3,2,1,0,451,59,1,0,0,0,452,453,5,43,0,0,453,454,3,
@@ -3284,12 +3284,12 @@ tree::TerminalNode* DaricParser::SwapContext::SWAP() {
   return getToken(DaricParser::SWAP, 0);
 }
 
-std::vector<DaricParser::VariableContext *> DaricParser::SwapContext::variable() {
-  return getRuleContexts<DaricParser::VariableContext>();
+std::vector<DaricParser::TypeSignatureContext *> DaricParser::SwapContext::typeSignature() {
+  return getRuleContexts<DaricParser::TypeSignatureContext>();
 }
 
-DaricParser::VariableContext* DaricParser::SwapContext::variable(size_t i) {
-  return getRuleContext<DaricParser::VariableContext>(i);
+DaricParser::TypeSignatureContext* DaricParser::SwapContext::typeSignature(size_t i) {
+  return getRuleContext<DaricParser::TypeSignatureContext>(i);
 }
 
 tree::TerminalNode* DaricParser::SwapContext::COMMA() {
@@ -3325,11 +3325,11 @@ DaricParser::SwapContext* DaricParser::swap() {
     setState(436);
     match(DaricParser::SWAP);
     setState(437);
-    variable();
+    typeSignature();
     setState(438);
     match(DaricParser::COMMA);
     setState(439);
-    variable();
+    typeSignature();
    
   }
   catch (RecognitionException &e) {

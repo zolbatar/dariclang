@@ -639,8 +639,8 @@ public:
     SwapContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *SWAP();
-    std::vector<VariableContext *> variable();
-    VariableContext* variable(size_t i);
+    std::vector<TypeSignatureContext *> typeSignature();
+    TypeSignatureContext* typeSignature(size_t i);
     antlr4::tree::TerminalNode *COMMA();
 
 

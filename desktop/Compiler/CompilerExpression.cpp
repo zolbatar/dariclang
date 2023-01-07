@@ -467,6 +467,8 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             ValueType vt;
             vt.type = Primitive::INT;
             switch (signature->GetClass()) {
+                default:
+                    assert(0);
                 case SignatureClass::Primitive:
                 case SignatureClass::Record:
                     assert(0);

@@ -27,8 +27,6 @@ struct ParserToken {
     std::vector<ParserToken> children;
     Scope scope;
     size_t signature;
-//    std::shared_ptr<TypeSignature> signature = nullptr;
-
-    Primitive data_type; // Deprecated
+    Primitive data_type; // Return type
     size_t reference; // Deprecated
 };
