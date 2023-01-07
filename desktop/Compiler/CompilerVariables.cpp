@@ -83,14 +83,6 @@ void Compiler::TokenConst(ParserToken &token) {
     auto signature = TypeSignature::Get(token.signature).get();
     auto call = BuildTypeCall(token);
 
-    // Set data type
-    auto ct = dynamic_cast<TypePrimitive *>(signature);
-    ct->SetAsConstant();
-    if (ct->GetPrimitiveType(call) == Primitive::NONE) {
-        ct->SetPrimitiveType(token.children[0].data_type);
-        token.literal = token.children[0].literal;
-    }
-
     // Create
     if (!signature->IsCreated()) {
         signature->Create(call);

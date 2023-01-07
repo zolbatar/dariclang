@@ -144,11 +144,11 @@ add_executable(${PROJECT_NAME}
         JIT/JIT.cpp
         Parser/Parser.h
         Parser/Parser.cpp
-        Parser/ParserCore.cpp
+        Parser/Core/ParserCore.cpp
         Parser/ParserErrorListener.h
         Parser/ParserToken.h
         Parser/ParserTokenType.h
-        Parser/ParserLiteral.cpp
+        Parser/Core/ParserLiteral.cpp
         Parser/Core/ParserCollection.cpp
         Parser/Core/ParserAssignment.cpp
         Parser/Core/ParserExpression.cpp

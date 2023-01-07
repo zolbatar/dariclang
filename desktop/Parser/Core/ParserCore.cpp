@@ -1,6 +1,6 @@
 #include <iostream>
-#include "../../runtime/Library/StringLib.h"
-#include "Parser.h"
+#include "../../../runtime/Library/StringLib.h"
+#include "../Parser.h"
 
 std::any Parser::visitProgram(DaricParser::ProgramContext *context) {
     auto this_statements = std::any_cast<std::vector<ParserToken>>(visit(context->statements()));

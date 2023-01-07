@@ -38,7 +38,6 @@ void Compiler::CreateLookaheadProc(ParserToken &t) {
 }
 
 void Compiler::TokenProcedure(ParserToken &t) {
-    auto call = BuildTypeCall(t);
     auto f = &procedures.find(t.identifier)->second;
     procedure = f->func;
     return_type = t.data_type;
@@ -49,16 +48,25 @@ void Compiler::TokenProcedure(ParserToken &t) {
     // Create local variables for parameters
     auto i = 0;
     for (auto &Arg: f->func->args()) {
-        auto pp = &f->parameters[i];
+/*        auto pp = &f->parameters[i];
         auto signature = pp->GetSignature();
+        auto call = BuildTypeCall(t);
+        call.ir = GetPreIR();
         signature->Create(call);
+
+        // Set value passed in
+        auto call2 = BuildTypeCall(t);
         ValueType vt;
         vt.value = &Arg;
-        vt.type = signature->GetPrimitiveType(call);
-        i++;
+        vt.type = signature->GetPrimitiveType(call2);
+        signature->Set(call2, vt);
+        i++;*/
     }
 
+    // Compile actual code
     CompileStatements(t.children[1].children);
+
+    // Clear and GC locals
     llvm.ClearLocals();
     Instance::locals.clear();
     if (!llvm.CheckReturn(GetIR())) {

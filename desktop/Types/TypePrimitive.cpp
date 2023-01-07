@@ -76,7 +76,6 @@ void TypePrimitive::Create(SignatureCall &call) {
         }
     } else {
         assert(scope == Scope::GLOBAL);
-
         switch (primitive_type) {
             case Primitive::BYTE:
                 call.llvm.CreateConstant(name,
