@@ -9,7 +9,7 @@ TypePrimitive::TypePrimitive(SourceFileData &state, Primitive type, std::string 
 }
 
 std::shared_ptr<TypeSignature> TypePrimitive::Create(SourceFileData &state, Scope scope, std::string name, Primitive type) {
-    std::shared_ptr<TypePrimitive> v = std::make_shared<TypePrimitive>(TypePrimitive(state, Primitive::NONE, name, scope));
+    std::shared_ptr<TypePrimitive> v = std::make_shared<TypePrimitive>(TypePrimitive(state, type, name, scope));
     signatures_by_index.push_back(v);
     signatures.emplace(name, v);
     return v;

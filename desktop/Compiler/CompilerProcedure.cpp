@@ -10,23 +10,24 @@ void Compiler::CreateLookaheadProc(ParserToken &t) {
 
     // Build parameters
     for (auto &token: t.children[0].children) {
-        auto ref = Reference::Get(token.reference);
+        auto signature = TypeSignature::Get(token.signature);
         if (token.type == ParserTokenType::PARAMETER) {
-            FuncParameter fp(ref, false);
+            FuncParameter fp(signature, false);
             f.parameters.push_back(std::move(fp));
         } else if (token.type == ParserTokenType::PARAMETER_REF) {
-            FuncParameter fp(ref, true);
+            FuncParameter fp(signature, true);
             f.parameters.push_back(std::move(fp));
         } else {
-            break;
+            assert(0);
         }
     }
 
     // Now create
+    auto call = BuildTypeCall(t);
     f.return_type = t.data_type;
     std::vector<llvm::Type *> types;
     for (auto &ff: f.parameters) {
-        auto tt = ff.GetLLVMType(llvm);
+        auto tt = ff.GetLLVMType(call);
         if (tt == nullptr)
             RaiseException("Error processing parameter '" + ff.GetName() + "'", t);
         types.push_back(tt);
@@ -37,6 +38,7 @@ void Compiler::CreateLookaheadProc(ParserToken &t) {
 }
 
 void Compiler::TokenProcedure(ParserToken &t) {
+    auto call = BuildTypeCall(t);
     auto f = &procedures.find(t.identifier)->second;
     procedure = f->func;
     return_type = t.data_type;
@@ -48,19 +50,11 @@ void Compiler::TokenProcedure(ParserToken &t) {
     auto i = 0;
     for (auto &Arg: f->func->args()) {
         auto pp = &f->parameters[i];
-        auto ref = pp->GetReference();
-
-        if (ref->FindInstance()) {
-            RaiseException("Variable name '" + ref->GetName() + "' already exists, are you shadowing a global variable",
-                           t);
-        }
-
-        ref->CreateInstance(llvm, GetFunction(), return_type, GetPreIR(), Scope::LOCAL, pp->IsRef());
-        if (!pp->IsRef()) {
-            ref->GetInstance()->Set(&Arg, nullptr, 0, llvm, procedure_ir);
-        } else {
-            ref->GetInstance()->SetPointer(&Arg, nullptr, 0, llvm, procedure_ir);
-        }
+        auto signature = pp->GetSignature();
+        signature->Create(call);
+        ValueType vt;
+        vt.value = &Arg;
+        vt.type = signature->GetPrimitiveType(call);
         i++;
     }
 
@@ -76,6 +70,7 @@ void Compiler::TokenProcedure(ParserToken &t) {
 }
 
 void Compiler::TokenCall(ParserToken &token) {
+    auto call = BuildTypeCall(token);
     auto ee = procedures.find(token.identifier);
     if (ee == procedures.end()) {
         // Check library
@@ -121,40 +116,11 @@ void Compiler::TokenCall(ParserToken &token) {
     auto i = 0;
     for (auto &s: token.children) {
         auto pp = &f->parameters[i];
-        if (!pp->IsRef()) {
-            auto vt = CompileExpression(s);
-            if (!f->parameters[i].ConvertToOutputValue(vt, GetIR(), llvm)) {
-                RaiseException("Parameter mismatch", token);
-            }
-            vals.push_back(vt.value);
-        } else {
-            auto ref = Reference::Get(s.reference);
-            if (!ref->InstanceExists())
-                VariableNotFound(s, ref->GetName());
-            if (!ref->FindInstanceUnknownInstanceType()) {
-                VariableError(s, ref->GetName());
-            }
-            auto value = ref->GetPointer(option_base, ProcessIndices(ref, s), llvm, GetIR(), s);
-            if (!ref->GetInstance()->IsRef()) {
-                // Primitive?
-                // Is it already a passed parameter?
-                vals.push_back(value);
-            } else {
-                // Arrays
-                // Deref pointer
-                switch (ref->GetInstanceType()) {
-                    case InstanceType::RECORD:
-                    case InstanceType::RECORD_ARRAY:
-                        ref->SetStructName(ref->GetInstance()->GetStructName());
-                        break;
-                    default:
-                        break;
-                }
-                auto tt = ref->GetLLVMType(false, llvm);
-                auto v2 = GetIR()->CreateLoad(tt, value);
-                vals.push_back(v2);
-            }
+        auto vt = CompileExpression(s);
+        if (!pp->ConvertToOutputValue(vt, call)) {
+            RaiseException("Parameter mismatch", token);
         }
+        vals.push_back(vt.value);
         i++;
     }
 

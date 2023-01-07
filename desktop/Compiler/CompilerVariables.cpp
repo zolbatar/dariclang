@@ -108,7 +108,7 @@ void Compiler::TokenSwap(ParserToken &t) {
         RaiseException("Types must be the same for SWAP", t);
     }
     auto v1 = signature1->Get(call);
-    auto v2 = signature1->Get(call);
+    auto v2 = signature2->Get(call);
     signature1->Set(call, v2);
     signature2->Set(call, v1);
 }

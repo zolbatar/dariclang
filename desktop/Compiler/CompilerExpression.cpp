@@ -2,6 +2,7 @@
 
 ValueType Compiler::CompileExpression(ParserToken &t) {
     // Recurse through all children, auto converting types as necessary
+    auto call = BuildTypeCall(t);
 
     switch (t.type) {
         case ParserTokenType::LITERAL: {
@@ -89,7 +90,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             auto i = 0;
             for (auto &s: t.children) {
                 auto vt = CompileExpression(s);
-                if (!f->parameters[i].ConvertToOutputValue(vt, GetIR(), llvm)) {
+                if (!f->parameters[i].ConvertToOutputValue(vt, call)) {
                     RaiseException("Parameter mismatch", t);
                 }
                 vals.push_back(vt.value);
@@ -463,7 +464,6 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
         }
         case ParserTokenType::SIZE: {
             auto signature = TypeSignature::Get(t.signature).get();
-            auto call = BuildTypeCall(t);
             ValueType vt;
             vt.type = Primitive::INT;
             switch (signature->GetClass()) {

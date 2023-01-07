@@ -9,6 +9,13 @@ public:
     bool operator==(TypeSignature &other) override;
     bool Matches(Primitive type);
     Primitive GetPrimitiveType(SignatureCall &call) override;
+    llvm::Type *GetLLVMType(bool is_ref, SignatureCall &call) override {
+        if (!is_ref) {
+            return call.llvm.TypeConversion(primitive_type);
+        } else {
+            return llvm::PointerType::get(call.llvm.TypeConversion(primitive_type), 0);
+        }
+    };
     void SetPrimitiveType(Primitive primitive_type);
     void Create(SignatureCall &call) override;
     void CreateConstant(SignatureCall &call);

@@ -30,25 +30,20 @@ std::any Parser::visitProcedure(DaricParser::ProcedureContext *context) {
 }
 
 std::any Parser::visitParameter(DaricParser::ParameterContext *context) {
-    ParserToken ps = CreateToken(context);
-    auto r = Reference::Create(state, context->IDENTIFIER(0)->getText());
-    ps.reference = r->GetRef();
-    ps.type = ParserTokenType::PARAMETER;
-    if (context->REF()) {
-        ps.type = ParserTokenType::PARAMETER_REF;
-    }
+    ParserToken ps = CreateToken(context, ParserTokenType::PARAMETER);
+
+    // Get type
+    Primitive typ = Primitive::NONE;
     if (context->type()) {
-        r->SetDataType(std::any_cast<Primitive>(visit(context->type())));
+        typ = std::any_cast<Primitive>(visit(context->type()));
     } else if (!context->type() && context->IDENTIFIER().size() == 1) {
         // Default type
-        r->SetDataType(Primitive::INT);
+        typ = Primitive::INT;
     } else {
-        if (!context->REF())
-            RaiseException("Record parameters needs REF", context);
-        r->SetStructName(context->IDENTIFIER(1)->getText());
-        ps.type = ParserTokenType::PARAMETER_REF;
-        r->SetAsStruct();
+        assert(0);
     }
+
+    ps.signature = TypePrimitive::Create(state, Scope::LOCAL, context->IDENTIFIER(0)->getText(), typ)->GetIndex();
     return ps;
 }
 

@@ -46,6 +46,7 @@ public:
     std::string GetName() { return name; }
     static std::shared_ptr<TypeSignature> Get(size_t index) { return signatures_by_index[index]; }
     static std::shared_ptr<TypeSignature> GetByName(std::string name);
+    virtual llvm::Type *GetLLVMType(bool is_ref, SignatureCall &call) = 0;
 
     // Check two signatures are identical
     virtual bool operator==(TypeSignature &) = 0;
