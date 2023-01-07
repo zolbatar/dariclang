@@ -53,6 +53,12 @@ void Compiler::TokenFor(ParserToken &t) {
     auto call = BuildTypeCall(t);
     auto from = CompileExpression(t.children[1]);
 
+    // Do we have a defined type?
+    if (signature->GetPrimitiveType(call) == Primitive::NONE) {
+        auto ct = dynamic_cast<TypePrimitive *>(signature);
+        ct->SetPrimitiveType(from.type);
+    }
+
     // String?
     if (signature->GetPrimitiveType(call) == Primitive::STRING) {
         RaiseException("Strings not allowed in FOR loops", t);
