@@ -126,3 +126,11 @@ llvm::Value *TypeSignature::GlobalIndex(SignatureCall &call) {
     return call.ir->CreateGEP(glob_v->getValueType(), glob_v, {llvm::ConstantInt::get(call.llvm.TypeInt, 0), index});
 }
 
+std::shared_ptr<TypeSignature> TypeSignature::GetByName(std::string name) {
+    auto f = signatures.find(name);
+    if (f == signatures.end())
+        return nullptr;
+    return f->second;
+}
+
+

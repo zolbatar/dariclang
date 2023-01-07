@@ -365,7 +365,7 @@ void daricParserInitialize() {
   	3,100,50,0,792,793,5,88,0,0,793,795,3,100,50,0,794,796,5,94,0,0,795,794,
   	1,0,0,0,795,796,1,0,0,0,796,808,1,0,0,0,797,798,5,78,0,0,798,808,3,100,
   	50,20,799,801,5,35,0,0,800,802,5,93,0,0,801,800,1,0,0,0,801,802,1,0,0,
-  	0,802,803,1,0,0,0,803,805,3,68,34,0,804,806,5,94,0,0,805,804,1,0,0,0,
+  	0,802,803,1,0,0,0,803,805,5,124,0,0,804,806,5,94,0,0,805,804,1,0,0,0,
   	805,806,1,0,0,0,806,808,1,0,0,0,807,656,1,0,0,0,807,661,1,0,0,0,807,662,
   	1,0,0,0,807,663,1,0,0,0,807,664,1,0,0,0,807,665,1,0,0,0,807,666,1,0,0,
   	0,807,670,1,0,0,0,807,672,1,0,0,0,807,674,1,0,0,0,807,676,1,0,0,0,807,
@@ -5517,6 +5517,10 @@ tree::TerminalNode* DaricParser::ExpressionContext::SIZE() {
   return getToken(DaricParser::SIZE, 0);
 }
 
+tree::TerminalNode* DaricParser::ExpressionContext::IDENTIFIER() {
+  return getToken(DaricParser::IDENTIFIER, 0);
+}
+
 tree::TerminalNode* DaricParser::ExpressionContext::HAT() {
   return getToken(DaricParser::HAT, 0);
 }
@@ -6188,7 +6192,7 @@ DaricParser::ExpressionContext* DaricParser::expression(int precedence) {
         match(DaricParser::LPAREN);
       }
       setState(803);
-      variable();
+      match(DaricParser::IDENTIFIER);
       setState(805);
       _errHandler->sync(this);
 

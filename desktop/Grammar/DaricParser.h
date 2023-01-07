@@ -1095,6 +1095,7 @@ public:
     antlr4::tree::TerminalNode *RIGHT();
     antlr4::tree::TerminalNode *LEN();
     antlr4::tree::TerminalNode *SIZE();
+    antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *HAT();
     antlr4::tree::TerminalNode *DIVIDE();
     antlr4::tree::TerminalNode *MULTIPLY();

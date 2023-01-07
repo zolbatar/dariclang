@@ -183,7 +183,7 @@ expression
     | LEN expression
 
     // Array functions
-    | SIZE LPAREN? variable RPAREN?
+    | SIZE LPAREN? IDENTIFIER RPAREN?
 
     // Maths
     | <assoc=right> expression HAT expression

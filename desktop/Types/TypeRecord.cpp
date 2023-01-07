@@ -186,8 +186,15 @@ ValueType TypeRecord::Get(SignatureCall &call) {
         vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(vt.type), gep);
     } else {
         assert(call.llvm.locals.contains(name));
-        auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetLocal(name), index);
-        vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(vt.type), gep);
+        if (!is_ref) {
+            auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetLocal(name), index);
+            vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(vt.type), gep);
+        } else {
+            auto pt = llvm::PointerType::get(struct_type, 0);
+            auto p = call.ir->CreateLoad(pt, call.llvm.GetLocal(name));
+            auto gep = call.ir->CreateStructGEP(struct_type, p, index);
+            vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(vt.type), gep);
+        }
     }
     return vt;
 }

@@ -43,7 +43,9 @@ public:
     SignatureClass GetClass() { return clazz; }
     size_t GetIndex() { return index; }
     bool IsCreated() { return created; };
+    std::string GetName() { return name; }
     static std::shared_ptr<TypeSignature> Get(size_t index) { return signatures_by_index[index]; }
+    static std::shared_ptr<TypeSignature> GetByName(std::string name);
 
     // Check two signatures are identical
     virtual bool operator==(TypeSignature &) = 0;
