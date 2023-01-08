@@ -50,10 +50,10 @@ void daricParserInitialize() {
       "swap", "when", "while", "clear", "get", "set", "typeSignatureSingle", 
       "typeSignatureArray", "typeSignatureRecord", "typeSignatureRecordArray", 
       "typeSignatureArrayNew", "typeSignatureRecordNew", "typeSignatureRecordArrayNew", 
-      "typeSignatureList", "typeSignatureVector", "typeSignatureSet", "typeSignatureMap", 
-      "typeSignatureStack", "typeSignatureQueue", "typeSignature", "typeSignatureArrayOrCollection", 
-      "expression", "type", "typeOrStruct", "literal", "floatLiteral", "integerLiteral", 
-      "stringLiteral"
+      "typeSignatureListNew", "typeSignatureVectorNew", "typeSignatureSetNew", 
+      "typeSignatureMapNew", "typeSignatureStackNew", "typeSignatureQueueNew", 
+      "typeSignature", "typeSignatureArrayOrCollection", "expression", "type", 
+      "typeOrStruct", "literal", "floatLiteral", "integerLiteral", "stringLiteral"
     },
     std::vector<std::string>{
       "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 
@@ -4441,52 +4441,52 @@ DaricParser::TypeSignatureRecordArrayNewContext* DaricParser::typeSignatureRecor
   return _localctx;
 }
 
-//----------------- TypeSignatureListContext ------------------------------------------------------------------
+//----------------- TypeSignatureListNewContext ------------------------------------------------------------------
 
-DaricParser::TypeSignatureListContext::TypeSignatureListContext(ParserRuleContext *parent, size_t invokingState)
+DaricParser::TypeSignatureListNewContext::TypeSignatureListNewContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureListContext::IDENTIFIER() {
+tree::TerminalNode* DaricParser::TypeSignatureListNewContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureListContext::COLON() {
+tree::TerminalNode* DaricParser::TypeSignatureListNewContext::COLON() {
   return getToken(DaricParser::COLON, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureListContext::LIST() {
+tree::TerminalNode* DaricParser::TypeSignatureListNewContext::LIST() {
   return getToken(DaricParser::LIST, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureListContext::SOPEN() {
+tree::TerminalNode* DaricParser::TypeSignatureListNewContext::SOPEN() {
   return getToken(DaricParser::SOPEN, 0);
 }
 
-DaricParser::TypeOrStructContext* DaricParser::TypeSignatureListContext::typeOrStruct() {
+DaricParser::TypeOrStructContext* DaricParser::TypeSignatureListNewContext::typeOrStruct() {
   return getRuleContext<DaricParser::TypeOrStructContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureListContext::SCLOSE() {
+tree::TerminalNode* DaricParser::TypeSignatureListNewContext::SCLOSE() {
   return getToken(DaricParser::SCLOSE, 0);
 }
 
 
-size_t DaricParser::TypeSignatureListContext::getRuleIndex() const {
-  return DaricParser::RuleTypeSignatureList;
+size_t DaricParser::TypeSignatureListNewContext::getRuleIndex() const {
+  return DaricParser::RuleTypeSignatureListNew;
 }
 
 
-std::any DaricParser::TypeSignatureListContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any DaricParser::TypeSignatureListNewContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<DaricVisitor*>(visitor))
-    return parserVisitor->visitTypeSignatureList(this);
+    return parserVisitor->visitTypeSignatureListNew(this);
   else
     return visitor->visitChildren(this);
 }
 
-DaricParser::TypeSignatureListContext* DaricParser::typeSignatureList() {
-  TypeSignatureListContext *_localctx = _tracker.createInstance<TypeSignatureListContext>(_ctx, getState());
-  enterRule(_localctx, 82, DaricParser::RuleTypeSignatureList);
+DaricParser::TypeSignatureListNewContext* DaricParser::typeSignatureListNew() {
+  TypeSignatureListNewContext *_localctx = _tracker.createInstance<TypeSignatureListNewContext>(_ctx, getState());
+  enterRule(_localctx, 82, DaricParser::RuleTypeSignatureListNew);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -4520,52 +4520,52 @@ DaricParser::TypeSignatureListContext* DaricParser::typeSignatureList() {
   return _localctx;
 }
 
-//----------------- TypeSignatureVectorContext ------------------------------------------------------------------
+//----------------- TypeSignatureVectorNewContext ------------------------------------------------------------------
 
-DaricParser::TypeSignatureVectorContext::TypeSignatureVectorContext(ParserRuleContext *parent, size_t invokingState)
+DaricParser::TypeSignatureVectorNewContext::TypeSignatureVectorNewContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureVectorContext::IDENTIFIER() {
+tree::TerminalNode* DaricParser::TypeSignatureVectorNewContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureVectorContext::COLON() {
+tree::TerminalNode* DaricParser::TypeSignatureVectorNewContext::COLON() {
   return getToken(DaricParser::COLON, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureVectorContext::VECTOR() {
+tree::TerminalNode* DaricParser::TypeSignatureVectorNewContext::VECTOR() {
   return getToken(DaricParser::VECTOR, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureVectorContext::SOPEN() {
+tree::TerminalNode* DaricParser::TypeSignatureVectorNewContext::SOPEN() {
   return getToken(DaricParser::SOPEN, 0);
 }
 
-DaricParser::TypeOrStructContext* DaricParser::TypeSignatureVectorContext::typeOrStruct() {
+DaricParser::TypeOrStructContext* DaricParser::TypeSignatureVectorNewContext::typeOrStruct() {
   return getRuleContext<DaricParser::TypeOrStructContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureVectorContext::SCLOSE() {
+tree::TerminalNode* DaricParser::TypeSignatureVectorNewContext::SCLOSE() {
   return getToken(DaricParser::SCLOSE, 0);
 }
 
 
-size_t DaricParser::TypeSignatureVectorContext::getRuleIndex() const {
-  return DaricParser::RuleTypeSignatureVector;
+size_t DaricParser::TypeSignatureVectorNewContext::getRuleIndex() const {
+  return DaricParser::RuleTypeSignatureVectorNew;
 }
 
 
-std::any DaricParser::TypeSignatureVectorContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any DaricParser::TypeSignatureVectorNewContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<DaricVisitor*>(visitor))
-    return parserVisitor->visitTypeSignatureVector(this);
+    return parserVisitor->visitTypeSignatureVectorNew(this);
   else
     return visitor->visitChildren(this);
 }
 
-DaricParser::TypeSignatureVectorContext* DaricParser::typeSignatureVector() {
-  TypeSignatureVectorContext *_localctx = _tracker.createInstance<TypeSignatureVectorContext>(_ctx, getState());
-  enterRule(_localctx, 84, DaricParser::RuleTypeSignatureVector);
+DaricParser::TypeSignatureVectorNewContext* DaricParser::typeSignatureVectorNew() {
+  TypeSignatureVectorNewContext *_localctx = _tracker.createInstance<TypeSignatureVectorNewContext>(_ctx, getState());
+  enterRule(_localctx, 84, DaricParser::RuleTypeSignatureVectorNew);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -4599,52 +4599,52 @@ DaricParser::TypeSignatureVectorContext* DaricParser::typeSignatureVector() {
   return _localctx;
 }
 
-//----------------- TypeSignatureSetContext ------------------------------------------------------------------
+//----------------- TypeSignatureSetNewContext ------------------------------------------------------------------
 
-DaricParser::TypeSignatureSetContext::TypeSignatureSetContext(ParserRuleContext *parent, size_t invokingState)
+DaricParser::TypeSignatureSetNewContext::TypeSignatureSetNewContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureSetContext::IDENTIFIER() {
+tree::TerminalNode* DaricParser::TypeSignatureSetNewContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureSetContext::COLON() {
+tree::TerminalNode* DaricParser::TypeSignatureSetNewContext::COLON() {
   return getToken(DaricParser::COLON, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureSetContext::SET() {
+tree::TerminalNode* DaricParser::TypeSignatureSetNewContext::SET() {
   return getToken(DaricParser::SET, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureSetContext::SOPEN() {
+tree::TerminalNode* DaricParser::TypeSignatureSetNewContext::SOPEN() {
   return getToken(DaricParser::SOPEN, 0);
 }
 
-DaricParser::TypeContext* DaricParser::TypeSignatureSetContext::type() {
+DaricParser::TypeContext* DaricParser::TypeSignatureSetNewContext::type() {
   return getRuleContext<DaricParser::TypeContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureSetContext::SCLOSE() {
+tree::TerminalNode* DaricParser::TypeSignatureSetNewContext::SCLOSE() {
   return getToken(DaricParser::SCLOSE, 0);
 }
 
 
-size_t DaricParser::TypeSignatureSetContext::getRuleIndex() const {
-  return DaricParser::RuleTypeSignatureSet;
+size_t DaricParser::TypeSignatureSetNewContext::getRuleIndex() const {
+  return DaricParser::RuleTypeSignatureSetNew;
 }
 
 
-std::any DaricParser::TypeSignatureSetContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any DaricParser::TypeSignatureSetNewContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<DaricVisitor*>(visitor))
-    return parserVisitor->visitTypeSignatureSet(this);
+    return parserVisitor->visitTypeSignatureSetNew(this);
   else
     return visitor->visitChildren(this);
 }
 
-DaricParser::TypeSignatureSetContext* DaricParser::typeSignatureSet() {
-  TypeSignatureSetContext *_localctx = _tracker.createInstance<TypeSignatureSetContext>(_ctx, getState());
-  enterRule(_localctx, 86, DaricParser::RuleTypeSignatureSet);
+DaricParser::TypeSignatureSetNewContext* DaricParser::typeSignatureSetNew() {
+  TypeSignatureSetNewContext *_localctx = _tracker.createInstance<TypeSignatureSetNewContext>(_ctx, getState());
+  enterRule(_localctx, 86, DaricParser::RuleTypeSignatureSetNew);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -4678,60 +4678,60 @@ DaricParser::TypeSignatureSetContext* DaricParser::typeSignatureSet() {
   return _localctx;
 }
 
-//----------------- TypeSignatureMapContext ------------------------------------------------------------------
+//----------------- TypeSignatureMapNewContext ------------------------------------------------------------------
 
-DaricParser::TypeSignatureMapContext::TypeSignatureMapContext(ParserRuleContext *parent, size_t invokingState)
+DaricParser::TypeSignatureMapNewContext::TypeSignatureMapNewContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureMapContext::IDENTIFIER() {
+tree::TerminalNode* DaricParser::TypeSignatureMapNewContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureMapContext::COLON() {
+tree::TerminalNode* DaricParser::TypeSignatureMapNewContext::COLON() {
   return getToken(DaricParser::COLON, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureMapContext::MAP() {
+tree::TerminalNode* DaricParser::TypeSignatureMapNewContext::MAP() {
   return getToken(DaricParser::MAP, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureMapContext::SOPEN() {
+tree::TerminalNode* DaricParser::TypeSignatureMapNewContext::SOPEN() {
   return getToken(DaricParser::SOPEN, 0);
 }
 
-DaricParser::TypeContext* DaricParser::TypeSignatureMapContext::type() {
+DaricParser::TypeContext* DaricParser::TypeSignatureMapNewContext::type() {
   return getRuleContext<DaricParser::TypeContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureMapContext::COMMA() {
+tree::TerminalNode* DaricParser::TypeSignatureMapNewContext::COMMA() {
   return getToken(DaricParser::COMMA, 0);
 }
 
-DaricParser::TypeOrStructContext* DaricParser::TypeSignatureMapContext::typeOrStruct() {
+DaricParser::TypeOrStructContext* DaricParser::TypeSignatureMapNewContext::typeOrStruct() {
   return getRuleContext<DaricParser::TypeOrStructContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureMapContext::SCLOSE() {
+tree::TerminalNode* DaricParser::TypeSignatureMapNewContext::SCLOSE() {
   return getToken(DaricParser::SCLOSE, 0);
 }
 
 
-size_t DaricParser::TypeSignatureMapContext::getRuleIndex() const {
-  return DaricParser::RuleTypeSignatureMap;
+size_t DaricParser::TypeSignatureMapNewContext::getRuleIndex() const {
+  return DaricParser::RuleTypeSignatureMapNew;
 }
 
 
-std::any DaricParser::TypeSignatureMapContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any DaricParser::TypeSignatureMapNewContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<DaricVisitor*>(visitor))
-    return parserVisitor->visitTypeSignatureMap(this);
+    return parserVisitor->visitTypeSignatureMapNew(this);
   else
     return visitor->visitChildren(this);
 }
 
-DaricParser::TypeSignatureMapContext* DaricParser::typeSignatureMap() {
-  TypeSignatureMapContext *_localctx = _tracker.createInstance<TypeSignatureMapContext>(_ctx, getState());
-  enterRule(_localctx, 88, DaricParser::RuleTypeSignatureMap);
+DaricParser::TypeSignatureMapNewContext* DaricParser::typeSignatureMapNew() {
+  TypeSignatureMapNewContext *_localctx = _tracker.createInstance<TypeSignatureMapNewContext>(_ctx, getState());
+  enterRule(_localctx, 88, DaricParser::RuleTypeSignatureMapNew);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -4769,52 +4769,52 @@ DaricParser::TypeSignatureMapContext* DaricParser::typeSignatureMap() {
   return _localctx;
 }
 
-//----------------- TypeSignatureStackContext ------------------------------------------------------------------
+//----------------- TypeSignatureStackNewContext ------------------------------------------------------------------
 
-DaricParser::TypeSignatureStackContext::TypeSignatureStackContext(ParserRuleContext *parent, size_t invokingState)
+DaricParser::TypeSignatureStackNewContext::TypeSignatureStackNewContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureStackContext::IDENTIFIER() {
+tree::TerminalNode* DaricParser::TypeSignatureStackNewContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureStackContext::COLON() {
+tree::TerminalNode* DaricParser::TypeSignatureStackNewContext::COLON() {
   return getToken(DaricParser::COLON, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureStackContext::STACK() {
+tree::TerminalNode* DaricParser::TypeSignatureStackNewContext::STACK() {
   return getToken(DaricParser::STACK, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureStackContext::SOPEN() {
+tree::TerminalNode* DaricParser::TypeSignatureStackNewContext::SOPEN() {
   return getToken(DaricParser::SOPEN, 0);
 }
 
-DaricParser::TypeOrStructContext* DaricParser::TypeSignatureStackContext::typeOrStruct() {
+DaricParser::TypeOrStructContext* DaricParser::TypeSignatureStackNewContext::typeOrStruct() {
   return getRuleContext<DaricParser::TypeOrStructContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureStackContext::SCLOSE() {
+tree::TerminalNode* DaricParser::TypeSignatureStackNewContext::SCLOSE() {
   return getToken(DaricParser::SCLOSE, 0);
 }
 
 
-size_t DaricParser::TypeSignatureStackContext::getRuleIndex() const {
-  return DaricParser::RuleTypeSignatureStack;
+size_t DaricParser::TypeSignatureStackNewContext::getRuleIndex() const {
+  return DaricParser::RuleTypeSignatureStackNew;
 }
 
 
-std::any DaricParser::TypeSignatureStackContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any DaricParser::TypeSignatureStackNewContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<DaricVisitor*>(visitor))
-    return parserVisitor->visitTypeSignatureStack(this);
+    return parserVisitor->visitTypeSignatureStackNew(this);
   else
     return visitor->visitChildren(this);
 }
 
-DaricParser::TypeSignatureStackContext* DaricParser::typeSignatureStack() {
-  TypeSignatureStackContext *_localctx = _tracker.createInstance<TypeSignatureStackContext>(_ctx, getState());
-  enterRule(_localctx, 90, DaricParser::RuleTypeSignatureStack);
+DaricParser::TypeSignatureStackNewContext* DaricParser::typeSignatureStackNew() {
+  TypeSignatureStackNewContext *_localctx = _tracker.createInstance<TypeSignatureStackNewContext>(_ctx, getState());
+  enterRule(_localctx, 90, DaricParser::RuleTypeSignatureStackNew);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -4848,52 +4848,52 @@ DaricParser::TypeSignatureStackContext* DaricParser::typeSignatureStack() {
   return _localctx;
 }
 
-//----------------- TypeSignatureQueueContext ------------------------------------------------------------------
+//----------------- TypeSignatureQueueNewContext ------------------------------------------------------------------
 
-DaricParser::TypeSignatureQueueContext::TypeSignatureQueueContext(ParserRuleContext *parent, size_t invokingState)
+DaricParser::TypeSignatureQueueNewContext::TypeSignatureQueueNewContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureQueueContext::IDENTIFIER() {
+tree::TerminalNode* DaricParser::TypeSignatureQueueNewContext::IDENTIFIER() {
   return getToken(DaricParser::IDENTIFIER, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureQueueContext::COLON() {
+tree::TerminalNode* DaricParser::TypeSignatureQueueNewContext::COLON() {
   return getToken(DaricParser::COLON, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureQueueContext::QUEUE() {
+tree::TerminalNode* DaricParser::TypeSignatureQueueNewContext::QUEUE() {
   return getToken(DaricParser::QUEUE, 0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureQueueContext::SOPEN() {
+tree::TerminalNode* DaricParser::TypeSignatureQueueNewContext::SOPEN() {
   return getToken(DaricParser::SOPEN, 0);
 }
 
-DaricParser::TypeOrStructContext* DaricParser::TypeSignatureQueueContext::typeOrStruct() {
+DaricParser::TypeOrStructContext* DaricParser::TypeSignatureQueueNewContext::typeOrStruct() {
   return getRuleContext<DaricParser::TypeOrStructContext>(0);
 }
 
-tree::TerminalNode* DaricParser::TypeSignatureQueueContext::SCLOSE() {
+tree::TerminalNode* DaricParser::TypeSignatureQueueNewContext::SCLOSE() {
   return getToken(DaricParser::SCLOSE, 0);
 }
 
 
-size_t DaricParser::TypeSignatureQueueContext::getRuleIndex() const {
-  return DaricParser::RuleTypeSignatureQueue;
+size_t DaricParser::TypeSignatureQueueNewContext::getRuleIndex() const {
+  return DaricParser::RuleTypeSignatureQueueNew;
 }
 
 
-std::any DaricParser::TypeSignatureQueueContext::accept(tree::ParseTreeVisitor *visitor) {
+std::any DaricParser::TypeSignatureQueueNewContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<DaricVisitor*>(visitor))
-    return parserVisitor->visitTypeSignatureQueue(this);
+    return parserVisitor->visitTypeSignatureQueueNew(this);
   else
     return visitor->visitChildren(this);
 }
 
-DaricParser::TypeSignatureQueueContext* DaricParser::typeSignatureQueue() {
-  TypeSignatureQueueContext *_localctx = _tracker.createInstance<TypeSignatureQueueContext>(_ctx, getState());
-  enterRule(_localctx, 92, DaricParser::RuleTypeSignatureQueue);
+DaricParser::TypeSignatureQueueNewContext* DaricParser::typeSignatureQueueNew() {
+  TypeSignatureQueueNewContext *_localctx = _tracker.createInstance<TypeSignatureQueueNewContext>(_ctx, getState());
+  enterRule(_localctx, 92, DaricParser::RuleTypeSignatureQueueNew);
 
 #if __cplusplus > 201703L
   auto onExit = finally([=, this] {
@@ -5037,28 +5037,28 @@ DaricParser::TypeSignatureRecordArrayNewContext* DaricParser::TypeSignatureArray
   return getRuleContext<DaricParser::TypeSignatureRecordArrayNewContext>(0);
 }
 
-DaricParser::TypeSignatureListContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureList() {
-  return getRuleContext<DaricParser::TypeSignatureListContext>(0);
+DaricParser::TypeSignatureListNewContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureListNew() {
+  return getRuleContext<DaricParser::TypeSignatureListNewContext>(0);
 }
 
-DaricParser::TypeSignatureVectorContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureVector() {
-  return getRuleContext<DaricParser::TypeSignatureVectorContext>(0);
+DaricParser::TypeSignatureVectorNewContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureVectorNew() {
+  return getRuleContext<DaricParser::TypeSignatureVectorNewContext>(0);
 }
 
-DaricParser::TypeSignatureSetContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureSet() {
-  return getRuleContext<DaricParser::TypeSignatureSetContext>(0);
+DaricParser::TypeSignatureSetNewContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureSetNew() {
+  return getRuleContext<DaricParser::TypeSignatureSetNewContext>(0);
 }
 
-DaricParser::TypeSignatureMapContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureMap() {
-  return getRuleContext<DaricParser::TypeSignatureMapContext>(0);
+DaricParser::TypeSignatureMapNewContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureMapNew() {
+  return getRuleContext<DaricParser::TypeSignatureMapNewContext>(0);
 }
 
-DaricParser::TypeSignatureStackContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureStack() {
-  return getRuleContext<DaricParser::TypeSignatureStackContext>(0);
+DaricParser::TypeSignatureStackNewContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureStackNew() {
+  return getRuleContext<DaricParser::TypeSignatureStackNewContext>(0);
 }
 
-DaricParser::TypeSignatureQueueContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureQueue() {
-  return getRuleContext<DaricParser::TypeSignatureQueueContext>(0);
+DaricParser::TypeSignatureQueueNewContext* DaricParser::TypeSignatureArrayOrCollectionContext::typeSignatureQueueNew() {
+  return getRuleContext<DaricParser::TypeSignatureQueueNewContext>(0);
 }
 
 
@@ -5113,42 +5113,42 @@ DaricParser::TypeSignatureArrayOrCollectionContext* DaricParser::typeSignatureAr
     case 4: {
       enterOuterAlt(_localctx, 4);
       setState(624);
-      typeSignatureList();
+      typeSignatureListNew();
       break;
     }
 
     case 5: {
       enterOuterAlt(_localctx, 5);
       setState(625);
-      typeSignatureVector();
+      typeSignatureVectorNew();
       break;
     }
 
     case 6: {
       enterOuterAlt(_localctx, 6);
       setState(626);
-      typeSignatureSet();
+      typeSignatureSetNew();
       break;
     }
 
     case 7: {
       enterOuterAlt(_localctx, 7);
       setState(627);
-      typeSignatureMap();
+      typeSignatureMapNew();
       break;
     }
 
     case 8: {
       enterOuterAlt(_localctx, 8);
       setState(628);
-      typeSignatureStack();
+      typeSignatureStackNew();
       break;
     }
 
     case 9: {
       enterOuterAlt(_localctx, 9);
       setState(629);
-      typeSignatureQueue();
+      typeSignatureQueueNew();
       break;
     }
 

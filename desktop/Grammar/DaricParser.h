@@ -45,8 +45,8 @@ public:
     RuleSet = 33, RuleTypeSignatureSingle = 34, RuleTypeSignatureArray = 35, 
     RuleTypeSignatureRecord = 36, RuleTypeSignatureRecordArray = 37, RuleTypeSignatureArrayNew = 38, 
     RuleTypeSignatureRecordNew = 39, RuleTypeSignatureRecordArrayNew = 40, 
-    RuleTypeSignatureList = 41, RuleTypeSignatureVector = 42, RuleTypeSignatureSet = 43, 
-    RuleTypeSignatureMap = 44, RuleTypeSignatureStack = 45, RuleTypeSignatureQueue = 46, 
+    RuleTypeSignatureListNew = 41, RuleTypeSignatureVectorNew = 42, RuleTypeSignatureSetNew = 43, 
+    RuleTypeSignatureMapNew = 44, RuleTypeSignatureStackNew = 45, RuleTypeSignatureQueueNew = 46, 
     RuleTypeSignature = 47, RuleTypeSignatureArrayOrCollection = 48, RuleExpression = 49, 
     RuleType = 50, RuleTypeOrStruct = 51, RuleLiteral = 52, RuleFloatLiteral = 53, 
     RuleIntegerLiteral = 54, RuleStringLiteral = 55
@@ -110,12 +110,12 @@ public:
   class TypeSignatureArrayNewContext;
   class TypeSignatureRecordNewContext;
   class TypeSignatureRecordArrayNewContext;
-  class TypeSignatureListContext;
-  class TypeSignatureVectorContext;
-  class TypeSignatureSetContext;
-  class TypeSignatureMapContext;
-  class TypeSignatureStackContext;
-  class TypeSignatureQueueContext;
+  class TypeSignatureListNewContext;
+  class TypeSignatureVectorNewContext;
+  class TypeSignatureSetNewContext;
+  class TypeSignatureMapNewContext;
+  class TypeSignatureStackNewContext;
+  class TypeSignatureQueueNewContext;
   class TypeSignatureContext;
   class TypeSignatureArrayOrCollectionContext;
   class ExpressionContext;
@@ -872,9 +872,9 @@ public:
 
   TypeSignatureRecordArrayNewContext* typeSignatureRecordArrayNew();
 
-  class  TypeSignatureListContext : public antlr4::ParserRuleContext {
+  class  TypeSignatureListNewContext : public antlr4::ParserRuleContext {
   public:
-    TypeSignatureListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSignatureListNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
@@ -888,11 +888,11 @@ public:
    
   };
 
-  TypeSignatureListContext* typeSignatureList();
+  TypeSignatureListNewContext* typeSignatureListNew();
 
-  class  TypeSignatureVectorContext : public antlr4::ParserRuleContext {
+  class  TypeSignatureVectorNewContext : public antlr4::ParserRuleContext {
   public:
-    TypeSignatureVectorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSignatureVectorNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
@@ -906,11 +906,11 @@ public:
    
   };
 
-  TypeSignatureVectorContext* typeSignatureVector();
+  TypeSignatureVectorNewContext* typeSignatureVectorNew();
 
-  class  TypeSignatureSetContext : public antlr4::ParserRuleContext {
+  class  TypeSignatureSetNewContext : public antlr4::ParserRuleContext {
   public:
-    TypeSignatureSetContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSignatureSetNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
@@ -924,11 +924,11 @@ public:
    
   };
 
-  TypeSignatureSetContext* typeSignatureSet();
+  TypeSignatureSetNewContext* typeSignatureSetNew();
 
-  class  TypeSignatureMapContext : public antlr4::ParserRuleContext {
+  class  TypeSignatureMapNewContext : public antlr4::ParserRuleContext {
   public:
-    TypeSignatureMapContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSignatureMapNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
@@ -944,11 +944,11 @@ public:
    
   };
 
-  TypeSignatureMapContext* typeSignatureMap();
+  TypeSignatureMapNewContext* typeSignatureMapNew();
 
-  class  TypeSignatureStackContext : public antlr4::ParserRuleContext {
+  class  TypeSignatureStackNewContext : public antlr4::ParserRuleContext {
   public:
-    TypeSignatureStackContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSignatureStackNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
@@ -962,11 +962,11 @@ public:
    
   };
 
-  TypeSignatureStackContext* typeSignatureStack();
+  TypeSignatureStackNewContext* typeSignatureStackNew();
 
-  class  TypeSignatureQueueContext : public antlr4::ParserRuleContext {
+  class  TypeSignatureQueueNewContext : public antlr4::ParserRuleContext {
   public:
-    TypeSignatureQueueContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSignatureQueueNewContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *COLON();
@@ -980,7 +980,7 @@ public:
    
   };
 
-  TypeSignatureQueueContext* typeSignatureQueue();
+  TypeSignatureQueueNewContext* typeSignatureQueueNew();
 
   class  TypeSignatureContext : public antlr4::ParserRuleContext {
   public:
@@ -1005,12 +1005,12 @@ public:
     TypeSignatureArrayNewContext *typeSignatureArrayNew();
     TypeSignatureRecordNewContext *typeSignatureRecordNew();
     TypeSignatureRecordArrayNewContext *typeSignatureRecordArrayNew();
-    TypeSignatureListContext *typeSignatureList();
-    TypeSignatureVectorContext *typeSignatureVector();
-    TypeSignatureSetContext *typeSignatureSet();
-    TypeSignatureMapContext *typeSignatureMap();
-    TypeSignatureStackContext *typeSignatureStack();
-    TypeSignatureQueueContext *typeSignatureQueue();
+    TypeSignatureListNewContext *typeSignatureListNew();
+    TypeSignatureVectorNewContext *typeSignatureVectorNew();
+    TypeSignatureSetNewContext *typeSignatureSetNew();
+    TypeSignatureMapNewContext *typeSignatureMapNew();
+    TypeSignatureStackNewContext *typeSignatureStackNew();
+    TypeSignatureQueueNewContext *typeSignatureQueueNew();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;

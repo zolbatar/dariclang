@@ -217,27 +217,27 @@ std::any Parser::visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureReco
 	return NULL;
 }
 
-std::any Parser::visitTypeSignatureList(DaricParser::TypeSignatureListContext *context) {
+std::any Parser::visitTypeSignatureListNew(DaricParser::TypeSignatureListNewContext *context) {
 	assert(0);
 }
 
-std::any Parser::visitTypeSignatureVector(DaricParser::TypeSignatureVectorContext *context) {
+std::any Parser::visitTypeSignatureVectorNew(DaricParser::TypeSignatureVectorNewContext *context) {
 	assert(0);
 }
 
-std::any Parser::visitTypeSignatureSet(DaricParser::TypeSignatureSetContext *context) {
+std::any Parser::visitTypeSignatureSetNew(DaricParser::TypeSignatureSetNewContext *context) {
 	assert(0);
 }
 
-std::any Parser::visitTypeSignatureMap(DaricParser::TypeSignatureMapContext *context) {
+std::any Parser::visitTypeSignatureMapNew(DaricParser::TypeSignatureMapNewContext *context) {
 	assert(0);
 }
 
-std::any Parser::visitTypeSignatureStack(DaricParser::TypeSignatureStackContext *context) {
+std::any Parser::visitTypeSignatureStackNew(DaricParser::TypeSignatureStackNewContext *context) {
 	assert(0);
 }
 
-std::any Parser::visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext *context) {
+std::any Parser::visitTypeSignatureQueueNew(DaricParser::TypeSignatureQueueNewContext *context) {
 	assert(0);
 }
 

@@ -98,12 +98,12 @@ protected:
 	std::any visitTypeSignatureArray(DaricParser::TypeSignatureArrayContext *context) override;
 	std::any visitTypeSignatureRecord(DaricParser::TypeSignatureRecordContext *context) override;
 	std::any visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) override;
-	std::any visitTypeSignatureList(DaricParser::TypeSignatureListContext *context) override;
-	std::any visitTypeSignatureVector(DaricParser::TypeSignatureVectorContext *context) override;
-	std::any visitTypeSignatureSet(DaricParser::TypeSignatureSetContext *context) override;
-	std::any visitTypeSignatureMap(DaricParser::TypeSignatureMapContext *context) override;
-	std::any visitTypeSignatureStack(DaricParser::TypeSignatureStackContext *context) override;
-	std::any visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext *context) override;
+	std::any visitTypeSignatureListNew(DaricParser::TypeSignatureListNewContext *context) override;
+	std::any visitTypeSignatureVectorNew(DaricParser::TypeSignatureVectorNewContext *context) override;
+	std::any visitTypeSignatureSetNew(DaricParser::TypeSignatureSetNewContext *context) override;
+	std::any visitTypeSignatureMapNew(DaricParser::TypeSignatureMapNewContext *context) override;
+	std::any visitTypeSignatureStackNew(DaricParser::TypeSignatureStackNewContext *context) override;
+	std::any visitTypeSignatureQueueNew(DaricParser::TypeSignatureQueueNewContext *context) override;
 	std::any visitTypeSignatureArrayOrCollection(DaricParser::TypeSignatureArrayOrCollectionContext *context) override;
 	std::any visitTypeSignatureArrayNew(DaricParser::TypeSignatureArrayNewContext *context) override;
 	std::any visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureRecordArrayNewContext *context) override;

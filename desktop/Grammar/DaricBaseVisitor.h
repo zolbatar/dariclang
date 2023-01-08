@@ -179,27 +179,27 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeSignatureList(DaricParser::TypeSignatureListContext *ctx) override {
+  virtual std::any visitTypeSignatureListNew(DaricParser::TypeSignatureListNewContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeSignatureVector(DaricParser::TypeSignatureVectorContext *ctx) override {
+  virtual std::any visitTypeSignatureVectorNew(DaricParser::TypeSignatureVectorNewContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeSignatureSet(DaricParser::TypeSignatureSetContext *ctx) override {
+  virtual std::any visitTypeSignatureSetNew(DaricParser::TypeSignatureSetNewContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeSignatureMap(DaricParser::TypeSignatureMapContext *ctx) override {
+  virtual std::any visitTypeSignatureMapNew(DaricParser::TypeSignatureMapNewContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeSignatureStack(DaricParser::TypeSignatureStackContext *ctx) override {
+  virtual std::any visitTypeSignatureStackNew(DaricParser::TypeSignatureStackNewContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual std::any visitTypeSignatureQueue(DaricParser::TypeSignatureQueueContext *ctx) override {
+  virtual std::any visitTypeSignatureQueueNew(DaricParser::TypeSignatureQueueNewContext *ctx) override {
     return visitChildren(ctx);
   }
 

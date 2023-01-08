@@ -86,12 +86,12 @@ typeSignatureRecordArray:   IDENTIFIER SOPEN expression? (COMMA expression)* SCL
 typeSignatureArrayNew:      IDENTIFIER COLON type SOPEN expression? (COMMA expression)* SCLOSE ;
 typeSignatureRecordNew:     IDENTIFIER COLON IDENTIFIER LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN ;
 typeSignatureRecordArrayNew:IDENTIFIER COLON IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
-typeSignatureList:          IDENTIFIER COLON LIST SOPEN typeOrStruct SCLOSE ;
-typeSignatureVector:        IDENTIFIER COLON VECTOR SOPEN typeOrStruct SCLOSE ;
-typeSignatureSet:           IDENTIFIER COLON SET SOPEN type SCLOSE ;
-typeSignatureMap:           IDENTIFIER COLON MAP SOPEN type COMMA typeOrStruct SCLOSE ;
-typeSignatureStack:         IDENTIFIER COLON STACK SOPEN typeOrStruct SCLOSE ;
-typeSignatureQueue:         IDENTIFIER COLON QUEUE SOPEN typeOrStruct SCLOSE ;
+typeSignatureListNew:       IDENTIFIER COLON LIST SOPEN typeOrStruct SCLOSE ;
+typeSignatureVectorNew:     IDENTIFIER COLON VECTOR SOPEN typeOrStruct SCLOSE ;
+typeSignatureSetNew:        IDENTIFIER COLON SET SOPEN type SCLOSE ;
+typeSignatureMapNew:        IDENTIFIER COLON MAP SOPEN type COMMA typeOrStruct SCLOSE ;
+typeSignatureStackNew:      IDENTIFIER COLON STACK SOPEN typeOrStruct SCLOSE ;
+typeSignatureQueueNew:      IDENTIFIER COLON QUEUE SOPEN typeOrStruct SCLOSE ;
 
 typeSignature
     : typeSignatureSingle
@@ -104,12 +104,12 @@ typeSignatureArrayOrCollection
     : typeSignatureArrayNew
     | typeSignatureRecordNew
     | typeSignatureRecordArrayNew
-    | typeSignatureList
-    | typeSignatureVector
-    | typeSignatureSet
-    | typeSignatureMap
-    | typeSignatureStack
-    | typeSignatureQueue
+    | typeSignatureListNew
+    | typeSignatureVectorNew
+    | typeSignatureSetNew
+    | typeSignatureMapNew
+    | typeSignatureStackNew
+    | typeSignatureQueueNew
     ;
 
 expression
