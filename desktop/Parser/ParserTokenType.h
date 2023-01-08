@@ -88,8 +88,6 @@ enum class ParserTokenType {
     STRING,
     STRING_WITH_FORMAT,
     STRUCT,
-    STRUCT_INSTANCE,
-    STRUCT_DIM,
     SQR,
     SWAP,
     TAN,

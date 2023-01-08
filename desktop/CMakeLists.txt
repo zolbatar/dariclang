@@ -130,6 +130,7 @@ add_executable(${PROJECT_NAME}
         Compiler/CompilerRead.cpp
         Compiler/CompilerArrays.cpp
         Compiler/CompilerCollections.cpp
+        Compiler/FuncParameter.h
         LLVM/CompilerLLVM.cpp
         LLVM/CompilerLLVMRun.cpp
         LLVM/CompilerLLVMVariables.cpp
@@ -198,7 +199,10 @@ add_executable(${PROJECT_NAME}
         Types/TypePrimitive.cpp
         Types/TypePrimitiveArray.h
         Types/TypePrimitiveArray.cpp
-        Types/Type.h Types/TypeRecord.h Types/TypeRecord.cpp Compiler/FuncParameter.h)
+        Types/Type.h Types/TypeRecord.h
+        Types/TypeRecord.cpp
+        Types/TypeRecordArray.cpp
+        Types/TypeRecordArray.h)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

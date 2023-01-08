@@ -104,12 +104,6 @@ void Compiler::CompileStatements(std::vector<ParserToken> &statements) {
             case ParserTokenType::PARAMETER_REF:
             case ParserTokenType::STRUCT:
                 break;
-            case ParserTokenType::STRUCT_INSTANCE:
-                TokenStructInstance(token);
-                break;
-            case ParserTokenType::STRUCT_DIM:
-                TokenStructArray(token);
-                break;
             case ParserTokenType::DIM:
                 TokenDim(token);
                 break;

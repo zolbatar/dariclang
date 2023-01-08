@@ -124,8 +124,6 @@ private:
     void TokenDim(ParserToken &t);
     void TokenContainer(ParserToken &t);
     void TokenStruct(ParserToken &t);
-    void TokenStructInstance(ParserToken &t);
-    void TokenStructArray(ParserToken &t);
     void TokenRepeat(ParserToken &t);
     void TokenWhile(ParserToken &t);
     void TokenFor(ParserToken &t);

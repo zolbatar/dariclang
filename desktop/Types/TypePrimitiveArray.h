@@ -32,4 +32,6 @@ public:
             std::string name,
             Primitive type,
             std::list<ParserToken> &expressions);
+    void CreateLocalDimensions(SignatureCall &call, Primitive primitive_type);
+    void CreateGlobalDimensions(SignatureCall &call, Primitive primitive_type);
 };

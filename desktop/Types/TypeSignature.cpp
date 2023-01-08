@@ -22,46 +22,6 @@ void TypeSignature::ClearLocals() {
     }
 }
 
-void TypeSignature::CreateLocalDimensions(SignatureCall &call, Primitive primitive_type) {
-
-    // Store dimensions (list of dimensions)
-    auto la = call.llvm.CreateLocalArrayStage1(name, call.ir, values.size(), Primitive::INT);
-    llvm::Value *size = llvm::ConstantInt::get(call.llvm.TypeInt, 1);
-    size_t i = 0;
-    for (auto &iv: values) {
-        size = call.ir->CreateMul(size, iv.value);
-        auto ptr = call.ir->CreateGEP(call.llvm.TypeInt, la, {llvm::ConstantInt::get(call.llvm.TypeInt, i)});
-        call.ir->CreateStore(size, ptr);
-        i++;
-    }
-
-    // Create array
-    call.llvm.CreateLocalArrayStage2(name, call.ir, size, call.llvm.TypeConversion(primitive_type));
-}
-
-void TypeSignature::CreateGlobalDimensions(SignatureCall &call, Primitive primitive_type) {
-
-    // Check indices are integers
-    std::vector<unsigned> indices;
-    for (auto &s: expressions) {
-        if (s.type != ParserTokenType::LITERAL && s.data_type != Primitive::INT) {
-            // All dimensions need to be literals
-            RaiseException("For global arrays, dimensions need to be literal integers", s);
-        }
-        indices.push_back(s.literal.iv);
-    }
-
-    size_t size = 1;
-    auto typ = llvm::ArrayType::get(call.llvm.TypeInt, indices.size());
-    std::vector<llvm::Constant *> values;
-    for (auto &iv: indices) {
-        size *= iv;
-        values.push_back(llvm::ConstantInt::get(call.llvm.TypeInt, size));
-    }
-    auto init = llvm::ConstantArray::get(typ, values);
-    auto size_v = llvm::ArrayType::get(call.llvm.TypeConversion(primitive_type), size);
-    call.llvm.CreateGlobalArray(name, typ, init, indices.size(), size_v, primitive_type);
-}
 
 std::list<ParserToken> &TypeSignature::GetExpressions() {
     return expressions;

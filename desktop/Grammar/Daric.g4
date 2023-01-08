@@ -69,8 +69,6 @@ read:           READ typeSignature ;
 restore:        RESTORE stringLiteral ;
 return:         RETURN expression?  ;
 struct:         RECORD IDENTIFIER NEWLINE* IDENTIFIER COLON typeOrStruct (NEWLINE+ IDENTIFIER COLON typeOrStruct)* NEWLINE* END RECORD ;
-//structDim:      DIM IDENTIFIER COLON IDENTIFIER SOPEN expression? (COMMA expression)* SCLOSE ;
-//structInstance: DIM IDENTIFIER COLON IDENTIFIER (LPAREN (IDENTIFIER EQ expression)? (COMMA IDENTIFIER EQ expression)* RPAREN)? ;
 swap:           SWAP typeSignature COMMA typeSignature ;
 when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements END WHILE ;

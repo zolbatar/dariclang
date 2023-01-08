@@ -138,6 +138,12 @@ std::any Parser::visitTypeSignatureRecordNew(DaricParser::TypeSignatureRecordNew
     if (!state.StructExists(struct_name))
         RecordNotFound(struct_name, context);
 
+    std::list<ParserToken> expression;
+    for (size_t i = 0; i < context->expression().size(); i++) {
+        auto pse = std::any_cast<ParserToken>(visit(context->expression(i)));
+        expression.push_back(std::move(pse));
+    }
+
     // Create
     auto ts = TypeRecord::FindRecordSingle(name, struct_name);
     auto result = std::get<0>(ts);
@@ -158,7 +164,33 @@ std::any Parser::visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordA
 }
 
 std::any Parser::visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureRecordArrayNewContext *context) {
-    assert(0);
+    // Context values
+    auto name = context->IDENTIFIER(0)->getText();
+    auto struct_name = context->IDENTIFIER(1)->getText();
+    std::list<ParserToken> expression;
+    for (size_t i = 0; i < context->expression().size(); i++) {
+        auto pse = std::any_cast<ParserToken>(visit(context->expression(i)));
+        pse.identifier = context->expression(i)->getText();
+        expression.push_back(std::move(pse));
+    }
+
+    // Do we have this struct?
+    if (!state.StructExists(struct_name))
+        RecordNotFound(struct_name, context);
+
+    // Create
+    auto ts = TypeRecordArray::FindRecordArray(name, struct_name, expression);
+    auto result = std::get<0>(ts);
+    auto type = std::get<1>(ts);
+    switch (result) {
+        case FindResult::NOT_FOUND:
+            return TypeRecordArray::Create(state, GetScope(), name, struct_name, expression);
+        default:
+            VariableException(context);
+            break;
+    }
+
+    return NULL;
 }
 
 std::any Parser::visitTypeSignatureList(DaricParser::TypeSignatureListContext *context) {

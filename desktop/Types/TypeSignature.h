@@ -43,6 +43,7 @@ public:
     SignatureClass GetClass() { return clazz; }
     size_t GetIndex() { return index; }
     bool IsCreated() { return created; };
+    Scope GetScope() { return scope; }
     std::string GetName() { return name; }
     static std::shared_ptr<TypeSignature> Get(size_t index) { return signatures_by_index[index]; }
     static std::shared_ptr<TypeSignature> GetByName(std::string name);
@@ -77,8 +78,6 @@ public:
     static void ClearLocals();
 protected:
     static std::string GetLatestInstanceIndex();
-    void CreateLocalDimensions(SignatureCall &call, Primitive primitive_type);
-    void CreateGlobalDimensions(SignatureCall &call, Primitive primitive_type);
     llvm::Value *LocalIndex(SignatureCall &call);
     llvm::Value *GlobalIndexPtr(SignatureCall &call);
     llvm::Value *GlobalIndex(SignatureCall &call);
