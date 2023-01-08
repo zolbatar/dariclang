@@ -64,7 +64,7 @@ std::any Parser::visitCall(DaricParser::CallContext *context) {
 
 std::any Parser::visitReturn(DaricParser::ReturnContext *context) {
     if (!current_procedure) {
-        RaiseException("RETURN only valid inside a procedure", context);
+        RaiseException("RETURN only valid inside a procedure", context, GetFilename());
     }
     ParserToken ps = CreateToken(context);
     ps.type = ParserTokenType::RETURN;

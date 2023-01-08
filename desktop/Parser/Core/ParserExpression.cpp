@@ -158,7 +158,7 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
         auto ps = CreateToken(context, ParserTokenType::SIZE);
         auto ff = TypeSignature::GetByName(context->IDENTIFIER()->getText());
         if (!ff)
-            VariableException(context);
+            VariableException(context, GetFilename());
         ps.signature = ff->GetIndex();
         return ps;
     }

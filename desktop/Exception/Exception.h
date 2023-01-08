@@ -4,58 +4,49 @@
 #include <string>
 #include <exception>
 #include <stdexcept>
-
-enum class ExceptionType {
-    PARSER,
-    COMPILER,
-    RUNTIME
-};
+#include "../antlr4-runtime/antlr4-runtime.h"
+#include "../Parser/ParserToken.h"
 
 struct CaughtException {
-    ExceptionType type;
-    std::string filename;
-    size_t line_number;
-    size_t char_position;
-    std::string error;
+	std::string filename;
+	size_t line_number;
+	size_t char_position;
+	std::string error;
 };
 
 class CustomException : public std::runtime_error {
 public:
-    CustomException(ExceptionType type,
-                    std::string filename,
-                    size_t line_number,
-                    size_t char_position,
-                    std::string error) :
-            std::runtime_error(error), type(type), error(error), filename(filename), line_number(line_number),
-            char_position(char_position) {};
+	CustomException(std::string filename,
+					size_t line_number,
+					size_t char_position,
+					std::string error) :
+		std::runtime_error(error), error(error), filename(filename), line_number(line_number),
+		char_position(char_position) {};
 
-    const char *what() const throw() override {
-        return error.c_str();
-    }
+	const char *what() const throw() override {
+		return error.c_str();
+	}
 
-    void OutputToStdout() {
-        std::string msg;
-        switch (type) {
-            case ExceptionType::PARSER:
-                msg = "Parser error";
-                break;
-            case ExceptionType::COMPILER:
-                msg = "Compiler error";
-                break;
-            case ExceptionType::RUNTIME:
-                msg = "Runtime error";
-                break;
-        }
-        if (type != ExceptionType::RUNTIME)
-            std::cout << "[" << msg << "] " << error << " in '" << filename << "' at " << line_number << ":"
-                      << char_position << std::endl;
-        else
-            std::cout << "[" << msg << "]" << std::endl;
-    };
+	void OutputToStdout() {
+		std::string msg;
+		std::cout << "Error: [" << msg << "] " << error << " in '" << filename << "' at " << line_number << ":"
+				  << char_position << std::endl;
+	};
 
-    ExceptionType type;
-    std::string error;
-    std::string filename;
-    size_t line_number;
-    size_t char_position;
+	std::string error;
+	std::string filename;
+	size_t line_number;
+	size_t char_position;
 };
+
+void RaiseException(std::string msg, ParserToken &t);
+void TypeError(ParserToken &t);
+void SyntaxError(ParserToken &t);
+void VariableNotFound(ParserToken &t, std::string name);
+void VariableError(ParserToken &t, std::string name);
+void RecordNotFound(ParserToken &t, std::string name);
+void VariableAlreadyExists(ParserToken &t, std::string name);
+void ProcedureNotFound(ParserToken &t, std::string name);
+void RaiseException(std::string msg, antlr4::ParserRuleContext *context, std::string filename);
+void VariableException(antlr4::ParserRuleContext *context, std::string filename);
+void RecordNotFound(std::string name, antlr4::ParserRuleContext *context, std::string filename);

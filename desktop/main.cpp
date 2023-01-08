@@ -45,17 +45,6 @@ void RunThread() {
 	json j = json::array();
 	for (auto &error : errors) {
 		json je;
-		switch (error.type) {
-			case ExceptionType::PARSER:
-				je["type"] = "Parser";
-				break;
-			case ExceptionType::COMPILER:
-				je["type"] = "Compiler";
-				break;
-			case ExceptionType::RUNTIME:
-				je["type"] = "Runtime";
-				break;
-		}
 		je["filename"] = error.filename;
 		je["line_number"] = error.line_number;
 		je["char_position"] = error.char_position;

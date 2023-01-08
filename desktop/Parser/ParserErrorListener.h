@@ -50,6 +50,6 @@ class DaricErrorListener : public antlr4::BaseErrorListener {
 		for (auto i = 0; i < cc - 1; i++)
 			std::cout << " ";
 		std::cout << "^" << std::endl;
-		throw CustomException(ExceptionType::PARSER, parser_filename, line, charPositionInLine, "Parsing error");
+		throw CustomException(parser_filename, line, charPositionInLine, "Parsing error");
 	}
 };

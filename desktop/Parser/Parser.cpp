@@ -9,94 +9,109 @@ extern std::string parser_filename;
 extern std::list<CaughtException> errors;
 
 std::vector<std::string> Parser::Parse(std::istream &source, CompileTarget target) {
-    Constants();
+	Constants();
 #ifdef CATCH
-    try {
+	try {
 #endif
-    // Call Antlr4 and process
-    parser_filename = filename;
-    antlr4::ANTLRInputStream input(source);
+	// Call Antlr4 and process
+	parser_filename = filename;
+	antlr4::ANTLRInputStream input(source);
 
-    DaricLexer lexer(&input);
-    antlr4::CommonTokenStream tokens(&lexer);
-    DaricParser parser(&tokens);
-    parser.removeErrorListeners();
-    DaricErrorListener errorListener;
-    parser.addErrorListener(&errorListener);
-    //parser.setBuildParseTree(true);
-    //parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
-    parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL);
-    DaricParser::ProgramContext *tree = parser.program();
-    visitProgram(tree);
+	DaricLexer lexer(&input);
+	antlr4::CommonTokenStream tokens(&lexer);
+	DaricParser parser(&tokens);
+	parser.removeErrorListeners();
+	DaricErrorListener errorListener;
+	parser.addErrorListener(&errorListener);
+	//parser.setBuildParseTree(true);
+	//parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL_EXACT_AMBIG_DETECTION);
+	parser.getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::LL);
+	DaricParser::ProgramContext *tree = parser.program();
+	visitProgram(tree);
 #ifdef CATCH
-    } catch (CustomException &ex) {
-        if (target == CompileTarget::INTERACTIVE) {
-            errors.emplace_back(CaughtException{.type = ex.type,
-                .filename = ex.filename,
-                .line_number = ex.line_number,
-                .char_position =ex.char_position,
-                .error = ex.error
-            });
-        } else {
-            ex.OutputToStdout();
-            exit(1);
-        }
-    }
-    catch (std::exception &ex) {
-        std::cout << "Exception: " << ex.what() << std::endl;
-        exit(1);
-    }
+	} catch (CustomException &ex) {
+		if (target == CompileTarget::INTERACTIVE) {
+			errors.emplace_back(CaughtException{.type = ex.type,
+				.filename = ex.filename,
+				.line_number = ex.line_number,
+				.char_position =ex.char_position,
+				.error = ex.error
+			});
+		} else {
+			ex.OutputToStdout();
+			exit(1);
+		}
+	}
+	catch (std::exception &ex) {
+		std::cout << "Exception: " << ex.what() << std::endl;
+		exit(1);
+	}
 #endif
-    return additional_files;
+	return additional_files;
+}
+
+ParserToken Parser::CreateToken(antlr4::ParserRuleContext *context) {
+	ParserToken p;
+	p.scope = GetScope();
+	p.file.line = context->getStart()->getLine();
+	p.file.filename = this->filename;
+	p.file.char_position = context->getStart()->getCharPositionInLine();
+	return p;
+}
+
+ParserToken Parser::CreateToken(antlr4::ParserRuleContext *context, ParserTokenType type) {
+	ParserToken p = CreateToken(context);
+	p.type = type;
+	return p;
 }
 
 void Parser::Constants() {
-    CreateConstantInt("Windowed", 1);
-    CreateConstantInt("Banked", 2);
+	CreateConstantInt("Windowed", 1);
+	CreateConstantInt("Banked", 2);
 
-    CreateConstantInt("KEY_ESCAPE", SDL_SCANCODE_ESCAPE);
-    CreateConstantInt("KEY_RETURN", SDL_SCANCODE_RETURN);
+	CreateConstantInt("KEY_ESCAPE", SDL_SCANCODE_ESCAPE);
+	CreateConstantInt("KEY_RETURN", SDL_SCANCODE_RETURN);
 
-    // Constants
-    CreateConstantInt("KEY_1", SDL_SCANCODE_1);
-    CreateConstantInt("KEY_2", SDL_SCANCODE_2);
-    CreateConstantInt("KEY_3", SDL_SCANCODE_3);
-    CreateConstantInt("KEY_4", SDL_SCANCODE_4);
-    CreateConstantInt("KEY_5", SDL_SCANCODE_5);
-    CreateConstantInt("KEY_6", SDL_SCANCODE_6);
-    CreateConstantInt("KEY_7", SDL_SCANCODE_7);
-    CreateConstantInt("KEY_8", SDL_SCANCODE_8);
-    CreateConstantInt("KEY_9", SDL_SCANCODE_9);
-    CreateConstantInt("KEY_0", SDL_SCANCODE_0);
+	// Constants
+	CreateConstantInt("KEY_1", SDL_SCANCODE_1);
+	CreateConstantInt("KEY_2", SDL_SCANCODE_2);
+	CreateConstantInt("KEY_3", SDL_SCANCODE_3);
+	CreateConstantInt("KEY_4", SDL_SCANCODE_4);
+	CreateConstantInt("KEY_5", SDL_SCANCODE_5);
+	CreateConstantInt("KEY_6", SDL_SCANCODE_6);
+	CreateConstantInt("KEY_7", SDL_SCANCODE_7);
+	CreateConstantInt("KEY_8", SDL_SCANCODE_8);
+	CreateConstantInt("KEY_9", SDL_SCANCODE_9);
+	CreateConstantInt("KEY_0", SDL_SCANCODE_0);
 
-    CreateConstantInt("KEY_Q", SDL_SCANCODE_Q);
-    CreateConstantInt("KEY_W", SDL_SCANCODE_W);
-    CreateConstantInt("KEY_E", SDL_SCANCODE_E);
-    CreateConstantInt("KEY_R", SDL_SCANCODE_R);
-    CreateConstantInt("KEY_T", SDL_SCANCODE_T);
-    CreateConstantInt("KEY_Y", SDL_SCANCODE_Y);
-    CreateConstantInt("KEY_U", SDL_SCANCODE_U);
-    CreateConstantInt("KEY_I", SDL_SCANCODE_I);
-    CreateConstantInt("KEY_O", SDL_SCANCODE_O);
-    CreateConstantInt("KEY_P", SDL_SCANCODE_P);
+	CreateConstantInt("KEY_Q", SDL_SCANCODE_Q);
+	CreateConstantInt("KEY_W", SDL_SCANCODE_W);
+	CreateConstantInt("KEY_E", SDL_SCANCODE_E);
+	CreateConstantInt("KEY_R", SDL_SCANCODE_R);
+	CreateConstantInt("KEY_T", SDL_SCANCODE_T);
+	CreateConstantInt("KEY_Y", SDL_SCANCODE_Y);
+	CreateConstantInt("KEY_U", SDL_SCANCODE_U);
+	CreateConstantInt("KEY_I", SDL_SCANCODE_I);
+	CreateConstantInt("KEY_O", SDL_SCANCODE_O);
+	CreateConstantInt("KEY_P", SDL_SCANCODE_P);
 
-    CreateConstantInt("KEY_A", SDL_SCANCODE_A);
-    CreateConstantInt("KEY_S", SDL_SCANCODE_S);
-    CreateConstantInt("KEY_D", SDL_SCANCODE_D);
-    CreateConstantInt("KEY_F", SDL_SCANCODE_F);
-    CreateConstantInt("KEY_G", SDL_SCANCODE_G);
-    CreateConstantInt("KEY_H", SDL_SCANCODE_H);
-    CreateConstantInt("KEY_J", SDL_SCANCODE_J);
-    CreateConstantInt("KEY_K", SDL_SCANCODE_K);
-    CreateConstantInt("KEY_L", SDL_SCANCODE_L);
+	CreateConstantInt("KEY_A", SDL_SCANCODE_A);
+	CreateConstantInt("KEY_S", SDL_SCANCODE_S);
+	CreateConstantInt("KEY_D", SDL_SCANCODE_D);
+	CreateConstantInt("KEY_F", SDL_SCANCODE_F);
+	CreateConstantInt("KEY_G", SDL_SCANCODE_G);
+	CreateConstantInt("KEY_H", SDL_SCANCODE_H);
+	CreateConstantInt("KEY_J", SDL_SCANCODE_J);
+	CreateConstantInt("KEY_K", SDL_SCANCODE_K);
+	CreateConstantInt("KEY_L", SDL_SCANCODE_L);
 
-    CreateConstantInt("KEY_Z", SDL_SCANCODE_Z);
-    CreateConstantInt("KEY_X", SDL_SCANCODE_X);
-    CreateConstantInt("KEY_C", SDL_SCANCODE_C);
-    CreateConstantInt("KEY_V", SDL_SCANCODE_V);
-    CreateConstantInt("KEY_B", SDL_SCANCODE_B);
-    CreateConstantInt("KEY_N", SDL_SCANCODE_N);
-    CreateConstantInt("KEY_M", SDL_SCANCODE_M);
+	CreateConstantInt("KEY_Z", SDL_SCANCODE_Z);
+	CreateConstantInt("KEY_X", SDL_SCANCODE_X);
+	CreateConstantInt("KEY_C", SDL_SCANCODE_C);
+	CreateConstantInt("KEY_V", SDL_SCANCODE_V);
+	CreateConstantInt("KEY_B", SDL_SCANCODE_B);
+	CreateConstantInt("KEY_N", SDL_SCANCODE_N);
+	CreateConstantInt("KEY_M", SDL_SCANCODE_M);
 
 /*    CreateConstantInt("NOTE_A0",21);
     CreateConstantInt("NOTE_As0",22);
@@ -241,21 +256,22 @@ void Parser::Constants() {
 }
 
 void Parser::CreateConstantInt(const std::string &name, T_I val) {
-    auto signature = TypePrimitive::Create(state, Scope::GLOBAL, name, Primitive::INT).get();
+	auto signature = TypePrimitive::Create(state, Scope::GLOBAL, name, Primitive::INT).get();
 
-    ParserToken p;
-    p.type = ParserTokenType::CONSTANT;
-    p.scope = Scope::GLOBAL;
-    p.file.line = 0;
-    p.file.filename = this->filename;
-    p.file.char_position = 0;
-    p.literal.iv = val;
+	ParserToken p;
+	p.signature = signature->GetIndex();
+	p.type = ParserTokenType::CONSTANT;
+	p.scope = Scope::GLOBAL;
+	p.file.line = 0;
+	p.file.filename = this->filename;
+	p.file.char_position = 0;
+	p.literal.iv = val;
 
-    // Set data type
-    auto ct = dynamic_cast<TypePrimitive *>(signature);
-    ct->SetAsConstant();
-    ct->SetPrimitiveType(Primitive::INT);
+	// Set data type
+	auto ct = dynamic_cast<TypePrimitive *>(signature);
+	ct->SetAsConstant();
+	ct->SetPrimitiveType(Primitive::INT);
 
-    statements.push_back(std::move(p));
+	statements.push_back(std::move(p));
 }
 

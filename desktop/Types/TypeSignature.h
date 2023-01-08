@@ -6,6 +6,7 @@
 #include <functional>
 #include <utility>
 #include "PrimitiveTypes.h"
+#include "../Exception/Exception.h"
 #include "../LLVM/CompilerLLVM.h"
 #include "../Parser/ParserToken.h"
 #include "../Exception/Exception.h"
@@ -38,47 +39,38 @@ struct SignatureCall {
 
 class TypeSignature {
 public:
+
+	// Constructor/Destructor
 	explicit TypeSignature(SourceFileData &state) : state(state) {}
 	virtual ~TypeSignature() = default;
+
+	// Get base stuff
 	SignatureClass GetClass() { return clazz; }
 	size_t GetIndex() { return index; }
 	bool IsCreated() { return created; };
 	Scope GetScope() { return scope; }
 	std::string GetName() { return name; }
-	static std::shared_ptr<TypeSignature> Get(size_t index) { return signatures_by_index[index]; }
-	static std::shared_ptr<TypeSignature> GetByName(const std::string &name);
-	virtual llvm::Type *GetLLVMType(bool is_ref, SignatureCall &call) = 0;
-	virtual void GarbageCollect(SignatureCall &call) = 0;
 
-	// Check two signatures are identical
+	// These need implementing for each type
 	virtual bool operator==(TypeSignature &) = 0;
-
-	// Creating, setting and getting
-	virtual Primitive GetPrimitiveType(SignatureCall &call) = 0;
 	virtual void Create(SignatureCall &call) = 0;
+	virtual void GarbageCollect(SignatureCall &call) = 0;
+	virtual llvm::Type *GetLLVMType(bool is_ref, SignatureCall &call) = 0;
 	virtual ValueType Get(SignatureCall &call) = 0;
+	virtual Primitive GetPrimitiveType(SignatureCall &call) = 0;
 	virtual void Set(SignatureCall &call, ValueType value) = 0;
 
-	static void RaiseException(std::string msg, ParserToken &t) {
-		throw CustomException(ExceptionType::COMPILER, t.file.filename, t.file.line, t.file.char_position, std::move(msg));
-	}
-
-	static void TypeError(ParserToken &t) {
-		throw CustomException(ExceptionType::COMPILER, t.file.filename, t.file.line, t.file.char_position, "Type error");
-	}
-
-	// Indices
-	std::list<ParserToken> &GetExpressions();
-
-	llvm::Value *CreateCall(std::string func_name, llvm::ArrayRef<llvm::Value *> vals, SignatureCall &call) {
-		return call.llvm.CreateCall(std::move(func_name), call.ir, call.func, vals, scope == Scope::LOCAL, call.default_return_type);
-	}
-
-	// Clear locals at end of procedure
+	// Static, shared stuff
+	static std::shared_ptr<TypeSignature> Get(size_t index) { return signatures_by_index[index]; }
+	static std::shared_ptr<TypeSignature> GetByName(const std::string &name);
 	static void ClearStatic();
 	static void ClearLocals();
 	static void GCLocals(SignatureCall &call);
+	llvm::Value *CreateCall(std::string func_name, llvm::ArrayRef<llvm::Value *> vals, SignatureCall &call) {
+		return call.llvm.CreateCall(std::move(func_name), call.ir, call.func, vals, scope == Scope::LOCAL, call.default_return_type);
+	}
 protected:
+	std::list<ParserToken> &GetExpressions();
 	static std::string GetLatestInstanceIndex();
 	llvm::Value *LocalIndex(SignatureCall &call);
 	llvm::Value *GlobalIndexPtr(SignatureCall &call);

@@ -10,7 +10,7 @@ std::any Parser::visitType(DaricParser::TypeContext *context) {
     } else if (context->BYTE()) {
         return Primitive::BYTE;
     }
-    RaiseException("Unknown type", context);
+    RaiseException("Unknown type", context, GetFilename());
     return NULL;
 }
 

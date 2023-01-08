@@ -25,11 +25,11 @@ std::any Parser::visitOption(DaricParser::OptionContext *context) {
         ParserToken ps = CreateToken(context, ParserTokenType::OPTIONBASE);
         ps.literal.iv = std::any_cast<ParserToken>(visit(context->integerLiteral())).literal.iv;
         if (ps.literal.iv != 0 && ps.literal.iv != 1) {
-            RaiseException("Unknown OPTION BASE value", context);
+            RaiseException("Unknown OPTION BASE value", context, GetFilename());
         }
         return ps;
     } else {
-        RaiseException("Unknown OPTION", context);
+        RaiseException("Unknown OPTION", context, GetFilename());
     }
     return nullptr;
 }

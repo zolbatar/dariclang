@@ -45,35 +45,8 @@ private:
 		return current_procedure == nullptr ? Scope::GLOBAL : Scope::LOCAL;
 	}
 
-	void RaiseException(std::string msg, antlr4::ParserRuleContext *context) {
-		throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
-							  context->getStart()->getCharPositionInLine(), msg);
-	}
-
-	void VariableException(antlr4::ParserRuleContext *context) {
-		throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
-							  context->getStart()->getCharPositionInLine(), "Variable error");
-	}
-
-	void RecordNotFound(std::string name, antlr4::ParserRuleContext *context) {
-		throw CustomException(ExceptionType::PARSER, filename, context->getStart()->getLine(),
-							  context->getStart()->getCharPositionInLine(), "Record '" + name + "' not found");
-	}
-
-	ParserToken CreateToken(antlr4::ParserRuleContext *context) {
-		ParserToken p;
-		p.scope = GetScope();
-		p.file.line = context->getStart()->getLine();
-		p.file.filename = this->filename;
-		p.file.char_position = context->getStart()->getCharPositionInLine();
-		return p;
-	}
-
-	ParserToken CreateToken(antlr4::ParserRuleContext *context, ParserTokenType type) {
-		ParserToken p = CreateToken(context);
-		p.type = type;
-		return p;
-	}
+	ParserToken CreateToken(antlr4::ParserRuleContext *context);
+	ParserToken CreateToken(antlr4::ParserRuleContext *context, ParserTokenType type);
 
 protected:
 	void Constants();

@@ -13,7 +13,7 @@ std::any Parser::visitIntegerLiteral(DaricParser::IntegerLiteralContext *context
             i = std::stoi(v, nullptr, 10);
         }
         catch (const std::invalid_argument &) {
-            RaiseException("Invalid number", context);
+            RaiseException("Invalid number", context, GetFilename());
         }
         if (context->MINUS() != nullptr) {
             i = -i;
@@ -25,7 +25,7 @@ std::any Parser::visitIntegerLiteral(DaricParser::IntegerLiteralContext *context
             i = std::stoi(v, nullptr, 16);
         }
         catch (const std::invalid_argument &) {
-            RaiseException("Invalid number", context);
+            RaiseException("Invalid number", context, GetFilename());
         }
     } else if (context->BINARYNUMBER() != nullptr) {
         auto v = context->BINARYNUMBER()->getText();
@@ -34,7 +34,7 @@ std::any Parser::visitIntegerLiteral(DaricParser::IntegerLiteralContext *context
             i = std::stoi(v, nullptr, 2);
         }
         catch (const std::invalid_argument &) {
-            RaiseException("Invalid number", context);
+            RaiseException("Invalid number", context, GetFilename());
         }
     }
     return ParserToken{.type=ParserTokenType::LITERAL, .literal.iv= i, .data_type= Primitive::INT};
@@ -47,7 +47,7 @@ std::any Parser::visitFloatLiteral(DaricParser::FloatLiteralContext *context) {
         i = std::stod(v);
     }
     catch (const std::invalid_argument &) {
-        RaiseException("Invalid number", context);
+        RaiseException("Invalid number", context, GetFilename());
     }
     if (context->MINUS() != nullptr) {
         i = -i;

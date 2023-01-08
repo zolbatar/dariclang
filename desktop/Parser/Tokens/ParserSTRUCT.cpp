@@ -7,14 +7,14 @@ struct StructField {
 
 std::any Parser::visitStruct(DaricParser::StructContext *context) {
 	if (this->current_procedure != nullptr) {
-		RaiseException("Record can only be defined outside of a procedure", context);
+		RaiseException("Record can only be defined outside of a procedure", context, GetFilename());
 	}
 
 	ParserToken ps = CreateToken(context, ParserTokenType::STRUCT);
 	ps.identifier = context->IDENTIFIER(0)->getText();
 
 	if (state.StructExists(ps.identifier)) {
-		RaiseException("Record '" + ps.identifier + "' already defined", context);
+		RaiseException("Record '" + ps.identifier + "' already defined", context, GetFilename());
 	}
 
 	// Build members
@@ -39,7 +39,7 @@ std::any Parser::visitStruct(DaricParser::StructContext *context) {
 			// Get child struct
 			auto f2 = state.FindStructIndices(field.type.name);
 			if (f2 == state.StructIndicesEnd())
-				RaiseException("Struct '" + field.type.name + "' not found", context);
+				RaiseException("Struct '" + field.type.name + "' not found", context, GetFilename());
 			auto child_struct = &state.GetStructInfo(f2->second).fields;
 
 			// Add child fields

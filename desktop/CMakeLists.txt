@@ -188,7 +188,7 @@ add_executable(${PROJECT_NAME}
         Types/TypeRecord.cpp
         Types/TypeRecordArray.cpp
         Types/TypeRecordArray.h
-        Types/PrimitiveTypes.h)
+        Types/PrimitiveTypes.h Exception/Exception.cpp)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

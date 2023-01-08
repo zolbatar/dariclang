@@ -29,7 +29,7 @@ std::any Parser::visitTypeSignatureSingle(DaricParser::TypeSignatureSingleContex
 			return TypePrimitive::Create(state, GetScope(), name, p_type);
 		}
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 
@@ -58,7 +58,7 @@ std::any Parser::visitTypeSignatureArray(DaricParser::TypeSignatureArrayContext 
 			return ct->CreateLink(state, expression);
 		}
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 
@@ -86,7 +86,7 @@ std::any Parser::visitTypeSignatureArrayNew(DaricParser::TypeSignatureArrayNewCo
 		case FindResult::NOT_FOUND:
 			return TypePrimitiveArray::Create(state, GetScope(), name, p_type, expression);
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 
@@ -112,11 +112,11 @@ std::any Parser::visitTypeSignatureRecord(DaricParser::TypeSignatureRecordContex
 		case FindResult::OK: {
 			auto ct = dynamic_cast<TypeRecord *>(type.get());
 			if (!ct->HasField(ff))
-				RaiseException("Record does not contain field '" + ff + "'", context);
+				RaiseException("Record does not contain field '" + ff + "'", context, GetFilename());
 			return ct->CreateLink(state, ff);
 		}
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 
@@ -136,7 +136,7 @@ std::any Parser::visitTypeSignatureRecordNew(DaricParser::TypeSignatureRecordNew
 
 	// Do we have this struct?
 	if (!state.StructExists(struct_name))
-		RecordNotFound(struct_name, context);
+		RecordNotFound(struct_name, context, GetFilename());
 
 	std::list<ParserToken> expression;
 	for (size_t i = 0; i < context->expression().size(); i++) {
@@ -152,7 +152,7 @@ std::any Parser::visitTypeSignatureRecordNew(DaricParser::TypeSignatureRecordNew
 		case FindResult::NOT_FOUND:
 			return TypeRecord::Create(state, GetScope(), name, struct_name, initialisers);
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 
@@ -176,11 +176,11 @@ std::any Parser::visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordA
 		case FindResult::OK: {
 			auto ct = dynamic_cast<TypeRecordArray *>(type.get());
 			if (!ct->HasField(field))
-				RaiseException("Record does not contain field '" + field + "'", context);
+				RaiseException("Record does not contain field '" + field + "'", context, GetFilename());
 			return ct->CreateLink(state, field);
 		}
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 
@@ -200,7 +200,7 @@ std::any Parser::visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureReco
 
 	// Do we have this struct?
 	if (!state.StructExists(struct_name))
-		RecordNotFound(struct_name, context);
+		RecordNotFound(struct_name, context, GetFilename());
 
 	// Create
 	auto ts = TypeRecordArray::FindRecordArray(name, struct_name, expression);
@@ -210,7 +210,7 @@ std::any Parser::visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureReco
 		case FindResult::NOT_FOUND:
 			return TypeRecordArray::Create(state, GetScope(), name, struct_name, expression);
 		default:
-			VariableException(context);
+			VariableException(context, GetFilename());
 			break;
 	}
 

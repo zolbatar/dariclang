@@ -3,7 +3,7 @@
 
 std::any Parser::visitConst(DaricParser::ConstContext *context) {
     if (current_procedure) {
-        RaiseException("CONST not allowed inside procedures", context);
+        RaiseException("CONST not allowed inside procedures", context, GetFilename());
     }
     ParserToken ps = CreateToken(context, ParserTokenType::CONSTANT);
     auto signature =std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature()));
