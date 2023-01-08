@@ -6,6 +6,7 @@ TypeRecordArray::TypeRecordArray(SourceFileData &state,
                                  std::list<ParserToken> expressions,
                                  Scope scope) : TypeRecord(state, name, struct_name, expressions, scope) {
     this->clazz = SignatureClass::RecordArray;
+    this->num_dimensions = expressions.size();
 }
 
 std::shared_ptr<TypeSignature> TypeRecordArray::Create(SourceFileData &state,
@@ -19,10 +20,22 @@ std::shared_ptr<TypeSignature> TypeRecordArray::Create(SourceFileData &state,
     return v;
 }
 
+std::shared_ptr<TypeSignature> TypeRecordArray::CreateLink(SourceFileData &state,
+                                                      std::string field) {
+    std::shared_ptr<TypeRecordArray> v = std::make_shared<TypeRecordArray>(TypeRecordArray(state, name, struct_name, {}, scope));
+    v->created = true;
+    v->SetField(field);
+    signatures_by_index.push_back(v);
+    signatures.emplace(name + GetLatestInstanceIndex(), v);
+    return v;
+}
+
 bool TypeRecordArray::operator==(TypeSignature &other) {
     if (other.GetClass() != this->clazz)
         return false;
     auto ct = dynamic_cast<TypeRecordArray &>(other);
+    if (ct.num_dimensions != this->num_dimensions)
+        return false;
     return true;
 }
 
@@ -56,31 +69,21 @@ std::tuple<FindResult, std::shared_ptr<TypeSignature>> TypeRecordArray::FindReco
     return std::make_tuple(FindResult::NO_MATCH, nullptr);
 }
 
-/*
- *
- * void Compiler::TokenStructArray(ParserToken &t) {
-    auto var = Reference::Get(t.reference);
+std::tuple<FindResult, std::shared_ptr<TypeSignature>> TypeRecordArray::FindRecordArray(
+        std::string name,
+        std::list<ParserToken> &expressions) {
 
-    // Do we have this struct?
-    if (!state.StructExists(var->GetStructName()))
-        RecordNotFound(t, var->GetStructName());
+    // Find by name
+    auto sig = signatures.find(name);
+    if (sig == signatures.end())
+        return std::make_tuple(FindResult::NOT_FOUND, nullptr);
 
-    // So fetch the struct info from LLVM and the parser
-    auto llvm_struct = llvm.GetStruct(var->GetStructName());
+    // Ensure is correct class
+    if (sig->second.get()->GetClass() != SignatureClass::RecordArray)
+        return std::make_tuple(FindResult::INCORRECT_CLASS, nullptr);
 
-    if (procedure == nullptr) {
-        if (t.scope != Scope::GLOBAL)
-            return;
-        CreateGlobalDimensions(var, Primitive::NONE, llvm_struct);
-        var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::GLOBAL, false);
-    } else {
-        if (t.scope != Scope::LOCAL)
-            return;
-        CreateLocalDimensions(var, Primitive::NONE, llvm_struct);
-        var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::LOCAL, false);
-    }
+    return std::make_tuple(FindResult::OK, sig->second);
 }
- */
 
 void TypeRecordArray::Create(SignatureCall &call) {
     auto si = GetStructInfo();

@@ -160,7 +160,29 @@ std::any Parser::visitTypeSignatureRecordNew(DaricParser::TypeSignatureRecordNew
 }
 
 std::any Parser::visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordArrayContext *context) {
-    assert(0);
+    // Context values
+    auto name = context->IDENTIFIER(0)->getText();
+    auto field = context->IDENTIFIER(1)->getText();
+    std::list<ParserToken> expression;
+    for (size_t i = 0; i < context->expression().size(); i++) {
+        auto pse = std::any_cast<ParserToken>(visit(context->expression(i)));
+        expression.push_back(std::move(pse));
+    }
+
+    auto ts = TypeRecordArray::FindRecordArray(name, expression);
+    auto result = std::get<0>(ts);
+    auto type = std::get<1>(ts);
+    switch (result) {
+        case FindResult::OK: {
+            auto ct = dynamic_cast<TypeRecordArray *>(type.get());
+            return ct->CreateLink(state, field);
+        }
+        default:
+            VariableException(context);
+            break;
+    }
+
+    return NULL;
 }
 
 std::any Parser::visitTypeSignatureRecordArrayNew(DaricParser::TypeSignatureRecordArrayNewContext *context) {

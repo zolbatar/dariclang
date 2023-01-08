@@ -15,6 +15,8 @@ public:
                                                  std::string name,
                                                  std::string struct_name,
                                                  std::list<ParserToken> expressions);
+    std::shared_ptr<TypeSignature> CreateLink(SourceFileData &state,
+                                              std::string field);
     bool operator==(TypeSignature &other) override;
     bool Matches(std::string struct_name,
                  std::list<ParserToken> &expressions);
@@ -30,6 +32,9 @@ public:
     static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindRecordArray(
             std::string name,
             std::string struct_name,
+            std::list<ParserToken> &expressions);
+    static std::tuple<FindResult, std::shared_ptr<TypeSignature>> FindRecordArray(
+            std::string name,
             std::list<ParserToken> &expressions);
     void CreateLocalDimensions(SignatureCall &call, llvm::StructType *type2);
     void CreateGlobalDimensions(SignatureCall &call, llvm::StructType *type2);
