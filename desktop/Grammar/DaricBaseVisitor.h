@@ -151,10 +151,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitVariable(DaricParser::VariableContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitTypeSignatureSingle(DaricParser::TypeSignatureSingleContext *ctx) override {
     return visitChildren(ctx);
   }

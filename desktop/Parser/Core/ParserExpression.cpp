@@ -203,12 +203,12 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
 
     if (context->HAS() != NULL) {
         ParserToken t = CreateToken(context, ParserTokenType::HAS);
-        auto r = std::any_cast<Reference *>(visit(context->variable()));
+/*        auto r = std::any_cast<Reference *>(visit(context->variable()));
         t.reference = r->GetRef();
 
         // Expression
         auto e1 = std::any_cast<ParserToken>(visit(context->expression(0)));
-        t.children.push_back(std::move(e1));
+        t.children.push_back(std::move(e1));*/
 
         return t;
     }
@@ -222,12 +222,6 @@ std::any Parser::visitExpression(DaricParser::ExpressionContext *context) {
     if (context->typeSignature() != NULL) {
         ParserToken t = CreateToken(context, ParserTokenType::VARIABLE);
         t.signature = std::any_cast<std::shared_ptr<TypeSignature>>(visit(context->typeSignature())).get()->GetIndex();
-        return t;
-    }
-    if (context->variable() != NULL) {
-        ParserToken t = CreateToken(context, ParserTokenType::VARIABLE);
-        auto r = std::any_cast<Reference *>(visit(context->variable()));
-        t.reference = r->GetRef();
         return t;
     }
     if (context->exprcall()) {

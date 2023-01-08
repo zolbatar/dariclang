@@ -7,24 +7,10 @@
 #include "llvm/Target/TargetMachine.h"
 #include "llvm/IR/LegacyPassManager.h"
 #include "llvm/IR/IRBuilder.h"
-#include "../Variables/PrimitiveTypes.h"
+#include "../Types/PrimitiveTypes.h"
 #include "../Shared/Shared.h"
 #include "../Compiler/CompilerOptions.h"
 #include "llvm/Transforms/Utils/BuildLibCalls.h"
-
-enum class CollectionType {
-	List,
-	Vector,
-	Set,
-	Map,
-	Queue,
-	Stack
-};
-
-struct CollectionAssign {
-	CollectionType type;
-	llvm::Value *alloc;
-};
 
 struct ValueType {
 	llvm::Value *value;
@@ -140,9 +126,9 @@ public:
 	ValueType MathsACS(llvm::IRBuilder<> *ir, ValueType &t1);
 	ValueType MathsATN(llvm::IRBuilder<> *ir, ValueType &t1);
 
-    // Min/Max
-    ValueType MathsMIN(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
-    ValueType MathsMAX(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
+	// Min/Max
+	ValueType MathsMIN(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
+	ValueType MathsMAX(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
 
 	// Bit shifting
 	ValueType MathsSHL(llvm::IRBuilder<> *ir, ValueType &t1, ValueType &t2);
@@ -183,9 +169,6 @@ public:
 	std::unordered_map<std::string, llvm::AllocaInst *> locals;
 	std::unordered_map<std::string, Primitive> globals_type;
 	std::unordered_map<std::string, Primitive> locals_type;
-
-	std::vector<CollectionAssign> local_collections;
-	void GCCollections(llvm::IRBuilder<> *ir);
 private:
 	void SetupLibrary();
 	void BuildData(SourceFileData &state);

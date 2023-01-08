@@ -1,32 +1,5 @@
 #include "Compiler.h"
 
-void Compiler::GCLocals() {
-    // Local vars
-    for (auto &l: Instance::locals) {
-        auto var = llvm.locals[l.first];
-        if (l.second->GetInstanceType() == InstanceType::PRIMITIVE && l.second->GetType() == Primitive::STRING) {
-            llvm.ClearPermString(GetIR()->CreateLoad(llvm.TypeString, var), GetIR());
-        } else if (l.second->GetInstanceType() == InstanceType::RECORD) {
-            // Is this a record?
-            auto idx = state.GetStructIndex(l.second->GetStructName());
-            auto str = state.GetStruct(idx);
-
-            // Any string fields?
-            int i = 0;
-            for (auto &f: str->fields) {
-                if (f.type == Primitive::STRING) {
-                    auto gep = GetIR()->CreateStructGEP(l.second->GetStructType(), var, i);
-                    llvm.ClearPermString(GetIR()->CreateLoad(llvm.TypeString, gep), GetIR());
-                }
-                i++;
-            }
-        }
-    }
-
-    // Local collections
-    llvm.GCCollections(GetIR());
-}
-
 void Compiler::GenericVariable(ParserToken &token, Scope scope) {
     auto signature = TypeSignature::Get(token.signature).get();
     auto value_type = CompileExpression(token.children[0]);

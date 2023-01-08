@@ -1,7 +1,7 @@
 #include "Compiler.h"
 
 void Compiler::TokenContainer(ParserToken &t) {
-    auto var = Reference::Get(t.reference);
+/*    auto var = Reference::Get(t.reference);
 
     switch (var->GetInstanceType()) {
         case InstanceType::SET:
@@ -22,12 +22,12 @@ void Compiler::TokenContainer(ParserToken &t) {
         if (t.scope != Scope::LOCAL)
             return;
         var->CreateInstance(llvm, GetFunction(), return_type, GetIR(), Scope::LOCAL, false);
-    }
+    }*/
 }
 
 void Compiler::TokenPlace(ParserToken &t) {
-    // Destination
-    Reference *ref = Reference::Get(t.reference);
+	// Destination
+/*    Reference *ref = Reference::Get(t.reference);
     if (!ref->InstanceExists())
         VariableNotFound(t, ref->GetName());
     if (!ref->FindInstanceUnknownInstanceType()) {
@@ -181,11 +181,11 @@ void Compiler::TokenPlace(ParserToken &t) {
             }
             i++;
         }
-    }
+    }*/
 }
 
 void Compiler::TokenFetch(ParserToken &t) {
-    auto ref = Reference::Get(t.reference);
+/*    auto ref = Reference::Get(t.reference);
     if (!ref->InstanceExists())
         VariableNotFound(t, ref->GetName());
     if (!ref->FindInstanceUnknownInstanceType()) {
@@ -288,11 +288,11 @@ void Compiler::TokenFetch(ParserToken &t) {
         }
         default:
             TypeError(t);
-    }
+    }*/
 }
 
 void Compiler::TokenClear(ParserToken &t) {
-    auto ref = Reference::Get(t.reference);
+/*    auto ref = Reference::Get(t.reference);
     if (!ref->InstanceExists())
         VariableNotFound(t, ref->GetName());
     if (!ref->FindInstanceUnknownInstanceType()) {
@@ -409,5 +409,5 @@ void Compiler::TokenClear(ParserToken &t) {
             default:
                 TypeError(t);
         }
-    }
+    }*/
 }

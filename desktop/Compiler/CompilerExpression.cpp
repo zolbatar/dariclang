@@ -513,7 +513,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
             return vt;
         }
         case ParserTokenType::HAS: {
-            auto expr = CompileExpression(t.children[0]);
+/*            auto expr = CompileExpression(t.children[0]);
             auto temp_name = GetScratchName(t.file.line);
             auto scratch = GetIR()->CreateAlloca(llvm.TypeConversion(expr.type), nullptr, temp_name);
             GetIR()->CreateStore(expr.value, scratch);
@@ -549,7 +549,7 @@ ValueType Compiler::CompileExpression(ParserToken &t) {
                 default:
                     TypeError(t);
             }
-            return vt;
+            return vt;*/
         }
         default:
             assert(0);

@@ -9,22 +9,21 @@ typedef const char *T_S;
 typedef uint8_t T_B;
 
 enum class Scope {
-    LOCAL,
-    GLOBAL,
+	LOCAL,
+	GLOBAL,
 };
 
 enum class Primitive {
-    NONE,
-    INT,
-    FLOAT,
-    STRING,
-    BYTE
+	NONE,
+	INT,
+	FLOAT,
+	STRING,
+	BYTE
 };
 
 struct TypeOrStruct {
-    bool is_struct = false;
-    Primitive type;
-    std::string name;
+	bool is_struct = false;
+	Primitive type;
+	std::string name;
 };
-
 

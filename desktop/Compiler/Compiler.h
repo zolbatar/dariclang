@@ -86,7 +86,6 @@ private:
         return sc;
     }
 
-    void GCLocals();
     std::string GetScratchName(size_t line);
     size_t scratch_index = 0;
     llvm::Function *GetFunction() {
@@ -136,7 +135,6 @@ private:
     void TokenFetch(ParserToken &t);
     void TokenClear(ParserToken &t);
 
-    std::vector<ValueType> ProcessIndices(Reference *ref, ParserToken &t);
     llvm::BasicBlock *CreateBB(std::string block_name, ParserToken &token);
     llvm::BasicBlock *CreateAndInsertBB(std::string block_name, bool branch, ParserToken &token);
     void AddBB(llvm::BasicBlock *bb);

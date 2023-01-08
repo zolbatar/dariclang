@@ -42,14 +42,14 @@ public:
     RuleOption = 19, RuleParameter = 20, RulePrint = 21, RuleProcedure = 22, 
     RuleRepeat = 23, RuleRead = 24, RuleRestore = 25, RuleReturn = 26, RuleStruct = 27, 
     RuleSwap = 28, RuleWhen = 29, RuleWhile = 30, RuleClear = 31, RuleGet = 32, 
-    RuleSet = 33, RuleVariable = 34, RuleTypeSignatureSingle = 35, RuleTypeSignatureArray = 36, 
-    RuleTypeSignatureRecord = 37, RuleTypeSignatureRecordArray = 38, RuleTypeSignatureArrayNew = 39, 
-    RuleTypeSignatureRecordNew = 40, RuleTypeSignatureRecordArrayNew = 41, 
-    RuleTypeSignatureList = 42, RuleTypeSignatureVector = 43, RuleTypeSignatureSet = 44, 
-    RuleTypeSignatureMap = 45, RuleTypeSignatureStack = 46, RuleTypeSignatureQueue = 47, 
-    RuleTypeSignature = 48, RuleTypeSignatureArrayOrCollection = 49, RuleExpression = 50, 
-    RuleType = 51, RuleTypeOrStruct = 52, RuleLiteral = 53, RuleFloatLiteral = 54, 
-    RuleIntegerLiteral = 55, RuleStringLiteral = 56
+    RuleSet = 33, RuleTypeSignatureSingle = 34, RuleTypeSignatureArray = 35, 
+    RuleTypeSignatureRecord = 36, RuleTypeSignatureRecordArray = 37, RuleTypeSignatureArrayNew = 38, 
+    RuleTypeSignatureRecordNew = 39, RuleTypeSignatureRecordArrayNew = 40, 
+    RuleTypeSignatureList = 41, RuleTypeSignatureVector = 42, RuleTypeSignatureSet = 43, 
+    RuleTypeSignatureMap = 44, RuleTypeSignatureStack = 45, RuleTypeSignatureQueue = 46, 
+    RuleTypeSignature = 47, RuleTypeSignatureArrayOrCollection = 48, RuleExpression = 49, 
+    RuleType = 50, RuleTypeOrStruct = 51, RuleLiteral = 52, RuleFloatLiteral = 53, 
+    RuleIntegerLiteral = 54, RuleStringLiteral = 55
   };
 
   explicit DaricParser(antlr4::TokenStream *input);
@@ -103,7 +103,6 @@ public:
   class ClearContext;
   class GetContext;
   class SetContext;
-  class VariableContext;
   class TypeSignatureSingleContext;
   class TypeSignatureArrayContext;
   class TypeSignatureRecordContext;
@@ -690,7 +689,7 @@ public:
     ClearContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *CLEAR();
-    VariableContext *variable();
+    antlr4::tree::TerminalNode *IDENTIFIER();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -701,13 +700,13 @@ public:
 
   class  GetContext : public antlr4::ParserRuleContext {
   public:
-    DaricParser::VariableContext *in = nullptr;
-    DaricParser::VariableContext *coll = nullptr;
+    DaricParser::TypeSignatureContext *in = nullptr;
+    antlr4::Token *coll = nullptr;
     GetContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ASSIGNL();
-    std::vector<VariableContext *> variable();
-    VariableContext* variable(size_t i);
+    TypeSignatureContext *typeSignature();
+    antlr4::tree::TerminalNode *IDENTIFIER();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -718,14 +717,14 @@ public:
 
   class  SetContext : public antlr4::ParserRuleContext {
   public:
-    DaricParser::VariableContext *in = nullptr;
-    DaricParser::VariableContext *coll = nullptr;
+    DaricParser::TypeSignatureContext *in = nullptr;
+    antlr4::Token *coll = nullptr;
     SetContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *ASSIGNR();
-    std::vector<VariableContext *> variable();
-    VariableContext* variable(size_t i);
+    antlr4::tree::TerminalNode *IDENTIFIER();
     ExpressionContext *expression();
+    TypeSignatureContext *typeSignature();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -733,28 +732,6 @@ public:
   };
 
   SetContext* set();
-
-  class  VariableContext : public antlr4::ParserRuleContext {
-  public:
-    VariableContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    std::vector<antlr4::tree::TerminalNode *> IDENTIFIER();
-    antlr4::tree::TerminalNode* IDENTIFIER(size_t i);
-    antlr4::tree::TerminalNode *SOPEN();
-    antlr4::tree::TerminalNode *SCLOSE();
-    std::vector<antlr4::tree::TerminalNode *> DOT();
-    antlr4::tree::TerminalNode* DOT(size_t i);
-    std::vector<ExpressionContext *> expression();
-    ExpressionContext* expression(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> COMMA();
-    antlr4::tree::TerminalNode* COMMA(size_t i);
-
-
-    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  VariableContext* variable();
 
   class  TypeSignatureSingleContext : public antlr4::ParserRuleContext {
   public:
@@ -1054,7 +1031,7 @@ public:
     LiteralContext *literal();
     ExprcallContext *exprcall();
     TypeSignatureContext *typeSignature();
-    VariableContext *variable();
+    antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *HAS();
     antlr4::tree::TerminalNode *MINUS();
     antlr4::tree::TerminalNode *PLUS();
@@ -1095,7 +1072,6 @@ public:
     antlr4::tree::TerminalNode *RIGHT();
     antlr4::tree::TerminalNode *LEN();
     antlr4::tree::TerminalNode *SIZE();
-    antlr4::tree::TerminalNode *IDENTIFIER();
     antlr4::tree::TerminalNode *HAT();
     antlr4::tree::TerminalNode *DIVIDE();
     antlr4::tree::TerminalNode *MULTIPLY();

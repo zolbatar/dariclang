@@ -155,7 +155,6 @@ add_executable(${PROJECT_NAME}
         Parser/Core/ParserExpression.cpp
         Parser/Core/ParserFunctions.cpp
         Parser/Core/ParserType.cpp
-        Parser/Core/ParserVariable.cpp
         Parser/Core/ParserStatements.cpp
         Parser/Core/ParserTypeSignature.cpp
         Parser/Tokens/ParserSTRUCT.cpp
@@ -175,20 +174,6 @@ add_executable(${PROJECT_NAME}
         Shared/Shared.cpp
         Shared/SourceFile.cpp
         Shared/SourceFile.h
-        Variables/PrimitiveTypes.h
-        Variables/Reference.cpp
-        Variables/Instance.cpp
-        Variables/InstancePrimitive.cpp
-        Variables/InstanceConstant.cpp
-        Variables/InstancePrimitiveArray.cpp
-        Variables/InstanceRecord.cpp
-        Variables/InstanceRecordArray.cpp
-        Variables/InstanceList.cpp
-        Variables/InstanceVector.cpp
-        Variables/InstanceSet.cpp
-        Variables/InstanceMap.cpp
-        Variables/InstanceStack.cpp
-        Variables/InstanceQueue.cpp
         Grammar/DaricBaseVisitor.cpp
         Grammar/DaricLexer.cpp
         Grammar/DaricParser.cpp
@@ -202,7 +187,8 @@ add_executable(${PROJECT_NAME}
         Types/Type.h Types/TypeRecord.h
         Types/TypeRecord.cpp
         Types/TypeRecordArray.cpp
-        Types/TypeRecordArray.h)
+        Types/TypeRecordArray.h
+        Types/PrimitiveTypes.h)
 if (APPLE)
     target_link_libraries(${PROJECT_NAME} PRIVATE
             "-framework OpenGL"

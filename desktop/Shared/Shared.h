@@ -3,7 +3,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
-#include "../Variables/PrimitiveTypes.h"
+#include "../Types/PrimitiveTypes.h"
 
 struct StructMember {
 	std::string name;

@@ -74,15 +74,9 @@ when:           WHEN expression (COMMA expression)* statements ;
 while:          WHILE expression statements END WHILE ;
 
 // Collections
-clear:          CLEAR variable ;
-get:            in=variable ASSIGNL coll=variable ;
-set:            (in=variable | expression) ASSIGNR coll=variable ;
-
-variable
-    : IDENTIFIER
-        (SOPEN expression? (COMMA expression)* SCLOSE)?
-        (DOT IDENTIFIER)*
-    ;
+clear:          CLEAR IDENTIFIER ;
+get:            in=typeSignature ASSIGNL coll=IDENTIFIER ;
+set:            (in=typeSignature | expression) ASSIGNR coll=IDENTIFIER ;
 
 typeSignatureSingle:        IDENTIFIER (COLON type)? ; // For creating primitive variables
 typeSignatureArray:         IDENTIFIER (COLON type)? SOPEN expression? (COMMA expression)* SCLOSE ;
@@ -124,10 +118,9 @@ expression
     | literal
     | exprcall
     | typeSignature
-    | variable
 
     // Collection
-    | variable HAS expression
+    | IDENTIFIER HAS expression
 
     // Unary
     | MINUS expression
