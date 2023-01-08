@@ -177,7 +177,7 @@ std::any Parser::visitTypeSignatureRecordArray(DaricParser::TypeSignatureRecordA
 			auto ct = dynamic_cast<TypeRecordArray *>(type.get());
 			if (!ct->HasField(field))
 				RaiseException("Record does not contain field '" + field + "'", context, GetFilename());
-			return ct->CreateLink(state, field);
+			return ct->CreateLink(state, field, expression);
 		}
 		default:
 			VariableException(context, GetFilename());

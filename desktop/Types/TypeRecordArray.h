@@ -16,7 +16,8 @@ public:
 												 std::string struct_name,
 												 const std::list<ParserToken> &expressions);
 	std::shared_ptr<TypeSignature> CreateLink(SourceFileData &state,
-											  std::string field);
+											  std::string field,
+											  std::list<ParserToken> expressions);
 	bool operator==(TypeSignature &other) override;
 	void GarbageCollect(SignatureCall &call) override;
 	bool Matches(const std::string &struct_name, std::list<ParserToken> &expressions);

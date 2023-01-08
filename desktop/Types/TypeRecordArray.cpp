@@ -23,9 +23,9 @@ std::shared_ptr<TypeSignature> TypeRecordArray::Create(SourceFileData &state,
 }
 
 std::shared_ptr<TypeSignature> TypeRecordArray::CreateLink(SourceFileData &state,
-														   std::string field) {
-	std::shared_ptr<TypeRecordArray> v = std::make_shared<TypeRecordArray>(TypeRecordArray(state, name, struct_name, {}, scope));
-	v->created = true;
+														   std::string field,
+														   std::list<ParserToken> expressions) {
+	std::shared_ptr<TypeRecordArray> v = std::make_shared<TypeRecordArray>(TypeRecordArray(state, name, struct_name, expressions, scope));
 	v->SetField(std::move(field));
 	signatures_by_index.push_back(v);
 	signatures.emplace(name + GetLatestInstanceIndex(), v);
@@ -112,12 +112,23 @@ llvm::Type *TypeRecordArray::GetLLVMType(bool is_ref, SignatureCall &call) {
 void TypeRecordArray::Create(SignatureCall &call) {
 	auto llvm_struct_type = call.llvm.GetStruct(struct_name);
 
+	// Create
+	for (auto &s : GetExpressions()) {
+		auto vt = call.exprcompile(s);
+		if (vt.type != Primitive::INT) {
+			RaiseException("For arrays, dimensions need to be integers", s);
+		}
+		values.push_back(vt);
+	}
+
 	switch (scope) {
 		case Scope::LOCAL: {
-			CreateLocalDimensions(call, llvm_struct_type);
+			if (!call.llvm.GetLocalArrayDimensions(name))
+				CreateLocalDimensions(call, llvm_struct_type);
 		}
 		case Scope::GLOBAL: {
-			CreateGlobalDimensions(call, llvm_struct_type);
+			if (!call.llvm.GetGlobalArrayDimensions(name))
+				CreateGlobalDimensions(call, llvm_struct_type);
 		}
 	}
 
@@ -128,16 +139,17 @@ ValueType TypeRecordArray::Get(SignatureCall &call) {
 	auto struct_type = call.llvm.GetStruct(struct_name);
 	auto si = GetStructInfo();
 	auto index = si->field_mappings.find(field_name)->second;
+
 	ValueType vt;
 	vt.type = si->fields[index].type;
 	if (scope == Scope::GLOBAL) {
 		assert(call.llvm.globals.contains(name));
-		auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetGlobal(name), index);
+		auto gep = call.ir->CreateStructGEP(struct_type, GlobalIndex(call), index);
 		vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(vt.type), gep);
 	} else {
 		assert(call.llvm.locals.contains(name));
 		if (!is_ref) {
-			auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetLocal(name), index);
+			auto gep = call.ir->CreateStructGEP(struct_type, LocalIndex(call), index);
 			vt.value = call.ir->CreateLoad(call.llvm.TypeConversion(vt.type), gep);
 		} else {
 			auto pt = llvm::PointerType::get(struct_type, 0);
@@ -155,11 +167,11 @@ void TypeRecordArray::Set(SignatureCall &call, ValueType value) {
 	auto index = si->field_mappings.find(field_name)->second;
 	if (scope == Scope::GLOBAL) {
 		assert(call.llvm.globals.contains(name));
-		auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetGlobal(name), index);
+		auto gep = call.ir->CreateStructGEP(struct_type, GlobalIndex(call), index);
 		call.ir->CreateStore(value.value, gep);
 	} else {
 		assert(call.llvm.locals.contains(name));
-		auto gep = call.ir->CreateStructGEP(struct_type, call.llvm.GetLocal(name), index);
+		auto gep = call.ir->CreateStructGEP(struct_type, LocalIndex(call), index);
 		call.ir->CreateStore(value.value, gep);
 	}
 }
